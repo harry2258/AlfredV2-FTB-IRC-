@@ -5,19 +5,20 @@ import com.harry2258.Alfred.api.Config;
 import com.harry2258.Alfred.api.PermissionManager;
 import org.pircbotx.hooks.events.MessageEvent;
 
-public class Kill extends Command {
+
+public class Test extends Command {
 
     private Config config;
     private PermissionManager manager;
 
-    public Kill() {
-        super("Kill", "Shuts the bot down.", "Kill");
+    public Test() {
+        super("Test", "This is a test command", "Test!");
     }
 
     @Override
     public boolean execute(MessageEvent event) {
-        event.getBot().stopBotReconnect();
-        event.getBot().sendIRC().quitServer("Shutting down...");
+        event.getChannel().send().message("Test!");
+        event.getChannel().send().message(event.getUser().getUserLevels(event.getChannel()).toString());
         return true;
     }
 
@@ -30,4 +31,5 @@ public class Kill extends Command {
     public void setManager(PermissionManager manager) {
         this.manager = manager;
     }
+
 }

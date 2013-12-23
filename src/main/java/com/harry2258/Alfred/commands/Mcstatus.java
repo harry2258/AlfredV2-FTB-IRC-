@@ -3,21 +3,21 @@ package com.harry2258.Alfred.commands;
 import com.harry2258.Alfred.api.Command;
 import com.harry2258.Alfred.api.Config;
 import com.harry2258.Alfred.api.PermissionManager;
+import com.harry2258.Alfred.api.Utils;
 import org.pircbotx.hooks.events.MessageEvent;
 
-public class Kill extends Command {
 
+public class Mcstatus extends Command {
     private Config config;
     private PermissionManager manager;
 
-    public Kill() {
-        super("Kill", "Shuts the bot down.", "Kill");
+    public Mcstatus() {
+        super("Mcstatus", "Shows the status of various minecraft servers");
     }
 
     @Override
     public boolean execute(MessageEvent event) {
-        event.getBot().stopBotReconnect();
-        event.getBot().sendIRC().quitServer("Shutting down...");
+        event.getChannel().send().message(Utils.checkMojangServers());
         return true;
     }
 

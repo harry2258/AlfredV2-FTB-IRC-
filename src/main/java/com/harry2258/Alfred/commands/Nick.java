@@ -5,20 +5,22 @@ import com.harry2258.Alfred.api.Config;
 import com.harry2258.Alfred.api.PermissionManager;
 import org.pircbotx.hooks.events.MessageEvent;
 
-public class Kill extends Command {
-
+public class Nick extends Command {
     private Config config;
     private PermissionManager manager;
 
-    public Kill() {
-        super("Kill", "Shuts the bot down.", "Kill");
+    public Nick() {
+        super("Nick", "changes the bot's nickname", "Nick newnickname");
     }
 
     @Override
     public boolean execute(MessageEvent event) {
-        event.getBot().stopBotReconnect();
-        event.getBot().sendIRC().quitServer("Shutting down...");
-        return true;
+        String[] args = event.getMessage().split(" ");
+        if (args.length >= 1) {
+            event.getBot().sendIRC().changeNick(event.getMessage().split(" ")[1]);
+            return true;
+        }
+        return false;
     }
 
     @Override

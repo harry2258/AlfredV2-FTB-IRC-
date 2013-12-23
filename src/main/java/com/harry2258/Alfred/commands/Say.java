@@ -5,20 +5,22 @@ import com.harry2258.Alfred.api.Config;
 import com.harry2258.Alfred.api.PermissionManager;
 import org.pircbotx.hooks.events.MessageEvent;
 
-public class Kill extends Command {
-
-    private Config config;
+public class Say extends Command {
     private PermissionManager manager;
+    private Config config;
 
-    public Kill() {
-        super("Kill", "Shuts the bot down.", "Kill");
+    public Say(){
+        super("Say", "Send a message to the current channel");
     }
-
     @Override
     public boolean execute(MessageEvent event) {
-        event.getBot().stopBotReconnect();
-        event.getBot().sendIRC().quitServer("Shutting down...");
-        return true;
+      String[] args = event.getMessage().split(" ");
+      StringBuilder builder = new StringBuilder();
+      for(int i = 1; i < args.length; i++){
+          builder.append(args[i]).append(" ");
+      }
+      event.getChannel().send().message(builder.toString().trim());
+      return true;
     }
 
     @Override

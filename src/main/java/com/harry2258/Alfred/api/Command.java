@@ -1,89 +1,97 @@
 package com.harry2258.Alfred.api;
 
-import java.util.HashMap;
-import static com.harry2258.Alfred.api.Command.commands;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.pircbotx.hooks.events.MessageEvent;
 
-public abstract class Command
-{
-    private Config config;
-    public static HashMap<String, Object> commands = new HashMap<>();
+public abstract class Command {
+    private final String name;
+    private final String description;
+    private final String help;
 
     /**
-     * Fairly self-explanitory. Used to execute the command's code
+     * This constructor isn't recommended as it leaves the entry for the command in the help command rather sparse
      *
-     * @param pircbotx MessageEvent to run from
+     * @param name The name of the command
+     * @see Command(String name, String description, String help)
      */
-    public void run(MessageEvent event)
-    {
-        //insert code here
+    public Command(String name) {
+        this.name = name;
+        this.description = "No description available for command " + name;
+        this.help = "No help available for command " + name;
     }
 
     /**
-     * Used to pass a config to the command if needed
+     * The help for the command defaults to: No help available for command <command>
      *
-     * @param conf the CookieConfig object to pass to the command. not
-     * *required* unless you actually access the config.
+     * @param name        The name of the command
+     * @param description A brief description of the command
+     * @see Command(String name, String description, String help)
      */
-    public void setConfig(Config conf)
-    {
-        this.config = conf;
-    }
-    
-
-    /**
-     * @return A description of what the command does
-     */
-    public String getDescription()
-    {
-        return "No description available for %CLASSNAME%";
+    public Command(String name, String description) {
+        this.name = name;
+        this.description = description;
+        this.help = "No help available for command " + name;
     }
 
     /**
-     * @return Syntax of the command.
+     * @param name        The name of the command
+     * @param description A brief description of the command
+     * @param help        Help for the command, usually usage information.
      */
-    public String getSyntax()
-    {
-        return "No syntax information available for class %CLASSNAME%";
+    public Command(String name, String description, String help) {
+        this.name = name;
+        this.description = description;
+        this.help = help;
     }
 
     /**
-     * @return the commands name
+     * Get the name of the command
+     *
+     * @return the command's name
      */
-    public String getName()
-    {
-        return "No command name set for %CLASSNAME%";
+    public String getName() {
+        return name;
     }
 
     /**
-     * @return if the command is secret (currently only used to hide the command
-     * from help)
+     * Get the description of the command
+     *
+     * @return the command's description
      */
-    public boolean isSecret()
-    {
-        return false;
+    public String getDescription() {
+        return this.description;
     }
 
-    public static Object getOrCreateNewInstance(String classname)
-    {
-        if (commands.containsKey(classname))
-        {
-
-            return commands.get(classname);
-        } else
-        {
-            try
-            {
-                commands.put(classname, Command.class.getClassLoader().loadClass("com.harry2258.Alfred.commands." + classname).newInstance());
-                return commands.get(classname);
-            } catch (ClassNotFoundException | InstantiationException | IllegalAccessException ex)
-            {
-                Logger.getLogger(Command.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
-        return null;
+    /**
+     * Get the syntax / help for the command
+     *
+     * @return the syntax / help for the command
+     */
+    public String getHelp() {
+        return this.help;
     }
+
+
+    /**
+     * Execute the command
+     *
+     * @param event The MessageEvent to fire the command with
+     */
+    public abstract boolean execute(MessageEvent event);
+
+    /**
+     * Set the config object to be used by the command
+     * Used to pass the config to the class.
+     *
+     * @param config the config object to pass
+     */
+    public abstract void setConfig(Config config);
+
+    /**
+     * Set the PermissionManager object for the command
+     * Used to pass the command a permissions manager
+     *
+     * @param manager the permissionsmanager instance to pass to the class
+     */
+    public abstract void setManager(PermissionManager manager);
 
 }
