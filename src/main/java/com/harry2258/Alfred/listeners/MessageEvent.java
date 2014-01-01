@@ -59,10 +59,15 @@ public class MessageEvent extends ListenerAdapter {
                  */
             }
         }
-        for (String word : event.getMessage().split(" ")) {
-            if (Utils.isUrl(word)) {
-                event.getChannel().send().message(event.getUser().getNick() + "'s URL: " + Utils.getTitle(word));
-            }
+//        for (String word : event.getMessage().split(" ")) {
+//            if (Utils.isUrl(word)) {
+//                event.getChannel().send().message(event.getUser().getNick() + "'s URL: " + Utils.getTitle(word));
+//            }
+//        }
+        
+        if (event.getMessage().contains("Changelog") || event.getMessage().contains("changelog")) {
+            event.getChannel().send().message(event.getUser().getNick() + ", Changelogs for all modpacks are here: http://is.gd/3NH0cH");
         }
+        
     }
 }
