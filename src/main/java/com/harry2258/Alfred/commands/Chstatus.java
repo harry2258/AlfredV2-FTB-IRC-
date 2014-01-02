@@ -12,9 +12,11 @@ import java.net.URL;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.pircbotx.Colors;
 
 import org.pircbotx.hooks.events.MessageEvent;
 
@@ -23,166 +25,19 @@ public class Chstatus extends Command {
     
     private Config config;
     private PermissionManager manager;
-    private static ArrayList<String> chRepos= new ArrayList<String>();
-    private static ArrayList<String> chURLs= new ArrayList<String>();
     public Chstatus() {
         super("ChStatus", "Shows status of CreeperHost repos", ":3");
     }
 
     @Override
     public boolean execute(MessageEvent event) {
-        /*
-        //---------------------------
-        String Offline = "Offline";
-        String Online = "Online";
-        Socket socket = null;
-        //---------------------------
-        String maidencheck = null;
-        String nottingcheck = null;
-        String grantcheck = null;
-        String atlantacheck = null;
-        String atlanta2check = null;
-        String chicagocheck = null;
-        String chicago2check = null;
-        String LAcheck = null;
-        boolean Maiden = false;
-        boolean Notting = false;
-        boolean Grant = false;
-        boolean Atlant = false;
-        boolean Atlant2 = false;
-        boolean Chicag = false;
-        boolean Chicag2 = false;
-        boolean Los = false;
         
-//----------------------
-        try {
-              socket = new Socket("england1.creeperrepo.net", 80);
-              Maiden = true;
-            } finally {            
-        if (socket != null) try { socket.close(); }
-        catch(IOException M) {System.out.println(M);}
-        }
-//----------------------
-        try {
-              socket = new Socket("england2.creeperrepo.net", 80);
-              Notting = true;
-            } finally {            
-        if (socket != null) try { socket.close(); }
-        catch(IOException M) {System.out.println(M);}
-        }
-//----------------------
-        try {
-              socket = new Socket("england3.creeperrepo.net", 80);
-              Grant = true;
-            } finally {            
-        if (socket != null) try { socket.close(); }
-        catch(IOException M) {System.out.println(M);}
-        }
-//----------------------
-        try {
-              socket = new Socket("atlanta1.creeperrepo.net", 80);
-              Atlant = true;
-            } finally {            
-        if (socket != null) try { socket.close(); }
-        catch(IOException M) {System.out.println(M);}
-        }
-//----------------------
-        try {
-              socket = new Socket("atlanta2.creeperrepo.net", 80);
-              Atlant2 = true;
-            } finally {            
-        if (socket != null) try { socket.close(); }
-        catch(IOException M) {System.out.println(M);}
-        }
-//----------------------
-        try {
-              socket = new Socket("chicago1.creeperrepo.net", 80);
-              Chicag = true;
-            } finally {            
-        if (socket != null) try { socket.close(); }
-        catch(IOException C) {System.out.println(C);}
-        }
-//----------------------
-        try {
-              socket = new Socket("chicago2.creeperrepo.net", 80);
-              Chicag2 = true;
-            } finally {            
-        if (socket != null) try { socket.close(); }
-        catch(IOException C2) {System.out.println(C2);}
-        }
-//----------------------
-        try {
-              socket = new Socket("losangeles1.creeperrepo.net", 80);
-              Los = true;
-            } finally {            
-        if (socket != null) try { socket.close(); }
-        catch(IOException LS) {
-        System.out.println(LS);}
-        }
-//----------------------
-           
-       if (Maiden) {
-           maidencheck = Colors.DARK_GREEN + Online + Colors.NORMAL + " | ";
-       } else {
-           maidencheck = Colors.RED + Offline + Colors.NORMAL + " | ";
-       }
-       if (Notting) {
-           nottingcheck = Colors.DARK_GREEN + Online + Colors.NORMAL + " | ";
-       } else {
-           nottingcheck = Colors.RED + Offline + Colors.NORMAL + " | ";
-       }
-       if (Grant) {
-           grantcheck = Colors.DARK_GREEN + Online + Colors.NORMAL + " | ";
-       } else {
-           grantcheck = Colors.RED + Offline + Colors.NORMAL + " | ";
-       }
-       if (Atlant) {
-           atlantacheck = Colors.DARK_GREEN + Online + Colors.NORMAL + " | ";
-       } else {
-           atlantacheck = Colors.RED + Offline + Colors.NORMAL + " | ";
-       }
-       if (Atlant2) {
-           atlanta2check = Colors.DARK_GREEN + Online + Colors.NORMAL + " | ";
-       } else {
-           atlanta2check = Colors.RED + Offline + Colors.NORMAL + " | ";
-       }
-       if (Chicag) {
-           chicagocheck = Colors.DARK_GREEN + Online + Colors.NORMAL + " | ";
-       } else {
-           chicagocheck = Colors.RED + Offline + Colors.NORMAL + " | ";
-       }
-       if (Chicag2) {
-           chicago2check = Colors.DARK_GREEN + Online + Colors.NORMAL + " | ";
-       } else {
-           chicago2check = Colors.RED + Offline + Colors.NORMAL + " | ";
-       }
-       if (Los) {
-           LAcheck = Colors.DARK_GREEN + Online;
-       } else {
-           LAcheck = Colors.RED + Offline;
-       }
-       
-         String status = "Maidenhead: "
-                       + maidencheck 
-                       + "Nottingham: "
-                       + nottingcheck 
-                       + "Grantham: "
-                       + grantcheck 
-                       + "Atlanta: "
-                       + atlantacheck 
-                       + "Atlanta 2: "
-                       + atlanta2check 
-                       + "Chicago: " 
-                       + chicagocheck 
-                       + "Chicago 2: " 
-                       + chicago2check 
-                       + "LA: "
-                       + LAcheck
-                       ;
-         */
-       
-       String list = null;
-       String status = null;
+        ArrayList<String> chRepos= new ArrayList<String>();
+        ArrayList<String> chURLs= new ArrayList<String>();
+        ArrayList<Boolean> tests = new ArrayList<Boolean>();
+        ArrayList<String> Status = new ArrayList<String>();
+        ArrayList<String> Message = new ArrayList<String>();
+        String sendMessage = "";
         try {
                 URL url;
                 url = new URL("http://new.creeperrepo.net/edges.json");
@@ -205,19 +60,30 @@ public class Chstatus extends Command {
                 if (E.getMessage().contains("404")) {
                 }
             }
-        for (int i = 1; i < chURLs.size(); i++) {
-            if (chURLs.get(i).contains("creeperrepo.net")) {
-                boolean tests = Utils.pingUrl(chURLs.get(i));
-                
-                if (tests) {
-                    event.respond(chRepos.get(i) + " is Online!");
-                } else {
-                    event.respond(chRepos.get(i) + " is Offline!");
+        
+                for(String url : chURLs) {
+                    if(url.contains("creeperrepo.net")) {
+                    tests.add(Utils.pingUrl(url));
+                    
+                    }
                 }
                 
-            }
-        }
-        
+                for (Boolean status : tests) {
+                    if(status.equals(true) ) {
+                        Status.add(Colors.DARK_GREEN + "Online" + Colors.NORMAL + " | ");
+                    } else {
+                        Status.add(Colors.RED + "Offline" + Colors.NORMAL + " | ");
+                    }
+                }
+                
+                for (int x = 0; x < chRepos.size(); x++) {
+                    Message.add(chRepos.get(x) + ": " + Status.get(x));
+                }
+                
+                for (String s : Message) {
+                    sendMessage += s + "\t";
+                }
+        event.getChannel().send().message(sendMessage);
         return true;
         }
         
