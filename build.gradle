@@ -1,0 +1,51 @@
+apply plugin: 'maven'
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'shadow'
+
+buildscript {
+    repositories {
+		maven {
+            name 'Shadow'
+            url 'http://dl.bintray.com/content/johnrengelman/gradle-plugins'
+        }
+        mavenCentral()
+        mavenLocal()
+    }
+    dependencies {
+        classpath 'org.gradle.plugins:shadow:0.7.4'
+    }
+
+}
+
+project.ext {
+    mainClass = 'com.harry2258.Alfred.Main'
+    currentYear = '2013'
+	}
+group = 'com.harry2258'
+version = '1.0-SNAPSHOT'
+project.build.sourceEncoding = 'UTF-8'
+description = "AlfredV2(FTB-IRC-BOT)"
+sourceCompatibility = 1.7
+targetCompatibility = 1.7
+jar {
+    manifest {
+        attributes 'Main-Class': project.mainClass
+    }
+}
+shadow {
+    exclude 'META-INF/*.DSA'
+    exclude 'META-INF/*.RSA'
+}
+repositories {  
+    mavenCentral()}
+dependencies {
+    compile 'org.pircbotx:pircbotx:2.0.1'
+	compile 'org.beanshell:bsh:2.0b4'
+    compile 'org.jsoup:jsoup:1.7.2'
+	compile 'org.slf4j:slf4j-simple:1.7.5'
+	compile 'org.reflections:reflections:0.9.9-RC1'
+	compile 'com.google.code.gson:gson:2.0'
+
+	compile 'junit:junit:3.8.1'
+	}

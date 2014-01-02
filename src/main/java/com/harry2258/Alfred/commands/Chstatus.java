@@ -4,13 +4,17 @@ import com.harry2258.Alfred.api.Command;
 import com.harry2258.Alfred.api.Config;
 import com.harry2258.Alfred.api.PermissionManager;
 import com.harry2258.Alfred.api.Utils;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.UnknownHostException;
+import java.util.HashMap;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import org.pircbotx.hooks.events.MessageEvent;
 
 
@@ -18,7 +22,7 @@ public class Chstatus extends Command {
     
     private Config config;
     private PermissionManager manager;
-
+    private static HashMap<String, String> chRepos = new HashMap<String, String>();
     public Chstatus() {
         super("ChStatus", "Shows status of CreeperHost repos", ":3");
     }
@@ -183,9 +187,14 @@ public class Chstatus extends Command {
                 BufferedReader re = new BufferedReader(new InputStreamReader(url.openStream()));
                 String st;
                 while ((st = re.readLine()) != null) {
-                    String a = st.replace("[", "").replace("]", "");
-                    String b = a.replace("{", "").replace("}", "").replace(":", " Repo url: ").replace("\"", "").replaceAll(",", " | ");
-                    list = b;
+                    st = st.replace("{", "").replace("}", "").replace("\"", "");
+                    String[] splitString = st.split(",");
+                    for(String entry : splitString) {
+                        String[] splitEntry = entry.split(":");
+                        if(splitEntry.length == 2) {
+                            chRepos.put(splitEntry[0], splitEntry[1]);
+                        }
+                    }
                 }
             } catch (IOException E) {
                 if (E.getMessage().contains("503")) {
@@ -193,20 +202,18 @@ public class Chstatus extends Command {
                 if (E.getMessage().contains("404")) {
                 }
             }
-        String[] test = list.split(" ");
-        
+        String[] test = (String[]) chRepos.entrySet().toArray();
+        String[] testNames = (String[]) chRepos.keySet().toArray();
         for (int i = 1; i < test.length; i++) {
             if (test[i].contains("creeperrepo.net")) {
                 boolean tests = Utils.pingUrl(test[i]);
-                String st = test[i];
-                String[] moretest = st.split(".");
-                /*
+                
                 if (tests) {
-                    e.respond(test[i] + " is Online!");
+                    event.respond(testNames[i] + " is Online!");
                 } else {
-                    e.respond(test[i] + " is Offline!");
+                    event.respond(testNames[i] + " is Offline!");
                 }
-                */
+                
             }
         }
         
