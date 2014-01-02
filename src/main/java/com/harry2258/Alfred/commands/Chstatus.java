@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Set;
 import java.util.logging.Level;
@@ -22,7 +23,8 @@ public class Chstatus extends Command {
     
     private Config config;
     private PermissionManager manager;
-    private static HashMap<String, String> chRepos = new HashMap<String, String>();
+    private static ArrayList<String> chRepos= new ArrayList<String>();
+    private static ArrayList<String> chURLs= new ArrayList<String>();
     public Chstatus() {
         super("ChStatus", "Shows status of CreeperHost repos", ":3");
     }
@@ -192,7 +194,8 @@ public class Chstatus extends Command {
                     for(String entry : splitString) {
                         String[] splitEntry = entry.split(":");
                         if(splitEntry.length == 2) {
-                            chRepos.put(splitEntry[0], splitEntry[1]);
+                            chRepos.add(splitEntry[0]);
+                            chURLs.add(splitEntry[1]);
                         }
                     }
                 }
@@ -202,16 +205,14 @@ public class Chstatus extends Command {
                 if (E.getMessage().contains("404")) {
                 }
             }
-        String[] test = (String[]) chRepos.entrySet().toArray();
-        String[] testNames = (String[]) chRepos.keySet().toArray();
-        for (int i = 1; i < test.length; i++) {
-            if (test[i].contains("creeperrepo.net")) {
-                boolean tests = Utils.pingUrl(test[i]);
+        for (int i = 1; i < chURLs.size(); i++) {
+            if (chURLs.get(i).contains("creeperrepo.net")) {
+                boolean tests = Utils.pingUrl(chURLs.get(i));
                 
                 if (tests) {
-                    event.respond(testNames[i] + " is Online!");
+                    event.respond(chRepos.get(i) + " is Online!");
                 } else {
-                    event.respond(testNames[i] + " is Offline!");
+                    event.respond(chRepos.get(i) + " is Offline!");
                 }
                 
             }
