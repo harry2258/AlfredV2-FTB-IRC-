@@ -26,6 +26,9 @@ import java.net.InetAddress;
 import java.net.Socket;
 import java.net.URL;
 import java.net.UnknownHostException;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 /**
  *
@@ -202,5 +205,17 @@ public class Utils {
             e.printStackTrace();
         }
         return false;
+    }
+    
+    public static  boolean isJSONObject(String possibleJson) {
+        boolean valid = false;
+            try {
+                new JSONObject(possibleJson);
+                valid = true;
+            }
+            catch(JSONException ex) { 
+                valid = false;
+            }
+            return valid;
     }
 }

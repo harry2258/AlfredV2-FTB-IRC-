@@ -43,7 +43,9 @@ public class Chstatus extends Command {
                 url = new URL("http://new.creeperrepo.net/edges.json");
                 BufferedReader re = new BufferedReader(new InputStreamReader(url.openStream()));
                 String st;
+                chRepos.add("Launcher");
                 while ((st = re.readLine()) != null) {
+                    tests.add(Utils.isJSONObject(st));
                     st = st.replace("{", "").replace("}", "").replace("\"", "");
                     String[] splitString = st.split(",");
                     for(String entry : splitString) {
@@ -83,6 +85,8 @@ public class Chstatus extends Command {
                 for (String s : Message) {
                     sendMessage += s + "\t";
                 }
+                
+                
         event.getChannel().send().message(sendMessage);
         return true;
         }
