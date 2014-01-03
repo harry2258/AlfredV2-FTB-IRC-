@@ -6,6 +6,7 @@ package com.harry2258.Alfred.api;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
 import com.google.gson.JsonParser;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.jsoup.Jsoup;
@@ -26,9 +27,6 @@ import java.net.InetAddress;
 import java.net.Socket;
 import java.net.URL;
 import java.net.UnknownHostException;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 /**
  *
@@ -210,12 +208,11 @@ public class Utils {
     public static  boolean isJSONObject(String possibleJson) {
         boolean valid = false;
             try {
-                new JSONObject(possibleJson);
-                valid = true;
-            }
-            catch(JSONException ex) { 
-                valid = false;
-            }
-            return valid;
+            new JsonParser().parse(possibleJson);
+            valid = true;
+        } catch (JsonParseException e) {
+            valid = false;
+        }
+        return valid;
     }
 }
