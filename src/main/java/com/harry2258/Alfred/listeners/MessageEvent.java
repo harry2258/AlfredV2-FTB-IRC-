@@ -26,26 +26,41 @@ public class MessageEvent extends ListenerAdapter {
     public void onMessage(org.pircbotx.hooks.events.MessageEvent event) {
         String trigger = config.getTrigger();
         if (event.getMessage().startsWith(trigger) && !Ignore.ignored.contains(event.getUser().getHostmask())) {
+            
             try {
                 String commandname = event.getMessage().split(" ")[0].substring(1).toLowerCase();
                 File commandfile = new File("commands/" + event.getChannel().getName() + "/" + commandname + ".cmd");
-                if (commandfile.exists()) {
+                
+                String mod = "command.mod";
+                if (commandfile.exists() && manager.hasPermission(mod, event.getUser())) {
                     BufferedReader in = new BufferedReader(new FileReader(commandfile));
                     String tmp;
+                    
                     while ((tmp = in.readLine()) != null){
                         String temps = tmp.replaceAll("color.red", Colors.RED).replaceAll("color.green", Colors.GREEN).replaceAll("color.bold", Colors.BOLD).replaceAll("color.normal", Colors.NORMAL).replaceAll("color.darkgreen", Colors.DARK_GREEN).replaceAll("color.purple", Colors.PURPLE).replaceAll("color.darkgreen", Colors.DARK_GREEN);
                         event.getChannel().send().message(commandname + ": " + temps);
                     }
+                    
                     in.close();
                     return;
                 }
                 String classname = Character.toUpperCase(event.getMessage().split(" ")[0].charAt(1)) + event.getMessage().split(" ")[0].substring(2).toLowerCase();
                 String permission = "command." + classname.toLowerCase();
+                String modpermission = "command.mod." + classname.toLowerCase();
+                
                 if (manager.hasPermission(permission, event.getUser())) {
                     Command command = CommandRegistry.getCommand(classname);
                     command.setConfig(config);
                     if (!command.execute(event)) {
                         event.getChannel().send().message(Colors.RED + "An error occurred! " + command.getHelp());
+                        return;
+                    }
+                    
+                } else if (manager.hasPermission(modpermission, event.getUser())){
+                        Command commands = CommandRegistry.getCommand(classname);
+                        commands.setConfig(config);
+                    if (!commands.execute(event)) {
+                        event.getChannel().send().message(Colors.RED + "An error occurred! " + commands.getHelp());
                         return;
                     }
                 } else {

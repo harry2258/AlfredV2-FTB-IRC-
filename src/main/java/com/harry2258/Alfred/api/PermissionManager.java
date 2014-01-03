@@ -31,9 +31,9 @@ public class PermissionManager {
             File config = new File("permissions.properties");
             if (!config.exists()) {
                 System.out.println("[!!] No configuration file found! generating a new one! [!!]");
+                config.createNewFile();
                 BufferedReader s = new BufferedReader(new InputStreamReader(Main.class.getResourceAsStream("/permissions.properties")));
                 String tmp = "";
-                config.createNewFile();
                 BufferedWriter out = new BufferedWriter(new FileWriter(config));
                 while ((tmp = s.readLine()) != null) {
                     out.write(tmp);
@@ -52,6 +52,10 @@ public class PermissionManager {
             System.out.println(s);
         }
     }
+    
+    public void reload() throws IOException {
+        properties.load(new FileInputStream("permissions.properties"));
+    }
 
     public boolean hasPermission(String permission, User user) {
         boolean hostmatch = false;
@@ -63,20 +67,22 @@ public class PermissionManager {
         }
         //huehuheue copypasta from Config.java
         for (String host : properties.stringPropertyNames()) {
-            
             nick = host.split("\\@")[0];
-            hostname = host.split("\\@")[1];
-            Pattern p = Pattern.compile(nick.replaceAll("\\*", ".*"));
+            Pattern p = Pattern.compile(user.getLogin());
             Matcher m = p.matcher(nick);
-            //System.out.print(user.getLogin());
+            System.out.println(nick);
+            System.out.println(m.toString());
             if (m.find()) {
                 nickmatch = true;
             }
             
             if (nickmatch && user.isVerified()) {
                 List<String> permissions = Arrays.asList(properties.getProperty(host).split(" "));
-                //System.out.print(permissions);
-                return permissions.contains(permission) || permissions.contains("permissions.*");
+                if (permissions.contains(permission) || permissions.contains("permissions.*")) {
+                    return true;
+                }
+            } else {
+                return false;
             }
         }
         return false;
