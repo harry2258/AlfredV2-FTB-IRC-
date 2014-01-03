@@ -42,9 +42,9 @@ public class Setcmd extends Command {
                 }
                 writer.flush();
                 writer.close();
+                event.getChannel().send().message("'"+ commandname + "' was set to '" + sb.toString() +"'");
                 return true;
             }catch (Exception e){
-                 event.getChannel().send().message("An error occured!");
             }
         }
         return false;

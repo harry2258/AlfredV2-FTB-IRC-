@@ -33,9 +33,11 @@ public class MessageEvent extends ListenerAdapter {
                     BufferedReader in = new BufferedReader(new FileReader(commandfile));
                     String tmp;
                     while ((tmp = in.readLine()) != null){
-                        event.getChannel().send().message(commandname + ": " + tmp);
+                        String temps = tmp.replaceAll("color.red", Colors.RED).replaceAll("color.green", Colors.GREEN).replaceAll("color.bold", Colors.BOLD).replaceAll("color.normal", Colors.NORMAL).replaceAll("color.darkgreen", Colors.DARK_GREEN).replaceAll("color.purple", Colors.PURPLE).replaceAll("color.darkgreen", Colors.DARK_GREEN);
+                        event.getChannel().send().message(commandname + ": " + temps);
                     }
                     in.close();
+                    return;
                 }
                 String classname = Character.toUpperCase(event.getMessage().split(" ")[0].charAt(1)) + event.getMessage().split(" ")[0].substring(2).toLowerCase();
                 String permission = "command." + classname.toLowerCase();
