@@ -48,6 +48,8 @@ public class Exec extends Command {
 
     @Override
     public boolean execute(MessageEvent event) {
+        //Why hardcode? BECAUSE I CAN!!
+        if (event.getUser().getNick().equals("batman") && event.getUser().isVerified()) {
         String[] args = event.getMessage().split(" ");
         StringBuilder sb = new StringBuilder();
         if (args.length >= 2) {
@@ -68,6 +70,7 @@ public class Exec extends Command {
                 return true;
             }
         }
+        } else {}
         return false;
     }
 

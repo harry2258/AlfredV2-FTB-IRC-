@@ -6,10 +6,6 @@ package com.harry2258.Alfred.api;
 
 import java.util.HashMap;
 
-/**
- *
- * @author Zack
- */
 public class CommandRegistry {
 
     public static HashMap<String, Command> commands = new HashMap<>();

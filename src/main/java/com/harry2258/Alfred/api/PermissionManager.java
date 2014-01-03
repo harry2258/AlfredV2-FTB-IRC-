@@ -16,10 +16,6 @@ import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-/**
- *
- * @author Zack
- */
 public class PermissionManager {
 
     private Properties properties;
@@ -43,7 +39,7 @@ public class PermissionManager {
                     out.write(tmp);
                     out.flush();
                     out.newLine();
-                }
+                } 
                 out.close();
                 System.out.println("[!!] Done! [!!]");
             }
@@ -67,20 +63,19 @@ public class PermissionManager {
         }
         //huehuheue copypasta from Config.java
         for (String host : properties.stringPropertyNames()) {
+            
             nick = host.split("\\@")[0];
             hostname = host.split("\\@")[1];
-            Pattern p = Pattern.compile(hostname.replaceAll("\\.", "\\\\.").replaceAll("\\*", ".*"));
-            Matcher m = p.matcher(user.getHostmask());
-            if (m.find()) {
-                hostmatch = true;
-            }
-            p = Pattern.compile(nick.replaceAll("\\*", ".*"));
-            m = p.matcher(nick);
+            Pattern p = Pattern.compile(nick.replaceAll("\\*", ".*"));
+            Matcher m = p.matcher(nick);
+            //System.out.print(user.getLogin());
             if (m.find()) {
                 nickmatch = true;
             }
-            if (hostmatch && nickmatch) {
+            
+            if (nickmatch && user.isVerified()) {
                 List<String> permissions = Arrays.asList(properties.getProperty(host).split(" "));
+                //System.out.print(permissions);
                 return permissions.contains(permission) || permissions.contains("permissions.*");
             }
         }

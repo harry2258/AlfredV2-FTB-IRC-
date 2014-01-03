@@ -9,13 +9,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
-import java.net.UnknownHostException;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.pircbotx.Colors;
 
 import org.pircbotx.hooks.events.MessageEvent;
@@ -25,6 +19,7 @@ public class Chstatus extends Command {
     
     private Config config;
     private PermissionManager manager;
+    
     public Chstatus() {
         super("ChStatus", "Shows status of CreeperHost repos", ":3");
     }
@@ -43,7 +38,7 @@ public class Chstatus extends Command {
                 url = new URL("http://new.creeperrepo.net/edges.json");
                 BufferedReader re = new BufferedReader(new InputStreamReader(url.openStream()));
                 String st;
-                chRepos.add("Launcher");
+                chRepos.add("CreeperRepo");
                 while ((st = re.readLine()) != null) {
                     tests.add(Utils.isJSONObject(st));
                     st = st.replace("{", "").replace("}", "").replace("\"", "");

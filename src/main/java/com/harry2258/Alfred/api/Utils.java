@@ -28,10 +28,6 @@ import java.net.Socket;
 import java.net.URL;
 import java.net.UnknownHostException;
 
-/**
- *
- * @author Zack
- */
 public class Utils {
     static String USER_AGENT = "Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/537.17 (KHTML, like Gecko) Chrome/24.0.1312.57 Safari/537.17";
 

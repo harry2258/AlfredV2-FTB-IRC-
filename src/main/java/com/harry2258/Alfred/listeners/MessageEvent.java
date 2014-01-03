@@ -3,18 +3,17 @@ package com.harry2258.Alfred.listeners;
 import com.harry2258.Alfred.api.PermissionManager;
 import com.harry2258.Alfred.api.Config;
 import com.harry2258.Alfred.api.CommandRegistry;
-import com.harry2258.Alfred.api.Utils;
 import com.harry2258.Alfred.api.Command;
+import com.harry2258.Alfred.commands.Ignore;
 import org.pircbotx.Colors;
 import org.pircbotx.hooks.ListenerAdapter;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 
 public class MessageEvent extends ListenerAdapter {
-
+    
     private Config config;
     private PermissionManager manager;
 
@@ -26,8 +25,7 @@ public class MessageEvent extends ListenerAdapter {
     @Override
     public void onMessage(org.pircbotx.hooks.events.MessageEvent event) {
         String trigger = config.getTrigger();
-        if (event.getMessage().startsWith(trigger)) {
-
+        if (event.getMessage().startsWith(trigger) && !Ignore.ignored.contains(event.getUser().getHostmask())) {
             try {
                 String commandname = event.getMessage().split(" ")[0].substring(1).toLowerCase();
                 File commandfile = new File("commands/" + event.getChannel().getName() + "/" + commandname + ".cmd");
@@ -49,7 +47,7 @@ public class MessageEvent extends ListenerAdapter {
                         return;
                     }
                 } else {
-                    event.getUser().send().notice(config.getPermissionDenied().replaceAll("%USERNAME%", event.getUser().getNick()));
+                    event.getChannel().send().message(config.getPermissionDenied().replaceAll("%USERNAME%", event.getUser().getNick()));
                 }
             } catch (Exception e) {
                 /*
