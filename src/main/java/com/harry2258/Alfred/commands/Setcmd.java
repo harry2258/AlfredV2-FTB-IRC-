@@ -37,9 +37,12 @@ public class Setcmd extends Command {
                 command.getParentFile().mkdirs();
                 command.createNewFile();
                 PrintWriter writer = new PrintWriter(new FileWriter(command));
-                for(String s : sb.toString().trim().split("\\\\n")){
-                    writer.println(s);
-                }
+                String[] lines = sb.toString().trim().split("\\\\n");
+                if (lines.length <= 3) {
+                    for(String s : lines){
+                        writer.println(s);
+                    }
+                } else  { event.getChannel().send().message("lines must be less than or equal to 3!");return false; }
                 writer.flush();
                 writer.close();
                 event.getChannel().send().message("'"+ commandname + "' was set to '" + sb.toString() +"'");
