@@ -37,7 +37,7 @@ public class MessageEvent extends ListenerAdapter {
                     
                     while ((tmp = in.readLine()) != null){
                         String temps = tmp.replaceAll("color.red", Colors.RED).replaceAll("color.green", Colors.GREEN).replaceAll("color.bold", Colors.BOLD).replaceAll("color.normal", Colors.NORMAL).replaceAll("color.darkgreen", Colors.DARK_GREEN).replaceAll("color.purple", Colors.PURPLE).replaceAll("color.darkgreen", Colors.DARK_GREEN);
-                        event.getChannel().send().message(commandname + ": " + temps);
+                        event.getChannel().send().message(temps);
                     }
                     
                     in.close();
