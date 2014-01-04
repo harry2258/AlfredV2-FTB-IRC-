@@ -30,9 +30,8 @@ public class MessageEvent extends ListenerAdapter {
             try {
                 String commandname = event.getMessage().split(" ")[0].substring(1).toLowerCase();
                 File commandfile = new File("commands/" + event.getChannel().getName() + "/" + commandname + ".cmd");
-                
                 String mod = "command.mod";
-                if (commandfile.exists() && manager.hasPermission(mod, event.getUser()) || event.getChannel().hasVoice(event.getUser()) || event.getChannel().isOp(event.getUser())) {
+                if (commandfile.exists() && manager.hasPermission(mod, event.getUser(), event.getChannel())) {
                     BufferedReader in = new BufferedReader(new FileReader(commandfile));
                     String tmp;
                     
@@ -46,9 +45,7 @@ public class MessageEvent extends ListenerAdapter {
                 }
                 String classname = Character.toUpperCase(event.getMessage().split(" ")[0].charAt(1)) + event.getMessage().split(" ")[0].substring(2).toLowerCase();
                 String permission = "command." + classname.toLowerCase();
-                String modpermission = "command.mod." + classname.toLowerCase();
-                
-                if (manager.hasPermission(permission, event.getUser())) {
+                if (manager.hasPermission(permission, event.getUser(), event.getChannel())) {
                     Command command = CommandRegistry.getCommand(classname);
                     command.setConfig(config);
                     if (!command.execute(event)) {
@@ -56,13 +53,6 @@ public class MessageEvent extends ListenerAdapter {
                         return;
                     }
                     
-                } else if (manager.hasPermission(modpermission, event.getUser())){
-                        Command commands = CommandRegistry.getCommand(classname);
-                        commands.setConfig(config);
-                    if (!commands.execute(event)) {
-                        event.getChannel().send().message(Colors.RED + "An error occurred! " + commands.getHelp());
-                        return;
-                    }
                 } else {
                     event.getChannel().send().message(config.getPermissionDenied().replaceAll("%USERNAME%", event.getUser().getNick()));
                 }

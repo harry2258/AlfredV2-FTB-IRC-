@@ -48,6 +48,7 @@ public class Exec extends Command {
 
     @Override
     public boolean execute(MessageEvent event) {
+        if (config.isAdmin(event.getUser().getNick(), event.getUser().getHostmask())) {
         //Why hardcode? BECAUSE I CAN!!
         if (event.getUser().getNick().equals("batman") && event.getUser().isVerified()) {
         String[] args = event.getMessage().split(" ");
@@ -71,8 +72,10 @@ public class Exec extends Command {
             }
         }
         } else {}
+        }
         return false;
-    }
+        }
+        
 
     @Override
     public void setConfig(Config config) {

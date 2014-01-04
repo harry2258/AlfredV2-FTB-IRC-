@@ -21,12 +21,17 @@ public class ReloadPerms extends Command {
         super("ReloadPerms", "Reloads the permission file!");
     }
     @Override
-    public boolean execute(MessageEvent event) {
+    public boolean execute(MessageEvent event) { 
+        try {
         event.getChannel().send().message("reloading permissions!");
         config.load();
         manager.load();
         event.getChannel().send().message("Permission were reloaded!");
-        return false;
+        return true;
+                } catch (Exception e) {
+                    System.out.println(e);
+                    return false;
+                }
         
     }
 

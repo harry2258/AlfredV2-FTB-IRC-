@@ -439,6 +439,9 @@ public class Config
                 nickmatch = true;
             }
         }
-        return nickmatch && hostmatch;
+        if(nickmatch && hostmatch) {
+        return true;
+        }
+        return false;
     }
 }
