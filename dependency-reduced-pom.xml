@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  <groupId>com.zack6849</groupId>
-  <artifactId>Alphabotv2</artifactId>
-  <name>Alphabotv2</name>
-  <version>1.0-SNAPSHOT</version>
+  <groupId>com.harr2258</groupId>
+  <artifactId>AlfredV2</artifactId>
+  <name>AlfredV2(FTB-IRC-BOT)</name>
+  <version>2.0.1</version>
   <url>http://bots.zack6849.com/</url>
   <build>
     <defaultGoal>clean package</defaultGoal>
@@ -15,6 +15,8 @@
         <configuration>
           <source>1.7</source>
           <target>1.7</target>
+          <showDeprecation>false</showDeprecation>
+          <debug>true</debug>
         </configuration>
       </plugin>
       <plugin>
@@ -42,7 +44,6 @@
               <artifactSet>
                 <includes>
                   <include>org.pircbotx:pircbotx</include>
-                  <include>org.reflections:reflections</include>
                 </includes>
               </artifactSet>
             </configuration>
@@ -59,15 +60,28 @@
       <scope>test</scope>
     </dependency>
     <dependency>
+      <groupId>bsh</groupId>
+      <artifactId>bsh</artifactId>
+      <version>2.0b4</version>
+      <type>pom</type>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
       <groupId>org.jsoup</groupId>
       <artifactId>jsoup</artifactId>
       <version>1.7.2</version>
       <scope>compile</scope>
     </dependency>
     <dependency>
-      <groupId>bsh</groupId>
-      <artifactId>bsh</artifactId>
-      <version>2.0b4</version>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-simple</artifactId>
+      <version>1.7.5</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.reflections</groupId>
+      <artifactId>reflections</artifactId>
+      <version>0.9.9-RC1</version>
       <scope>compile</scope>
     </dependency>
     <dependency>
@@ -77,9 +91,21 @@
       <scope>compile</scope>
     </dependency>
     <dependency>
-      <groupId>org.slf4j</groupId>
-      <artifactId>slf4j-simple</artifactId>
-      <version>1.7.5</version>
+      <groupId>org.beanshell</groupId>
+      <artifactId>bsh</artifactId>
+      <version>2.0b4</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>commons-configuration</groupId>
+      <artifactId>commons-configuration</artifactId>
+      <version>1.9</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.json</groupId>
+      <artifactId>json</artifactId>
+      <version>20090211</version>
       <scope>compile</scope>
     </dependency>
   </dependencies>

@@ -3,6 +3,8 @@ package com.harry2258.Alfred.commands;
 import com.harry2258.Alfred.api.Command;
 import com.harry2258.Alfred.api.Config;
 import com.harry2258.Alfred.api.PermissionManager;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.pircbotx.hooks.events.MessageEvent;
 
 public class Kill extends Command {
@@ -16,9 +18,16 @@ public class Kill extends Command {
 
     @Override
     public boolean execute(MessageEvent event) {
-        event.getBot().stopBotReconnect();
-        event.getBot().sendIRC().quitServer("Shutting down...");
-        return true;
+        try {
+         if (manager.hasPermission("command.exec", event.getUser(), event.getChannel())) {
+            event.getBot().stopBotReconnect();
+            event.getBot().sendIRC().quitServer("Shutting down...");
+            return true;
+            }
+        } catch (Exception ex) {
+            Logger.getLogger(Kill.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
     }
 
     @Override

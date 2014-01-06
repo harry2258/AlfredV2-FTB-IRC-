@@ -9,7 +9,6 @@ import org.pircbotx.Configuration;
 import org.pircbotx.PircBotX;
 import org.reflections.Reflections;
 import org.slf4j.impl.SimpleLogger;
-import org.slf4j.impl.StaticLoggerBinder;
 
 import java.nio.charset.Charset;
 import java.util.Set;

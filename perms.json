@@ -1,1 +1,1 @@
-{"Perms":{"Exec":["batman"],"Everyone":["command.mcstatus","command.chstatus","command.custom"],"ModPerms":["command.mods","command.google","command.add","command.mcstatus","command.ignore","command.unignore","command.test"],"Admins":["batman"],"Mods":["niel"]}}
+{"Perms":{"Exec":["batman"],"ModPerms":["command.mods","command.google","command.add","command.mcstatus","command.ignore","command.unignore","command.test"],"Everyone":["command.mcstatus","command.chstatus","command.custom"],"Admins":["batman","progwml6|L"],"Mods":["niel"]}}
