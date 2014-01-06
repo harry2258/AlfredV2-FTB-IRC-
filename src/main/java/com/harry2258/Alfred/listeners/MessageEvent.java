@@ -44,7 +44,7 @@ public class MessageEvent extends ListenerAdapter {
             try {
                 String commandname = event.getMessage().split(" ")[0].substring(1).toLowerCase();
                 File commandfile = new File("commands/" + event.getChannel().getName() + "/" + commandname + ".cmd");
-                String mod = "command.mod";
+                String mod = "command.custom";
                 if (commandfile.exists() && manager.hasPermission(mod, event.getUser(), event.getChannel())) {
                     BufferedReader in = new BufferedReader(new FileReader(commandfile));
                     String tmp;

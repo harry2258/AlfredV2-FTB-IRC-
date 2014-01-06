@@ -45,7 +45,7 @@ public class Setcmd extends Command {
                 } else  { event.getChannel().send().message("lines must be less than or equal to 3!");return false; }
                 writer.flush();
                 writer.close();
-                event.getChannel().send().message("'"+ commandname + "' was set to '" + sb.toString() +"'");
+                event.getUser().send().notice("'"+ commandname + "' was set to '" + sb.toString() +"'");
                 return true;
             }catch (Exception e){
             }
