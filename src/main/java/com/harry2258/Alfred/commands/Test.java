@@ -19,6 +19,7 @@ public class Test extends Command {
     public boolean execute(MessageEvent event) {
         event.getChannel().send().message("Test!");
         event.getChannel().send().message(event.getUser().getUserLevels(event.getChannel()).toString());
+
         return true;
     }
 

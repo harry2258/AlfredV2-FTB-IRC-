@@ -4,6 +4,7 @@
  */
 package com.harry2258.Alfred.api;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
@@ -184,7 +185,7 @@ public class Utils {
         try {
         final URL url = new URL("http://" + address);
         final HttpURLConnection urlConn = (HttpURLConnection) url.openConnection();
-        urlConn.setConnectTimeout(1000 * 10); // mTimeout is in seconds
+        urlConn.setConnectTimeout(4000);
         final long startTime = System.currentTimeMillis();
         urlConn.connect();
         final long endTime = System.currentTimeMillis();
@@ -201,14 +202,4 @@ public class Utils {
         return false;
     }
     
-    public static  boolean isJSONObject(String possibleJson) {
-        boolean valid = false;
-            try {
-            new JsonParser().parse(possibleJson);
-            valid = true;
-        } catch (JsonParseException e) {
-            valid = false;
-        }
-        return valid;
-    }
 }

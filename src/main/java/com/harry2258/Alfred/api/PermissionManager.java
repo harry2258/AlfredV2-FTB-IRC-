@@ -19,8 +19,8 @@ import java.util.regex.Pattern;
 
 public class PermissionManager {
 
-    private Properties modproperties;
-    private Properties properties;
+    public Properties modproperties;
+    public Properties properties;
     private Config configs;
     
     public PermissionManager(Config conf) {
@@ -43,6 +43,7 @@ public class PermissionManager {
                     out.newLine();
                 } 
                 out.close();
+                s.close();
                 System.out.println("[!!] Done! [!!]");
             }
             
@@ -61,6 +62,7 @@ public class PermissionManager {
                     out.newLine();
                 } 
                 out.close();
+                s.close();
                 System.out.println("[!!] Done! [!!]");
             }
             properties.load(new FileInputStream("permissions.properties"));
@@ -71,17 +73,33 @@ public class PermissionManager {
         
         System.out.println("\n\n=======================\nPERMISSIONS\n=======================");
         for (String s : properties.stringPropertyNames()) {
-            System.out.println(s);
+            List<String> permissions = Arrays.asList(properties.getProperty(s).split(" "));
+            System.out.println(s + ": " + permissions.toString());
         }
         System.out.println("\n\n=======================\nMOD PERMISSIONS\n=======================");
         for (String s : modproperties.stringPropertyNames()) {
-            System.out.println(s);
+            List<String> permissions = Arrays.asList(modproperties.getProperty(s).split(" "));
+            System.out.println(s + ": " + permissions.toString());
         }
     }
-    
-    public void reload() throws IOException {
+    public void reload() throws FileNotFoundException, IOException{
+        //moar copypasta :3
         properties.load(new FileInputStream("permissions.properties"));
         modproperties.load(new FileInputStream("modpermissions.properties"));
+        
+        System.out.println("\n\n=======================\nPERMISSIONS\n=======================");
+        for (String s : properties.stringPropertyNames()) {
+            List<String> permissions = Arrays.asList(properties.getProperty(s).split(" "));
+            System.out.println(s + ": " + permissions.toString());
+        }
+        
+        
+        System.out.println("\n\n=======================\nMOD PERMISSIONS\n=======================");
+        for (String s : modproperties.stringPropertyNames()) {
+            List<String> permissions = Arrays.asList(modproperties.getProperty(s).split(" "));
+            System.out.println(s + ": " + permissions.toString());
+        }
+        
     }
 
     public boolean hasPermission(String permission, User user, Channel channel) {

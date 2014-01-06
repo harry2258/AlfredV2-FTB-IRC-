@@ -2,6 +2,7 @@ package com.harry2258.Alfred.commands;
 
 import com.harry2258.Alfred.api.Command;
 import com.harry2258.Alfred.api.Config;
+import com.harry2258.Alfred.api.JsonUtils;
 import com.harry2258.Alfred.api.PermissionManager;
 import com.harry2258.Alfred.api.Utils;
 
@@ -40,7 +41,7 @@ public class Chstatus extends Command {
                 String st;
                 chRepos.add("CreeperRepo");
                 while ((st = re.readLine()) != null) {
-                    tests.add(Utils.isJSONObject(st));
+                    tests.add(JsonUtils.isJSONObject(st));
                     st = st.replace("{", "").replace("}", "").replace("\"", "");
                     String[] splitString = st.split(",");
                     for(String entry : splitString) {
