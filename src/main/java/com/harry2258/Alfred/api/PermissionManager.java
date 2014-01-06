@@ -114,63 +114,32 @@ public class PermissionManager {
             return true;
         }
         
-        /*
-        List<String> modperms = Arrays.asList(modproperties.getProperty("perms").split(" "));
-        if (modperms.contains(permission)) {
-            permmatch = true;
-            if (user.isIrcop() || channel.hasVoice(user)) {
-                return true;
-            }
-            for (String host : modproperties.stringPropertyNames()) {
-                nick = host.split("\\@")[0];
-                Pattern p = Pattern.compile(user.getLogin());
-                Matcher m = p.matcher(nick);
-                if (m.find()) {
-                    nickmatch = true;
-                }
-                if (nickmatch && user.isVerified()) {
-                    return true;
-                }
-            }
-        }
-        */
-        
-        System.out.println("=================================\nINFO");
         String perms = JsonUtils.getStringFromFile(JsonUtils.Jsonfile.toString());
         JSONObject jsonObj = new JSONObject(perms);
-        System.out.println("Nickmatch: " + jsonObj.getJSONObject("Perms").getString("Mods").contains(user.getNick()));
-        System.out.println("PermMatch: " + jsonObj.getJSONObject("Perms").getString("ModPerms").contains(permission));
-        System.out.println("Is Logged in: " + user.isVerified());
-        System.out.println("=================================");
+        
+        if (jsonObj.getJSONObject("Perms").getString("Everyone").contains(permission)) {
+            if (user.isVerified()) {
+            return true;
+            } else { user.send().notice("You need to be logged in to use this!");}
+        }
+        
         if (jsonObj.getJSONObject("Perms").getString("ModPerms").contains(permission)) {
             if (jsonObj.getJSONObject("Perms").getString("Mods").contains(user.getNick()) && user.isVerified() || channel.hasVoice(user) ) {
             return true;
             }
         }
         
-        
-        
-        //huehuheue copypasta from Config.java
-        /*
-        for (String host : properties.stringPropertyNames()) {
-            nick = host.split("\\@")[0];
-            Pattern p = Pattern.compile(user.getLogin());
-            Matcher m = p.matcher(nick);
-            if (m.find()) {
-                nickmatch = true;
-            }
-            
-            if (nickmatch && user.isVerified()) {
-                List<String> permissions = Arrays.asList(properties.getProperty(host).split(" "));
-                if (permissions.contains(permission) || permissions.contains("permissions.*")) {
-                    return true;
-                }
-                
-            } else {
-                return false;
+        if (jsonObj.getJSONObject("Perms").getString("Admins").contains(user.getNick())) {
+            if (user.isVerified()) {
+            return true;
             }
         }
-        */
+        
+        if (jsonObj.getJSONObject("Perms").getString("Exec").contains(user.getNick())) {
+            if (user.isVerified()) {
+            return true;
+            }
+        }
         
         return false;
     }

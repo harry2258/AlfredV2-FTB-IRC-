@@ -31,6 +31,13 @@ public class Remove extends Command {
         String[] args = event.getMessage().split(" ");
         String type = args[1];
         String mod = event.getBot().getUserChannelDao().getUser(args[2]).getNick();
+        String check = args[2];
+        String command = null;
+           if (!check.contains("command.")){
+               command = "command." + check;
+           } else { command = check; }
+           
+           
     if (type.equalsIgnoreCase("mod")) {
         if (args.length == 3) {
             
@@ -64,14 +71,10 @@ public class Remove extends Command {
             }
         }
     }
+    
     if (type.equalsIgnoreCase("modperms")) {
         if (args.length == 3) {
             try {
-                String check = args[2];
-                String command = null;
-                if (!check.contains("command.")){
-                    command = "command." + check;
-                } else { command = check; }
                 String strFileJson = JsonUtils.getStringFromFile(JsonUtils.Jsonfile.toString());
                 JSONObject jsonObj = new JSONObject(strFileJson);
                 if (jsonObj.getJSONObject("Perms").getString("ModPerms").contains(command)) {
@@ -83,6 +86,71 @@ public class Remove extends Command {
                     
                     for (int x = 0; x < finalstring.length; x++) {
                         jsonObj.getJSONObject("Perms").append("ModPerms", finalstring[x]);
+                        
+                    }
+                    
+                    JsonUtils.writeJsonFile(JsonUtils.jsonFilePath, jsonObj.toString());
+                    String strJson = JsonUtils.getStringFromFile(JsonUtils.Jsonfile.toString());
+                    event.getUser().send().notice(command + " was removed from the list!");
+                    return true;
+                } else {
+                    event.getChannel().send().message(command + " is not on the list!");
+                return true;
+                }
+            } catch (Exception ex) {
+                System.out.println(ex);
+            }
+        }
+    }
+    
+    if (type.equalsIgnoreCase("admin")) {
+        if (args.length == 3) {
+            
+            try {
+                String strFileJson = JsonUtils.getStringFromFile(JsonUtils.Jsonfile.toString());
+                JSONObject jsonObj = new JSONObject(strFileJson);
+                ArrayList<String> tests = new ArrayList<String>();
+                ArrayList<String> testss = new ArrayList<String>();
+                if (jsonObj.getJSONObject("Perms").getString("Admins").contains(mod)) {
+                    String test = jsonObj.getJSONObject("Perms").getJSONArray("Admins").toString();
+                    jsonObj.getJSONObject("Perms").remove("Admins");
+                    String string = test.replace(",\"" + mod + "\"" , "").replace("\"", "").replaceAll("]", "").replace("[", "");
+                    String newstring = string.replaceAll(",", " ");
+                    String[] finalstring = newstring.split(" ");
+                    
+                    for (int x = 0; x < finalstring.length; x++) {
+                        jsonObj.getJSONObject("Perms").append("Admins", finalstring[x]);
+                        
+                    }
+                    
+                    JsonUtils.writeJsonFile(JsonUtils.jsonFilePath, jsonObj.toString());
+                    String strJson = JsonUtils.getStringFromFile(JsonUtils.Jsonfile.toString());
+                    event.getUser().send().notice(mod + " was removed from the list!");
+                    return true;
+                } else {
+                    event.getChannel().send().message(mod + " is not on the list!");
+                return true;
+                }
+            } catch (Exception ex) {
+                System.out.println(ex);
+            }
+        }
+    }
+    
+    if (type.equalsIgnoreCase("everyone")) {
+        if (args.length == 3) {
+            try {
+                String strFileJson = JsonUtils.getStringFromFile(JsonUtils.Jsonfile.toString());
+                JSONObject jsonObj = new JSONObject(strFileJson);
+                if (jsonObj.getJSONObject("Perms").getString("Everyone").contains(command)) {
+                    String test = jsonObj.getJSONObject("Perms").getJSONArray("Everyone").toString();
+                    jsonObj.getJSONObject("Perms").remove("Everyone");
+                    String string = test.replace(",\"" + command + "\"" , "").replace("\"", "").replaceAll("]", "").replace("[", "");
+                    String newstring = string.replaceAll(",", " ");
+                    String[] finalstring = newstring.split(" ");
+                    
+                    for (int x = 0; x < finalstring.length; x++) {
+                        jsonObj.getJSONObject("Perms").append("Everyone", finalstring[x]);
                         
                     }
                     

@@ -3,6 +3,7 @@ package com.harry2258.Alfred;
 import com.harry2258.Alfred.api.Command;
 import com.harry2258.Alfred.api.CommandRegistry;
 import com.harry2258.Alfred.api.Config;
+import com.harry2258.Alfred.api.JsonUtils;
 import com.harry2258.Alfred.api.PermissionManager;
 import org.pircbotx.Configuration;
 import org.pircbotx.PircBotX;
@@ -35,7 +36,9 @@ public class Main {
             PermissionManager manager = new PermissionManager(config);
             System.out.println("Loading and registering commands");
             config.load();
-            manager.load();
+            if (!JsonUtils.jsonFilePath.exists()){
+                JsonUtils.createJsonStructure();
+            }
             Reflections reflections = new Reflections("com.harry2258.Alfred.commands");
             Set<Class<? extends Command>> subTypes = reflections.getSubTypesOf(Command.class);
             for (Class c : subTypes) {

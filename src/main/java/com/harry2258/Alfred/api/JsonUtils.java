@@ -87,7 +87,7 @@ public class JsonUtils {
         try {
             jsonFilePath.createNewFile();
 
-            String jsonString = "{\"Perms\":{\"Mods\":[\"batman\"], \"ModPerms\": [\"command.mods\", \"command.google\"]}}";
+            String jsonString = "{\"Perms\":{\"Mods\":[\"niel\"], \"ModPerms\": [\"command.mods\", \"command.google\"], \"Admins\":[\"batman\"], \"Everyone\": [\"command.mcstatus\", \"command.chstatus\"], \"Exec\":[\"batman\"]}}";
 
             writeJsonFile(jsonFilePath, jsonString);                
 
