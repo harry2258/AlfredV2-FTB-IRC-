@@ -68,9 +68,9 @@ public class Chstatus extends Command {
                 
                 for (Boolean status : tests) {
                     if(status.equals(true) ) {
-                        Status.add(Colors.DARK_GREEN + "Online" + Colors.NORMAL + " | ");
+                        Status.add(Colors.DARK_GREEN + "✓" + Colors.NORMAL + " | ");
                     } else {
-                        Status.add(Colors.RED + "Offline" + Colors.NORMAL + " | ");
+                        Status.add(Colors.RED + "✘" + Colors.NORMAL + " | ");
                     }
                 }
                 
