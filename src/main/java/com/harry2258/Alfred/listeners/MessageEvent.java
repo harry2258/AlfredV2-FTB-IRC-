@@ -4,6 +4,7 @@ import com.harry2258.Alfred.api.PermissionManager;
 import com.harry2258.Alfred.api.Config;
 import com.harry2258.Alfred.api.CommandRegistry;
 import com.harry2258.Alfred.api.Command;
+import static com.harry2258.Alfred.api.CommandRegistry.commands;
 import com.harry2258.Alfred.commands.Ignore;
 import org.pircbotx.Colors;
 import org.pircbotx.hooks.ListenerAdapter;
@@ -58,6 +59,7 @@ public class MessageEvent extends ListenerAdapter {
                 }
                 String classname = Character.toUpperCase(event.getMessage().split(" ")[0].charAt(1)) + event.getMessage().split(" ")[0].substring(2).toLowerCase();
                 String permission = "command." + classname.toLowerCase();
+                if (commands.containsKey(classname)) {
                 if (manager.hasPermission(permission, event.getUser(), event.getChannel())) {
                     Command command = CommandRegistry.getCommand(classname);
                     command.setConfig(config);
@@ -67,7 +69,10 @@ public class MessageEvent extends ListenerAdapter {
                     }
                     
                 } else {
-                    event.getChannel().send().message(config.getPermissionDenied().replaceAll("%USERNAME%", event.getUser().getNick()));
+                    event.getUser().send().notice(config.getPermissionDenied().replaceAll("%USERNAME%", event.getUser().getNick()));
+                }
+              } else {
+                event.getUser().send().notice("There is no command by that name!");
                 }
             } catch (Exception e) {
                 /*
