@@ -143,17 +143,15 @@ public class PermissionManager {
         System.out.println("Is Logged in: " + user.isVerified());
         System.out.println("=================================");
         if (jsonObj.getJSONObject("Perms").getString("ModPerms").contains(permission)) {
-            if (jsonObj.getJSONObject("Perms").getString("Mods").contains(user.getNick()) && user.isVerified()) {
+            if (jsonObj.getJSONObject("Perms").getString("Mods").contains(user.getNick()) && user.isVerified() || channel.hasVoice(user) ) {
             return true;
             }
-        } else {
-            return false;
         }
         
         
         
         //huehuheue copypasta from Config.java
-        
+        /*
         for (String host : properties.stringPropertyNames()) {
             nick = host.split("\\@")[0];
             Pattern p = Pattern.compile(user.getLogin());
@@ -172,6 +170,7 @@ public class PermissionManager {
                 return false;
             }
         }
+        */
         
         return false;
     }

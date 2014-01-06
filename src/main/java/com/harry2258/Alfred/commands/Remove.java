@@ -36,7 +36,6 @@ public class Remove extends Command {
             
             try {
                 String strFileJson = JsonUtils.getStringFromFile(JsonUtils.Jsonfile.toString());
-                event.getChannel().send().message(strFileJson);
                 JSONObject jsonObj = new JSONObject(strFileJson);
                 ArrayList<String> tests = new ArrayList<String>();
                 ArrayList<String> testss = new ArrayList<String>();
@@ -54,7 +53,7 @@ public class Remove extends Command {
                     
                     JsonUtils.writeJsonFile(JsonUtils.jsonFilePath, jsonObj.toString());
                     String strJson = JsonUtils.getStringFromFile(JsonUtils.Jsonfile.toString());
-                    event.getChannel().send().message(strJson);
+                    event.getUser().send().notice(mod + " was removed from the list!");
                     return true;
                 } else {
                     event.getChannel().send().message(mod + " is not on the list!");
@@ -68,14 +67,17 @@ public class Remove extends Command {
     if (type.equalsIgnoreCase("modperms")) {
         if (args.length == 3) {
             try {
-                String command = args[2];
+                String check = args[2];
+                String command = null;
+                if (!check.contains("command.")){
+                    command = "command." + check;
+                } else { command = check; }
                 String strFileJson = JsonUtils.getStringFromFile(JsonUtils.Jsonfile.toString());
-                event.getChannel().send().message(strFileJson);
                 JSONObject jsonObj = new JSONObject(strFileJson);
                 if (jsonObj.getJSONObject("Perms").getString("ModPerms").contains(command)) {
                     String test = jsonObj.getJSONObject("Perms").getJSONArray("ModPerms").toString();
                     jsonObj.getJSONObject("Perms").remove("ModPerms");
-                    String string = test.replace(",\"" + mod + "\"" , "").replace("\"", "").replaceAll("]", "").replace("[", "");
+                    String string = test.replace(",\"" + command + "\"" , "").replace("\"", "").replaceAll("]", "").replace("[", "");
                     String newstring = string.replaceAll(",", " ");
                     String[] finalstring = newstring.split(" ");
                     
@@ -86,7 +88,7 @@ public class Remove extends Command {
                     
                     JsonUtils.writeJsonFile(JsonUtils.jsonFilePath, jsonObj.toString());
                     String strJson = JsonUtils.getStringFromFile(JsonUtils.Jsonfile.toString());
-                    event.getChannel().send().message(strJson);
+                    event.getUser().send().notice(command + " was removed from the list!");
                     return true;
                 } else {
                     event.getChannel().send().message(command + " is not on the list!");
