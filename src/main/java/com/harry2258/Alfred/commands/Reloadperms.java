@@ -4,34 +4,30 @@
  */
 package com.harry2258.Alfred.commands;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonParser;
 import com.harry2258.Alfred.api.Command;
 import com.harry2258.Alfred.api.Config;
+import com.harry2258.Alfred.api.JsonUtils;
 import com.harry2258.Alfred.api.PermissionManager;
+import org.json.JSONObject;
 import org.pircbotx.hooks.events.MessageEvent;
 
 /**
  *
  * @author Hardik
  */
-public class ReloadPerms extends Command {
+public class Reloadperms extends Command {
     private PermissionManager manager;
     private Config config;
     
-    public ReloadPerms(){
-        super("ReloadPerms", "Reloads the permission file!");
+    public Reloadperms(){
+        super("Reloadperms", "Reloads the permission file!");
     }
     @Override
     public boolean execute(MessageEvent event) { 
-        try {
-        event.getChannel().send().message("reloading permissions!");
-        config.load();
-        manager.load();
-        event.getChannel().send().message("Permission were reloaded!");
-        return true;
-                } catch (Exception e) {
-                    System.out.println(e);
-                    return false;
-                }
+        //Shouldn't need this for now
+        return false;
         
     }
 

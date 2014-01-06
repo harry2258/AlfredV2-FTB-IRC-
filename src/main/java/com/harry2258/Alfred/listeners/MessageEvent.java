@@ -25,8 +25,21 @@ public class MessageEvent extends ListenerAdapter {
     @Override
     public void onMessage(org.pircbotx.hooks.events.MessageEvent event) {
         String trigger = config.getTrigger();
+        String[] args = event.getMessage().split(" ");
         if (event.getMessage().startsWith(trigger) && !Ignore.ignored.contains(event.getUser().getHostmask())) {
-            
+            /*
+            if (event.getMessage().equalsIgnoreCase("~login")){
+                System.out.println("TEST!! " + args[0]);
+                //System.out.println("TEST!! " + args[1]);
+                if (args.length == 2){
+                    event.getChannel().send().message("User Login: " + event.getBot().getUserChannelDao().getUser(args[1]).getLogin() + " | User Nick: " + event.getBot().getUserChannelDao().getUser(args[1]).getNick() + " | User UUID: " + event.getBot().getUserChannelDao().getUser(args[1]).getUserId() + " | Is verified?: " + Boolean.valueOf(event.getBot().getUserChannelDao().getUser(args[1]).isVerified()));
+                    return;
+                } else {
+                    event.getChannel().send().message("User Login: " + event.getUser().getLogin() + " | User Nick: " + event.getUser().getNick() + " | User UUID: " + event.getUser().getUserId() + " | Is verified?: " +Boolean.valueOf(event.getUser().isVerified()));
+                }
+                return;
+            }
+            */
             try {
                 String commandname = event.getMessage().split(" ")[0].substring(1).toLowerCase();
                 File commandfile = new File("commands/" + event.getChannel().getName() + "/" + commandname + ".cmd");

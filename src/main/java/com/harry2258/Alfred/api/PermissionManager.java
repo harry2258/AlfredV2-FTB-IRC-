@@ -16,6 +16,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import org.json.JSONObject;
 
 public class PermissionManager {
 
@@ -102,7 +103,7 @@ public class PermissionManager {
         
     }
 
-    public boolean hasPermission(String permission, User user, Channel channel) {
+    public boolean hasPermission(String permission, User user, Channel channel) throws Exception {
         boolean hostmatch = false;
         boolean nickmatch = false;
         boolean permmatch = false;
@@ -112,6 +113,8 @@ public class PermissionManager {
         if (configs.isAdmin(user.getNick(), user.getHostmask())) {
             return true;
         }
+        
+        /*
         List<String> modperms = Arrays.asList(modproperties.getProperty("perms").split(" "));
         if (modperms.contains(permission)) {
             permmatch = true;
@@ -130,8 +133,27 @@ public class PermissionManager {
                 }
             }
         }
+        */
+        
+        System.out.println("=================================\nINFO");
+        String perms = JsonUtils.getStringFromFile(JsonUtils.Jsonfile.toString());
+        JSONObject jsonObj = new JSONObject(perms);
+        System.out.println("Nickmatch: " + jsonObj.getJSONObject("Perms").getString("Mods").contains(user.getNick()));
+        System.out.println("PermMatch: " + jsonObj.getJSONObject("Perms").getString("ModPerms").contains(permission));
+        System.out.println("Is Logged in: " + user.isVerified());
+        System.out.println("=================================");
+        if (jsonObj.getJSONObject("Perms").getString("ModPerms").contains(permission)) {
+            if (jsonObj.getJSONObject("Perms").getString("Mods").contains(user.getNick()) && user.isVerified()) {
+            return true;
+            }
+        } else {
+            return false;
+        }
+        
+        
         
         //huehuheue copypasta from Config.java
+        
         for (String host : properties.stringPropertyNames()) {
             nick = host.split("\\@")[0];
             Pattern p = Pattern.compile(user.getLogin());
@@ -150,6 +172,7 @@ public class PermissionManager {
                 return false;
             }
         }
+        
         return false;
     }
 
