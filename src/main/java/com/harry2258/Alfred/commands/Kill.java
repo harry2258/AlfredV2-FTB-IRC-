@@ -2,9 +2,11 @@ package com.harry2258.Alfred.commands;
 
 import com.harry2258.Alfred.api.Command;
 import com.harry2258.Alfred.api.Config;
+import com.harry2258.Alfred.api.JsonUtils;
 import com.harry2258.Alfred.api.PermissionManager;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.json.JSONObject;
 import org.pircbotx.hooks.events.MessageEvent;
 
 public class Kill extends Command {
@@ -19,7 +21,9 @@ public class Kill extends Command {
     @Override
     public boolean execute(MessageEvent event) {
         try {
-         if (manager.hasPermission("command.exec", event.getUser(), event.getChannel())) {
+         String perms = JsonUtils.getStringFromFile(JsonUtils.Jsonfile.toString());
+            JSONObject jsonObj = new JSONObject(perms);
+            if (jsonObj.getJSONObject("Perms").getString("Exec").contains(event.getUser().getNick())) {
             event.getBot().stopBotReconnect();
             event.getBot().sendIRC().quitServer("Shutting down...");
             return true;

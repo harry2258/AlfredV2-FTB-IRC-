@@ -21,6 +21,7 @@ import java.util.logging.Logger;
  */
 public class Main {
     public static long startup = 0;
+    public static PircBotX bot;
 
     public static void main(String[] args) {
         System.setProperty(SimpleLogger.SHOW_DATE_TIME_KEY, "true");
@@ -53,7 +54,7 @@ public class Main {
             builder.setFinger(config.getCtcpFinger());
             builder.setEncoding(Charset.isSupported("UTF-8") ? Charset.forName("UTF-8") : Charset.defaultCharset());
             builder.setNickservPassword(config.getBotPassword());
-            builder.setVersion("Alphbot v2.0");
+            builder.setVersion("Alfred v2.0");
             builder.setServer(config.getServerHostame(), Integer.parseInt(config.getServerPort()), config.getServerPassword());
             builder.getListenerManager().addListener(new com.harry2258.Alfred.listeners.MessageEvent(config, manager));
             builder.getListenerManager().addListener(new com.harry2258.Alfred.listeners.InviteEvent(config, manager));
@@ -70,4 +71,3 @@ public class Main {
         }
     }
 }
-

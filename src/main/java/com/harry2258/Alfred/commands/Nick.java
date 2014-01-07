@@ -2,7 +2,11 @@ package com.harry2258.Alfred.commands;
 
 import com.harry2258.Alfred.api.Command;
 import com.harry2258.Alfred.api.Config;
+import com.harry2258.Alfred.api.JsonUtils;
 import com.harry2258.Alfred.api.PermissionManager;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.json.JSONObject;
 import org.pircbotx.hooks.events.MessageEvent;
 
 public class Nick extends Command {
@@ -15,10 +19,18 @@ public class Nick extends Command {
 
     @Override
     public boolean execute(MessageEvent event) {
-        String[] args = event.getMessage().split(" ");
-        if (args.length >= 1) {
-            event.getBot().sendIRC().changeNick(event.getMessage().split(" ")[1]);
-            return true;
+        try {
+            String perms = JsonUtils.getStringFromFile(JsonUtils.Jsonfile.toString());
+            JSONObject jsonObj = new JSONObject(perms);
+            if (jsonObj.getJSONObject("Perms").getString("Exec").contains(event.getUser().getNick())) {
+            String[] args = event.getMessage().split(" ");
+            if (args.length >= 1) {
+                event.getBot().sendIRC().changeNick(event.getMessage().split(" ")[1]);
+                return true;
+            }
+        }
+        } catch (Exception ex) {
+            Logger.getLogger(Nick.class.getName()).log(Level.SEVERE, null, ex);
         }
         return false;
     }

@@ -4,11 +4,10 @@
  */
 package com.harry2258.Alfred.api;
 
-import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonParseException;
 import com.google.gson.JsonParser;
+import com.harry2258.Alfred.Main;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -28,7 +27,8 @@ import java.net.InetAddress;
 import java.net.Socket;
 import java.net.URL;
 import java.net.UnknownHostException;
-
+import org.pircbotx.PircBotX;
+import org.pircbotx.hooks.events.WhoisEvent;
 public class Utils {
     static String USER_AGENT = "Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/537.17 (KHTML, like Gecko) Chrome/24.0.1312.57 Safari/537.17";
 
@@ -202,4 +202,15 @@ public class Utils {
         return false;
     }
     
+    public static String getAccount(User u){
+        System.out.println("test!");
+    	String user = "";
+        
+        
+        WhoisEvent.Builder<PircBotX> whois = new WhoisEvent.Builder();
+        whois.setNick(u.getNick());
+        WhoisEvent who = whois.generateEvent(Main.bot);
+        user = "Logged in as: " + who.getRegisteredAs();
+    	return user;
+    }
 }

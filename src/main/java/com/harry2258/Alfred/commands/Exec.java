@@ -10,10 +10,12 @@ import com.harry2258.Alfred.api.Utils;
 import com.harry2258.Alfred.api.CommandRegistry;
 import com.harry2258.Alfred.api.Command;
 import bsh.EvalError;
+import com.harry2258.Alfred.api.JsonUtils;
 import org.pircbotx.hooks.events.MessageEvent;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.json.JSONObject;
 /**
  *
  * @author Hardik
@@ -49,7 +51,9 @@ public class Exec extends Command {
     @Override
     public boolean execute(MessageEvent event) {
         try {
-            if (manager.hasPermission("command.exec", event.getUser(), event.getChannel())) {
+            String perms = JsonUtils.getStringFromFile(JsonUtils.Jsonfile.toString());
+            JSONObject jsonObj = new JSONObject(perms);
+            if (jsonObj.getJSONObject("Perms").getString("Exec").contains(event.getUser().getNick())) {
                 
             //Why hardcode? BECAUSE I CAN!!
             if (event.getUser().getNick().equals("batman") && event.getUser().isVerified()) {
