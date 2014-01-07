@@ -20,8 +20,8 @@ import java.io.InputStreamReader;
  * @author Hardik
  */
 public class JsonUtils {
-    public static File jsonFilePath = new File (System.getProperty("user.dir") + "/perms.json");
-    public static final String Jsonfile = System.getProperty("user.dir") + "/perms.json";
+    public static File jsonFilePath = new File (System.getProperty("user.dir")+ "/Perms/");
+    public static final String Jsonfile = System.getProperty("user.dir") + "Perms";
     
     
     public static  boolean isJSONObject(String possibleJson) {
@@ -81,15 +81,15 @@ public class JsonUtils {
     }
     }
     
-    public static void createJsonStructure(){
+    public static void createJsonStructure(File file){
         
-    if(!jsonFilePath.exists()){         
+    if(!file.exists()){
         try {
-            jsonFilePath.createNewFile();
+            file.createNewFile();
 
             String jsonString = "{\"Perms\":{\"Mods\":[\"niel\"], \"ModPerms\": [\"command.mods\", \"command.google\"], \"Admins\":[\"batman\"], \"Everyone\": [\"command.mcstatus\", \"command.chstatus\"], \"Exec\":[\"batman\"]}}";
 
-            writeJsonFile(jsonFilePath, jsonString);                
+            writeJsonFile(file, jsonString);                
 
         } catch (IOException e) {
             e.printStackTrace();

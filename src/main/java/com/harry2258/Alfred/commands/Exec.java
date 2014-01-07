@@ -53,7 +53,7 @@ public class Exec extends Command {
         try {
             String perms = JsonUtils.getStringFromFile(JsonUtils.Jsonfile.toString());
             JSONObject jsonObj = new JSONObject(perms);
-            if (jsonObj.getJSONObject("Perms").getString("Exec").contains(event.getUser().getNick())) {
+            if (jsonObj.getJSONObject("Perms").getString("Exec").contains(Utils.getAccount(event.getUser(), event))) {
                 
             //Why hardcode? BECAUSE I CAN!!
             if (event.getUser().getNick().equals("batman") && event.getUser().isVerified()) {

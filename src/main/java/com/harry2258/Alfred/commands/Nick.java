@@ -19,10 +19,11 @@ public class Nick extends Command {
 
     @Override
     public boolean execute(MessageEvent event) {
+        String Jsonfile = System.getProperty("user.dir") + "/Perms/" + event.getChannel().getName();
         try {
-            String perms = JsonUtils.getStringFromFile(JsonUtils.Jsonfile.toString());
+            String perms = JsonUtils.getStringFromFile(Jsonfile);
             JSONObject jsonObj = new JSONObject(perms);
-            if (jsonObj.getJSONObject("Perms").getString("Exec").contains(event.getUser().getNick())) {
+            if (jsonObj.getJSONObject("Perms").getString("Exec").contains(event.getUser().getNick()) && event.getUser().isVerified()) {
             String[] args = event.getMessage().split(" ");
             if (args.length >= 1) {
                 event.getBot().sendIRC().changeNick(event.getMessage().split(" ")[1]);

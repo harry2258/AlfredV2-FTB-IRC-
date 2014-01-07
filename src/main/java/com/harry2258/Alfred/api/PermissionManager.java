@@ -20,7 +20,7 @@ public class PermissionManager {
         this.configs = conf;
     }
 
-    public boolean hasPermission(String permission, User user, Channel channel) throws Exception {
+    public boolean hasPermission(String permission, User user, Channel channel, org.pircbotx.hooks.events.MessageEvent event) throws Exception {
         boolean hostmatch = false;
         boolean nickmatch = false;
         boolean permmatch = false;
@@ -30,8 +30,8 @@ public class PermissionManager {
         if (configs.isAdmin(user.getNick(), user.getHostmask())) {
             return true;
         }
-        
-        String perms = JsonUtils.getStringFromFile(JsonUtils.Jsonfile.toString());
+        String Jsonfile = System.getProperty("user.dir") + "/Perms/" + channel.getName();
+        String perms = JsonUtils.getStringFromFile(Jsonfile);
         JSONObject jsonObj = new JSONObject(perms);
         
         if (jsonObj.getJSONObject("Perms").getString("Everyone").contains(permission)) {
@@ -41,18 +41,12 @@ public class PermissionManager {
         }
         
         if (jsonObj.getJSONObject("Perms").getString("ModPerms").contains(permission)) {
-            if (jsonObj.getJSONObject("Perms").getString("Mods").contains(user.getNick()) && user.isVerified() || channel.hasVoice(user) ) {
+            if (jsonObj.getJSONObject("Perms").getString("Mods").contains(Utils.getAccount(user, event)) && user.isVerified() || channel.hasVoice(user) ) {
             return true;
             }
         }
         
-        if (jsonObj.getJSONObject("Perms").getString("Admins").contains(user.getNick())) {
-            if (user.isVerified()) {
-            return true;
-            }
-        }
-        
-        if (jsonObj.getJSONObject("Perms").getString("Exec").contains(user.getNick())) {
+        if (jsonObj.getJSONObject("Perms").getString("Admins").contains(Utils.getAccount(user, event))) {
             if (user.isVerified()) {
             return true;
             }

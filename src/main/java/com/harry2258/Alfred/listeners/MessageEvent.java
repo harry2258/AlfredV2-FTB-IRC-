@@ -5,6 +5,7 @@ import com.harry2258.Alfred.api.Config;
 import com.harry2258.Alfred.api.CommandRegistry;
 import com.harry2258.Alfred.api.Command;
 import static com.harry2258.Alfred.api.CommandRegistry.commands;
+import com.harry2258.Alfred.api.Utils;
 import com.harry2258.Alfred.commands.Ignore;
 import org.pircbotx.Colors;
 import org.pircbotx.hooks.ListenerAdapter;
@@ -12,12 +13,15 @@ import org.pircbotx.hooks.ListenerAdapter;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.pircbotx.PircBotX;
+import org.pircbotx.hooks.WaitForQueue;
 
 import org.pircbotx.hooks.events.WhoisEvent;
 
 public class MessageEvent extends ListenerAdapter {
-    
+    public static PircBotX bot;
     private Config config;
     private PermissionManager manager;
 
@@ -29,30 +33,17 @@ public class MessageEvent extends ListenerAdapter {
         public void onMessage(org.pircbotx.hooks.events.MessageEvent event) {
         String trigger = config.getTrigger();
         String[] args = event.getMessage().split(" ");
-        if (event.getMessage().startsWith(trigger) && !Ignore.ignored.contains(event.getUser().getHostmask())) {
-            
-            if (event.getMessage().equalsIgnoreCase("`login")){
-                //System.out.println("TEST!! " + args[1]);
-//                if (args.length == 2){
-//                    event.getChannel().send().message("User Login: " + event.getBot().getUserChannelDao().getUser(args[1]).getLogin() + " | User Nick: " + event.getBot().getUserChannelDao().getUser(args[1]).getNick() + " | User UUID: " + event.getBot().getUserChannelDao().getUser(args[1]).getUserId() + " | Is verified?: " + Boolean.valueOf(event.getBot().getUserChannelDao().getUser(args[1]).isVerified()));
-//                    return;
-//                } else {
-//                    event.getChannel().send().message("User Login: " + event.getUser().getLogin() + " | User Realname: " + event.getUser().getRealName() + " | User UUID: " + event.getUser().getUserId() + " | Is verified?: " +Boolean.valueOf(event.getUser().isVerified()));
-//                }
-                
-                String whoisNick = event.getUser().getNick();
-                WhoisEvent.Builder<PircBotX> builder = new WhoisEvent.Builder<PircBotX>();
-                builder.setNick(whoisNick);
-                
-                event.getChannel().send().message("Logged in as: " + builder.getRegisteredAs());
+        if (event.getMessage().equalsIgnoreCase("login")){
+                event.getChannel().send().message("Logged in as: " + Utils.getAccount(event.getUser(), event));
                 return;
             }
+        if (event.getMessage().startsWith(trigger) && !Ignore.ignored.contains(event.getUser().getHostmask())) {
             
             try {
                 String commandname = event.getMessage().split(" ")[0].substring(1).toLowerCase();
                 File commandfile = new File("commands/" + event.getChannel().getName() + "/" + commandname + ".cmd");
                 String mod = "command.custom";
-                if (commandfile.exists() && manager.hasPermission(mod, event.getUser(), event.getChannel())) {
+                if (commandfile.exists() && manager.hasPermission(mod, event.getUser(), event.getChannel(), event)) {
                     BufferedReader in = new BufferedReader(new FileReader(commandfile));
                     String tmp;
                     
@@ -67,7 +58,7 @@ public class MessageEvent extends ListenerAdapter {
                 String classname = Character.toUpperCase(event.getMessage().split(" ")[0].charAt(1)) + event.getMessage().split(" ")[0].substring(2).toLowerCase();
                 String permission = "command." + classname.toLowerCase();
                 if (commands.containsKey(classname)) {
-                if (manager.hasPermission(permission, event.getUser(), event.getChannel())) {
+                if (manager.hasPermission(permission, event.getUser(), event.getChannel(), event)) {
                     Command command = CommandRegistry.getCommand(classname);
                     command.setConfig(config);
                     if (!command.execute(event)) {

@@ -8,6 +8,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.harry2258.Alfred.Main;
+import com.harry2258.Alfred.listeners.MessageEvent;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -28,6 +29,7 @@ import java.net.Socket;
 import java.net.URL;
 import java.net.UnknownHostException;
 import org.pircbotx.PircBotX;
+import org.pircbotx.hooks.WaitForQueue;
 import org.pircbotx.hooks.events.WhoisEvent;
 public class Utils {
     static String USER_AGENT = "Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/537.17 (KHTML, like Gecko) Chrome/24.0.1312.57 Safari/537.17";
@@ -202,15 +204,19 @@ public class Utils {
         return false;
     }
     
-    public static String getAccount(User u){
+    public static String getAccount(User u, org.pircbotx.hooks.events.MessageEvent event){
         System.out.println("test!");
     	String user = "";
-        
-        
-        WhoisEvent.Builder<PircBotX> whois = new WhoisEvent.Builder();
-        whois.setNick(u.getNick());
-        WhoisEvent who = whois.generateEvent(Main.bot);
-        user = "Logged in as: " + who.getRegisteredAs();
-    	return user;
+        event.getBot().sendRaw().rawLineNow("WHOIS " + u.getNick());
+                WaitForQueue waitForQueue = new WaitForQueue(event.getBot());
+                WhoisEvent test = null;
+                try {
+                    test = waitForQueue.waitFor(WhoisEvent.class);
+                    waitForQueue.close();
+                    user = test.getRegisteredAs();
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(MessageEvent.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                return user;
     }
 }

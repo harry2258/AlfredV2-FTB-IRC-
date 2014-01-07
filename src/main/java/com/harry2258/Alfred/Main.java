@@ -36,9 +36,6 @@ public class Main {
             PermissionManager manager = new PermissionManager(config);
             System.out.println("Loading and registering commands");
             config.load();
-            if (!JsonUtils.jsonFilePath.exists()){
-                JsonUtils.createJsonStructure();
-            }
             Reflections reflections = new Reflections("com.harry2258.Alfred.commands");
             Set<Class<? extends Command>> subTypes = reflections.getSubTypesOf(Command.class);
             for (Class c : subTypes) {

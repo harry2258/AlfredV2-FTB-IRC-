@@ -8,6 +8,7 @@ import com.harry2258.Alfred.api.Command;
 import com.harry2258.Alfred.api.Config;
 import com.harry2258.Alfred.api.JsonUtils;
 import com.harry2258.Alfred.api.PermissionManager;
+import java.io.File;
 import java.util.ArrayList;
 import org.json.JSONObject;
 import org.pircbotx.Colors;
@@ -27,7 +28,11 @@ public class Remove extends Command {
     
     @Override
     public boolean execute(MessageEvent event) {
-        JsonUtils.createJsonStructure();
+        File file = new File ("/Perms/" + event.getChannel().getName() + "/perms.json");
+        if (!file.exists()){
+            JsonUtils.createJsonStructure(file);
+        }
+        String Jsonfile = "/Perms/" + event.getChannel().getName() + "/perms.json";
         String[] args = event.getMessage().split(" ");
         String type = args[1];
         String mod = event.getBot().getUserChannelDao().getUser(args[2]).getNick();
@@ -42,7 +47,7 @@ public class Remove extends Command {
         if (args.length == 3) {
             
             try {
-                String strFileJson = JsonUtils.getStringFromFile(JsonUtils.Jsonfile.toString());
+                String strFileJson = JsonUtils.getStringFromFile(Jsonfile);
                 JSONObject jsonObj = new JSONObject(strFileJson);
                 ArrayList<String> tests = new ArrayList<String>();
                 ArrayList<String> testss = new ArrayList<String>();
@@ -58,8 +63,7 @@ public class Remove extends Command {
                         
                     }
                     
-                    JsonUtils.writeJsonFile(JsonUtils.jsonFilePath, jsonObj.toString());
-                    String strJson = JsonUtils.getStringFromFile(JsonUtils.Jsonfile.toString());
+                    JsonUtils.writeJsonFile(file, jsonObj.toString());
                     event.getUser().send().notice(mod + " was removed from the list!");
                     return true;
                 } else {
@@ -75,7 +79,7 @@ public class Remove extends Command {
     if (type.equalsIgnoreCase("modperms")) {
         if (args.length == 3) {
             try {
-                String strFileJson = JsonUtils.getStringFromFile(JsonUtils.Jsonfile.toString());
+                String strFileJson = JsonUtils.getStringFromFile(Jsonfile);
                 JSONObject jsonObj = new JSONObject(strFileJson);
                 if (jsonObj.getJSONObject("Perms").getString("ModPerms").contains(command)) {
                     String test = jsonObj.getJSONObject("Perms").getJSONArray("ModPerms").toString();
@@ -89,8 +93,7 @@ public class Remove extends Command {
                         
                     }
                     
-                    JsonUtils.writeJsonFile(JsonUtils.jsonFilePath, jsonObj.toString());
-                    String strJson = JsonUtils.getStringFromFile(JsonUtils.Jsonfile.toString());
+                    JsonUtils.writeJsonFile(file, jsonObj.toString());
                     event.getUser().send().notice(command + " was removed from the list!");
                     return true;
                 } else {
@@ -107,7 +110,7 @@ public class Remove extends Command {
         if (args.length == 3) {
             
             try {
-                String strFileJson = JsonUtils.getStringFromFile(JsonUtils.Jsonfile.toString());
+                String strFileJson = JsonUtils.getStringFromFile(Jsonfile);
                 JSONObject jsonObj = new JSONObject(strFileJson);
                 ArrayList<String> tests = new ArrayList<String>();
                 ArrayList<String> testss = new ArrayList<String>();
@@ -123,7 +126,7 @@ public class Remove extends Command {
                         
                     }
                     
-                    JsonUtils.writeJsonFile(JsonUtils.jsonFilePath, jsonObj.toString());
+                    JsonUtils.writeJsonFile(file, jsonObj.toString());
                     String strJson = JsonUtils.getStringFromFile(JsonUtils.Jsonfile.toString());
                     event.getUser().send().notice(mod + " was removed from the list!");
                     return true;
@@ -140,7 +143,7 @@ public class Remove extends Command {
     if (type.equalsIgnoreCase("everyone")) {
         if (args.length == 3) {
             try {
-                String strFileJson = JsonUtils.getStringFromFile(JsonUtils.Jsonfile.toString());
+                String strFileJson = JsonUtils.getStringFromFile(Jsonfile);
                 JSONObject jsonObj = new JSONObject(strFileJson);
                 if (jsonObj.getJSONObject("Perms").getString("Everyone").contains(command)) {
                     String test = jsonObj.getJSONObject("Perms").getJSONArray("Everyone").toString();
@@ -154,7 +157,7 @@ public class Remove extends Command {
                         
                     }
                     
-                    JsonUtils.writeJsonFile(JsonUtils.jsonFilePath, jsonObj.toString());
+                    JsonUtils.writeJsonFile(file, jsonObj.toString());
                     String strJson = JsonUtils.getStringFromFile(JsonUtils.Jsonfile.toString());
                     event.getUser().send().notice(command + " was removed from the list!");
                     return true;
