@@ -33,17 +33,11 @@ public class Remove extends Command {
         String Jsonfile = System.getProperty("user.dir") + "/Perms/" + event.getChannel().getName() + "/" +  "perms.json";
         String[] args = event.getMessage().split(" ");
         String type = args[1];
-        String mod = Utils.getAccount(event.getBot().getUserChannelDao().getUser(args[2]), event);
-        String check = args[2];
-        String command = null;
-           if (!check.contains("command.")){
-               command = "command." + check;
-           } else { command = check; }
            
            
     if (type.equalsIgnoreCase("mod")) {
         if (args.length == 3) {
-            
+            String mod = Utils.getAccount(event.getBot().getUserChannelDao().getUser(args[2]), event);
             try {
                 String strFileJson = JsonUtils.getStringFromFile(Jsonfile);
                 JSONObject jsonObj = new JSONObject(strFileJson);
@@ -76,6 +70,12 @@ public class Remove extends Command {
     
     if (type.equalsIgnoreCase("modperms")) {
         if (args.length == 3) {
+            String check = args[2];
+            String command = null;
+            if (!check.contains("command.")){
+                command = "command." + check;
+            } else { command = check; }
+
             try {
                 String strFileJson = JsonUtils.getStringFromFile(Jsonfile);
                 JSONObject jsonObj = new JSONObject(strFileJson);
@@ -106,7 +106,7 @@ public class Remove extends Command {
     
     if (type.equalsIgnoreCase("admin")) {
         if (args.length == 3) {
-            
+            String mod = Utils.getAccount(event.getBot().getUserChannelDao().getUser(args[2]), event);
             try {
                 String strFileJson = JsonUtils.getStringFromFile(Jsonfile);
                 JSONObject jsonObj = new JSONObject(strFileJson);
@@ -140,6 +140,12 @@ public class Remove extends Command {
     
     if (type.equalsIgnoreCase("everyone")) {
         if (args.length == 3) {
+            String check = args[2];
+            String command = null;
+            if (!check.contains("command.")){
+                command = "command." + check;
+            } else { command = check; }
+            
             try {
                 String strFileJson = JsonUtils.getStringFromFile(Jsonfile);
                 JSONObject jsonObj = new JSONObject(strFileJson);

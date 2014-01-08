@@ -26,13 +26,18 @@ public class List extends Command {
         String modpermissions;
         String everyone;
         String Admins;
+        String Exec;
 
         String Jsonfile = System.getProperty("user.dir") + "/Perms/" + event.getChannel().getName() + "/" +  "perms.json";
         String perms = JsonUtils.getStringFromFile(Jsonfile);
         JSONObject jsonObj = new JSONObject(perms);
 
+        String exece = System.getProperty("user.dir") + "/perms.json";
+        String exe = JsonUtils.getStringFromFile(exece);
+        JSONObject exec = new JSONObject(exe);
+
         temp = jsonObj.getJSONObject("Perms").getString("Everyone");
-        everyone = "Permissions everyone have: " + temp.replace("{", "").replace("}", "").replace(":", ": ").replace("\"", "").replaceAll(",", " | ");
+        everyone = "Permission everyone has: " + temp.replace("{", "").replace("}", "").replace(":", ": ").replace("\"", "").replaceAll(",", " | ");
 
         temp = jsonObj.getJSONObject("Perms").getString("ModPerms");
         modpermissions = "Mod Permissions: "+ temp.replace("{", "").replace("}", "").replace(":", ": ").replace("\"", "").replaceAll(",", " | ");
@@ -43,10 +48,14 @@ public class List extends Command {
         temp = jsonObj.getJSONObject("Perms").getString("Admins");
         Admins = "Admins: "+ temp.replace("{", "").replace("}", "").replace(":", ": ").replace("\"", "").replaceAll(",", " | ");
 
+        temp = exec.getJSONObject("Perms").getString("Exec");
+        Exec = "God of Alfred: "+ temp.replace("{", "").replace("}", "").replace(":", ": ").replace("\"", "").replaceAll(",", " | ");
+
         event.getUser().send().notice(everyone); //Everyone Perms
         event.getUser().send().notice(modpermissions); //Mod Permissions
         event.getUser().send().notice(mod); //Mod List
         event.getUser().send().notice(Admins); //Admin List
+        event.getUser().send().notice(Exec);  //God of the mod!
         return true;
     }
 
