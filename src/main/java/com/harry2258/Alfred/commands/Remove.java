@@ -145,7 +145,7 @@ public class Remove extends Command {
             if (!check.contains("command.")){
                 command = "command." + check;
             } else { command = check; }
-            
+
             try {
                 String strFileJson = JsonUtils.getStringFromFile(Jsonfile);
                 JSONObject jsonObj = new JSONObject(strFileJson);
