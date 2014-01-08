@@ -28,11 +28,11 @@ public class Remove extends Command {
     
     @Override
     public boolean execute(MessageEvent event) {
-        File file = new File ("/Perms/" + event.getChannel().getName() + "/perms.json");
+        File file = new File (System.getProperty("user.dir") + "/Perms/" + event.getChannel().getName() + "/" +  "perms.json");
         if (!file.exists()){
             JsonUtils.createJsonStructure(file);
         }
-        String Jsonfile = "/Perms/" + event.getChannel().getName() + "/perms.json";
+        String Jsonfile = System.getProperty("user.dir") + "/Perms/" + event.getChannel().getName() + "/" +  "perms.json";
         String[] args = event.getMessage().split(" ");
         String type = args[1];
         String mod = event.getBot().getUserChannelDao().getUser(args[2]).getNick();

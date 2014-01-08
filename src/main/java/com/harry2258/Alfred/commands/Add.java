@@ -26,13 +26,10 @@ public class Add extends Command {
     }
     @Override
     public boolean execute(MessageEvent event) {
-        File file = new File ("Perms/" + event.getChannel().getName() + "/perms.json");
-        String test = "Perms/" + event.getChannel().getName() + "/perms.json";
-        event.getChannel().send().message(test);
-        if (!file.exists()){
-            JsonUtils.createJsonStructure(file);
-        }
-        String Jsonfile = "/Perms/" + event.getChannel().getName() + "/perms.json";
+        File file = new File (System.getProperty("user.dir") + "/Perms/" + event.getChannel().getName() + "/" +  "perms.json");
+        String test = System.getProperty("user.dir") + "/Perms/" + event.getChannel().getName() + "/" +  "perms.json";
+        JsonUtils.createJsonStructure(file);
+        String Jsonfile = System.getProperty("user.dir") + "/Perms/" + event.getChannel().getName() + "/" +  "perms.json";
         String[] args = event.getMessage().split(" ");
         String type = args[1];
         String newuser = event.getBot().getUserChannelDao().getUser(args[2]).getNick();

@@ -4,6 +4,7 @@
  */
 package com.harry2258.Alfred.api;
 
+import java.io.File;
 import org.pircbotx.User;
 import org.pircbotx.Channel;
 
@@ -21,6 +22,12 @@ public class PermissionManager {
     }
 
     public boolean hasPermission(String permission, User user, Channel channel, org.pircbotx.hooks.events.MessageEvent event) throws Exception {
+        File file = new File (System.getProperty("user.dir") + "/Perms/" + event.getChannel().getName() + "/" +  "perms.json");
+        System.out.println(file);
+        if (!file.exists()) {
+            JsonUtils.createJsonStructure(file);
+        }
+        
         boolean hostmatch = false;
         boolean nickmatch = false;
         boolean permmatch = false;
@@ -30,7 +37,8 @@ public class PermissionManager {
         if (configs.isAdmin(user.getNick(), user.getHostmask())) {
             return true;
         }
-        String Jsonfile = System.getProperty("user.dir") + "/Perms/" + channel.getName();
+        
+        String Jsonfile = System.getProperty("user.dir") + "/Perms/" + event.getChannel().getName() + "/" +  "perms.json";
         String perms = JsonUtils.getStringFromFile(Jsonfile);
         JSONObject jsonObj = new JSONObject(perms);
         
