@@ -9,10 +9,13 @@ import org.pircbotx.PircBotX;
 import org.reflections.Reflections;
 import org.slf4j.impl.SimpleLogger;
 
+import java.io.File;
 import java.nio.charset.Charset;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import static com.harry2258.Alfred.api.JsonUtils.writeJsonFile;
 
 /**
  * Hello world!
@@ -21,7 +24,7 @@ import java.util.logging.Logger;
 public class Main {
     public static long startup = 0;
     public static PircBotX bot;
-
+    public static File jsonFilePath = new File (System.getProperty("user.dir")+ "/perms.json");
     public static void main(String[] args) {
         System.setProperty(SimpleLogger.SHOW_DATE_TIME_KEY, "true");
         System.setProperty(SimpleLogger.DATE_TIME_FORMAT_KEY, "[HH:mm:ss]");
@@ -35,6 +38,11 @@ public class Main {
             PermissionManager manager = new PermissionManager(config);
             System.out.println("Loading and registering commands");
             config.load();
+            if (jsonFilePath.exists()) {
+            jsonFilePath.createNewFile();
+            String jsonString = "{\"Perms\":{\"Exec\":[\"batman\", \"progwml6\"]}}";
+            writeJsonFile(jsonFilePath, jsonString);
+            }
             Reflections reflections = new Reflections("com.harry2258.Alfred.commands");
             Set<Class<? extends Command>> subTypes = reflections.getSubTypesOf(Command.class);
             for (Class c : subTypes) {

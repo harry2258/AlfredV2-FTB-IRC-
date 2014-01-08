@@ -7,7 +7,6 @@ package com.harry2258.Alfred.api;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.harry2258.Alfred.Main;
 import com.harry2258.Alfred.listeners.MessageEvent;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.jsoup.Jsoup;
@@ -16,6 +15,8 @@ import org.pircbotx.Channel;
 import org.pircbotx.Colors;
 import org.pircbotx.User;
 import org.pircbotx.UserLevel;
+import org.pircbotx.hooks.WaitForQueue;
+import org.pircbotx.hooks.events.WhoisEvent;
 
 import java.io.*;
 import java.net.*;
@@ -24,13 +25,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.net.InetAddress;
-import java.net.Socket;
-import java.net.URL;
-import java.net.UnknownHostException;
-import org.pircbotx.PircBotX;
-import org.pircbotx.hooks.WaitForQueue;
-import org.pircbotx.hooks.events.WhoisEvent;
 public class Utils {
     static String USER_AGENT = "Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/537.17 (KHTML, like Gecko) Chrome/24.0.1312.57 Safari/537.17";
 

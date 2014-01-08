@@ -2,12 +2,11 @@ package com.harry2258.Alfred.commands;
 
 import com.harry2258.Alfred.api.Command;
 import com.harry2258.Alfred.api.Config;
-import com.harry2258.Alfred.api.JsonUtils;
 import com.harry2258.Alfred.api.PermissionManager;
+import org.pircbotx.hooks.events.MessageEvent;
+
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.json.JSONObject;
-import org.pircbotx.hooks.events.MessageEvent;
 
 public class Nick extends Command {
     private Config config;

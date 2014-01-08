@@ -4,12 +4,12 @@
  */
 package com.harry2258.Alfred.api;
 
-import java.io.File;
-import org.pircbotx.User;
-import org.pircbotx.Channel;
-
-import java.util.Properties;
 import org.json.JSONObject;
+import org.pircbotx.Channel;
+import org.pircbotx.User;
+
+import java.io.File;
+import java.util.Properties;
 
 public class PermissionManager {
 
@@ -67,8 +67,8 @@ public class PermissionManager {
         return false;
     }
 
-    public boolean hasExec(User user, Channel channel, org.pircbotx.hooks.events.MessageEvent event) throws Exception {
-
+    public static boolean hasExec(User user, Channel channel, org.pircbotx.hooks.events.MessageEvent event) throws Exception {
+        System.out.println("Checking for Exec perms!");
         String Admin = JsonUtils.getStringFromFile(JsonUtils.Jsonfile);
         JSONObject exec = new JSONObject(Admin);
 

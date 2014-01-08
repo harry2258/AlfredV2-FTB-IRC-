@@ -1,24 +1,19 @@
 package com.harry2258.Alfred.listeners;
 
-import com.harry2258.Alfred.api.PermissionManager;
-import com.harry2258.Alfred.api.Config;
-import com.harry2258.Alfred.api.CommandRegistry;
 import com.harry2258.Alfred.api.Command;
-import static com.harry2258.Alfred.api.CommandRegistry.commands;
-import com.harry2258.Alfred.api.Utils;
+import com.harry2258.Alfred.api.CommandRegistry;
+import com.harry2258.Alfred.api.Config;
+import com.harry2258.Alfred.api.PermissionManager;
 import com.harry2258.Alfred.commands.Ignore;
 import org.pircbotx.Colors;
+import org.pircbotx.PircBotX;
 import org.pircbotx.hooks.ListenerAdapter;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import org.pircbotx.PircBotX;
-import org.pircbotx.hooks.WaitForQueue;
 
-import org.pircbotx.hooks.events.WhoisEvent;
+import static com.harry2258.Alfred.api.CommandRegistry.commands;
 
 public class MessageEvent extends ListenerAdapter {
     public static PircBotX bot;

@@ -4,13 +4,9 @@
  */
 package com.harry2258.Alfred.commands;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonParser;
 import com.harry2258.Alfred.api.Command;
 import com.harry2258.Alfred.api.Config;
-import com.harry2258.Alfred.api.JsonUtils;
 import com.harry2258.Alfred.api.PermissionManager;
-import org.json.JSONObject;
 import org.pircbotx.hooks.events.MessageEvent;
 
 /**

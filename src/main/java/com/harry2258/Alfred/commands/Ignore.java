@@ -8,10 +8,11 @@ package com.harry2258.Alfred.commands;
 import com.harry2258.Alfred.api.Command;
 import com.harry2258.Alfred.api.Config;
 import com.harry2258.Alfred.api.PermissionManager;
-import java.util.ArrayList;
-import java.util.List;
 import org.pircbotx.User;
 import org.pircbotx.hooks.events.MessageEvent;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class Ignore extends Command {
     

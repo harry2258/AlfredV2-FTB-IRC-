@@ -4,18 +4,12 @@
  */
 package com.harry2258.Alfred.commands;
 
-import com.harry2258.Alfred.api.PermissionManager;
-import com.harry2258.Alfred.api.Config;
-import com.harry2258.Alfred.api.Utils;
-import com.harry2258.Alfred.api.CommandRegistry;
-import com.harry2258.Alfred.api.Command;
 import bsh.EvalError;
-import com.harry2258.Alfred.api.JsonUtils;
+import com.harry2258.Alfred.api.*;
 import org.pircbotx.hooks.events.MessageEvent;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.json.JSONObject;
 /**
  *
  * @author Hardik

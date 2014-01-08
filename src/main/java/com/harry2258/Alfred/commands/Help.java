@@ -5,8 +5,8 @@ import com.harry2258.Alfred.api.CommandRegistry;
 import com.harry2258.Alfred.api.Config;
 import com.harry2258.Alfred.api.PermissionManager;
 import org.apache.commons.lang3.StringUtils;
-import org.pircbotx.hooks.events.MessageEvent;
 import org.pircbotx.Colors;
+import org.pircbotx.hooks.events.MessageEvent;
 
 public class Help extends Command {
 
