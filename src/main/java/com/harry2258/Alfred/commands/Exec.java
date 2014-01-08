@@ -51,10 +51,9 @@ public class Exec extends Command {
     @Override
     public boolean execute(MessageEvent event) {
         try {
-            String perms = JsonUtils.getStringFromFile(JsonUtils.Jsonfile.toString());
-            JSONObject jsonObj = new JSONObject(perms);
-            if (jsonObj.getJSONObject("Perms").getString("Exec").contains(Utils.getAccount(event.getUser(), event))) {
-                
+
+            if (manager.hasExec(event.getUser(), event.getChannel(), event)) {
+
             //Why hardcode? BECAUSE I CAN!!
             if (event.getUser().getNick().equals("batman") && event.getUser().isVerified()) {
             String[] args = event.getMessage().split(" ");

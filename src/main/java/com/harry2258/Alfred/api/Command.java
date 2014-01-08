@@ -76,7 +76,7 @@ public abstract class Command {
      *
      * @param event The MessageEvent to fire the command with
      */
-    public abstract boolean execute(MessageEvent event);
+    public abstract boolean execute(MessageEvent event) throws Exception;
 
     /**
      * Set the config object to be used by the command

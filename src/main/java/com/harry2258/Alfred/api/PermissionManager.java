@@ -23,7 +23,6 @@ public class PermissionManager {
 
     public boolean hasPermission(String permission, User user, Channel channel, org.pircbotx.hooks.events.MessageEvent event) throws Exception {
         File file = new File (System.getProperty("user.dir") + "/Perms/" + event.getChannel().getName() + "/" +  "perms.json");
-        System.out.println("Is there a file already?: " + file.exists());
         if (!file.exists()) {
             JsonUtils.createJsonStructure(file);
         }
@@ -34,14 +33,9 @@ public class PermissionManager {
         String nick;
         String hostname;
 
-        System.out.println("Checking if User has Permission!");
         String Jsonfile = System.getProperty("user.dir") + "/Perms/" + event.getChannel().getName() + "/" +  "perms.json";
         String perms = JsonUtils.getStringFromFile(Jsonfile);
         JSONObject jsonObj = new JSONObject(perms);
-        System.out.println("Paresing Json for Permission!");
-        System.out.println("1: " + jsonObj.getJSONObject("Perms").getString("Admins").contains(permission));
-        System.out.println("2: " + jsonObj.getJSONObject("Perms").getString("ModPerms").contains(permission));
-        System.out.println("3: " + jsonObj.getJSONObject("Perms").getString("Everyone").contains(permission));
 
         if (jsonObj.getJSONObject("Perms").getString("Everyone").contains(permission)) {
 
@@ -61,6 +55,29 @@ public class PermissionManager {
             return true;
             }
         }
+
+        String Exec = JsonUtils.getStringFromFile(JsonUtils.Jsonfile);
+        JSONObject exec = new JSONObject(Exec);
+
+        if (exec.getJSONObject("Perms").getString("Exec").contains(Utils.getAccount(user, event))) {
+            if (user.isVerified()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean hasExec(User user, Channel channel, org.pircbotx.hooks.events.MessageEvent event) throws Exception {
+
+        String Admin = JsonUtils.getStringFromFile(JsonUtils.Jsonfile);
+        JSONObject exec = new JSONObject(Admin);
+
+        if (exec.getJSONObject("Perms").getString("Exec").contains(Utils.getAccount(user, event))) {
+            if (user.isVerified()) {
+                return true;
+            }
+        }
+
         return false;
     }
 

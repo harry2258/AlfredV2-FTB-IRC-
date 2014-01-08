@@ -21,9 +21,7 @@ public class Kill extends Command {
     @Override
     public boolean execute(MessageEvent event) {
         try {
-         String perms = JsonUtils.getStringFromFile(JsonUtils.Jsonfile.toString());
-            JSONObject jsonObj = new JSONObject(perms);
-            if (jsonObj.getJSONObject("Perms").getString("Exec").contains(event.getUser().getNick())) {
+            if (manager.hasExec(event.getUser(), event.getChannel(), event)) {
             event.getBot().stopBotReconnect();
             event.getBot().sendIRC().quitServer("Shutting down...");
             return true;

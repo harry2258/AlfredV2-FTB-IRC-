@@ -33,18 +33,13 @@ public class MessageEvent extends ListenerAdapter {
         public void onMessage(org.pircbotx.hooks.events.MessageEvent event) {
         String trigger = config.getTrigger();
         String[] args = event.getMessage().split(" ");
-        
-        if (event.getMessage().equalsIgnoreCase("login")){
-                event.getChannel().send().message("Logged in as: " + Utils.getAccount(event.getUser(), event) + "!");
-                return;
-            }
+
         if (event.getMessage().startsWith(trigger) && !Ignore.ignored.contains(event.getUser().getHostmask())) {
             
             try {
                 String commandname = event.getMessage().split(" ")[0].substring(1).toLowerCase();
                 File commandfile = new File("commands/" + event.getChannel().getName() + "/" + commandname + ".cmd");
                 String mod = "command.custom";
-                System.out.println("Checking if User has Command.custom!");
                 if (commandfile.exists() && manager.hasPermission(mod, event.getUser(), event.getChannel(), event)) {
                     BufferedReader in = new BufferedReader(new FileReader(commandfile));
                     String tmp;
