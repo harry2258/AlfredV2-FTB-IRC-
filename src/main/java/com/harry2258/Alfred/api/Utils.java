@@ -205,7 +205,6 @@ public class Utils {
     }
     
     public static String getAccount(User u, org.pircbotx.hooks.events.MessageEvent event){
-        System.out.println("test!");
     	String user = "";
         event.getBot().sendRaw().rawLineNow("WHOIS " + u.getNick());
                 WaitForQueue waitForQueue = new WaitForQueue(event.getBot());

@@ -23,26 +23,28 @@ public class PermissionManager {
 
     public boolean hasPermission(String permission, User user, Channel channel, org.pircbotx.hooks.events.MessageEvent event) throws Exception {
         File file = new File (System.getProperty("user.dir") + "/Perms/" + event.getChannel().getName() + "/" +  "perms.json");
-        System.out.println(file);
+        System.out.println("Is there a file already?: " + file.exists());
         if (!file.exists()) {
             JsonUtils.createJsonStructure(file);
         }
-        
+
         boolean hostmatch = false;
         boolean nickmatch = false;
         boolean permmatch = false;
         String nick;
         String hostname;
-        
-        if (configs.isAdmin(user.getNick(), user.getHostmask())) {
-            return true;
-        }
-        
+
+        System.out.println("Checking if User has Permission!");
         String Jsonfile = System.getProperty("user.dir") + "/Perms/" + event.getChannel().getName() + "/" +  "perms.json";
         String perms = JsonUtils.getStringFromFile(Jsonfile);
         JSONObject jsonObj = new JSONObject(perms);
-        
+        System.out.println("Paresing Json for Permission!");
+        System.out.println("1: " + jsonObj.getJSONObject("Perms").getString("Admins").contains(permission));
+        System.out.println("2: " + jsonObj.getJSONObject("Perms").getString("ModPerms").contains(permission));
+        System.out.println("3: " + jsonObj.getJSONObject("Perms").getString("Everyone").contains(permission));
+
         if (jsonObj.getJSONObject("Perms").getString("Everyone").contains(permission)) {
+
             if (user.isVerified()) {
             return true;
             } else { user.send().notice("You need to be logged in to use this!");}
@@ -59,7 +61,6 @@ public class PermissionManager {
             return true;
             }
         }
-        
         return false;
     }
 

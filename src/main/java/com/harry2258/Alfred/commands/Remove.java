@@ -8,6 +8,7 @@ import com.harry2258.Alfred.api.Command;
 import com.harry2258.Alfred.api.Config;
 import com.harry2258.Alfred.api.JsonUtils;
 import com.harry2258.Alfred.api.PermissionManager;
+import com.harry2258.Alfred.api.Utils;
 import java.io.File;
 import java.util.ArrayList;
 import org.json.JSONObject;
@@ -35,7 +36,7 @@ public class Remove extends Command {
         String Jsonfile = System.getProperty("user.dir") + "/Perms/" + event.getChannel().getName() + "/" +  "perms.json";
         String[] args = event.getMessage().split(" ");
         String type = args[1];
-        String mod = event.getBot().getUserChannelDao().getUser(args[2]).getNick();
+        String mod = Utils.getAccount(event.getBot().getUserChannelDao().getUser(args[2]), event);
         String check = args[2];
         String command = null;
            if (!check.contains("command.")){

@@ -39,7 +39,6 @@ public class JsonUtils {
         File fl = new File(filePath);
         FileInputStream fin = new FileInputStream(fl);
         String ret = convertStreamToString(fin);
-        
         fin.close();        
         return ret;
         
@@ -59,11 +58,6 @@ public class JsonUtils {
     public static void writeJsonFile(File file, String json) {
     BufferedWriter bufferedWriter = null;
     try {
-
-        if(!file.exists()){
-            file.createNewFile();
-        }
-
         FileWriter fileWriter = new FileWriter(file);
         bufferedWriter = new BufferedWriter(fileWriter);
         bufferedWriter.write(json);
@@ -83,10 +77,9 @@ public class JsonUtils {
     
     public static void createJsonStructure(File file){
         try {
-            System.out.println(file);
             file.getParentFile().mkdirs();
             file.createNewFile();
-            String jsonString = "{\"Perms\":{\"Mods\":[\"niel\"], \"ModPerms\": [\"command.mods\", \"command.google\"], \"Admins\":[\"batman\"], \"Everyone\": [\"command.mcstatus\", \"command.chstatus\"], \"Exec\":[\"batman\"]}}";
+            String jsonString = "{\"Perms\":{\"Mods\":[\"niel\"], \"ModPerms\": [\"command.custom\", \"command.google\"], \"Admins\":[\"batman\"], \"Everyone\": [\"command.mcstatus\", \"command.chstatus\"], \"Exec\":[\"batman\"]}}";
             writeJsonFile(file, jsonString);
 
         } catch (IOException e) {

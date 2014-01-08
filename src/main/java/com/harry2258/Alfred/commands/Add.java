@@ -8,9 +8,11 @@ import com.harry2258.Alfred.api.Command;
 import com.harry2258.Alfred.api.Config;
 import com.harry2258.Alfred.api.JsonUtils;
 import com.harry2258.Alfred.api.PermissionManager;
+import com.harry2258.Alfred.api.Utils;
 import java.io.File;
 import org.json.JSONObject;
 import org.pircbotx.Colors;
+import org.pircbotx.User;
 import org.pircbotx.hooks.events.MessageEvent;
 
 /**
@@ -27,22 +29,18 @@ public class Add extends Command {
     @Override
     public boolean execute(MessageEvent event) {
         File file = new File (System.getProperty("user.dir") + "/Perms/" + event.getChannel().getName() + "/" +  "perms.json");
-        String test = System.getProperty("user.dir") + "/Perms/" + event.getChannel().getName() + "/" +  "perms.json";
-        JsonUtils.createJsonStructure(file);
+        if (!file.exists()){
+            JsonUtils.createJsonStructure(file);
+        }
         String Jsonfile = System.getProperty("user.dir") + "/Perms/" + event.getChannel().getName() + "/" +  "perms.json";
         String[] args = event.getMessage().split(" ");
         String type = args[1];
-        String newuser = event.getBot().getUserChannelDao().getUser(args[2]).getNick();
-        String check = args[2];
-        String command = null;
-        if (!check.contains("command.")){
-            command = "command." + check;
-        } else { command = check; }
-                
+
                 
     if (type.equalsIgnoreCase("mod")) {
         if (args.length == 3) {
             try {
+                String newuser = Utils.getAccount(event.getBot().getUserChannelDao().getUser(args[2]), event);
                 String strFileJson = JsonUtils.getStringFromFile(Jsonfile);
                 JSONObject jsonObj = new JSONObject(strFileJson);
                 if (!jsonObj.getJSONObject("Perms").getString("Mods").contains(newuser)) {
@@ -63,8 +61,14 @@ public class Add extends Command {
     if (type.equalsIgnoreCase("modperms")) {
         if (args.length == 3) {
             try {
-                String strFileJson = JsonUtils.getStringFromFile(Jsonfile);
-                JSONObject jsonObj = new JSONObject(strFileJson);
+                String check = args[2];
+                String command = null;
+                if (!check.contains("command.")){
+                    command = "command." + check;
+                } else { command = check; }
+                String perms = JsonUtils.getStringFromFile(Jsonfile);
+                JSONObject jsonObj = new JSONObject(perms);
+                System.out.println(jsonObj.getJSONObject("Perms").getString("ModPerms"));
                 if (!jsonObj.getJSONObject("Perms").getString("ModPerms").contains(command)) {
                 jsonObj.getJSONObject("Perms").append("ModPerms", command);
                 JsonUtils.writeJsonFile(file, jsonObj.toString());
@@ -83,12 +87,12 @@ public class Add extends Command {
     if (type.equalsIgnoreCase("admin")) {
         if (args.length == 3) {
             try {
+                String newuser = Utils.getAccount(event.getBot().getUserChannelDao().getUser(args[2]), event);
                 String strFileJson = JsonUtils.getStringFromFile(Jsonfile);
                 JSONObject jsonObj = new JSONObject(strFileJson);
                 if (!jsonObj.getJSONObject("Perms").getString("Admins").contains(newuser)) {
                 jsonObj.getJSONObject("Perms").append("Admins", newuser);
                 JsonUtils.writeJsonFile(file, jsonObj.toString());
-                String strJson = JsonUtils.getStringFromFile(JsonUtils.Jsonfile.toString());
                 event.getUser().send().notice(newuser + " was added to the list!");
                 return true;
                 } else {
@@ -104,12 +108,17 @@ public class Add extends Command {
     if (type.equalsIgnoreCase("everyone")) {
         if (args.length == 3) {
             try {
+                String check = args[2];
+                String command = null;
+                if (!check.contains("command.")){
+                    command = "command." + check;
+                } else { command = check; }
+
                 String strFileJson = JsonUtils.getStringFromFile(Jsonfile);
                 JSONObject jsonObj = new JSONObject(strFileJson);
                 if (!jsonObj.getJSONObject("Perms").getString("Everyone").contains(command)) {
                 jsonObj.getJSONObject("Perms").append("Everyone", command);
                 JsonUtils.writeJsonFile(file, jsonObj.toString());
-                String strJson = JsonUtils.getStringFromFile(JsonUtils.Jsonfile.toString());
                 event.getUser().send().notice(command + " was added to the list!");
                 return true;
                 } else {

@@ -1,1 +1,2 @@
-Download: http://www.java.com/en/download/manual.jsp
+64 Bit: http://javadl.sun.com/webapps/download/AutoDL?BundleId=81821
+32 Bit: http://javadl.sun.com/webapps/download/AutoDL?BundleId=81819

@@ -3,7 +3,6 @@ package com.harry2258.Alfred;
 import com.harry2258.Alfred.api.Command;
 import com.harry2258.Alfred.api.CommandRegistry;
 import com.harry2258.Alfred.api.Config;
-import com.harry2258.Alfred.api.JsonUtils;
 import com.harry2258.Alfred.api.PermissionManager;
 import org.pircbotx.Configuration;
 import org.pircbotx.PircBotX;
