@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.harry2258.Alfred.commands;
 
 import com.harry2258.Alfred.api.Command;
@@ -10,21 +6,20 @@ import com.harry2258.Alfred.api.PermissionManager;
 import org.pircbotx.hooks.events.MessageEvent;
 
 /**
- *
- * @author Hardik
+ * Created by Hardik on 1/14/14.
  */
-public class Reloadperms extends Command {
-    private PermissionManager manager;
+public class Remind extends Command {
+
     private Config config;
-    
-    public Reloadperms(){
-        super("Reloadperms", "Reloads the permission file!");
+    private PermissionManager manager;
+
+    public Remind() {
+        super("Remind", "Adds a reminder for the user!", "Remind [user] [reminder]");
     }
+
     @Override
-    public boolean execute(MessageEvent event) { 
-        //Shouldn't need this for now
+    public boolean execute(MessageEvent event) throws Exception {
         return false;
-        
     }
 
     @Override
@@ -34,7 +29,6 @@ public class Reloadperms extends Command {
 
     @Override
     public void setManager(PermissionManager manager) {
-       this.manager = manager;
+        this.manager = manager;
     }
-    
 }

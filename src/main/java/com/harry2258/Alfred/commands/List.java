@@ -28,7 +28,7 @@ public class List extends Command {
         String Admins;
         String Exec;
 
-        String Jsonfile = System.getProperty("user.dir") + "/Perms/" + event.getChannel().getName() + "/" +  "perms.json";
+        String Jsonfile = System.getProperty("user.dir") + "/Perms/" + event.getChannel().getName() + "/" + "perms.json";
         String perms = JsonUtils.getStringFromFile(Jsonfile);
         JSONObject jsonObj = new JSONObject(perms);
 
@@ -40,22 +40,22 @@ public class List extends Command {
         everyone = "Permission everyone has: " + temp.replace("{", "").replace("}", "").replace(":", ": ").replace("\"", "").replaceAll(",", " | ");
 
         temp = jsonObj.getJSONObject("Perms").getString("ModPerms");
-        modpermissions = "Mod Permissions: "+ temp.replace("{", "").replace("}", "").replace(":", ": ").replace("\"", "").replaceAll(",", " | ");
+        modpermissions = "Mod Permissions: " + temp.replace("{", "").replace("}", "").replace(":", ": ").replace("\"", "").replaceAll(",", " | ");
 
         temp = jsonObj.getJSONObject("Perms").getString("Mods");
-        mod = "Mods: "+ temp.replace("{", "").replace("}", "").replace(":", ": ").replace("\"", "").replaceAll(",", " | ");
+        mod = "Mods: " + temp.replace("{", "").replace("}", "").replace(":", ": ").replace("\"", "").replaceAll(",", " | ");
 
         temp = jsonObj.getJSONObject("Perms").getString("Admins");
-        Admins = "Admins: "+ temp.replace("{", "").replace("}", "").replace(":", ": ").replace("\"", "").replaceAll(",", " | ");
+        Admins = "Admins: " + temp.replace("{", "").replace("}", "").replace(":", ": ").replace("\"", "").replaceAll(",", " | ");
 
         temp = exec.getJSONObject("Perms").getString("Exec");
-        Exec = "God of Alfred: "+ temp.replace("{", "").replace("}", "").replace(":", ": ").replace("\"", "").replaceAll(",", " | ");
+        Exec = "God of Alfred: " + temp.replace("{", "").replace("}", "").replace(":", ": ").replace("\"", "").replaceAll(",", " | ");
 
         event.getUser().send().notice(everyone); //Everyone Perms
         event.getUser().send().notice(modpermissions); //Mod Permissions
         event.getUser().send().notice(mod); //Mod List
         event.getUser().send().notice(Admins); //Admin List
-        event.getUser().send().notice(Exec);  //God of the mod!
+        event.getUser().send().notice(Exec);  //God of the bot!
         return true;
     }
 

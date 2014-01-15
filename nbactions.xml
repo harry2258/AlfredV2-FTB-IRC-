@@ -1,47 +1,49 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <actions>
-        <action>
-            <actionName>run</actionName>
-            <goals>
-                <goal>process-classes</goal>
-                <goal>org.codehaus.mojo:exec-maven-plugin:1.2.1:exec</goal>
-            </goals>
-            <properties>
-                <exec.args>-Xmx100m -classpath %classpath ${packageClassName}</exec.args>
-                <exec.executable>java</exec.executable>
-                <exec.workingdir>C:\Users\Home\Documents\NetBeansProjects\AlfredV2(FTB-IRC-BOT)</exec.workingdir>
-            </properties>
-        </action>
-        <action>
-            <actionName>debug</actionName>
-            <goals>
-                <goal>process-classes</goal>
-                <goal>org.codehaus.mojo:exec-maven-plugin:1.2.1:exec</goal>
-            </goals>
-            <properties>
-                <exec.args>-Xdebug -Xrunjdwp:transport=dt_socket,server=n,address=${jpda.address} -Xmx100m -classpath %classpath com.harry2258.Alfred.Main</exec.args>
-                <exec.executable>java</exec.executable>
-                <jpda.listen>true</jpda.listen>
-                <exec.workingdir>C:\Users\Home\Documents\NetBeansProjects\AlfredV2(FTB-IRC-BOT)</exec.workingdir>
-            </properties>
-        </action>
-        <action>
-            <actionName>profile</actionName>
-            <goals>
-                <goal>process-classes</goal>
-                <goal>org.codehaus.mojo:exec-maven-plugin:1.2.1:exec</goal>
-            </goals>
-            <properties>
-                <exec.args>${profiler.args} -Xmx100m -classpath %classpath ${packageClassName}</exec.args>
-                <exec.executable>${profiler.java}</exec.executable>
-                <exec.workingdir>C:\Users\Home\Documents\NetBeansProjects\AlfredV2(FTB-IRC-BOT)</exec.workingdir>
-            </properties>
-        </action>
-        <action>
-            <actionName>build-with-dependencies</actionName>
-            <reactor>also-make</reactor>
-            <goals>
-                <goal>install</goal>
-            </goals>
-        </action>
-    </actions>
+    <action>
+        <actionName>run</actionName>
+        <goals>
+            <goal>process-classes</goal>
+            <goal>org.codehaus.mojo:exec-maven-plugin:1.2.1:exec</goal>
+        </goals>
+        <properties>
+            <exec.args>-Xmx100m -classpath %classpath ${packageClassName}</exec.args>
+            <exec.executable>java</exec.executable>
+            <exec.workingdir>C:\Users\Home\Documents\NetBeansProjects\AlfredV2(FTB-IRC-BOT)</exec.workingdir>
+        </properties>
+    </action>
+    <action>
+        <actionName>debug</actionName>
+        <goals>
+            <goal>process-classes</goal>
+            <goal>org.codehaus.mojo:exec-maven-plugin:1.2.1:exec</goal>
+        </goals>
+        <properties>
+            <exec.args>-Xdebug -Xrunjdwp:transport=dt_socket,server=n,address=${jpda.address} -Xmx100m -classpath
+                %classpath com.harry2258.Alfred.Main
+            </exec.args>
+            <exec.executable>java</exec.executable>
+            <jpda.listen>true</jpda.listen>
+            <exec.workingdir>C:\Users\Home\Documents\NetBeansProjects\AlfredV2(FTB-IRC-BOT)</exec.workingdir>
+        </properties>
+    </action>
+    <action>
+        <actionName>profile</actionName>
+        <goals>
+            <goal>process-classes</goal>
+            <goal>org.codehaus.mojo:exec-maven-plugin:1.2.1:exec</goal>
+        </goals>
+        <properties>
+            <exec.args>${profiler.args} -Xmx100m -classpath %classpath ${packageClassName}</exec.args>
+            <exec.executable>${profiler.java}</exec.executable>
+            <exec.workingdir>C:\Users\Home\Documents\NetBeansProjects\AlfredV2(FTB-IRC-BOT)</exec.workingdir>
+        </properties>
+    </action>
+    <action>
+        <actionName>build-with-dependencies</actionName>
+        <reactor>also-make</reactor>
+        <goals>
+            <goal>install</goal>
+        </goals>
+    </action>
+</actions>

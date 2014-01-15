@@ -13,7 +13,6 @@ import org.pircbotx.User;
 import org.pircbotx.hooks.events.MessageEvent;
 
 /**
- *
  * @author Zack
  */
 public class Ban extends Command {
@@ -34,11 +33,11 @@ public class Ban extends Command {
             User target = event.getBot().getUserChannelDao().getUser(args[2]);
             int senderrank = Utils.getRank(chan, sender);
             int targetrank = Utils.getRank(chan, target);
-            if(senderrank > targetrank){
+            if (senderrank > targetrank) {
                 chan.send().ban("*!*@" + target.getHostmask());
                 chan.send().kick(target);
                 return true;
-            }else{
+            } else {
                 sender.send().message("You cant kick someone with a higher rank than you!");
                 return false;
             }
@@ -48,11 +47,11 @@ public class Ban extends Command {
             int senderrank = Utils.getRank(event.getChannel(), event.getUser());
             User target = event.getBot().getUserChannelDao().getUser(args[1]);
             int targetrank = Utils.getRank(event.getChannel(), target);
-            if(senderrank > targetrank){
+            if (senderrank > targetrank) {
                 chan.send().ban("*!*@" + target.getHostmask());
                 chan.send().kick(target, "Ban requested by " + sender.getNick());
                 return true;
-            }else{
+            } else {
                 sender.send().message("You cant kick someone with a higher rank than you!");
                 return false;
             }

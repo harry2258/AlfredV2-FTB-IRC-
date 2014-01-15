@@ -5,22 +5,26 @@ import com.harry2258.Alfred.api.Config;
 import com.harry2258.Alfred.api.PermissionManager;
 import org.pircbotx.hooks.events.MessageEvent;
 
-public class Say extends Command {
-    private PermissionManager manager;
+/**
+ * Created by Hardik on 1/14/14.
+ */
+public class Action extends Command {
     private Config config;
+    private PermissionManager manager;
 
-    public Say() {
-        super("Say", "Send a message to the current channel");
+    public Action() {
+        super("Action", "Send an action to the channel", "Action [action]");
     }
 
     @Override
-    public boolean execute(MessageEvent event) {
+    public boolean execute(MessageEvent event) throws Exception {
         String[] args = event.getMessage().split(" ");
-        StringBuilder builder = new StringBuilder();
+
+        StringBuilder sb = new StringBuilder();
         for (int i = 1; i < args.length; i++) {
-            builder.append(args[i]).append(" ");
+            sb.append(args[i]).append(" ");
         }
-        event.getChannel().send().message(builder.toString().trim());
+        event.getChannel().send().action(sb.toString().trim());
         return true;
     }
 

@@ -6,26 +6,31 @@ import com.harry2258.Alfred.api.PermissionManager;
 import org.pircbotx.Channel;
 import org.pircbotx.hooks.events.MessageEvent;
 
-public class Join extends Command {
-
+/**
+ * Created by Hardik on 1/14/14.
+ */
+public class Gsay extends Command {
     private Config config;
     private PermissionManager manager;
 
-    public Join() {
-        super("Join", "Tells the bot to join a channel", "join [#channel]");
+    public Gsay() {
+        super("Gsay", "Global say!", "Gsay [#channel] [Message]");
     }
 
     @Override
     public boolean execute(MessageEvent event) throws Exception {
-        if (manager.hasExec(event.getUser(), event)) {
-            String[] args = event.getMessage().split(" ");
-            Channel target = event.getBot().getUserChannelDao().getChannel(args[1]);
-            if (target.isInviteOnly()) {
-                event.getBot().sendRaw().rawLineNow("KNOCK " + target.getName() + " :Asked to join this channel by user " + event.getUser().getNick() + " in channel " + event.getChannel().getName());
-            }
-            event.getBot().sendIRC().joinChannel(target.getName());
+        String[] args = event.getMessage().split(" ");
+        StringBuilder sb = new StringBuilder();
+        for (int i = 2; i < args.length; i++) {
+            sb.append(args[i]).append(" ");
+        }
+        String all = sb.toString().trim();
+        if (args.length >= 3) {
+            Channel t = event.getBot().getUserChannelDao().getChannel(args[1]);
+            t.send().message(all);
             return true;
         }
+
         return false;
     }
 

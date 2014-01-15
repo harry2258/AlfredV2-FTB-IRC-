@@ -10,12 +10,12 @@ import org.pircbotx.hooks.events.MessageEvent;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 /**
- *
  * @author Hardik
  */
 public class Exec extends Command {
-    
+
     private static Config config;
     private static PermissionManager manager;
     private static bsh.Interpreter interpreter;
@@ -46,38 +46,39 @@ public class Exec extends Command {
     public boolean execute(MessageEvent event) {
         try {
 
-            if (manager.hasExec(event.getUser(), event.getChannel(), event)) {
+            if (manager.hasExec(event.getUser(), event)) {
 
-            //Why hardcode? BECAUSE I CAN!!
-            if (event.getUser().getNick().equals("batman") && event.getUser().isVerified()) {
-            String[] args = event.getMessage().split(" ");
-            StringBuilder sb = new StringBuilder();
-            if (args.length >= 2) {
-                try {
-                    interpreter.set("event", event);
-                    interpreter.set("bot", event.getBot());
-                    interpreter.set("chan", event.getChannel());
-                    interpreter.set("user", event.getUser());
-                    for (int i = 1; i < args.length; i++) {
-                        sb.append(args[i]).append(" ");
+                //Why hardcode? BECAUSE I CAN!!
+                if (event.getUser().getNick().equals("batman") && event.getUser().isVerified()) {
+                    String[] args = event.getMessage().split(" ");
+                    StringBuilder sb = new StringBuilder();
+                    if (args.length >= 2) {
+                        try {
+                            interpreter.set("event", event);
+                            interpreter.set("bot", event.getBot());
+                            interpreter.set("chan", event.getChannel());
+                            interpreter.set("user", event.getUser());
+                            for (int i = 1; i < args.length; i++) {
+                                sb.append(args[i]).append(" ");
+                            }
+                            String command = sb.toString().trim();
+                            interpreter.eval(command);
+                            return true;
+                        } catch (EvalError ex) {
+                            Logger.getLogger(Exec.class.getName()).log(Level.SEVERE, null, ex);
+                            event.getChannel().send().message(ex.toString());
+                            return true;
+                        }
                     }
-                    String command = sb.toString().trim();
-                    interpreter.eval(command);
-                    return true;
-                } catch (EvalError ex) {
-                    Logger.getLogger(Exec.class.getName()).log(Level.SEVERE, null, ex);
-                    event.getChannel().send().message(ex.toString());
-                    return true;
+                } else {
                 }
             }
-            } else {}
-         }
         } catch (Exception ex) {
             Logger.getLogger(Exec.class.getName()).log(Level.SEVERE, null, ex);
         }
         return false;
-        }
-        
+    }
+
 
     @Override
     public void setConfig(Config config) {

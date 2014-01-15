@@ -25,6 +25,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
 public class Utils {
     static String USER_AGENT = "Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/537.17 (KHTML, like Gecko) Chrome/24.0.1312.57 Safari/537.17";
 
@@ -85,7 +86,7 @@ public class Utils {
             while ((result = reader.readLine()) != null) {
                 String a = result.replace("red", Colors.RED + "Offline" + Colors.NORMAL).replace("green", Colors.DARK_GREEN + "Online" + Colors.NORMAL).replace("[", "").replace("]", "");
                 String b = a.replace("{", "").replace("}", "").replace(":", ": ").replace("\"", "").replaceAll(",", " | ");
-                returns = b.replace("login.minecraft.net", "Login").replace("session.minecraft.net","Session").replace("account.mojang.com", "Account").replace("auth.mojang.com", "Auth").replace("skins.minecraft.net","Skins").replace("authserver.mojang.com","Auth Server").replace("sessionserver.mojang.com", "Session Server").replace("minecraft.net", "Minecraft");
+                returns = b.replace("login.minecraft.net", "Login").replace("session.minecraft.net", "Session").replace("account.mojang.com", "Account").replace("auth.mojang.com", "Auth").replace("skins.minecraft.net", "Skins").replace("authserver.mojang.com", "Auth Server").replace("sessionserver.mojang.com", "Session Server").replace("minecraft.net", "Minecraft");
             }
             reader.close();
         } catch (IOException e) {
@@ -175,21 +176,21 @@ public class Utils {
         }
         return null;
     }
-        
-    
+
+
     public static boolean pingUrl(final String address) {
         try {
-        final URL url = new URL("http://" + address);
-        final HttpURLConnection urlConn = (HttpURLConnection) url.openConnection();
-        urlConn.setConnectTimeout(4000);
-        final long startTime = System.currentTimeMillis();
-        urlConn.connect();
-        final long endTime = System.currentTimeMillis();
-        if (urlConn.getResponseCode() == HttpURLConnection.HTTP_OK) {
-        System.out.println("Time (ms) : " + (endTime - startTime));
-        System.out.println("Ping to " + address +" was success");
-        return true;
-        }
+            final URL url = new URL("http://" + address);
+            final HttpURLConnection urlConn = (HttpURLConnection) url.openConnection();
+            urlConn.setConnectTimeout(4000);
+            final long startTime = System.currentTimeMillis();
+            urlConn.connect();
+            final long endTime = System.currentTimeMillis();
+            if (urlConn.getResponseCode() == HttpURLConnection.HTTP_OK) {
+                System.out.println("Time (ms) : " + (endTime - startTime));
+                System.out.println("Ping to " + address + " was success");
+                return true;
+            }
         } catch (final MalformedURLException e1) {
             e1.printStackTrace();
         } catch (final IOException e) {
@@ -197,19 +198,36 @@ public class Utils {
         }
         return false;
     }
-    
-    public static String getAccount(User u, org.pircbotx.hooks.events.MessageEvent event){
-    	String user = "";
+
+    public static String getAccount(User u, org.pircbotx.hooks.events.MessageEvent event) {
+        String user = "";
         event.getBot().sendRaw().rawLineNow("WHOIS " + u.getNick());
-                WaitForQueue waitForQueue = new WaitForQueue(event.getBot());
-                WhoisEvent test = null;
-                try {
-                    test = waitForQueue.waitFor(WhoisEvent.class);
-                    waitForQueue.close();
-                    user = test.getRegisteredAs();
-                } catch (InterruptedException ex) {
-                    Logger.getLogger(MessageEvent.class.getName()).log(Level.SEVERE, null, ex);
-                }
-                return user;
+        WaitForQueue waitForQueue = new WaitForQueue(event.getBot());
+        WhoisEvent test = null;
+        try {
+            test = waitForQueue.waitFor(WhoisEvent.class);
+            waitForQueue.close();
+            user = test.getRegisteredAs();
+        } catch (InterruptedException ex) {
+            Logger.getLogger(MessageEvent.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return user;
     }
+
+    public static boolean checkAccount(String user) {
+        boolean paid = false;
+        try {
+            URL url = new URL("https://minecraft.net/haspaid.jsp?user=" + user);
+            BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
+            String str = in.readLine();
+            in.close();
+            if (str != null) {
+                paid = Boolean.valueOf(str);
+            }
+        } catch (java.io.IOException e1) {
+        }
+        return paid;
+    }
+
+
 }

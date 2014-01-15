@@ -10,15 +10,14 @@ import com.google.gson.JsonParser;
 import java.io.*;
 
 /**
- *
  * @author Hardik
  */
 public class JsonUtils {
-    public static File jsonFilePath = new File (System.getProperty("user.dir")+ "/Perms/perms.json");
+    public static File jsonFilePath = new File(System.getProperty("user.dir") + "/Perms/perms.json");
     public static final String Jsonfile = System.getProperty("user.dir") + "/perms.json";
-    
-    
-    public static  boolean isJSONObject(String possibleJson) {
+
+
+    public static boolean isJSONObject(String possibleJson) {
         boolean valid = false;
         try {
             new JsonParser().parse(possibleJson);
@@ -28,48 +27,48 @@ public class JsonUtils {
         }
         return valid;
     }
-    
-    public static String getStringFromFile (String filePath) throws Exception {
+
+    public static String getStringFromFile(String filePath) throws Exception {
         File fl = new File(filePath);
         FileInputStream fin = new FileInputStream(fl);
         String ret = convertStreamToString(fin);
-        fin.close();        
+        fin.close();
         return ret;
-        
+
     }
-    
+
     public static String convertStreamToString(InputStream is) throws Exception {
         BufferedReader reader = new BufferedReader(new InputStreamReader(is));
         StringBuilder sb = new StringBuilder();
         String line = null;
-        
+
         while ((line = reader.readLine()) != null) {
             sb.append(line).append("\n");
         }
-    return sb.toString();
+        return sb.toString();
     }
-    
-    public static void writeJsonFile(File file, String json) {
-    BufferedWriter bufferedWriter = null;
-    try {
-        FileWriter fileWriter = new FileWriter(file);
-        bufferedWriter = new BufferedWriter(fileWriter);
-        bufferedWriter.write(json);
 
-    } catch (IOException e) {
-        e.printStackTrace();
-    } finally {
+    public static void writeJsonFile(File file, String json) {
+        BufferedWriter bufferedWriter = null;
         try {
-            if (bufferedWriter != null){
-                bufferedWriter.close();
+            FileWriter fileWriter = new FileWriter(file);
+            bufferedWriter = new BufferedWriter(fileWriter);
+            bufferedWriter.write(json);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (bufferedWriter != null) {
+                    bufferedWriter.close();
+                }
+            } catch (IOException ex) {
+                ex.printStackTrace();
             }
-        } catch (IOException ex) {
-            ex.printStackTrace();
         }
     }
-    }
-    
-    public static void createJsonStructure(File file){
+
+    public static void createJsonStructure(File file) {
         try {
             file.getParentFile().mkdirs();
             file.createNewFile();
@@ -79,5 +78,5 @@ public class JsonUtils {
         } catch (IOException e) {
             e.printStackTrace();
         }
-}
+    }
 }

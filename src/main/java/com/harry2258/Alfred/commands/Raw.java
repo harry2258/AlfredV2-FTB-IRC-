@@ -3,27 +3,28 @@ package com.harry2258.Alfred.commands;
 import com.harry2258.Alfred.api.Command;
 import com.harry2258.Alfred.api.Config;
 import com.harry2258.Alfred.api.PermissionManager;
-import org.pircbotx.Channel;
 import org.pircbotx.hooks.events.MessageEvent;
 
-public class Join extends Command {
-
+/**
+ * Created by Hardik on 1/14/14.
+ */
+public class Raw extends Command {
     private Config config;
     private PermissionManager manager;
 
-    public Join() {
-        super("Join", "Tells the bot to join a channel", "join [#channel]");
+    public Raw() {
+        super("Raw", "Send a RAW line!");
     }
 
     @Override
     public boolean execute(MessageEvent event) throws Exception {
-        if (manager.hasExec(event.getUser(), event)) {
+        if (PermissionManager.hasExec(event.getUser(), event)) {
+            StringBuilder sb = new StringBuilder();
             String[] args = event.getMessage().split(" ");
-            Channel target = event.getBot().getUserChannelDao().getChannel(args[1]);
-            if (target.isInviteOnly()) {
-                event.getBot().sendRaw().rawLineNow("KNOCK " + target.getName() + " :Asked to join this channel by user " + event.getUser().getNick() + " in channel " + event.getChannel().getName());
+            for (int i = 1; i < args.length; i++) {
+                sb.append(args[i] + " ");
             }
-            event.getBot().sendIRC().joinChannel(target.getName());
+            event.getBot().sendRaw().rawLineNow(sb.toString().trim());
             return true;
         }
         return false;

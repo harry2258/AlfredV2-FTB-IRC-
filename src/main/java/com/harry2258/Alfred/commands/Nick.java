@@ -19,13 +19,13 @@ public class Nick extends Command {
     @Override
     public boolean execute(MessageEvent event) {
         try {
-            if (manager.hasExec(event.getUser(), event.getChannel(), event)) {
-            String[] args = event.getMessage().split(" ");
-            if (args.length >= 1) {
-                event.getBot().sendIRC().changeNick(event.getMessage().split(" ")[1]);
-                return true;
+            if (manager.hasExec(event.getUser(), event)) {
+                String[] args = event.getMessage().split(" ");
+                if (args.length >= 1) {
+                    event.getBot().sendIRC().changeNick(event.getMessage().split(" ")[1]);
+                    return true;
+                }
             }
-        }
         } catch (Exception ex) {
             Logger.getLogger(Nick.class.getName()).log(Level.SEVERE, null, ex);
         }
