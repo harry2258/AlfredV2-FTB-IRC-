@@ -1,5 +1,6 @@
 package com.harry2258.Alfred.commands;
 
+import com.harry2258.Alfred.Main;
 import com.harry2258.Alfred.api.Command;
 import com.harry2258.Alfred.api.Config;
 import com.harry2258.Alfred.api.JsonUtils;
@@ -28,8 +29,8 @@ public class List extends Command {
         String Admins;
         String Exec;
 
-        String Jsonfile = System.getProperty("user.dir") + "/Perms/" + event.getChannel().getName() + "/" + "perms.json";
-        String perms = JsonUtils.getStringFromFile(Jsonfile);
+        //String Jsonfile = System.getProperty("user.dir") + "/Perms/" + event.getChannel().getName() + "/" + "perms.json";
+        String perms = Main.map.get(event.getChannel().getName()).toString();
         JSONObject jsonObj = new JSONObject(perms);
 
         String exece = System.getProperty("user.dir") + "/perms.json";

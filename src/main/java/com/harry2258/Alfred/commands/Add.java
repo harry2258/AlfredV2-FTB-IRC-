@@ -4,6 +4,7 @@
  */
 package com.harry2258.Alfred.commands;
 
+import com.harry2258.Alfred.Main;
 import com.harry2258.Alfred.api.*;
 import org.json.JSONObject;
 import org.pircbotx.Colors;
@@ -32,7 +33,6 @@ public class Add extends Command {
         String[] args = event.getMessage().split(" ");
         String type = args[1];
 
-
         if (type.equalsIgnoreCase("mod")) {
             if (args.length == 3) {
                 try {
@@ -43,6 +43,7 @@ public class Add extends Command {
                         jsonObj.getJSONObject("Perms").append("Mods", newuser);
                         JsonUtils.writeJsonFile(file, jsonObj.toString());
                         event.getUser().send().notice(newuser + " was added to the list!");
+                        event.getUser().send().notice("Please Reload the permissions!");
                         return true;
                     } else {
                         event.getChannel().send().message(newuser + " is already on the list!");
@@ -66,11 +67,11 @@ public class Add extends Command {
                     }
                     String perms = JsonUtils.getStringFromFile(Jsonfile);
                     JSONObject jsonObj = new JSONObject(perms);
-                    System.out.println(jsonObj.getJSONObject("Perms").getString("ModPerms"));
                     if (!jsonObj.getJSONObject("Perms").getString("ModPerms").contains(command)) {
                         jsonObj.getJSONObject("Perms").append("ModPerms", command);
                         JsonUtils.writeJsonFile(file, jsonObj.toString());
                         event.getUser().send().notice(command + " was added to the list!");
+                        event.getUser().send().notice("Please Reload the permissions!");
                         return true;
                     } else {
                         event.getChannel().send().message(command + " is already on the list!");
@@ -92,6 +93,7 @@ public class Add extends Command {
                         jsonObj.getJSONObject("Perms").append("Admins", newuser);
                         JsonUtils.writeJsonFile(file, jsonObj.toString());
                         event.getUser().send().notice(newuser + " was added to the list!");
+                        event.getUser().send().notice("Please Reload the permissions!");
                         return true;
                     } else {
                         event.getChannel().send().message(newuser + " is already on the list!");
@@ -120,6 +122,7 @@ public class Add extends Command {
                         jsonObj.getJSONObject("Perms").append("Everyone", command);
                         JsonUtils.writeJsonFile(file, jsonObj.toString());
                         event.getUser().send().notice(command + " was added to the list!");
+                        event.getUser().send().notice("Please Reload the permissions!");
                         return true;
                     } else {
                         event.getChannel().send().message(command + " is already on the list!");

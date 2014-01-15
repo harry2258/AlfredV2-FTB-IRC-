@@ -2,13 +2,17 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
+
 package com.harry2258.Alfred.api;
 
+import com.harry2258.Alfred.Main;
 import org.json.JSONObject;
 import org.pircbotx.Channel;
 import org.pircbotx.User;
 
 import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 
 public class PermissionManager {
@@ -21,20 +25,26 @@ public class PermissionManager {
         this.configs = conf;
     }
 
+
     public boolean hasPermission(String permission, User user, Channel channel, org.pircbotx.hooks.events.MessageEvent event) throws Exception {
         File file = new File(System.getProperty("user.dir") + "/Perms/" + event.getChannel().getName() + "/" + "perms.json");
         if (!file.exists()) {
             JsonUtils.createJsonStructure(file);
         }
 
-        boolean hostmatch = false;
-        boolean nickmatch = false;
-        boolean permmatch = false;
         String nick;
         String hostname;
 
-        String Jsonfile = System.getProperty("user.dir") + "/Perms/" + event.getChannel().getName() + "/" + "perms.json";
-        String perms = JsonUtils.getStringFromFile(Jsonfile);
+
+        //String Jsonfile = System.getProperty("user.dir") + "/Perms/" + event.getChannel().getName() + "/" + "perms.json";
+        if (!Main.map.containsKey(event.getChannel().getName())) {
+            System.out.println("Perms are not inside HashMap!\nAdding!");
+            String Jsonfile = System.getProperty("user.dir") + "/Perms/" + event.getChannel().getName() + "/" + "perms.json";
+            String perms = JsonUtils.getStringFromFile(Jsonfile);
+            Main.map.put(event.getChannel().getName(), perms);
+        }
+
+        String perms = Main.map.get(event.getChannel().getName());
         JSONObject jsonObj = new JSONObject(perms);
 
         String sender = Utils.getAccount(user, event);
@@ -63,8 +73,8 @@ public class PermissionManager {
 
     public static boolean hasExec(User user, org.pircbotx.hooks.events.MessageEvent event) throws Exception {
         System.out.println("Checking for Exec perms!");
-        String Admin = JsonUtils.getStringFromFile(JsonUtils.Jsonfile);
-        JSONObject exec = new JSONObject(Admin);
+        String Exec = JsonUtils.getStringFromFile(JsonUtils.Jsonfile);
+        JSONObject exec = new JSONObject(Exec);
 
         if (exec.getJSONObject("Perms").getString("Exec").contains(Utils.getAccount(user, event))) {
             if (user.isVerified()) {
@@ -78,11 +88,10 @@ public class PermissionManager {
     public static boolean hasAdmin(User user, org.pircbotx.hooks.events.MessageEvent event) throws Exception {
 
         String sender = Utils.getAccount(user, event);
-        String Jsonfile = System.getProperty("user.dir") + "/Perms/" + event.getChannel().getName() + "/" + "perms.json";
-        String perms = JsonUtils.getStringFromFile(Jsonfile);
-        JSONObject jsonObj = new JSONObject(perms);
+        String Admin = Main.map.get(event.getChannel().getName());
+        JSONObject admin = new JSONObject(Admin);
 
-        if (jsonObj.getJSONObject("Perms").getString("Admins").contains(sender)) {
+        if (admin.getJSONObject("Perms").getString("Admins").contains(sender)) {
             if (user.isVerified()) {
                 return true;
             }

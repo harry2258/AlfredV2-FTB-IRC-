@@ -1,9 +1,6 @@
 package com.harry2258.Alfred;
 
-import com.harry2258.Alfred.api.Command;
-import com.harry2258.Alfred.api.CommandRegistry;
-import com.harry2258.Alfred.api.Config;
-import com.harry2258.Alfred.api.PermissionManager;
+import com.harry2258.Alfred.api.*;
 import org.pircbotx.Configuration;
 import org.pircbotx.PircBotX;
 import org.reflections.Reflections;
@@ -11,6 +8,8 @@ import org.slf4j.impl.SimpleLogger;
 
 import java.io.File;
 import java.nio.charset.Charset;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -24,6 +23,7 @@ public class Main {
     public static long startup = 0;
     public static PircBotX bot;
     public static File jsonFilePath = new File(System.getProperty("user.dir") + "/perms.json");
+    public static Map<String,String> map=new HashMap<String,String>();
 
     public static void main(String[] args) {
         System.setProperty(SimpleLogger.SHOW_DATE_TIME_KEY, "true");
@@ -62,9 +62,20 @@ public class Main {
             builder.setServer(config.getServerHostame(), Integer.parseInt(config.getServerPort()), config.getServerPassword());
             builder.getListenerManager().addListener(new com.harry2258.Alfred.listeners.MessageEvent(config, manager));
             builder.getListenerManager().addListener(new com.harry2258.Alfred.listeners.InviteEvent(config, manager));
+            System.out.println("------Permissions------");
             for (String channel : config.getChannels()) {
+                File file = new File(System.getProperty("user.dir") + "/Perms/" + channel + "/" + "perms.json");
+                String Jsonfile = System.getProperty("user.dir") + "/Perms/" + channel + "/" + "perms.json";
+                if (!file.exists()) {
+                    System.out.println("Creating perms.json for " + channel);
+                    JsonUtils.createJsonStructure(file);
+                }
+                String perms = JsonUtils.getStringFromFile(Jsonfile);
+                map.put(channel, perms);
+                System.out.println("Loaded perms for " + channel);
                 builder.addAutoJoinChannel(channel);
             }
+            System.out.println("-----------------------");
             PircBotX bot = new PircBotX(builder.buildConfiguration());
             System.out.println("Starting bot...");
             bot.startBot();

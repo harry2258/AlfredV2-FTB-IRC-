@@ -27,7 +27,7 @@ public class Delcmd extends Command {
             File command = new File("commands/" + event.getChannel().getName() + "/" + commandname + ".cmd");
             if (command.exists()) {
                 command.delete();
-                event.getChannel().send().message("deleted command \"" + commandname + "\"");
+                event.getUser().send().notice("deleted command \"" + commandname + "\"");
                 return true;
             } else {
                 event.getUser().send().notice("There is no custom command by that name!");
@@ -39,11 +39,11 @@ public class Delcmd extends Command {
 
     @Override
     public void setConfig(Config config) {
-
+this.config = config;
     }
 
     @Override
     public void setManager(PermissionManager manager) {
-
+this.manager = manager;
     }
 }
