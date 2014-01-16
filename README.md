@@ -1,4 +1,5 @@
-AlfredV2-FTB-IRC-
+Alfred2 (FTB IRC BOT)
+
 =================
 
-Alfred2 :D Thanks Zack!
+Alfred2 :D Thanks again Zack!
