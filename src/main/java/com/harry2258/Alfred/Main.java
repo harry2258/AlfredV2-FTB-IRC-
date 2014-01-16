@@ -23,7 +23,8 @@ public class Main {
     public static long startup = 0;
     public static PircBotX bot;
     public static File jsonFilePath = new File(System.getProperty("user.dir") + "/perms.json");
-    public static Map<String,String> map=new HashMap<String,String>();
+    public static Map<String, String> map = new HashMap<String, String>();
+    public static Map<String, String> Login = new HashMap<String, String>();
 
     public static void main(String[] args) {
         System.setProperty(SimpleLogger.SHOW_DATE_TIME_KEY, "true");
@@ -62,6 +63,9 @@ public class Main {
             builder.setServer(config.getServerHostame(), Integer.parseInt(config.getServerPort()), config.getServerPassword());
             builder.getListenerManager().addListener(new com.harry2258.Alfred.listeners.MessageEvent(config, manager));
             builder.getListenerManager().addListener(new com.harry2258.Alfred.listeners.InviteEvent(config, manager));
+            builder.getListenerManager().addListener(new com.harry2258.Alfred.listeners.JoinEvent(config, manager));
+            builder.getListenerManager().addListener(new com.harry2258.Alfred.listeners.NickChangeEvent(config, manager));
+            builder.getListenerManager().addListener(new com.harry2258.Alfred.listeners.PartEvent(config, manager));
             System.out.println("------Permissions------");
             for (String channel : config.getChannels()) {
                 File file = new File(System.getProperty("user.dir") + "/Perms/" + channel + "/" + "perms.json");

@@ -4,7 +4,6 @@
  */
 package com.harry2258.Alfred.commands;
 
-import com.harry2258.Alfred.Main;
 import com.harry2258.Alfred.api.*;
 import org.json.JSONObject;
 import org.pircbotx.Colors;
@@ -122,7 +121,6 @@ public class Add extends Command {
                         jsonObj.getJSONObject("Perms").append("Everyone", command);
                         JsonUtils.writeJsonFile(file, jsonObj.toString());
                         event.getUser().send().notice(command + " was added to the list!");
-                        event.getUser().send().notice("Please Reload the permissions!");
                         return true;
                     } else {
                         event.getChannel().send().message(command + " is already on the list!");

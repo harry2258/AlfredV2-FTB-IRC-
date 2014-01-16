@@ -40,11 +40,11 @@ public class Reload extends Command {
 
     @Override
     public void setConfig(Config config) {
-this.config = config;
+        this.config = config;
     }
 
     @Override
     public void setManager(PermissionManager manager) {
-this.manager = manager;
+        this.manager = manager;
     }
 }
