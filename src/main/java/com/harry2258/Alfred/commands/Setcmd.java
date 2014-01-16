@@ -10,6 +10,8 @@ import java.io.FileWriter;
 import java.io.PrintWriter;
 import java.util.Date;
 
+import static com.harry2258.Alfred.api.CommandRegistry.commands;
+
 /**
  * Created with IntelliJ IDEA.
  * User: Zack
@@ -22,40 +24,46 @@ public class Setcmd extends Command {
     private PermissionManager manager;
 
     public Setcmd() {
-        super("Setcmd", "Set a custom command", "setcmd <trigger> <output> ex $setcmd test this is a test!");
+        super("Setcmd", "Set a custom command", "setcmd [trigger] [output] ex `setcmd test this is a test!");
     }
 
     @Override
     public boolean execute(MessageEvent event) throws Exception {
         Date date = new Date();
         String[] args = event.getMessage().split(" ");
-        if (args.length > 1) {
-            String commandname = args[1];
-            StringBuilder sb = new StringBuilder();
-            for (int i = 2; i < args.length; i++) {
-                sb.append(args[i]).append(" ");
-            }
-            try {
-
-                File command = new File("commands/" + event.getChannel().getName() + "/" + commandname + ".cmd");
-                command.getParentFile().mkdirs();
-                command.createNewFile();
-                PrintWriter writer = new PrintWriter(new FileWriter(command));
-                String[] lines = sb.toString().trim().split("\\\\n");
-                if (lines.length <= 3) {
-                    for (String s : lines) {
-                        writer.println(s);
-                    }
-                } else {
-                    event.getChannel().send().message("lines must be less than or equal to 3!");
-                    return false;
+        String classname = Character.toUpperCase(args[1].charAt(0)) + event.getMessage().split(" ")[1].substring(1).toLowerCase();
+        event.getUser().send().notice(classname);
+        if (!commands.containsKey(classname)) {
+            if (args.length > 1) {
+                String commandname = args[1];
+                StringBuilder sb = new StringBuilder();
+                for (int i = 2; i < args.length; i++) {
+                    sb.append(args[i]).append(" ");
                 }
-                writer.flush();
-                writer.close();
-                event.getUser().send().notice("'" + commandname + "' was set to '" + sb.toString() + "'");
-                return true;
-            } catch (Exception e) {
+                try {
+
+                    File command = new File("commands/" + event.getChannel().getName() + "/" + commandname + ".cmd");
+                    command.getParentFile().mkdirs();
+                    command.createNewFile();
+                    PrintWriter writer = new PrintWriter(new FileWriter(command));
+                    String[] lines = sb.toString().trim().split("\\\\n");
+                    if (lines.length <= 3) {
+                        for (String s : lines) {
+                            writer.println(s);
+                        }
+                    } else {
+                        event.getChannel().send().message("lines must be less than or equal to 3!");
+                        return false;
+                    }
+                    writer.flush();
+                    writer.close();
+                    event.getUser().send().notice("'" + commandname + "' was set to '" + sb.toString() + "'");
+                    return true;
+                } catch (Exception e) {
+                }
             }
+        } else {
+            event.getUser().send().notice("You cannot create a custom command by that name!");
         }
         return false;
     }

@@ -88,7 +88,7 @@ public class PermissionManager {
 
     public static boolean hasAdmin(User user, org.pircbotx.hooks.events.MessageEvent event) throws Exception {
 
-        String sender = Utils.getAccount(user, event);
+        String sender = Main.Login.get(user.getNick());
         String Admin = Main.map.get(event.getChannel().getName());
         JSONObject admin = new JSONObject(Admin);
 

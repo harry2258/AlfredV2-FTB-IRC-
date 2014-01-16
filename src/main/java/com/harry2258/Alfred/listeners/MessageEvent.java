@@ -68,7 +68,7 @@ public class MessageEvent extends ListenerAdapter {
                                 Command command = CommandRegistry.getCommand(classname);
                                 command.setConfig(config);
                                 if (!command.execute(event)) {
-                                    event.getChannel().send().message(Colors.RED + "An error occurred! " + command.getHelp());
+                                    event.getChannel().send().message(Colors.RED + "An error occurred! " + Colors.NORMAL + command.getHelp());
                                     return;
                                 }
 
