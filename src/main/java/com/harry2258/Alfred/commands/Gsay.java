@@ -19,6 +19,7 @@ public class Gsay extends Command {
 
     @Override
     public boolean execute(MessageEvent event) throws Exception {
+
         String[] args = event.getMessage().split(" ");
         StringBuilder sb = new StringBuilder();
         for (int i = 2; i < args.length; i++) {
