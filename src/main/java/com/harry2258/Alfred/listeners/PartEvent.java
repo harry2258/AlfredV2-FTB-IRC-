@@ -4,6 +4,7 @@ import com.harry2258.Alfred.Main;
 import com.harry2258.Alfred.api.Config;
 import com.harry2258.Alfred.api.PermissionManager;
 import org.pircbotx.hooks.ListenerAdapter;
+import org.pircbotx.hooks.events.QuitEvent;
 
 /**
  * Created by Hardik on 1/15/14.
@@ -20,6 +21,12 @@ public class PartEvent extends ListenerAdapter {
 
     @Override
     public void onPart(org.pircbotx.hooks.events.PartEvent event) throws Exception {
+
+        Main.Login.remove(event.getUser().getNick());
+        System.out.println(event.getUser().getNick() + " was removed from the HashMap");
+    }
+
+    public void onQuit(QuitEvent event) throws Exception {
 
         Main.Login.remove(event.getUser().getNick());
         System.out.println(event.getUser().getNick() + " was removed from the HashMap");

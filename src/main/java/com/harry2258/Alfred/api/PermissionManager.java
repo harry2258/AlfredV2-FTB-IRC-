@@ -33,6 +33,10 @@ public class PermissionManager {
             return true;
         }
 
+        if (!Main.Login.containsKey(user.getNick())) {
+            return false;
+        }
+
         String nick;
         String hostname;
 

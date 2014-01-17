@@ -9,6 +9,8 @@ import org.pircbotx.Channel;
 import org.pircbotx.User;
 import org.pircbotx.hooks.events.MessageEvent;
 
+import java.util.ArrayList;
+
 /**
  * Created by Hardik on 1/15/14.
  */
@@ -21,22 +23,35 @@ public class Getlogin extends Command {
         super("Getlogin", "Gets Getlogin names of all the users [Can take time with a lot of people!]", "Getlogin");
     }
 
+    ArrayList<String> user = new ArrayList<String>();
+
     @Override
     public boolean execute(MessageEvent event) throws Exception {
         if (PermissionManager.hasExec(event.getUser(), event)) {
             int i = 0;
+            final long startTime = System.currentTimeMillis();
             for (Channel channel : event.getBot().getUserBot().getChannels()) {
                 for (User u : channel.getUsers()) {
                     if (u.isVerified()) {
-                        if (!Main.Login.containsKey(u.getNick())) {
-                            String user = Utils.getAccount(u, event);
-                            Main.Login.put(u.getNick(), user);
-                            i++;
-                        }
+                        Thread.sleep(1000);
+                        String account = Utils.getAccount(u, event);
+                        user.add(account);
+                        i++;
                     }
                 }
+                final long endTime = System.currentTimeMillis();
+                event.getUser().send().notice("Got " + user.size() + " more users! It took me " + ((endTime - startTime) / 1000) + " seconds.");
+                i = 0;
             }
-            event.getChannel().send().message("Added " + i + " to Login HashMap!");
+            final long endTime = System.currentTimeMillis();
+            event.getUser().send().notice("Got " + user.size() + " users! It took me " + ((endTime - startTime) / 1000) + " seconds.");
+            int x = 0;
+            for (x = 0; x < user.size(); x++) {
+                Main.Login.put(event.getUser().getNick(), user.get(x));
+                x++;
+            }
+
+            event.getChannel().send().message("Added " + x + " users to Login HashMap!");
         }
         return true;
     }

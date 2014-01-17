@@ -8,6 +8,9 @@ import org.pircbotx.hooks.ListenerAdapter;
 import org.pircbotx.hooks.WaitForQueue;
 import org.pircbotx.hooks.events.WhoisEvent;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -27,14 +30,42 @@ public class NickChangeEvent extends ListenerAdapter {
 
     @Override
     public void onNickChange(org.pircbotx.hooks.events.NickChangeEvent event) throws Exception {
-
         String oldNick = event.getOldNick();
         String newNick = event.getNewNick();
 
+        /*
+        if (oldN.exists()) {
+            path = System.getProperty("user.dir") + "/Reminders/" + oldNick + ".txt";
+        } else {
+            File newN = new File(System.getProperty("user.dir") + "/Reminders/" + newNick + ".txt");
+            if (newN.exists()) {
+                path = System.getProperty("user.dir") + "/Reminders/" + newNick + ".txt";
+            }
+
+        }
+        */
+
+        String user = getAccount(event.getUser(), event);
+
+        File reminder = new File(System.getProperty("user.dir") + "/Reminders/" + user + ".txt");
+        if (reminder.exists()) {
+            BufferedReader in = new BufferedReader(new FileReader(reminder));
+            String tmp;
+            event.getUser().send().notice("=========Reminders=========");
+            while ((tmp = in.readLine()) != null) {
+                event.getUser().send().notice(tmp);
+            }
+            in.close();
+            reminder.delete();
+        }
+
+
         Main.Login.remove(oldNick);
-        Main.Login.put(newNick, getAccount(event.getUser(), event));
+        Main.Login.put(newNick, user);
 
         System.out.println("Removed " + oldNick + " from HashMap and Added " + newNick);
+
+
     }
 
     public static String getAccount(User u, org.pircbotx.hooks.events.NickChangeEvent event) {

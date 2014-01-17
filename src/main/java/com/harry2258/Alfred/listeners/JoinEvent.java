@@ -8,6 +8,9 @@ import org.pircbotx.hooks.ListenerAdapter;
 import org.pircbotx.hooks.WaitForQueue;
 import org.pircbotx.hooks.events.WhoisEvent;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -36,6 +39,26 @@ public class JoinEvent extends ListenerAdapter {
             }
         } else {
             event.getUser().send().notice("You need to login to use the bot!");
+        }
+
+        String path = null;
+        if (Main.Login.containsKey(event.getUser().getNick())) {
+            path = System.getProperty("user.dir") + "/Reminders/" + Main.Login.get(event.getUser().getNick()) + ".txt";
+        } else {
+            path = System.getProperty("user.dir") + "/Reminders/" + event.getUser().getNick() + ".txt";
+        }
+
+        File reminder = new File(path);
+
+        if (reminder.exists()) {
+            BufferedReader in = new BufferedReader(new FileReader(reminder));
+            String tmp;
+            event.getUser().send().notice("=========Reminders=========");
+            while ((tmp = in.readLine()) != null) {
+                event.getUser().send().notice(tmp);
+            }
+            in.close();
+            reminder.delete();
         }
     }
 

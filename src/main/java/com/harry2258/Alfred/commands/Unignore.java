@@ -24,7 +24,6 @@ public class Unignore extends Command {
     public boolean execute(MessageEvent event) {
         String[] args = event.getMessage().split(" ");
         if (args.length == 2) {
-            String test = args[1];
             String user = Utils.getAccount(event.getBot().getUserChannelDao().getUser(args[1]), event);
             if (Ignore.ignored.contains(user)) {
                 Ignore.ignored.remove(user);

@@ -31,6 +31,12 @@ public class Ignore extends Command {
         String[] args = event.getMessage().split(" ");
         if (args.length == 2) {
             User target = event.getBot().getUserChannelDao().getUser(args[1]);
+
+            if (target.getNick().equals(event.getUser().getNick())) {
+                event.getChannel().send().message(event.getUser().getNick() + " hurt itself in confusion!");
+                return true;
+            }
+
             String user = Utils.getAccount(event.getBot().getUserChannelDao().getUser(args[1]), event);
             if (!manager.hasExec(target, event)) {
 
