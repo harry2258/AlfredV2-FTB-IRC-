@@ -36,11 +36,14 @@ public class MessageEvent extends ListenerAdapter {
             }
         }
         if (event.getMessage().startsWith(trigger) && !Ignore.ignored.contains(Main.Login.get(event.getUser().getNick()))) {
-            if (event.getUser().isVerified()) {
                 if (event.getMessage().startsWith(config.getTrigger() + "login")) {
+                    if (event.getUser().isVerified()) {
                     String classname = "Login";
                     Command command = CommandRegistry.getCommand(classname);
                     command.setConfig(config);
+                    } else {
+                        event.getUser().send().notice("You need to be logged in with NickServ!");
+                    }
                 }
 
                 if (Main.Login.containsKey(event.getUser().getNick())) {
@@ -118,9 +121,6 @@ public class MessageEvent extends ListenerAdapter {
                 } else {
                     event.getUser().send().notice("Please log into the bot using " + config.getTrigger() + "login");
                 }
-            } else {
-                event.getUser().send().notice("You need to be logged in with NickServ to use the bot!");
-            }
         }
 //        for (String word : event.getMessage().split(" ")) {
 //            if (Utils.isUrl(word)) {
