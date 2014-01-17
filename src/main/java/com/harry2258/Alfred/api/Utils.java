@@ -229,5 +229,30 @@ public class Utils {
         return paid;
     }
 
+    public static String getInsult() {
+        String insult1 = null;
+        do {
+            try {
+                URL insult;
+                insult = new URL("http://www.pangloss.com/seidel/Shaker/index.html?");
+                BufferedReader br = new BufferedReader(new InputStreamReader(insult.openStream()));
+                for (int i = 0; i < 16; ++i)
+                    br.readLine();
+                String line = br.readLine();
+                String y = line.replaceAll("</font>", " ").replace("</form><hr>", "");
+                insult1 = y;
+                while (line != null) {
+                    System.out.println(line);
+                    line = br.readLine();
+                }
+                br.close();
+            } catch (Exception e1) {
+                e1.printStackTrace();
+            }
+        } while (insult1.isEmpty());
+
+        return insult1;
+    }
+
 
 }

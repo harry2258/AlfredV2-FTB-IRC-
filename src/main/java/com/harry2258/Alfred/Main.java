@@ -23,8 +23,8 @@ public class Main {
     public static long startup = 0;
     public static PircBotX bot;
     public static File jsonFilePath = new File(System.getProperty("user.dir") + "/perms.json");
-    public static Map<String, String> map = new HashMap<String, String>();
-    public static Map<String, String> Login = new HashMap<String, String>();
+    public static Map<String, String> map = new HashMap<>();
+    public static Map<String, String> Login = new HashMap<>();
 
     public static void main(String[] args) {
         System.setProperty(SimpleLogger.SHOW_DATE_TIME_KEY, "true");
@@ -52,7 +52,7 @@ public class Main {
                 CommandRegistry.register(cmd);
             }
             //i have no idea what this is, but IDEA wouldn't shut the fuck up about changing it.
-            Configuration.Builder<PircBotX> builder = new Configuration.Builder<PircBotX>();
+            Configuration.Builder<PircBotX> builder = new Configuration.Builder<>();
             builder.setName(config.getBotNickname());
             builder.setRealName(config.getBotUsername());
             builder.setLogin(config.getBotIdent());

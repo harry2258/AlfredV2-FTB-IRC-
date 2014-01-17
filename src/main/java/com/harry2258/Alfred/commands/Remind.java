@@ -30,7 +30,15 @@ public class Remind extends Command {
     public boolean execute(MessageEvent event) throws Exception {
         String[] args = event.getMessage().split(" ");
         if (args.length >= 3) {
-            String newuser = Utils.getAccount(event.getBot().getUserChannelDao().getUser(args[1]), event);
+            String newuser = null;
+            if (event.getChannel().getUsers().contains(args[1])) {
+                System.out.println("Got login name of " + args[1] + "!");
+                newuser = Utils.getAccount(event.getBot().getUserChannelDao().getUser(args[1]), event);
+            } else {
+                System.out.println("User not found in channel!");
+                newuser = args[1];
+            }
+
             File file = new File(System.getProperty("user.dir") + "/Reminders/" + newuser + ".txt");
             if (!file.exists()) {
                 file.getParentFile().mkdirs();

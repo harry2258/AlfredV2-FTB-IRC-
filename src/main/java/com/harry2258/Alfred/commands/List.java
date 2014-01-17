@@ -30,7 +30,7 @@ public class List extends Command {
         String Exec;
 
         //String Jsonfile = System.getProperty("user.dir") + "/Perms/" + event.getChannel().getName() + "/" + "perms.json";
-        String perms = Main.map.get(event.getChannel().getName()).toString();
+        String perms = Main.map.get(event.getChannel().getName());
         JSONObject jsonObj = new JSONObject(perms);
 
         String exece = System.getProperty("user.dir") + "/perms.json";

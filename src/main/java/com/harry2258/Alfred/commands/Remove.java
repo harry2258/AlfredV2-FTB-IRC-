@@ -4,6 +4,7 @@
  */
 package com.harry2258.Alfred.commands;
 
+import com.harry2258.Alfred.Main;
 import com.harry2258.Alfred.api.*;
 import org.json.JSONObject;
 import org.pircbotx.Colors;
@@ -29,7 +30,7 @@ public class Remove extends Command {
         if (!file.exists()) {
             JsonUtils.createJsonStructure(file);
         }
-        String Jsonfile = System.getProperty("user.dir") + "/Perms/" + event.getChannel().getName() + "/" + "perms.json";
+        String Jsonfile = file.toString();
         String[] args = event.getMessage().split(" ");
         String type = args[1];
 
@@ -56,6 +57,9 @@ public class Remove extends Command {
 
                         JsonUtils.writeJsonFile(file, jsonObj.toString());
                         event.getUser().send().notice(mod + " was removed from the list!");
+                        String perms = JsonUtils.getStringFromFile(Jsonfile);
+                        Main.map.put(event.getChannel().getName(), perms);
+                        event.getUser().send().notice("Reloaded Permissions");
                         return true;
                     } else {
                         event.getChannel().send().message(mod + " is not on the list!");
@@ -94,6 +98,9 @@ public class Remove extends Command {
 
                         JsonUtils.writeJsonFile(file, jsonObj.toString());
                         event.getUser().send().notice(command + " was removed from the list!");
+                        String perms = JsonUtils.getStringFromFile(Jsonfile);
+                        Main.map.put(event.getChannel().getName(), perms);
+                        event.getUser().send().notice("Reloaded Permissions");
                         return true;
                     } else {
                         event.getChannel().send().message(command + " is not on the list!");
@@ -126,8 +133,11 @@ public class Remove extends Command {
                         }
 
                         JsonUtils.writeJsonFile(file, jsonObj.toString());
-                        String strJson = JsonUtils.getStringFromFile(JsonUtils.Jsonfile.toString());
+                        String strJson = JsonUtils.getStringFromFile(JsonUtils.Jsonfile);
                         event.getUser().send().notice(mod + " was removed from the list!");
+                        String perms = JsonUtils.getStringFromFile(Jsonfile);
+                        Main.map.put(event.getChannel().getName(), perms);
+                        event.getUser().send().notice("Reloaded Permissions");
                         return true;
                     } else {
                         event.getChannel().send().message(mod + " is not on the list!");
@@ -165,8 +175,11 @@ public class Remove extends Command {
                         }
 
                         JsonUtils.writeJsonFile(file, jsonObj.toString());
-                        String strJson = JsonUtils.getStringFromFile(JsonUtils.Jsonfile.toString());
+                        String strJson = JsonUtils.getStringFromFile(JsonUtils.Jsonfile);
                         event.getUser().send().notice(command + " was removed from the list!");
+                        String perms = JsonUtils.getStringFromFile(Jsonfile);
+                        Main.map.put(event.getChannel().getName(), perms);
+                        event.getUser().send().notice("Reloaded Permissions");
                         return true;
                     } else {
                         event.getChannel().send().message(command + " is not on the list!");

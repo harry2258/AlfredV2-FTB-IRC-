@@ -24,14 +24,13 @@ public class Reload extends Command {
     public boolean execute(MessageEvent event) throws Exception {
         Main.map.clear();
         File file = new File(System.getProperty("user.dir") + "/Perms/" + event.getChannel().getName() + "/" + "perms.json");
-        String Jsonfile = System.getProperty("user.dir") + "/Perms/" + event.getChannel().getName() + "/" + "perms.json";
         if (!file.exists()) {
             System.out.println("Creating perms.json for " + event.getChannel());
             JsonUtils.createJsonStructure(file);
         }
-        String perms = JsonUtils.getStringFromFile(Jsonfile);
+        String perms = JsonUtils.getStringFromFile(file.toString());
         Main.map.put(event.getChannel().getName(), perms);
-        event.getUser().send().notice("Permissions were reloaded for "  + event.getChannel().getName() + "!");
+        event.getUser().send().notice("Permissions were reloaded for " + event.getChannel().getName() + "!");
         return true;
     }
 

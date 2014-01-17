@@ -27,13 +27,13 @@ public class Chstatus extends Command {
     @Override
     public boolean execute(MessageEvent event) {
 
-        ArrayList<String> chRepos = new ArrayList<String>();
-        ArrayList<String> chURLs = new ArrayList<String>();
-        ArrayList<String> chURLNames = new ArrayList<String>();
-        ArrayList<Boolean> tests = new ArrayList<Boolean>();
-        ArrayList<String> Status = new ArrayList<String>();
-        ArrayList<String> Message = new ArrayList<String>();
-        ArrayList<Integer> Load = new ArrayList<Integer>();
+        ArrayList<String> chRepos = new ArrayList<>();
+        ArrayList<String> chURLs = new ArrayList<>();
+        ArrayList<String> chURLNames = new ArrayList<>();
+        ArrayList<Boolean> tests = new ArrayList<>();
+        ArrayList<String> Status = new ArrayList<>();
+        ArrayList<String> Message = new ArrayList<>();
+        ArrayList<Integer> Load = new ArrayList<>();
 
         String sendMessage = "";
         Boolean Json = null;
@@ -87,7 +87,7 @@ public class Chstatus extends Command {
                 BufferedReader re = new BufferedReader(new InputStreamReader(newURL.openStream()));
                 while ((ts = re.readLine()) != null) {
                     JSONObject jsonObj = new JSONObject(ts);
-                    String test = jsonObj.getString("Bandwidth").toString();
+                    String test = jsonObj.getString("Bandwidth");
                     int x = (int) (Integer.parseInt(test) * 100) / 1000000;
                     Load.add(x);
                 }

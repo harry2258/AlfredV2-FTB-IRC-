@@ -23,7 +23,7 @@ public class Getlogin extends Command {
         super("Getlogin", "Gets Getlogin names of all the users [Can take time with a lot of people!]", "Getlogin");
     }
 
-    ArrayList<String> user = new ArrayList<String>();
+    ArrayList<String> user = new ArrayList<>();
 
     @Override
     public boolean execute(MessageEvent event) throws Exception {

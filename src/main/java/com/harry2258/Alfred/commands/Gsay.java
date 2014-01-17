@@ -19,19 +19,19 @@ public class Gsay extends Command {
 
     @Override
     public boolean execute(MessageEvent event) throws Exception {
-
-        String[] args = event.getMessage().split(" ");
-        StringBuilder sb = new StringBuilder();
-        for (int i = 2; i < args.length; i++) {
-            sb.append(args[i]).append(" ");
+        if (PermissionManager.hasExec(event.getUser(), event)) {
+            String[] args = event.getMessage().split(" ");
+            StringBuilder sb = new StringBuilder();
+            for (int i = 2; i < args.length; i++) {
+                sb.append(args[i]).append(" ");
+            }
+            String all = sb.toString().trim();
+            if (args.length >= 3) {
+                Channel t = event.getBot().getUserChannelDao().getChannel(args[1]);
+                t.send().message(all);
+                return true;
+            }
         }
-        String all = sb.toString().trim();
-        if (args.length >= 3) {
-            Channel t = event.getBot().getUserChannelDao().getChannel(args[1]);
-            t.send().message(all);
-            return true;
-        }
-
         return false;
     }
 

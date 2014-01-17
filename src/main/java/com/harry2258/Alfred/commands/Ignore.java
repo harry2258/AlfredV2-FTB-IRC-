@@ -17,7 +17,7 @@ import java.util.List;
 
 public class Ignore extends Command {
 
-    public static List<String> ignored = new ArrayList<String>();
+    public static List<String> ignored = new ArrayList<>();
 
     private Config config;
     private PermissionManager manager;
