@@ -31,7 +31,7 @@ public class Reload extends Command {
         }
         String perms = JsonUtils.getStringFromFile(Jsonfile);
         Main.map.put(event.getChannel().getName(), perms);
-        event.getUser().send().notice("Permissions were reloaded!");
+        event.getUser().send().notice("Permissions were reloaded for "  + event.getChannel().getName() + "!");
         return true;
     }
 
