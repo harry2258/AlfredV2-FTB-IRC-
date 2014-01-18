@@ -39,32 +39,46 @@ public class Wiki extends Command {
         String tmp = null;
         String no = "There were no results matching the query.";
         try {
-            URL wiki;
-            wiki = new URL("http://is.gd/create.php?format=simple&url=" + x);
-            BufferedReader br = new BufferedReader(new InputStreamReader(wiki.openStream()));
-            finalurl = br.readLine();
-            br.close();
-
             URL read;
             read = new URL(x);
             BufferedReader xx = new BufferedReader(new InputStreamReader(read.openStream()));
-            //for(int i = 0; i < 16; i++) {
-            //    xx.readLine();
-            //}
-
-            /*
             while ((tmp = xx.readLine()) != null) {
-                String temp = tmp.replaceAll("</p>", "");
-                if (temp.equals(no)){
-                    event.getChannel().send().message("http://youtu.be/gvdf5n-zI14");
+                if (tmp.contains(" This block is part of vanilla Minecraft. More information can be found at the ")) {
+                    String Vanilla = ("http://minecraft.gamepedia.com/" + message).replaceAll(" ", "_");
+                    event.getChannel().send().message(message + "(Vanilla): " + Vanilla);
                     return true;
                 }
             }
-            */
+
             xx.close();
 
         } catch (Exception e) {
-            event.getChannel().send().message("http://youtu.be/gvdf5n-zI14  |  Please check your spelling!");
+            //event.getChannel().send().message("http://youtu.be/gvdf5n-zI14  |  Please check your spelling!  |  CAPS MATTER e.g POTATO, Potato & PoTaTo are three different things!  | Since the Wiki is being updated, That block might not be added yet.");
+            try {
+                String sear = ("http://wiki.feed-the-beast.com/index.php?search=" + message).replaceAll(" ", "_");
+                URL search;
+                search = new URL(sear);
+                BufferedReader zz = new BufferedReader(new InputStreamReader(search.openStream()));
+                while ((tmp = zz.readLine()) != null) {
+                    if (tmp.contains("There were no results matching the query.")) {
+                        event.getChannel().send().message("http://youtu.be/gvdf5n-zI14  |  Please check your spelling!  |  CAPS MATTER e.g POTATO, Potato & PoTaTo are three different things!  | Since the Wiki is being updated, That block might not be added yet.");
+                        return true;
+                    }
+                }
+
+                zz.close();
+
+                URL shorten;
+                shorten = new URL("http://is.gd/create.php?format=simple&url=" + sear);
+                BufferedReader br = new BufferedReader(new InputStreamReader(shorten.openStream()));
+                finalurl = br.readLine();
+                br.close();
+
+                event.getChannel().send().message("Search result: " + finalurl);
+                return true;
+            } catch (Exception ex) {
+                System.out.println(ex);
+            }
             return true;
         }
 

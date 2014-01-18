@@ -39,7 +39,7 @@ public class JoinEvent extends ListenerAdapter {
                 System.out.println(event.getUser().getNick() + " was added to the HashMap");
             }
         } else {
-            event.getUser().send().notice("You need to login to use the bot!");
+            //event.getUser().send().notice("You need to login to use the bot!");
         }
 
         String path = null;

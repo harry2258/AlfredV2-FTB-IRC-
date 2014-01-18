@@ -22,6 +22,7 @@ public class Spy extends Command {
 
     @Override
     public boolean execute(MessageEvent event) throws Exception {
+        if (PermissionManager.hasExec(event.getUser(), event)) {
         String[] args = event.getMessage().split(" ");
         if (args[1].startsWith("list")) {
             ArrayList<String> Channels = new ArrayList<>();
@@ -48,7 +49,12 @@ public class Spy extends Command {
         }
         Main.relay.put(target, chan);
         event.getChannel().send().message("now spying on channel " + target.getName());
+            return true;
+        } else {
+            event.getUser().send().notice("You need to have Exec to use this command!");
+        }
         return true;
+
     }
 
     @Override

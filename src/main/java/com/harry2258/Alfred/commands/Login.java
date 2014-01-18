@@ -32,7 +32,7 @@ public class Login extends Command {
                 event.getUser().send().notice("Logged in!");
                 return true;
             }
-            if (args[1].equalsIgnoreCase("name")) {
+            if (args[1].equalsIgnoreCase("info")) {
                 event.getUser().send().notice("You are logged in as: " + Main.Login.get(event.getUser().getNick()));
                 return true;
             }

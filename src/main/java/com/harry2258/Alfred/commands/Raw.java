@@ -26,6 +26,8 @@ public class Raw extends Command {
             }
             event.getBot().sendRaw().rawLineNow(sb.toString().trim());
             return true;
+        } else {
+
         }
         return false;
     }

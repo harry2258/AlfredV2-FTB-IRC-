@@ -22,16 +22,22 @@ public class Cinsult extends Command {
     @Override
     public boolean execute(MessageEvent event) throws Exception {
         String[] args = event.getMessage().split(" ");
-        Channel chan = event.getBot().getUserChannelDao().getChannel(args[1]);
-        String insult1 = Utils.getInsult();
-        System.out.println(chan.isInviteOnly());
-        if (chan.isInviteOnly() || chan.isSecret() || chan.isChannelPrivate()) {
-            event.respond("I cannot join " + chan.getName() + "!");
-        } else {
-            event.getBot().sendIRC().joinChannel(chan.getName());
-            chan.send().message(insult1);
-            chan.send().part();
-            return true;
+        if (args.length == 2) {
+            Channel chan = event.getBot().getUserChannelDao().getChannel(args[1]);
+            String insult1 = Utils.getInsult();
+            System.out.println(chan.isInviteOnly());
+            if (chan.isInviteOnly() || chan.isSecret() || chan.isChannelPrivate()) {
+                event.respond("I cannot join " + chan.getName() + "!");
+            } else {
+                if (event.getBot().getUserBot().getChannels().contains(chan)) {
+                    chan.send().message(insult1);
+                    return true;
+                }
+                event.getBot().sendIRC().joinChannel(chan.getName());
+                chan.send().message(insult1);
+                chan.send().part();
+                return true;
+            }
         }
         return true;
     }

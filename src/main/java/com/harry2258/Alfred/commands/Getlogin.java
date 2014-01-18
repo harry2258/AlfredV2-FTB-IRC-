@@ -32,10 +32,11 @@ public class Getlogin extends Command {
             for (User u : event.getChannel().getUsers()) {
 
                 if (u.isVerified()) {
-                    Thread.sleep(1000);
-                    if (!Main.Login.containsKey(event.getUser().getNick())) {
+                    String name = u.getNick();
+                    Thread.sleep(1500);
+                    if (!Main.Login.containsKey(name)) {
                         String account = Utils.getAccount(u, event);
-                        Main.Login.put(event.getUser().getNick(), account);
+                        Main.Login.put(name, account);
                         i++;
                     }
                 }

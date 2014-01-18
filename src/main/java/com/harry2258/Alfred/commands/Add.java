@@ -7,7 +7,6 @@ package com.harry2258.Alfred.commands;
 import com.harry2258.Alfred.Main;
 import com.harry2258.Alfred.api.*;
 import org.json.JSONObject;
-import org.pircbotx.Colors;
 import org.pircbotx.hooks.events.MessageEvent;
 
 import java.io.File;
@@ -20,7 +19,7 @@ public class Add extends Command {
     private PermissionManager manager;
 
     public Add() {
-        super("Add", "Adds the Permission/User to the list", "add [" + Colors.DARK_BLUE + "Permission" + Colors.NORMAL + "/" + Colors.DARK_GREEN + "User" + Colors.NORMAL + "] [" + Colors.DARK_BLUE + "Permission" + Colors.NORMAL + "/" + Colors.DARK_GREEN + "User" + Colors.NORMAL + "]");
+        super("Add", "Adds the Permission/User to the list", "There a 4 groups to add people/permissions to. Everyone: If the user is logged in, they can use permission listed in here. Modperms: If the user ia a Mod, they can use permission listed in here. Mod: Add an user to Mod list to allows them to use Modperms. Admin: Have access to almost all commands, except few critical ones. | add [mod] [batman]");
     }
 
     @Override

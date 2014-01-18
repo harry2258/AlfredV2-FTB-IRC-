@@ -206,7 +206,7 @@ public class Utils {
             JsonElement jelement = new JsonParser().parse(json);
             JsonObject output = jelement.getAsJsonObject();
             output = output.getAsJsonObject("responseData").getAsJsonArray("results").get(0).getAsJsonObject();
-            String result = String.format("Google: %s | %s | (%s)", StringEscapeUtils.unescapeHtml4(output.get("titleNoFormatting").toString().replaceAll("\"", "")), StringEscapeUtils.unescapeHtml4(output.get("content").toString().replaceAll("\\s+", " ").replaceAll("\\<.*?>", "").replaceAll("\"", "")), output.get("url").toString().replaceAll("\"", ""));
+            String result = String.format("Google: %s | %s | [ %s ]", StringEscapeUtils.unescapeHtml4(output.get("titleNoFormatting").toString().replaceAll("\"", "")), StringEscapeUtils.unescapeHtml4(output.get("content").toString().replaceAll("\\s+", " ").replaceAll("\\<.*?>", "").replaceAll("\"", "")), output.get("url").toString().replaceAll("\"", ""));
             if (result != null) {
                 return result;
             } else {
@@ -280,7 +280,7 @@ public class Utils {
                 for (int i = 0; i < 16; ++i)
                     br.readLine();
                 String line = br.readLine();
-                String y = line.replaceAll("</font>", " ").replace("</form><hr>", "");
+                String y = line.replaceAll("</font>", " ").replace("</form><hr>", "").replaceAll("<br>", " ");
                 insult1 = y;
                 while (line != null) {
                     System.out.println(line);

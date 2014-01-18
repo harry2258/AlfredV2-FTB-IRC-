@@ -8,16 +8,17 @@ import org.pircbotx.hooks.events.MessageEvent;
 /**
  * Created by Hardik on 1/14/14.
  */
-public class Action extends Command {
+public class Me extends Command {
     private Config config;
     private PermissionManager manager;
 
-    public Action() {
+    public Me() {
         super("Action", "Send an action to the channel", "Action [action]");
     }
 
     @Override
     public boolean execute(MessageEvent event) throws Exception {
+        if (PermissionManager.hasExec(event.getUser(), event)) {
         String[] args = event.getMessage().split(" ");
 
         StringBuilder sb = new StringBuilder();
@@ -25,6 +26,7 @@ public class Action extends Command {
             sb.append(args[i]).append(" ");
         }
         event.getChannel().send().action(sb.toString().trim());
+        }
         return true;
     }
 

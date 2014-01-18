@@ -27,7 +27,7 @@ public class MessageEvent extends ListenerAdapter {
         String trigger = config.getTrigger();
         String[] args = event.getMessage().split(" ");
         Date date = new Date();
-        /*
+
         if (!Main.Login.containsKey(event.getUser().getNick())) {
             if (event.getUser().isVerified()) {
                 System.out.println("Adding user to HashMap");
@@ -36,7 +36,7 @@ public class MessageEvent extends ListenerAdapter {
                 System.out.println(event.getUser().getNick() + " was added to the HashMap");
             }
         }
-        */
+
 
         if (Main.relay.containsKey(event.getChannel())) {
             Main.relay.get(event.getChannel()).send().message("[" + event.getChannel().getName() + "] <" + event.getUser().getNick() + "> " + event.getMessage());
@@ -166,6 +166,10 @@ public class MessageEvent extends ListenerAdapter {
             in.close();
             reminder.delete();
         }
+
+        //if (event.getMessage().contains("can") | event.getMessage().contains("someone") && event.getMessage().contains("help") && event.getMessage().contains("me")) {
+        //    event.getChannel().send().message("Maybe. Maybe Not.");
+        //}
 
     }
 }

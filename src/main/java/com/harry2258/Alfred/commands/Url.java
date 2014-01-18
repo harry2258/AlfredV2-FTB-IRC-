@@ -22,7 +22,6 @@ public class Url extends Command {
     @Override
     public boolean execute(MessageEvent event) throws Exception {
         String[] args = event.getMessage().split(" ");
-
         if (args.length == 2) {
             if (args[1].startsWith("list")) {
                 if (Main.URL.isEmpty()) {
