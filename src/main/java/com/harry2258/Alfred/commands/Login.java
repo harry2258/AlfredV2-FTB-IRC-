@@ -21,16 +21,16 @@ public class Login extends Command {
     @Override
     public boolean execute(MessageEvent event) throws Exception {
         String[] args = event.getMessage().split(" ");
-        if (args.length == 2){
+        if (args.length == 2) {
             if (args[1].equalsIgnoreCase("again")) {
-            event.getUser().send().notice("Removing old login!");
-            Main.Login.remove(Main.Login.get(event.getUser().getNick()));
-            Main.Login.remove(event.getUser().getNick());
-            event.getUser().send().notice("Logging in...");
-            String account = Utils.getAccount(event.getUser(), event);
-            Main.Login.put(event.getUser().getNick(), account);
-            event.getUser().send().notice("Logged in!");
-            return true;
+                event.getUser().send().notice("Removing old login!");
+                Main.Login.remove(Main.Login.get(event.getUser().getNick()));
+                Main.Login.remove(event.getUser().getNick());
+                event.getUser().send().notice("Logging in...");
+                String account = Utils.getAccount(event.getUser(), event);
+                Main.Login.put(event.getUser().getNick(), account);
+                event.getUser().send().notice("Logged in!");
+                return true;
             }
             if (args[1].equalsIgnoreCase("name")) {
                 event.getUser().send().notice("You are logged in as: " + Main.Login.get(event.getUser().getNick()));
@@ -38,7 +38,7 @@ public class Login extends Command {
             }
         }
         if (Main.Login.containsKey(event.getUser().getNick())) {
-            event.getUser().send().notice("You are already logged in! If you want to update login, use " + config.getTrigger() + "login again");
+            event.getUser().send().notice("You are already logged in! If you want to update login, use \"" + config.getTrigger() + "login again\"");
             return true;
         }
         String account = Utils.getAccount(event.getUser(), event);

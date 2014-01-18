@@ -112,7 +112,7 @@ public class Utils {
                 publishdate = e.text();
             }
         }
-        info = title + "  [" + Colors.DARK_GREEN + views + Colors.NORMAL +"]  [" + Colors.DARK_GREEN + "+" + likes + Colors.NORMAL + "]  [" + Colors.RED + "-" + dislikes + Colors.NORMAL + "]  [" + Colors.MAGENTA + user + Colors.NORMAL + " - " + Colors.YELLOW + publishdate + Colors.NORMAL +"]";
+        info = title + "  [" + Colors.DARK_GREEN + views + Colors.NORMAL + "]  [" + Colors.DARK_GREEN + "+" + likes + Colors.NORMAL + "]  [" + Colors.RED + "-" + dislikes + Colors.NORMAL + "]  [" + Colors.MAGENTA + user + Colors.NORMAL + " - " + Colors.YELLOW + publishdate + Colors.NORMAL + "]";
         //System.out.println(info);
         return info;
     }
