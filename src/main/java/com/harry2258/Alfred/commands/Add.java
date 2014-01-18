@@ -25,11 +25,11 @@ public class Add extends Command {
 
     @Override
     public boolean execute(MessageEvent event) {
-        File file = new File(System.getProperty("user.dir") + "/Perms/" + event.getChannel().getName() + "/" + "perms.json");
+        File file = new File(System.getProperty("user.dir") + "/perms/" + event.getChannel().getName().toLowerCase() + "/" + "perms.json");
         if (!file.exists()) {
             JsonUtils.createJsonStructure(file);
         }
-        String Jsonfile = System.getProperty("user.dir") + "/Perms/" + event.getChannel().getName() + "/" + "perms.json";
+        String Jsonfile = System.getProperty("user.dir") + "/perms/" + event.getChannel().getName().toLowerCase() + "/" + "perms.json";
         String[] args = event.getMessage().split(" ");
         String type = args[1];
 

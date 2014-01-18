@@ -23,7 +23,7 @@ public class Reload extends Command {
     @Override
     public boolean execute(MessageEvent event) throws Exception {
         Main.map.clear();
-        File file = new File(System.getProperty("user.dir") + "/Perms/" + event.getChannel().getName() + "/" + "perms.json");
+        File file = new File(System.getProperty("user.dir") + "/perms/" + event.getChannel().getName().toLowerCase() + "/" + "perms.json");
         if (!file.exists()) {
             System.out.println("Creating perms.json for " + event.getChannel());
             JsonUtils.createJsonStructure(file);

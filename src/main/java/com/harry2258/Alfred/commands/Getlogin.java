@@ -33,18 +33,15 @@ public class Getlogin extends Command {
 
                 if (u.isVerified()) {
                     Thread.sleep(1000);
-                    String account = Utils.getAccount(u, event);
-                    user.add(account);
-                    i++;
+                    if (!Main.Login.containsKey(event.getUser().getNick())) {
+                        String account = Utils.getAccount(u, event);
+                        Main.Login.put(event.getUser().getNick(), account);
+                        i++;
+                    }
                 }
             }
             final long endTime = System.currentTimeMillis();
-            event.getUser().send().notice("Got " + i + " users from" + event.getChannel().getName() + "! It took me " + ((endTime - startTime) / 1000) + " seconds.");
-
-            for (int x = 0; x < user.size(); x++) {
-                Main.Login.put(event.getUser().getNick(), user.get(x));
-                x++;
-            }
+            event.getUser().send().notice("Got " + i + " users from " + event.getChannel().getName() + "! It took me " + ((endTime - startTime) / 1000) + " seconds.");
 
         }
         return true;

@@ -26,7 +26,7 @@ public class Wiki extends Command {
         StringBuilder sb = new StringBuilder();
         String[] args = event.getMessage().split(" ");
 
-        for(int i = 1; i < args.length; i++) {
+        for (int i = 1; i < args.length; i++) {
             sb.append(args[i]).append(" ");
         }
 
@@ -68,7 +68,7 @@ public class Wiki extends Command {
             return true;
         }
 
-            event.getChannel().send().message( message + ": " + x);
+        event.getChannel().send().message(message + ": " + x);
         return true;
     }
 

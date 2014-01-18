@@ -26,7 +26,7 @@ public class Remove extends Command {
 
     @Override
     public boolean execute(MessageEvent event) {
-        File file = new File(System.getProperty("user.dir") + "/Perms/" + event.getChannel().getName() + "/" + "perms.json");
+        File file = new File(System.getProperty("user.dir") + "/perms/" + event.getChannel().getName().toLowerCase() + "/" + "perms.json");
         if (!file.exists()) {
             JsonUtils.createJsonStructure(file);
         }

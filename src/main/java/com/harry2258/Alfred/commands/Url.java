@@ -4,7 +4,6 @@ import com.harry2258.Alfred.Main;
 import com.harry2258.Alfred.api.Command;
 import com.harry2258.Alfred.api.Config;
 import com.harry2258.Alfred.api.PermissionManager;
-import org.pircbotx.Channel;
 import org.pircbotx.hooks.events.MessageEvent;
 
 import java.util.ArrayList;
@@ -25,25 +24,25 @@ public class Url extends Command {
         String[] args = event.getMessage().split(" ");
 
         if (args.length == 2) {
-        if (args[1].startsWith("list")) {
-            if (Main.URL.isEmpty()) {
-                event.getUser().send().notice("There are no channels that have URL scanning!");
+            if (args[1].startsWith("list")) {
+                if (Main.URL.isEmpty()) {
+                    event.getUser().send().notice("There are no channels that have URL scanning!");
+                    return true;
+                }
+                ArrayList<String> url = new ArrayList<>();
+                String Message = null;
+
+                for (int i = 0; i < Main.URL.size(); i++) {
+                    url.add(Main.URL.get(i));
+                }
+
+                for (String s : url) {
+                    Message += s + " \t";
+                }
+
+                event.getUser().send().notice(Message);
                 return true;
             }
-            ArrayList<String> url = new ArrayList<>();
-            String Message = null;
-
-            for (int i = 0; i < Main.URL.size(); i++) {
-                url.add(Main.URL.get(i));
-            }
-
-            for (String s : url) {
-                Message += s + " \t";
-            }
-
-            event.getUser().send().notice(Message);
-            return true;
-        }
 
             //boolean state = Boolean.valueOf(args[1]);
             String state = args[1];
@@ -54,7 +53,7 @@ public class Url extends Command {
             if (state.equalsIgnoreCase("off") || state.equalsIgnoreCase("false") || state.equalsIgnoreCase("no")) {
                 Main.URL.remove(event.getChannel().getName());
                 event.getUser().send().notice("Removed " + event.getChannel().getName() + " from URL scanning!");
-        }
+            }
         }
         return true;
     }

@@ -24,7 +24,7 @@ public class PermissionManager {
     }
 
     public boolean hasPermission(String permission, User user, Channel channel, org.pircbotx.hooks.events.MessageEvent event) throws Exception {
-        File file = new File(System.getProperty("user.dir") + "/Perms/" + event.getChannel().getName() + "/" + "perms.json");
+        File file = new File(System.getProperty("user.dir") + "/perms/" + event.getChannel().getName().toLowerCase() + "/" + "perms.json");
         if (!file.exists()) {
             JsonUtils.createJsonStructure(file);
         }
@@ -36,12 +36,9 @@ public class PermissionManager {
         String nick;
         String hostname;
 
-
-        //String Jsonfile = System.getProperty("user.dir") + "/Perms/" + event.getChannel().getName() + "/" + "perms.json";
-
         if (!Main.map.containsKey(event.getChannel().getName())) {
             System.out.println("Perms are not inside HashMap!\nAdding!");
-            String Jsonfile = System.getProperty("user.dir") + "/Perms/" + event.getChannel().getName() + "/" + "perms.json";
+            String Jsonfile = System.getProperty("user.dir") + "/perms/" + event.getChannel().getName().toLowerCase() + "/" + "perms.json";
             String perms = JsonUtils.getStringFromFile(Jsonfile);
             Main.map.put(event.getChannel().getName(), perms);
         }
