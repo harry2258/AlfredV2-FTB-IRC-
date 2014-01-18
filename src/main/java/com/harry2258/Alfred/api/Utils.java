@@ -11,6 +11,7 @@ import com.harry2258.Alfred.listeners.MessageEvent;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 import org.pircbotx.Channel;
 import org.pircbotx.Colors;
 import org.pircbotx.User;
@@ -62,7 +63,11 @@ public class Utils {
             if (type.contains("text") || type.contains("application")) {
                 Document doc = Jsoup.connect(link).userAgent(USER_AGENT).followRedirects(true).get();
                 String title = doc.title() == null || doc.title().isEmpty() ? "No title found!" : doc.title();
-                info = String.format("%s - Content Type: %s Size: %skb", title, type, length);
+                info = String.format("%s"
+                        //"- Content Type: %s Size: %skb"
+                        , title
+                        //, type, length
+                );
                 return info;
             }
             info = String.format("Content Type: %s Size: %skb", type, length);
@@ -74,6 +79,42 @@ public class Utils {
             }
             return response.isEmpty() ? Colors.RED + "An error occured" : response;
         }
+    }
+
+    public static String getYoutubeInfo(String s) throws IOException {
+        String info;
+        String title = null;
+        String likes = null;
+        String dislikes = null;
+        String user = null;
+        String views = null;
+        String publishdate = null;
+        Document doc = Jsoup.connect(s).userAgent("Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/537.17 (KHTML, like Gecko) Chrome/24.0.1312.57 Safari/537.17").get();
+        for (Element e : doc.select("a")) {
+            if (e.attr("class").equalsIgnoreCase("yt-uix-sessionlink yt-user-videos")) {
+                user = e.attr("href").split("/user/")[1].split("/")[0];
+            }
+        }
+        for (Element e : doc.select("span")) {
+            if (e.attr("class").equalsIgnoreCase("watch-view-count ")) {
+                views = e.text();
+            }
+            if (e.attr("class").equalsIgnoreCase("likes-count")) {
+                likes = e.text();
+            }
+            if (e.attr("class").equalsIgnoreCase("dislikes-count")) {
+                dislikes = e.text();
+            }
+            if (e.attr("class").equalsIgnoreCase("watch-title  yt-uix-expander-head") || e.attr("class").equalsIgnoreCase("watch-title long-title yt-uix-expander-head")) {
+                title = e.text();
+            }
+            if (e.attr("class").equalsIgnoreCase("watch-video-date")) {
+                publishdate = e.text();
+            }
+        }
+        info = title + "  [" + Colors.DARK_GREEN + views + Colors.NORMAL +"]  [" + Colors.DARK_GREEN + "+" + likes + Colors.NORMAL + "]  [" + Colors.RED + "-" + dislikes + Colors.NORMAL + "]  [" + Colors.MAGENTA + user + Colors.NORMAL + " - " + Colors.YELLOW + publishdate + Colors.NORMAL +"]";
+        //System.out.println(info);
+        return info;
     }
 
     public static String checkMojangServers() {

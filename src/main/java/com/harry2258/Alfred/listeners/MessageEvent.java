@@ -27,19 +27,32 @@ public class MessageEvent extends ListenerAdapter {
         String trigger = config.getTrigger();
         String[] args = event.getMessage().split(" ");
         Date date = new Date();
+        /*
         if (!Main.Login.containsKey(event.getUser().getNick())) {
             if (event.getUser().isVerified()) {
+                System.out.println("Adding user to HashMap");
                 String account = Utils.getAccount(event.getUser(), event);
                 Main.Login.put(event.getUser().getNick(), account);
                 System.out.println(event.getUser().getNick() + " was added to the HashMap");
             }
         }
+        */
+
+        if (Main.relay.containsKey(event.getChannel())) {
+            Main.relay.get(event.getChannel()).send().message("[" + event.getChannel().getName() + "] <" + event.getUser().getNick() + "> " + event.getMessage());
+        }
+
         if (event.getMessage().startsWith(trigger) && !Ignore.ignored.contains(Main.Login.get(event.getUser().getNick()))) {
             if (event.getMessage().startsWith(config.getTrigger() + "login")) {
                 if (event.getUser().isVerified()) {
                     String classname = "Login";
                     Command command = CommandRegistry.getCommand(classname);
                     command.setConfig(config);
+                    if (!command.execute(event)) {
+                        event.getChannel().send().message(Colors.RED + "An error occurred! " + Colors.NORMAL + command.getHelp());
+                        return;
+                    }
+                    return;
                 } else {
                     event.getUser().send().notice("You need to be logged in with NickServ!");
                 }
@@ -62,8 +75,8 @@ public class MessageEvent extends ListenerAdapter {
                         if (args.length == 2) {
                             String user = args[1];
                             while ((tmp = in.readLine()) != null) {
-                                String temps = tmp.replaceAll("color.red", Colors.RED).replaceAll("color.green", Colors.GREEN).replaceAll("color.bold", Colors.BOLD).replaceAll("color.normal", Colors.NORMAL).replaceAll("color.darkgreen", Colors.DARK_GREEN).replaceAll("color.purple", Colors.PURPLE).replaceAll("color.darkgreen", Colors.DARK_GREEN);
-                                event.getChannel().send().message(user + ": " + tmp);
+                                String temps = tmp.replaceAll("color.red", Colors.RED).replaceAll("color.green", Colors.GREEN).replaceAll("color.bold", Colors.BOLD).replaceAll("color.normal", Colors.NORMAL).replaceAll("color.darkgreen", Colors.DARK_GREEN).replaceAll("color.purple", Colors.PURPLE).replaceAll("color.darkgreen", Colors.DARK_GREEN).replaceAll("%user%", user);
+                                event.getChannel().send().message(temps);
                             }
                             in.close();
                             return;
@@ -71,7 +84,8 @@ public class MessageEvent extends ListenerAdapter {
                         } else {
                             while ((tmp = in.readLine()) != null) {
                                 String temps = tmp.replaceAll("color.red", Colors.RED).replaceAll("color.green", Colors.GREEN).replaceAll("color.bold", Colors.BOLD).replaceAll("color.normal", Colors.NORMAL).replaceAll("color.darkgreen", Colors.DARK_GREEN).replaceAll("color.purple", Colors.PURPLE).replaceAll("color.darkgreen", Colors.DARK_GREEN);
-                                event.getChannel().send().message(temps);
+                                String message = temps.replaceAll("%user%,", "").replaceAll("%user%:", "").replaceAll("%user%", "");
+                                event.getChannel().send().message(message);
                             }
                             in.close();
                             return;
@@ -121,14 +135,27 @@ public class MessageEvent extends ListenerAdapter {
                 event.getUser().send().notice("Please log into the bot using " + config.getTrigger() + "login");
             }
         }
-//        for (String word : event.getMessage().split(" ")) {
-//            if (Utils.isUrl(word)) {
-//                event.getChannel().send().message(event.getUser().getNick() + "'s URL: " + Utils.getTitle(word));
-//            }
-//        }
 
-        String newuser = Utils.getAccount(event.getUser(), event);
-        File reminder = new File(System.getProperty("user.dir") + "/Reminders/" + newuser + ".txt");
+
+        if (Main.URL.contains(event.getChannel().getName())) {
+            for (String word : event.getMessage().split(" ")) {
+                if (Utils.isUrl(word) && !word.toLowerCase().contains("youtube") && !word.equals(config.getTrigger() + "setcmd")) {
+                    event.getChannel().send().message("[" + Colors.RED + event.getUser().getNick() + Colors.NORMAL + "] " + Utils.getTitle(word));
+                }
+
+                if (Utils.isUrl(word) && word.toLowerCase().contains("youtube") && !word.equals(config.getTrigger() + "ping")) {
+                    event.getChannel().send().message("[" + Colors.RED + "YouTube" + Colors.NORMAL + "] " + Utils.getYoutubeInfo(word));
+
+                }
+            }
+
+
+        }
+
+
+        String path = System.getProperty("user.dir") + "/Reminders/" + Main.Login.get(event.getUser().getNick()) + ".txt";
+
+        File reminder = new File(path);
         if (reminder.exists()) {
             BufferedReader in = new BufferedReader(new FileReader(reminder));
             String tmp;

@@ -1,6 +1,7 @@
 package com.harry2258.Alfred;
 
 import com.harry2258.Alfred.api.*;
+import org.pircbotx.Channel;
 import org.pircbotx.Configuration;
 import org.pircbotx.PircBotX;
 import org.reflections.Reflections;
@@ -8,6 +9,7 @@ import org.slf4j.impl.SimpleLogger;
 
 import java.io.File;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -25,6 +27,8 @@ public class Main {
     public static File jsonFilePath = new File(System.getProperty("user.dir") + "/perms.json");
     public static Map<String, String> map = new HashMap<>();
     public static Map<String, String> Login = new HashMap<>();
+    public static HashMap<Channel, Channel> relay = new HashMap<>();
+    public static ArrayList<String> URL = new ArrayList<>();
 
     public static void main(String[] args) {
         System.setProperty(SimpleLogger.SHOW_DATE_TIME_KEY, "true");

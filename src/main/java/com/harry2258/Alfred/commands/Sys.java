@@ -29,6 +29,7 @@ public class Sys extends Command {
         long minute = TimeUnit.SECONDS.toMinutes(unixTime) - (TimeUnit.SECONDS.toHours(unixTime) * 60);
         long seconds = TimeUnit.SECONDS.toSeconds(unixTime) - (TimeUnit.SECONDS.toMinutes(unixTime) * 60);
         String time = String.format("%d Days %d Hours %d Minutes and %d seconds", day, hours, minute, seconds);
+        event.getChannel().send().message(System.getProperty("os.name") + " " + System.getProperty("os.version") + " " + System.getProperty("os.arch"));
         event.getChannel().send().message(Colors.DARK_GREEN + "System uptime" + Colors.NORMAL + ": " + time);
         return true;
     }

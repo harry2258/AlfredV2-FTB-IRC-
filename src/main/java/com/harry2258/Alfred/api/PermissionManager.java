@@ -29,10 +29,6 @@ public class PermissionManager {
             JsonUtils.createJsonStructure(file);
         }
 
-        if (Utils.getAccount(event.getUser(), event).equals("batman")) {
-            return true;
-        }
-
         if (!Main.Login.containsKey(user.getNick())) {
             return false;
         }
@@ -42,6 +38,7 @@ public class PermissionManager {
 
 
         //String Jsonfile = System.getProperty("user.dir") + "/Perms/" + event.getChannel().getName() + "/" + "perms.json";
+
         if (!Main.map.containsKey(event.getChannel().getName())) {
             System.out.println("Perms are not inside HashMap!\nAdding!");
             String Jsonfile = System.getProperty("user.dir") + "/Perms/" + event.getChannel().getName() + "/" + "perms.json";
@@ -73,6 +70,7 @@ public class PermissionManager {
         if (exec.getJSONObject("Perms").getString("Exec").contains(sender)) {
             return true;
         }
+
         return false;
     }
 

@@ -45,12 +45,12 @@ public class Ping extends Command {
             s.close();
             time = System.currentTimeMillis() - start;
             returns = "Response time: " + time + " miliseconds";
-            event.getChannel().send().message(returns);
 
         } catch (Exception ex) {
+            event.getChannel().send().message(ex.toString());
             return false;
         }
-
+        event.getChannel().send().message(returns);
         return true;
     }
 

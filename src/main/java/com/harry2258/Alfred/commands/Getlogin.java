@@ -5,7 +5,6 @@ import com.harry2258.Alfred.api.Command;
 import com.harry2258.Alfred.api.Config;
 import com.harry2258.Alfred.api.PermissionManager;
 import com.harry2258.Alfred.api.Utils;
-import org.pircbotx.Channel;
 import org.pircbotx.User;
 import org.pircbotx.hooks.events.MessageEvent;
 
@@ -30,28 +29,23 @@ public class Getlogin extends Command {
         if (PermissionManager.hasExec(event.getUser(), event)) {
             int i = 0;
             final long startTime = System.currentTimeMillis();
-            for (Channel channel : event.getBot().getUserBot().getChannels()) {
-                for (User u : channel.getUsers()) {
-                    if (u.isVerified()) {
-                        Thread.sleep(1000);
-                        String account = Utils.getAccount(u, event);
-                        user.add(account);
-                        i++;
-                    }
+            for (User u : event.getChannel().getUsers()) {
+
+                if (u.isVerified()) {
+                    Thread.sleep(1000);
+                    String account = Utils.getAccount(u, event);
+                    user.add(account);
+                    i++;
                 }
-                final long endTime = System.currentTimeMillis();
-                event.getUser().send().notice("Got " + user.size() + " more users! It took me " + ((endTime - startTime) / 1000) + " seconds.");
-                i = 0;
             }
             final long endTime = System.currentTimeMillis();
-            event.getUser().send().notice("Got " + user.size() + " users! It took me " + ((endTime - startTime) / 1000) + " seconds.");
-            int x = 0;
-            for (x = 0; x < user.size(); x++) {
+            event.getUser().send().notice("Got " + i + " users from" + event.getChannel().getName() + "! It took me " + ((endTime - startTime) / 1000) + " seconds.");
+
+            for (int x = 0; x < user.size(); x++) {
                 Main.Login.put(event.getUser().getNick(), user.get(x));
                 x++;
             }
 
-            event.getChannel().send().message("Added " + x + " users to Login HashMap!");
         }
         return true;
     }
