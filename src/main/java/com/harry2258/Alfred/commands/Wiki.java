@@ -68,7 +68,7 @@ public class Wiki extends Command {
             String json = xy.replaceAll("\n", " ");
             JSONObject jsonObj = new JSONObject(json);
             String APItest = jsonObj.getJSONObject("pages").getString(test);
-            String df = APItest.replaceAll("\\{\\{[^}]+\\}\\}|\\[\\[Category:[^\\]]+\\]\\]|\\[\\[|\\]\\]|^\\s+|\\s+$|<[^>]+>", "").replaceAll("\\r?\\n.*$", "");
+            String df = APItest.replaceAll("\\{\\{[^}]+\\}\\}|\\[\\[Category:[^\\]]+\\]\\]|\\[\\[|\\]\\]|^\\s+|\\s+$|<[^>]+>", "").trim().replaceAll("\\r?\\n.*", "");
             String fd = df.replaceAll("'", "").trim();
             int maxLength = (fd.length() < 150)?fd.length():150;
 
