@@ -154,9 +154,16 @@ public class MessageEvent extends ListenerAdapter {
         }
 
 
-        String path = System.getProperty("user.dir") + "/Reminders/" + Main.Login.get(event.getUser().getNick()) + ".txt";
+        String user = null;
 
-        File reminder = new File(path);
+        if (Main.Login.containsKey(event.getUser().getNick())) {
+            user = Main.Login.get(event.getUser().getNick());
+        } else {
+            user = event.getUser().getNick();
+        }
+
+        String login = System.getProperty("user.dir") + "/Reminders/" + user + ".txt";
+        File reminder = new File(login);
         if (reminder.exists()) {
             BufferedReader in = new BufferedReader(new FileReader(reminder));
             String tmp;
@@ -167,6 +174,9 @@ public class MessageEvent extends ListenerAdapter {
             in.close();
             reminder.delete();
         }
+
+
+
 
         //if (event.getMessage().contains("can") | event.getMessage().contains("someone") && event.getMessage().contains("help") && event.getMessage().contains("me")) {
         //    event.getChannel().send().message("Maybe. Maybe Not.");
