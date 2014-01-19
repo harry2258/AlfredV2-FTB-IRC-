@@ -75,8 +75,9 @@ public class MessageEvent extends ListenerAdapter {
                         if (args.length == 2) {
                             String user = args[1];
                             while ((tmp = in.readLine()) != null) {
-                                String temps = tmp.replaceAll("color.red", Colors.RED).replaceAll("color.green", Colors.GREEN).replaceAll("color.bold", Colors.BOLD).replaceAll("color.normal", Colors.NORMAL).replaceAll("color.darkgreen", Colors.DARK_GREEN).replaceAll("color.purple", Colors.PURPLE).replaceAll("color.darkgreen", Colors.DARK_GREEN).replaceAll("%user%", user);
-                                event.getChannel().send().message(temps);
+                                String temps = tmp.replaceAll("color.red", Colors.RED).replaceAll("color.green", Colors.GREEN).replaceAll("color.bold", Colors.BOLD).replaceAll("color.normal", Colors.NORMAL).replaceAll("color.darkgreen", Colors.DARK_GREEN).replaceAll("color.purple", Colors.PURPLE).replaceAll("color.darkgreen", Colors.DARK_GREEN);
+                                //.replaceAll("%user%", user);
+                                event.getChannel().send().message(args[1] + ", " + temps);
                             }
                             in.close();
                             return;

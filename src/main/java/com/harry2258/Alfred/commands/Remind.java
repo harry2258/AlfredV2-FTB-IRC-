@@ -54,7 +54,7 @@ public class Remind extends Command {
             try (PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(file, true)))) {
                 out.println(date + " [" + event.getUser().getNick() + "] " + sb);
                 out.close();
-                event.getUser().send().notice("Reminder set! It will be sent the next time the user is active.");
+                event.getUser().send().notice("Reminder set! It will be sent the next time the " + args[1] + " is active.");
             }
         }
         return true;
