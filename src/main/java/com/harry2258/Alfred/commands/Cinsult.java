@@ -22,8 +22,15 @@ public class Cinsult extends Command {
     @Override
     public boolean execute(MessageEvent event) throws Exception {
         String[] args = event.getMessage().split(" ");
+
         if (args.length == 2) {
             Channel chan = event.getBot().getUserChannelDao().getChannel(args[1]);
+
+            if (chan.getName().equalsIgnoreCase("#dragonweyr") || chan.getName().equalsIgnoreCase("#help") || chan.getName().equalsIgnoreCase("#lobby") || chan.getName().equalsIgnoreCase("#coders")) {
+                event.getChannel().send().message("YOU CRAZY SENDIN' ME OUT THERE?! AWW HELL NAW!!");
+                return true;
+            }
+
             String insult1 = Utils.getInsult();
             System.out.println(chan.isInviteOnly());
             if (chan.isInviteOnly() || chan.isSecret() || chan.isChannelPrivate()) {

@@ -19,13 +19,13 @@ public class Me extends Command {
     @Override
     public boolean execute(MessageEvent event) throws Exception {
         if (PermissionManager.hasExec(event.getUser(), event)) {
-        String[] args = event.getMessage().split(" ");
+            String[] args = event.getMessage().split(" ");
 
-        StringBuilder sb = new StringBuilder();
-        for (int i = 1; i < args.length; i++) {
-            sb.append(args[i]).append(" ");
-        }
-        event.getChannel().send().action(sb.toString().trim());
+            StringBuilder sb = new StringBuilder();
+            for (int i = 1; i < args.length; i++) {
+                sb.append(args[i]).append(" ");
+            }
+            event.getChannel().send().action(sb.toString().trim());
         }
         return true;
     }

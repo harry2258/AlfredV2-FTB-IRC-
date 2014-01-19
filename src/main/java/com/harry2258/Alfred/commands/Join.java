@@ -20,6 +20,12 @@ public class Join extends Command {
         if (manager.hasExec(event.getUser(), event)) {
             String[] args = event.getMessage().split(" ");
             Channel target = event.getBot().getUserChannelDao().getChannel(args[1]);
+
+            if (target.getName().equalsIgnoreCase("#dragonweyr") || target.getName().equalsIgnoreCase("#help") || target.getName().equalsIgnoreCase("#lobby") || target.getName().equalsIgnoreCase("#coders")) {
+                event.getChannel().send().message("YOU CRAZY SENDIN' ME OUT THERE?! AWW HELL NAW!!");
+                return true;
+            }
+
             if (target.isInviteOnly()) {
                 event.getBot().sendRaw().rawLineNow("KNOCK " + target.getName() + " :Asked to join this channel by user " + event.getUser().getNick() + " in channel " + event.getChannel().getName());
             }

@@ -61,7 +61,7 @@ public class Wiki extends Command {
                 BufferedReader zz = new BufferedReader(new InputStreamReader(search.openStream()));
                 while ((tmp = zz.readLine()) != null) {
                     if (tmp.contains("There were no results matching the query.")) {
-                        event.getChannel().send().message("http://youtu.be/gvdf5n-zI14  |  Please check your spelling!  |  CAPS MATTER e.g POTATO, Potato & PoTaTo are three different things!  | Since the Wiki is being updated, That block might not be added yet.");
+                        event.getChannel().send().message("http://youtu.be/gvdf5n-zI14  |  Please check your spelling!  |  CAPS MATTER e.g POTATO, Potato & PoTaTo are three different things!  | Since the Wiki is being updated, That page might not be added yet.");
                         return true;
                     }
                 }
