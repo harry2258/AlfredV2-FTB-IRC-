@@ -27,22 +27,22 @@ public class MessageEvent extends ListenerAdapter {
         String trigger = config.getTrigger();
         String[] args = event.getMessage().split(" ");
         Date date = new Date();
-
-        if (!Main.Login.containsKey(event.getUser().getNick())) {
+        String eventuser = event.getUser().getNick();
+        if (!Main.Login.containsKey(eventuser)) {
             if (event.getUser().isVerified()) {
                 System.out.println("Adding user to HashMap");
                 String account = Utils.getAccount(event.getUser(), event);
-                Main.Login.put(event.getUser().getNick(), account);
-                System.out.println(event.getUser().getNick() + " was added to the HashMap");
+                Main.Login.put(eventuser, account);
+                System.out.println(eventuser + " was added to the HashMap");
             }
         }
 
 
         if (Main.relay.containsKey(event.getChannel())) {
-            Main.relay.get(event.getChannel()).send().message("[" + event.getChannel().getName() + "] <" + event.getUser().getNick() + "> " + event.getMessage());
+            Main.relay.get(event.getChannel()).send().message("[" + event.getChannel().getName() + "] <" + eventuser + "> " + event.getMessage());
         }
 
-        if (event.getMessage().startsWith(trigger) && !Ignore.ignored.contains(Main.Login.get(event.getUser().getNick()))) {
+        if (event.getMessage().startsWith(trigger) && !Ignore.ignored.contains(Main.Login.get(eventuser))) {
             if (event.getMessage().startsWith(config.getTrigger() + "login")) {
                 if (event.getUser().isVerified()) {
                     String classname = "Login";
@@ -58,7 +58,7 @@ public class MessageEvent extends ListenerAdapter {
                 }
             }
 
-            if (Main.Login.containsKey(event.getUser().getNick())) {
+            if (Main.Login.containsKey(eventuser)) {
                 File file = new File(System.getProperty("user.dir") + "/Logs/" + event.getChannel().getName() + "/" + "CommandIssued.txt");
                 if (!file.exists()) {
                     file.getParentFile().mkdirs();
@@ -115,7 +115,7 @@ public class MessageEvent extends ListenerAdapter {
                                 }
 
                             } else {
-                                event.getUser().send().notice(config.getPermissionDenied().replaceAll("%USERNAME%", event.getUser().getNick()));
+                                event.getUser().send().notice(config.getPermissionDenied().replaceAll("%USERNAME%", eventuser));
                             }
 
 
@@ -140,11 +140,11 @@ public class MessageEvent extends ListenerAdapter {
 
         if (Main.URL.contains(event.getChannel().getName())) {
             for (String word : event.getMessage().split(" ")) {
-                if (Utils.isUrl(word) && !word.toLowerCase().contains("youtube") && !word.equals(config.getTrigger() + "setcmd")) {
+                if (Utils.isUrl(word) && !word.toLowerCase().contains("youtube") && !word.toLowerCase().contains("youtu.be") && !word.equals(config.getTrigger() + "setcmd")) {
                     event.getChannel().send().message("[" + Colors.RED + event.getUser().getNick() + Colors.NORMAL + "] " + Utils.getTitle(word));
                 }
 
-                if (Utils.isUrl(word) && word.toLowerCase().contains("youtube") && !word.equals(config.getTrigger() + "ping")) {
+                if (Utils.isUrl(word) && word.toLowerCase().contains("youtube") || word.toLowerCase().contains("youtu.be") && !word.equals(config.getTrigger() + "ping")) {
                     event.getChannel().send().message("[" + Colors.RED + "YouTube" + Colors.NORMAL + "] " + Utils.getYoutubeInfo(word));
 
                 }
@@ -156,10 +156,10 @@ public class MessageEvent extends ListenerAdapter {
 
         String user = null;
 
-        if (Main.Login.containsKey(event.getUser().getNick())) {
-            user = Main.Login.get(event.getUser().getNick());
+        if (Main.Login.containsKey(eventuser)) {
+            user = Main.Login.get(eventuser);
         } else {
-            user = event.getUser().getNick();
+            user = eventuser;
         }
 
         String login = System.getProperty("user.dir") + "/Reminders/" + user + ".txt";
