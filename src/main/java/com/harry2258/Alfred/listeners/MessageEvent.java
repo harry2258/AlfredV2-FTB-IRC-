@@ -176,8 +176,6 @@ public class MessageEvent extends ListenerAdapter {
         }
 
 
-
-
         //if (event.getMessage().contains("can") | event.getMessage().contains("someone") && event.getMessage().contains("help") && event.getMessage().contains("me")) {
         //    event.getChannel().send().message("Maybe. Maybe Not.");
         //}

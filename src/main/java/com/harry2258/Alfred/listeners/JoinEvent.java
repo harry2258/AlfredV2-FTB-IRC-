@@ -61,6 +61,10 @@ public class JoinEvent extends ListenerAdapter {
             in.close();
             reminder.delete();
         }
+
+        if (Main.relay.containsKey(event.getChannel())) {
+            Main.relay.get(event.getChannel()).send().message("[" + event.getChannel().getName() + "] " + event.getUser().getNick() + " joined the channel.");
+        }
     }
 
     public static String getAccount(User u, org.pircbotx.hooks.events.JoinEvent event) {

@@ -65,7 +65,6 @@ public class NickChangeEvent extends ListenerAdapter {
 
         System.out.println("Removed " + oldNick + " from HashMap and Added " + newNick);
 
-
     }
 
     public static String getAccount(User u, org.pircbotx.hooks.events.NickChangeEvent event) {

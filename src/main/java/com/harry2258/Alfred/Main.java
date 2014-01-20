@@ -70,6 +70,8 @@ public class Main {
             builder.getListenerManager().addListener(new com.harry2258.Alfred.listeners.JoinEvent(config, manager));
             builder.getListenerManager().addListener(new com.harry2258.Alfred.listeners.NickChangeEvent(config, manager));
             builder.getListenerManager().addListener(new com.harry2258.Alfred.listeners.PartEvent(config, manager));
+            builder.getListenerManager().addListener(new com.harry2258.Alfred.listeners.ActionEvent(config, manager));
+
             System.out.println("------Permissions------");
             for (String channel : config.getChannels()) {
                 File file = new File(System.getProperty("user.dir") + "/Perms/" + channel + "/" + "perms.json");
@@ -83,6 +85,7 @@ public class Main {
                 System.out.println("Loaded perms for " + channel);
                 builder.addAutoJoinChannel(channel);
             }
+
             System.out.println("-----------------------");
             PircBotX bot = new PircBotX(builder.buildConfiguration());
             System.out.println("Starting bot...");
