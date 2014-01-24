@@ -10,10 +10,13 @@
 bot.properties
 Run Bot.bat
 .idea/
-commands/#FTB/
-commands/#batbot/
 Perms/
-Logs/#batbot/CommandIssued.txt
 Logs/
 Reminders/
+commands/#FTB/
+commands/#batbot/
+commands/#batman
 commands/#FTB-wiki/
+commands/#randomcraft/
++#useless linux editor garbage
+ +~*

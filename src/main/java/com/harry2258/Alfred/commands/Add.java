@@ -11,6 +11,8 @@ import org.pircbotx.hooks.events.MessageEvent;
 
 import java.io.File;
 
+import static com.harry2258.Alfred.api.CommandRegistry.commands;
+
 /**
  * @author Hardik
  */
@@ -58,6 +60,7 @@ public class Add extends Command {
 
         if (type.equalsIgnoreCase("modperms")) {
             if (args.length == 3) {
+                if (commands.containsKey(Character.toUpperCase(args[2].charAt(0)) + event.getMessage().split(" ")[2].substring(1).toLowerCase())) {
                 try {
                     String check = args[2];
                     String command = null;
@@ -71,19 +74,23 @@ public class Add extends Command {
                     if (!jsonObj.getJSONObject("Perms").getString("ModPerms").contains(command)) {
                         jsonObj.getJSONObject("Perms").append("ModPerms", command);
                         JsonUtils.writeJsonFile(file, jsonObj.toString());
-                        event.getUser().send().notice(command + " was added to the list!");
+                        event.getUser().send().notice(args[2] + " was added to the list!");
                         String perms = JsonUtils.getStringFromFile(Jsonfile);
                         Main.map.put(event.getChannel().getName(), perms);
                         event.getUser().send().notice("Reloaded Permissions");
                         return true;
                     } else {
-                        event.getChannel().send().message(command + " is already on the list!");
+                        event.getChannel().send().message(args[2] + " is already on the list!");
                         return true;
                     }
                 } catch (Exception ex) {
                     System.out.println(ex);
                 }
-            }
+            } else {
+                    event.getChannel().send().message("There is no command by that name!");
+                    return true;
+                }
+        }
         }
 
         if (type.equalsIgnoreCase("admin")) {
@@ -112,6 +119,7 @@ public class Add extends Command {
 
         if (type.equalsIgnoreCase("everyone")) {
             if (args.length == 3) {
+                if (commands.containsKey(Character.toUpperCase(args[1].charAt(0)) + event.getMessage().split(" ")[2].substring(1).toLowerCase())) {
                 try {
                     String check = args[2];
                     String command = null;
@@ -126,17 +134,21 @@ public class Add extends Command {
                     if (!jsonObj.getJSONObject("Perms").getString("Everyone").contains(command)) {
                         jsonObj.getJSONObject("Perms").append("Everyone", command);
                         JsonUtils.writeJsonFile(file, jsonObj.toString());
-                        event.getUser().send().notice(command + " was added to the list!");
+                        event.getUser().send().notice(args[2] + " was added to the list!");
                         String perms = JsonUtils.getStringFromFile(Jsonfile);
                         Main.map.put(event.getChannel().getName(), perms);
                         event.getUser().send().notice("Reloaded Permissions");
                         return true;
                     } else {
-                        event.getChannel().send().message(command + " is already on the list!");
+                        event.getChannel().send().message(args[2] + " is already on the list!");
                         return true;
                     }
                 } catch (Exception ex) {
                     System.out.println(ex);
+                }
+            } else {
+                    event.getChannel().send().message("There is no command by that name!");
+                    return true;
                 }
             }
         }

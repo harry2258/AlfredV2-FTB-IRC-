@@ -21,10 +21,14 @@ public class Help extends Command {
     public boolean execute(MessageEvent event) {
         String[] args = event.getMessage().split(" ");
         if (args.length == 1) {
+            /*
             for (String s : CommandRegistry.commands.keySet()) {
                 Command command = CommandRegistry.getCommand(s);
                 event.getUser().send().notice(String.format(Colors.RED + "%s" + Colors.NORMAL + " - %s", command.getName(), command.getDescription()));
             }
+            */
+            event.getChannel().send().message("Please go to the http://harry2258.com/alfred !");
+            event.getChannel().send().message("or you can use Help [command name]");
             return true;
         }
         if (args.length == 2) {

@@ -8,6 +8,7 @@ import org.pircbotx.hooks.ListenerAdapter;
 /**
  * Created by Hardik on 1/19/14.
  */
+
 public class ActionEvent extends ListenerAdapter {
 
     private Config config;
@@ -18,7 +19,7 @@ public class ActionEvent extends ListenerAdapter {
         this.manager = man;
     }
 
-    public void onNickChange(org.pircbotx.hooks.events.ActionEvent event) throws Exception {
+    public void onAction(org.pircbotx.hooks.events.ActionEvent event) throws Exception {
         if (Main.relay.containsKey(event.getChannel())) {
             Main.relay.get(event.getChannel()).send().message("[" + event.getChannel().getName() + "] " + event.getUser().getNick() + " " + event.getAction());
         }

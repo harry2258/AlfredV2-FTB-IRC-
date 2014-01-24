@@ -26,7 +26,7 @@ public class Cinsult extends Command {
         if (args.length == 2) {
             Channel chan = event.getBot().getUserChannelDao().getChannel(args[1]);
 
-            if (chan.getName().equalsIgnoreCase("#dragonweyr") || chan.getName().equalsIgnoreCase("#help") || chan.getName().equalsIgnoreCase("#lobby") || chan.getName().equalsIgnoreCase("#coders")) {
+            if (chan.getName().equalsIgnoreCase("#dragonweyr") || chan.getName().equalsIgnoreCase("#help") || chan.getName().equalsIgnoreCase("#lobby") || chan.getName().equalsIgnoreCase("#coders")  || chan.getName().equalsIgnoreCase("#esper")  || chan.getName().equalsIgnoreCase("#helper")) {
                 event.getChannel().send().message("YOU CRAZY SENDIN' ME OUT THERE?! AWW HELL NAW!!");
                 return true;
             }

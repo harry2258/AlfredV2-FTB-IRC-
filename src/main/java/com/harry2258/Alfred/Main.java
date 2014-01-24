@@ -1,6 +1,7 @@
 package com.harry2258.Alfred;
 
 import com.harry2258.Alfred.api.*;
+import org.apache.commons.configuration.PropertiesConfiguration;
 import org.pircbotx.Channel;
 import org.pircbotx.Configuration;
 import org.pircbotx.PircBotX;
@@ -24,11 +25,13 @@ import static com.harry2258.Alfred.api.JsonUtils.writeJsonFile;
 public class Main {
     public static long startup = 0;
     public static PircBotX bot;
-    public static File jsonFilePath = new File(System.getProperty("user.dir") + "/perms.json");
+    public static File jsonFilePath = new File(System.getProperty("user.dir") + "/exec.json");
     public static Map<String, String> map = new HashMap<>();
     public static Map<String, String> Login = new HashMap<>();
     public static HashMap<Channel, Channel> relay = new HashMap<>();
     public static ArrayList<String> URL = new ArrayList<>();
+    public static PropertiesConfiguration customcmd;
+    public static File cmd = new File(System.getProperty("user.dir") + "/parser.yml");
 
     public static void main(String[] args) {
         System.setProperty(SimpleLogger.SHOW_DATE_TIME_KEY, "true");
@@ -43,11 +46,21 @@ public class Main {
             PermissionManager manager = new PermissionManager(config);
             System.out.println("Loading and registering commands");
             config.load();
-            if (jsonFilePath.exists()) {
+
+            if (!jsonFilePath.exists()) {
                 jsonFilePath.createNewFile();
                 String jsonString = "{\"Perms\":{\"Exec\":[\"batman\", \"progwml6\"]}}";
                 writeJsonFile(jsonFilePath, jsonString);
             }
+
+            if(cmd.exists()){
+                customcmd.load(cmd);
+            }else{
+                cmd.getParentFile().mkdirs();
+                cmd.createNewFile();
+                Utils.Parser(cmd);
+            }
+
             Reflections reflections = new Reflections("com.harry2258.Alfred.commands");
             Set<Class<? extends Command>> subTypes = reflections.getSubTypesOf(Command.class);
             for (Class c : subTypes) {
@@ -72,16 +85,17 @@ public class Main {
             builder.getListenerManager().addListener(new com.harry2258.Alfred.listeners.PartEvent(config, manager));
             builder.getListenerManager().addListener(new com.harry2258.Alfred.listeners.ActionEvent(config, manager));
 
+
             System.out.println("------Permissions------");
             for (String channel : config.getChannels()) {
-                File file = new File(System.getProperty("user.dir") + "/Perms/" + channel + "/" + "perms.json");
-                String Jsonfile = System.getProperty("user.dir") + "/Perms/" + channel + "/" + "perms.json";
+                File file = new File(System.getProperty("user.dir") + "/Perms/" + channel.toLowerCase() + "/" + "perms.json");
+                String Jsonfile = System.getProperty("user.dir") + "/Perms/" + channel.toLowerCase() + "/" + "perms.json";
                 if (!file.exists()) {
                     System.out.println("Creating perms.json for " + channel);
                     JsonUtils.createJsonStructure(file);
                 }
                 String perms = JsonUtils.getStringFromFile(Jsonfile);
-                map.put(channel, perms);
+                map.put(channel.toLowerCase(), perms);
                 System.out.println("Loaded perms for " + channel);
                 builder.addAutoJoinChannel(channel);
             }

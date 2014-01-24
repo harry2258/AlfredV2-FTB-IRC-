@@ -22,9 +22,10 @@ public class PartEvent extends ListenerAdapter {
     @Override
     public void onPart(org.pircbotx.hooks.events.PartEvent event) throws Exception {
 
+        if (Main.Login.containsKey(event.getUser().getNick())) {
         Main.Login.remove(event.getUser().getNick());
         System.out.println(event.getUser().getNick() + " was removed from the HashMap");
-
+        }
         if (Main.relay.containsKey(event.getChannel())) {
             Main.relay.get(event.getChannel()).send().message("[" + event.getChannel().getName() + "] " + event.getUser().getNick() + " left the channel.");
         }
@@ -33,7 +34,9 @@ public class PartEvent extends ListenerAdapter {
 
     public void onQuit(QuitEvent event) throws Exception {
 
+        if (Main.Login.containsKey(event.getUser().getNick())) {
         Main.Login.remove(event.getUser().getNick());
         System.out.println(event.getUser().getNick() + " was removed from the HashMap");
+        }
     }
 }

@@ -46,6 +46,7 @@ public class Wiki extends Command {
         String tmp = null;
         String info = null;
 
+
         try {
 
             URL read;
@@ -55,13 +56,15 @@ public class Wiki extends Command {
             JSONObject json = new JSONObject(search);
             String searchJson = json.getJSONObject("query").getJSONArray("search").getJSONObject(0).getString("title");
 
-            name = (searchJson).replace("/ko", "");
-
+            if (json.getJSONObject("query").getJSONArray("search").getJSONObject(0).getString("snippet").contains("#REDIRECT")) {
+                name = (json.getJSONObject("query").getJSONArray("search").getJSONObject(0).getString("snippet")).replaceAll("\\{\\{[^}]+\\}\\}|\\[\\[Category:[^\\]]+\\]\\]|\\[\\[|\\]\\]|^\\s+|\\s+$|<[^>]+>", "").trim().replaceAll("\\r?\\n.*", "").replaceAll("\\S+\\|(\\S+)", "$1").replaceAll("#REDIRECT ", "");
+            } else {
+                name = (searchJson).replace("/ko", "");
+            }
 
             String temp = ("http://wiki.feed-the-beast.com/api.php?action=wikilinkquery&query=" + name + "&format=json").replaceAll(" ", "%20");
             URL u = new URL(temp);
             URLConnection c = u.openConnection();
-            c.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/537.17 (KHTML, like Gecko) Chrome/24.0.1312.57 Safari/537.17");
             BufferedReader in = new BufferedReader(new InputStreamReader(c.getInputStream()));
             String xy = in.readLine();
             String json1 = xy.replaceAll("\n", " ");

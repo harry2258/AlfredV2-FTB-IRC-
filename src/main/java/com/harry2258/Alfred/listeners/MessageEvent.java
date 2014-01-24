@@ -75,7 +75,7 @@ public class MessageEvent extends ListenerAdapter {
                         if (args.length == 2) {
                             String user = args[1];
                             while ((tmp = in.readLine()) != null) {
-                                String temps = tmp.replaceAll("color.red", Colors.RED).replaceAll("color.green", Colors.GREEN).replaceAll("color.bold", Colors.BOLD).replaceAll("color.normal", Colors.NORMAL).replaceAll("color.darkgreen", Colors.DARK_GREEN).replaceAll("color.purple", Colors.PURPLE).replaceAll("color.darkgreen", Colors.DARK_GREEN);
+                                String temps = tmp.replaceAll("color.red", Colors.RED).replaceAll("color.green", Colors.GREEN).replaceAll("color.bold", Colors.BOLD).replaceAll("color.normal", Colors.NORMAL).replaceAll("color.darkgreen", Colors.DARK_GREEN).replaceAll("color.purple", Colors.PURPLE).replaceAll("color.darkblue", Colors.DARK_BLUE).replaceAll("color.blue", Colors.BLUE);
                                 //.replaceAll("%user%", user);
                                 event.getChannel().send().message(args[1] + ", " + temps);
                             }
@@ -84,9 +84,8 @@ public class MessageEvent extends ListenerAdapter {
 
                         } else {
                             while ((tmp = in.readLine()) != null) {
-                                String temps = tmp.replaceAll("color.red", Colors.RED).replaceAll("color.green", Colors.GREEN).replaceAll("color.bold", Colors.BOLD).replaceAll("color.normal", Colors.NORMAL).replaceAll("color.darkgreen", Colors.DARK_GREEN).replaceAll("color.purple", Colors.PURPLE).replaceAll("color.darkgreen", Colors.DARK_GREEN);
-                                String message = temps.replaceAll("%user%,", "").replaceAll("%user%:", "").replaceAll("%user%", "");
-                                event.getChannel().send().message(message);
+                                String temps = tmp.replaceAll("color.red", Colors.RED).replaceAll("color.green", Colors.GREEN).replaceAll("color.bold", Colors.BOLD).replaceAll("color.normal", Colors.NORMAL).replaceAll("color.darkgreen", Colors.DARK_GREEN).replaceAll("color.purple", Colors.PURPLE).replaceAll("color.darkblue", Colors.DARK_BLUE).replaceAll("color.blue", Colors.BLUE);
+                                event.getChannel().send().message(temps);
                             }
                             in.close();
                             return;
@@ -150,7 +149,6 @@ public class MessageEvent extends ListenerAdapter {
                 }
             }
 
-
         }
 
 
@@ -174,7 +172,6 @@ public class MessageEvent extends ListenerAdapter {
             in.close();
             reminder.delete();
         }
-
 
         //if (event.getMessage().contains("can") | event.getMessage().contains("someone") && event.getMessage().contains("help") && event.getMessage().contains("me")) {
         //    event.getChannel().send().message("Maybe. Maybe Not.");

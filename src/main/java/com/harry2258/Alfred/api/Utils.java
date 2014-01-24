@@ -9,6 +9,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.harry2258.Alfred.listeners.MessageEvent;
 import org.apache.commons.lang3.StringEscapeUtils;
+import org.json.JSONObject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -178,9 +179,9 @@ public class Utils {
             System.out.println(all);
             String[] args1 = all.split("\u0000");
             if (args1[3].contains("§")) {
-                returns = "MOTD: " + args1[3].replaceAll("§[a-m]", "").replaceAll("§[1234567890]", "") + "   players: [" + args1[4] + "/" + args1[5] + "]";
+                returns = Colors.DARK_GREEN + "MOTD" + ": "+  Colors.NORMAL + args1[3].replaceAll("§[a-m]", "").replaceAll("§[1234567890]", "") + "  |" + Colors.DARK_GREEN +  "  players" + Colors.NORMAL + " [" + args1[4] + "/" + args1[5] + "]";
             } else {
-                returns = "MOTD: " + args1[3] + "   players: [" + args1[4] + "/" + args1[5] + "]";
+                returns = Colors.DARK_GREEN + "MOTD" + ": " + Colors.NORMAL + args1[3] + "  |" + Colors.DARK_GREEN +  "  players"+ Colors.NORMAL + " [" + args1[4] + "/" + args1[5] + "]";
             }
         } catch (UnknownHostException e1) {
             returns = "the host you specified is unknown. check your settings.";
@@ -269,6 +270,28 @@ public class Utils {
         }
         return paid;
     }
+    public static String McBans(String user) {
+        String bans = null;
+        int i = 0;
+        try {
+            URL url = new URL("http://api.fishbans.com/bans/" + user);
+            BufferedReader br = new BufferedReader(new InputStreamReader(url.openStream()));
+            String json = br.readLine();
+            br.close();
+            JSONObject jsonObj = new JSONObject(json);
+            i = Integer.parseInt(jsonObj.getJSONObject("bans").getJSONObject("service").getJSONObject("mcbans").getString("bans"))
+              + Integer.parseInt(jsonObj.getJSONObject("bans").getJSONObject("service").getJSONObject("mcbouncer").getString("bans"))
+              + Integer.parseInt(jsonObj.getJSONObject("bans").getJSONObject("service").getJSONObject("mcblockit").getString("bans"))
+              + Integer.parseInt(jsonObj.getJSONObject("bans").getJSONObject("service").getJSONObject("minebans").getString("bans"))
+              + Integer.parseInt(jsonObj.getJSONObject("bans").getJSONObject("service").getJSONObject("glizer").getString("bans"));
+
+            bans = Colors.BOLD + user + Colors.NORMAL + " has a total of " + Colors.BOLD + i + Colors.NORMAL + " bans!";
+        } catch(Exception x) {
+            System.out.println(x);
+            bans = "Please make sure you spelled the Minecraft name right! ";
+        }
+        return  bans;
+    }
 
     public static String getInsult() {
         String insult1 = null;
@@ -282,10 +305,6 @@ public class Utils {
                 String line = br.readLine();
                 String y = line.replaceAll("</font>", " ").replace("</form><hr>", "").replaceAll("<br>", " ");
                 insult1 = y;
-                while (line != null) {
-                    System.out.println(line);
-                    line = br.readLine();
-                }
                 br.close();
             } catch (Exception e1) {
                 e1.printStackTrace();
@@ -295,5 +314,8 @@ public class Utils {
         return insult1;
     }
 
+    public static void Parser(File file) {
+
+    }
 
 }

@@ -51,7 +51,7 @@ public class Chstatus extends Command {
                     if (splitEntry.length == 2) {
                         chRepos.add(splitEntry[0]);
                         chURLs.add(splitEntry[1]);
-                        chURLNames.add(splitEntry[1].substring(0, splitEntry[1].indexOf(".creeperrepo.net") - 0));
+                        chURLNames.add(splitEntry[1].substring(0, splitEntry[1].indexOf(".creeperrepo.net")));
                     }
                 }
             }
@@ -78,7 +78,7 @@ public class Chstatus extends Command {
         }
 
         for (int y = 0; y < chURLNames.size(); y++) {
-            String jsonURL = new String("http://status.creeperrepo.net/fetchjson.php?l=" + chURLNames.get(y));
+            String jsonURL = "http://status.creeperrepo.net/fetchjson.php?l=" + chURLNames.get(y);
             System.out.println("Connecting to " + jsonURL);
             try {
                 URL newURL;

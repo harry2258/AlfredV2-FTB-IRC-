@@ -1,1 +1,1 @@
-{"Perms":{"Exec":["batman"],"ModPerms":["command.custom","command.google","command.test","command.lmgtfy","command.remind"],"Everyone":["command.mcstatus","command.chstatus"],"Admins":["batman","progwml6","Viper-7"],"Mods":["niel","batphone","Viper-7","progwml6"]}}
+{"Perms":{"Exec":["batman"],"Everyone":["command.mcstatus","command.chstatus","command.custom"],"ModPerms":["command.custom","command.google","command.test","command.lmgtfy","command.remind"],"Admins":["batman","progwml6","Viper-7"],"Mods":["niel","batphone","Viper-7","progwml6"]}}

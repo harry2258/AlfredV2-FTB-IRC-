@@ -21,7 +21,7 @@ public class Join extends Command {
             String[] args = event.getMessage().split(" ");
             Channel target = event.getBot().getUserChannelDao().getChannel(args[1]);
 
-            if (target.getName().equalsIgnoreCase("#dragonweyr") || target.getName().equalsIgnoreCase("#help") || target.getName().equalsIgnoreCase("#lobby") || target.getName().equalsIgnoreCase("#coders")) {
+            if (target.getName().equalsIgnoreCase("#dragonweyr") || target.getName().equalsIgnoreCase("#help") || target.getName().equalsIgnoreCase("#lobby") || target.getName().equalsIgnoreCase("#coders")  || target.getName().equalsIgnoreCase("#esper")  || target.getName().equalsIgnoreCase("#helper")) {
                 event.getChannel().send().message("YOU CRAZY SENDIN' ME OUT THERE?! AWW HELL NAW!!");
                 return true;
             }

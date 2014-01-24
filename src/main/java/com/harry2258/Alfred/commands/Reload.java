@@ -22,15 +22,15 @@ public class Reload extends Command {
 
     @Override
     public boolean execute(MessageEvent event) throws Exception {
-        Main.map.clear();
+        Main.map.remove(event.getChannel().getName().toLowerCase());
         File file = new File(System.getProperty("user.dir") + "/perms/" + event.getChannel().getName().toLowerCase() + "/" + "perms.json");
         if (!file.exists()) {
             System.out.println("Creating perms.json for " + event.getChannel());
             JsonUtils.createJsonStructure(file);
         }
         String perms = JsonUtils.getStringFromFile(file.toString());
-        Main.map.put(event.getChannel().getName(), perms);
-        event.getUser().send().notice("Permissions were reloaded for " + event.getChannel().getName() + "!");
+        Main.map.put(event.getChannel().getName().toLowerCase(), perms);
+        event.getUser().send().notice("Permissions were reloaded for " + event.getChannel().getName().toLowerCase() + "!");
         return true;
     }
 
