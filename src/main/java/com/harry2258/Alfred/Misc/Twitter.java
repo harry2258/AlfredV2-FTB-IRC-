@@ -80,7 +80,6 @@ public class Twitter extends Thread {
                 twitter = twitterFactory.getInstance();
 
                 String[] args = tweetuser.getString("Users").replaceAll("[\\[\"\\]]", "").split(",");
-                System.out.println(args);
 
                 for (int i = 0; i < args.length; i++) {
                     try {

@@ -30,8 +30,11 @@ public class Cinsult extends Command {
                 event.getChannel().send().message("YOU CRAZY SENDIN' ME OUT THERE?! AWW HELL NAW!!");
                 return true;
             }
-
             String insult1 = Utils.getInsult();
+
+            while (insult1.isEmpty()) {
+                wait();
+            }
             System.out.println(chan.isInviteOnly());
             if (chan.isInviteOnly() || chan.isSecret() || chan.isChannelPrivate()) {
                 event.respond("I cannot join " + chan.getName() + "!");
