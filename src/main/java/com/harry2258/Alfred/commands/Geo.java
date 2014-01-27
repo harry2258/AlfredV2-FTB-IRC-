@@ -33,6 +33,10 @@ public class Geo extends Command {
         ArrayList<String> Message = new ArrayList<>();
         String message = "";
         String ip = "";
+        if (event.getChannel().isChannelPrivate() || event.getChannel().isSecret() || event.getChannel().isInviteOnly()){
+            event.getChannel().send().message("No no no! Not in here!");
+            return true;
+        }
 
         if (args.length == 3 && PermissionManager.hasExec(event.getUser(), event) && args[1].equals("exec")) {
 
@@ -110,7 +114,7 @@ public class Geo extends Command {
             System.out.println(jsonObj.toString());
             info.add(Colors.BOLD + "State: " + Colors.NORMAL + jsonObj.getString("region_name"));
             info.add(Colors.BOLD + "Country: " + Colors.NORMAL + jsonObj.getString("country_name"));
-            info.add(Colors.BOLD + "Coords: " + Colors.NORMAL + jsonObj.getString("latitude") + " " + jsonObj.getString("longitude"));
+            info.add(Colors.BOLD + "Coords: " + Colors.NORMAL + jsonObj.getString("latitude").replaceAll("(?:\\.).*","") + " " + jsonObj.getString("longitude").replaceAll("(?:\\.).*",""));
 
             for (int x = 0; x < info.size(); x++) {
                 Message.add(info.get(x));
