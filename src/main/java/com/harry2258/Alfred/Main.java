@@ -1,6 +1,8 @@
 package com.harry2258.Alfred;
 
+import com.harry2258.Alfred.Misc.Twitter;
 import com.harry2258.Alfred.api.*;
+import com.harry2258.Alfred.runnables.ChatSocketListener;
 import org.apache.commons.configuration.PropertiesConfiguration;
 import org.pircbotx.Channel;
 import org.pircbotx.Configuration;
@@ -10,10 +12,7 @@ import org.slf4j.impl.SimpleLogger;
 
 import java.io.File;
 import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -31,7 +30,10 @@ public class Main {
     public static HashMap<Channel, Channel> relay = new HashMap<>();
     public static ArrayList<String> URL = new ArrayList<>();
     public static PropertiesConfiguration customcmd;
-    public static File cmd = new File(System.getProperty("user.dir") + "/parser.yml");
+    public static File cmd = new File(System.getProperty("user.dir") + "/parser.json");
+    public static File globalperm = new File(System.getProperty("user.dir") + "/global.json");
+    public static List<String> users = new ArrayList<String>();
+    public static HashMap<String, Integer> violation = new HashMap<String, Integer>();
 
     public static void main(String[] args) {
         System.setProperty(SimpleLogger.SHOW_DATE_TIME_KEY, "true");
@@ -42,23 +44,27 @@ public class Main {
         System.out.println("Starting");
         try {
             startup = System.currentTimeMillis();
-            Config config = new Config();
+            final Config config = new Config();
             PermissionManager manager = new PermissionManager(config);
             System.out.println("Loading and registering commands");
             config.load();
 
+            //Creates Exec.json
             if (!jsonFilePath.exists()) {
                 jsonFilePath.createNewFile();
                 String jsonString = "{\"Perms\":{\"Exec\":[\"batman\", \"progwml6\"]}}";
                 writeJsonFile(jsonFilePath, jsonString);
             }
-
-            if(cmd.exists()){
-                customcmd.load(cmd);
-            }else{
+            //creates Parse.Json for Log command
+            if (!cmd.exists()) {
                 cmd.getParentFile().mkdirs();
                 cmd.createNewFile();
                 Utils.Parser(cmd);
+            }
+            //Creates Global Everyone permission
+            if (!globalperm.exists()) {
+                globalperm.createNewFile();
+                Utils.Geveryone(globalperm);
             }
 
             Reflections reflections = new Reflections("com.harry2258.Alfred.commands");
@@ -76,7 +82,7 @@ public class Main {
             builder.setFinger(config.getCtcpFinger());
             builder.setEncoding(Charset.isSupported("UTF-8") ? Charset.forName("UTF-8") : Charset.defaultCharset());
             builder.setNickservPassword(config.getBotPassword());
-            builder.setVersion("Alfred v2.0");
+            builder.setVersion("Alfred v2.1");
             builder.setServer(config.getServerHostame(), Integer.parseInt(config.getServerPort()), config.getServerPassword());
             builder.getListenerManager().addListener(new com.harry2258.Alfred.listeners.MessageEvent(config, manager));
             builder.getListenerManager().addListener(new com.harry2258.Alfred.listeners.InviteEvent(config, manager));
@@ -103,6 +109,12 @@ public class Main {
             System.out.println("-----------------------");
             PircBotX bot = new PircBotX(builder.buildConfiguration());
             System.out.println("Starting bot...");
+            if (config.isEnableChatSocket()) {
+                new Thread(new ChatSocketListener(bot, config.getChatSocketPort())).start();
+            }
+            if (config.isEnabledTwitter()) {
+                new Thread(new Twitter(bot)).start();
+            }
             bot.startBot();
             System.out.println("Shutting down");
         } catch (Exception ex) {
