@@ -94,7 +94,7 @@ public class Log extends Command {
                     if (!info.contains(temp) && jsonObj.getBoolean("JavaVersion")) {
                         info.add(temp);
                     }
-                    Java = tmp.replaceAll(".*(?:Java Version:)|(?:as: ).*|[._a-z]", "").trim();
+                    Java = tmp.replaceAll(".*(?:Java Version:)|(?:as: ).*|[._a-z]|[,A-Z]", "").trim();
                     if (Java.equals("180")) {
                         Java = "18000";
                     }
