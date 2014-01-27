@@ -23,11 +23,12 @@ public class MessageEvent extends ListenerAdapter {
     }
 
     @Override
-    public void onMessage(org.pircbotx.hooks.events.MessageEvent event) throws Exception {
+    public void onMessage(final org.pircbotx.hooks.events.MessageEvent event) throws Exception {
         String trigger = config.getTrigger();
         String[] args = event.getMessage().split(" ");
         Date date = new Date();
-        String eventuser = event.getUser().getNick();
+        final String eventuser = event.getUser().getNick();
+
         if (!Main.Login.containsKey(eventuser)) {
             if (event.getUser().isVerified()) {
                 System.out.println("Adding user to HashMap");
@@ -36,7 +37,6 @@ public class MessageEvent extends ListenerAdapter {
                 System.out.println(eventuser + " was added to the HashMap");
             }
         }
-
 
         if (Main.relay.containsKey(event.getChannel())) {
             Main.relay.get(event.getChannel()).send().message("[" + event.getChannel().getName() + "] <" + eventuser + "> " + event.getMessage());
@@ -57,6 +57,7 @@ public class MessageEvent extends ListenerAdapter {
                     event.getUser().send().notice("You need to be logged in with NickServ!");
                 }
             }
+
 
             if (Main.Login.containsKey(eventuser)) {
                 File file = new File(System.getProperty("user.dir") + "/Logs/" + event.getChannel().getName() + "/" + "CommandIssued.txt");
@@ -132,10 +133,9 @@ public class MessageEvent extends ListenerAdapter {
                  */
                 }
             } else {
-                event.getUser().send().notice("Please log into the bot using " + config.getTrigger() + "login");
+                event.getUser().send().notice("You need to be logged in with NickServ to use the bot!");
             }
         }
-
 
         if (Main.URL.contains(event.getChannel().getName())) {
             for (String word : event.getMessage().split(" ")) {
@@ -152,15 +152,15 @@ public class MessageEvent extends ListenerAdapter {
         }
 
 
-        String user = null;
+        String Ruser = null;
 
         if (Main.Login.containsKey(eventuser)) {
-            user = Main.Login.get(eventuser);
+            Ruser = Main.Login.get(eventuser);
         } else {
-            user = eventuser;
+            Ruser = eventuser;
         }
 
-        String login = System.getProperty("user.dir") + "/Reminders/" + user + ".txt";
+        String login = System.getProperty("user.dir") + "/Reminders/" + Ruser + ".txt";
         File reminder = new File(login);
         if (reminder.exists()) {
             BufferedReader in = new BufferedReader(new FileReader(reminder));
@@ -173,9 +173,46 @@ public class MessageEvent extends ListenerAdapter {
             reminder.delete();
         }
 
-        //if (event.getMessage().contains("can") | event.getMessage().contains("someone") && event.getMessage().contains("help") && event.getMessage().contains("me")) {
-        //    event.getChannel().send().message("Maybe. Maybe Not.");
-        //}
+        //Copy from old Alphabot :3
+        /*
+        new Thread(new Runnable(){
+            @Override
+            public void run(){
+                //System.out.println("entered run");
+                try{
+                    if(!Main.users.contains(eventuser)){
+                        if(Main.violation.containsKey(eventuser)){
+                            Main.violation.put(eventuser, (Integer) Main.violation.get(eventuser) + 1);
+                        }else{
+                            Main.violation.put(eventuser, 0);
+                        }
+                        Main.users.add(eventuser);
+                        System.out.println("Added to list.");
+                        Thread.sleep(1000);
+                        System.out.println("Removed from list.");
+                        Main.users.remove(eventuser);
+                    }else{
+                        if((Integer) Main.violation.get(eventuser) > 3){
+                            event.getChannel().send().kick(event.getUser(), "Calm your tits bro");
+                            Main.violation.put(eventuser, 0);
+                            return;
+                        }
+                        System.out.println("User already in list. muting");
+                        event.getUser().send().mode("+q");
+                        Main.users.remove(eventuser);
+                        System.out.println("muted.");
+                        event.getUser().send().notice("You've been muted temporarily for spam.");
+
+                        Thread.sleep(1000 * 10);
+                        System.out.println("unmuted");
+                        event.getUser().send().mode("-q");
+                    }
+                }catch(Exception e){
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+        */
 
     }
 }

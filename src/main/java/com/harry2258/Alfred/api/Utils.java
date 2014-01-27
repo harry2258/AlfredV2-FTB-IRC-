@@ -9,6 +9,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.harry2258.Alfred.listeners.MessageEvent;
 import org.apache.commons.lang3.StringEscapeUtils;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -179,9 +180,9 @@ public class Utils {
             System.out.println(all);
             String[] args1 = all.split("\u0000");
             if (args1[3].contains("§")) {
-                returns = Colors.DARK_GREEN + "MOTD" + ": "+  Colors.NORMAL + args1[3].replaceAll("§[a-m]", "").replaceAll("§[1234567890]", "") + "  |" + Colors.DARK_GREEN +  "  players" + Colors.NORMAL + " [" + args1[4] + "/" + args1[5] + "]";
+                returns = Colors.DARK_GREEN + "MOTD" + ": " + Colors.NORMAL + args1[3].replaceAll("§[a-m]", "").replaceAll("§[1234567890]", "") + "  |" + Colors.DARK_GREEN + "  players" + Colors.NORMAL + " [" + args1[4] + "/" + args1[5] + "]";
             } else {
-                returns = Colors.DARK_GREEN + "MOTD" + ": " + Colors.NORMAL + args1[3] + "  |" + Colors.DARK_GREEN +  "  players"+ Colors.NORMAL + " [" + args1[4] + "/" + args1[5] + "]";
+                returns = Colors.DARK_GREEN + "MOTD" + ": " + Colors.NORMAL + args1[3] + "  |" + Colors.DARK_GREEN + "  players" + Colors.NORMAL + " [" + args1[4] + "/" + args1[5] + "]";
             }
         } catch (UnknownHostException e1) {
             returns = "the host you specified is unknown. check your settings.";
@@ -252,6 +253,7 @@ public class Utils {
             user = test.getRegisteredAs();
         } catch (InterruptedException ex) {
             Logger.getLogger(MessageEvent.class.getName()).log(Level.SEVERE, null, ex);
+
         }
         return user;
     }
@@ -270,6 +272,7 @@ public class Utils {
         }
         return paid;
     }
+
     public static String McBans(String user) {
         String bans = null;
         int i = 0;
@@ -280,17 +283,17 @@ public class Utils {
             br.close();
             JSONObject jsonObj = new JSONObject(json);
             i = Integer.parseInt(jsonObj.getJSONObject("bans").getJSONObject("service").getJSONObject("mcbans").getString("bans"))
-              + Integer.parseInt(jsonObj.getJSONObject("bans").getJSONObject("service").getJSONObject("mcbouncer").getString("bans"))
-              + Integer.parseInt(jsonObj.getJSONObject("bans").getJSONObject("service").getJSONObject("mcblockit").getString("bans"))
-              + Integer.parseInt(jsonObj.getJSONObject("bans").getJSONObject("service").getJSONObject("minebans").getString("bans"))
-              + Integer.parseInt(jsonObj.getJSONObject("bans").getJSONObject("service").getJSONObject("glizer").getString("bans"));
+                    + Integer.parseInt(jsonObj.getJSONObject("bans").getJSONObject("service").getJSONObject("mcbouncer").getString("bans"))
+                    + Integer.parseInt(jsonObj.getJSONObject("bans").getJSONObject("service").getJSONObject("mcblockit").getString("bans"))
+                    + Integer.parseInt(jsonObj.getJSONObject("bans").getJSONObject("service").getJSONObject("minebans").getString("bans"))
+                    + Integer.parseInt(jsonObj.getJSONObject("bans").getJSONObject("service").getJSONObject("glizer").getString("bans"));
 
             bans = Colors.BOLD + user + Colors.NORMAL + " has a total of " + Colors.BOLD + i + Colors.NORMAL + " bans!";
-        } catch(Exception x) {
+        } catch (Exception x) {
             System.out.println(x);
             bans = "Please make sure you spelled the Minecraft name right! ";
         }
-        return  bans;
+        return bans;
     }
 
     public static String getInsult() {
@@ -315,7 +318,44 @@ public class Utils {
     }
 
     public static void Parser(File file) {
-
+        JSONObject obj = new JSONObject();
+        try {
+            obj.put("MCVersion", true);
+            obj.put("JavaVersion", true);
+            obj.put("Modded", true);
+            obj.put("ServerBrand", true);
+            obj.put("ServerType", true);
+            obj.put("Description", true);
+            obj.put("OSName", true);
+            obj.put("Suggestion", true);
+            JsonUtils.writeJsonFile(file, obj.toString());
+            System.out.println(obj.toString());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
+    public static void Geveryone(File file) throws JSONException {
+        String perms = "{\"Permissions\":[\"command.wiki\", \"command.mcstatus\", \"command.chstatus\"]}";
+        JsonUtils.writeJsonFile(file, perms);
+    }
+
+    public static void TweetAuth(File file) {
+        JSONObject obj = new JSONObject();
+        try {
+            obj.put("OAuthConsumerKey", "");
+            obj.put("OAuthConsumerSecret", "");
+            obj.put("OAuthAccessToken", "");
+            obj.put("OAuthAccessTokenSecret", "");
+            JsonUtils.writeJsonFile(file, obj.toString());
+            System.out.println(obj.toString());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void TweetUser(File file) {
+        String Auth = "{\"Users\":[\"FTB_Team\", \"TPPIModPack\"]}";
+        JsonUtils.writeJsonFile(file, Auth);
+    }
 }
