@@ -22,7 +22,6 @@ public class Test extends Command {
         event.getChannel().send().message("Test!");
         event.getChannel().send().message(event.getUser().getUserLevels(event.getChannel()).toString());
         event.getChannel().send().message(("Logged in as: " + Utils.getAccount(event.getUser(), event)));
-
         return true;
     }
 

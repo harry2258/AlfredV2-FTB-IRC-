@@ -47,6 +47,13 @@ public class PermissionManager {
         String perms = Main.map.get(event.getChannel().getName());
         JSONObject jsonObj = new JSONObject(perms);
 
+        String Geveryone = JsonUtils.getStringFromFile(Main.globalperm.toString());
+        JSONObject everyone = new JSONObject(Geveryone);
+
+        if (everyone.getString("Permissions").contains(permission)) {
+            return true;
+        }
+
         if (jsonObj.getJSONObject("Perms").getString("Everyone").contains(permission)) {
             return true;
         }

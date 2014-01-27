@@ -190,6 +190,44 @@ public class Remove extends Command {
                 }
             }
         }
+
+        if (type.equalsIgnoreCase("global")) {
+            if (args.length == 3) {
+                String check = args[2];
+                String command = null;
+                if (!check.contains("command.")) {
+                    command = "command." + check;
+                } else {
+                    command = check;
+                }
+
+                try {
+                    String strFileJson = JsonUtils.getStringFromFile(Main.globalperm.toString());
+                    JSONObject jsonObj = new JSONObject(strFileJson);
+                    if (jsonObj.getString("Permissions").contains(command)) {
+                        String test = jsonObj.getJSONArray("Permissions").toString();
+                        jsonObj.remove("Permissions");
+                        String string = test.replace(",\"" + command + "\"", "").replace("\"", "").replaceAll("]", "").replace("[", "");
+                        String newstring = string.replaceAll(",", " ");
+                        String[] finalstring = newstring.split(" ");
+
+                        for (int x = 0; x < finalstring.length; x++) {
+                            jsonObj.append("Permissions", finalstring[x]);
+
+                        }
+
+                        JsonUtils.writeJsonFile(Main.globalperm, jsonObj.toString());
+                        event.getUser().send().notice(command + " was removed from the list!");
+                        return true;
+                    } else {
+                        event.getChannel().send().message(command + " is not on the list!");
+                        return true;
+                    }
+                } catch (Exception ex) {
+                    System.out.println(ex);
+                }
+            }
+        }
         return false;
     }
 
