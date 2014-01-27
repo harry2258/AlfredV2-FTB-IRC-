@@ -3,13 +3,17 @@
 # Package Files #
 *.war
 *.ear
+#IntelljI stuff
+.idea/
+#useless linux editor garbage
+~*
+# Auto-generated stuff
 /target/
 /build/
 /bin
 .gradle/
 bot.properties
 Run Bot.bat
-.idea/
 Perms/
 Logs/
 Reminders/
@@ -18,5 +22,8 @@ commands/#batbot/
 commands/#batman
 commands/#FTB-wiki/
 commands/#randomcraft/
-#useless linux editor garbage
-~*
+exec.json
+parser.json
+Twitter/
+global.json
+lib/twitter4j-core-3.0.0.jar

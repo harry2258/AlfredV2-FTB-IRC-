@@ -26,7 +26,7 @@ public class Cinsult extends Command {
         if (args.length == 2) {
             Channel chan = event.getBot().getUserChannelDao().getChannel(args[1]);
 
-            if (chan.getName().equalsIgnoreCase("#dragonweyr") || chan.getName().equalsIgnoreCase("#help") || chan.getName().equalsIgnoreCase("#lobby") || chan.getName().equalsIgnoreCase("#coders")  || chan.getName().equalsIgnoreCase("#esper")  || chan.getName().equalsIgnoreCase("#helper")) {
+            if (chan.getName().equalsIgnoreCase("#dragonweyr") || chan.getName().equalsIgnoreCase("#help") || chan.getName().equalsIgnoreCase("#lobby") || chan.getName().equalsIgnoreCase("#coders") || chan.getName().equalsIgnoreCase("#esper") || chan.getName().equalsIgnoreCase("#helper")) {
                 event.getChannel().send().message("YOU CRAZY SENDIN' ME OUT THERE?! AWW HELL NAW!!");
                 return true;
             }
@@ -35,6 +35,7 @@ public class Cinsult extends Command {
             System.out.println(chan.isInviteOnly());
             if (chan.isInviteOnly() || chan.isSecret() || chan.isChannelPrivate()) {
                 event.respond("I cannot join " + chan.getName() + "!");
+                return true;
             } else {
                 if (event.getBot().getUserBot().getChannels().contains(chan)) {
                     chan.send().message(insult1);
@@ -46,7 +47,7 @@ public class Cinsult extends Command {
                 return true;
             }
         }
-        return true;
+        return false;
     }
 
     @Override

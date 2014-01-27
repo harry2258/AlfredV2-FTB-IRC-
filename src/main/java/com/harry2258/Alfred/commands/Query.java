@@ -8,8 +8,6 @@ import org.pircbotx.hooks.events.MessageEvent;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * Created by Hardik on 1/21/14.
@@ -39,20 +37,20 @@ public class Query extends Command {
             try {
                 result = Utils.checkServerStatus(InetAddress.getByName(args[1]), Integer.valueOf(args[2]));
             } catch (UnknownHostException ex) {
-                return  false;
+                return false;
             }
         }
-            event.getChannel().send().message(result);
-            return true;
+        event.getChannel().send().message(result);
+        return true;
     }
 
     @Override
     public void setConfig(Config config) {
-this.config = config;
+        this.config = config;
     }
 
     @Override
     public void setManager(PermissionManager manager) {
-this.manager = manager;
+        this.manager = manager;
     }
 }

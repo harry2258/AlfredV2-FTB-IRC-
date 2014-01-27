@@ -34,6 +34,10 @@ public class Wiki extends Command {
         }
 
         String test = sb.toString().trim();
+
+        if (args[1].equalsIgnoreCase("bc")) {
+            test = "Buildcraft";
+        }
         String message = test.replaceAll(" ", "%20");
 
 
