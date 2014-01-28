@@ -3,6 +3,7 @@ package com.harry2258.Alfred.commands;
 import com.harry2258.Alfred.api.Command;
 import com.harry2258.Alfred.api.Config;
 import com.harry2258.Alfred.api.PermissionManager;
+import com.harry2258.Alfred.api.Utils;
 import org.pircbotx.User;
 import org.pircbotx.hooks.events.MessageEvent;
 
@@ -21,12 +22,13 @@ public class Skin extends Command {
     @Override
     public boolean execute(MessageEvent event) throws Exception {
         String[] args = event.getMessage().split(" ");
-        if (args.length == 2) {
-            User user = event.getBot().getUserChannelDao().getUser(args[1]);
-            event.respond("https://tntup.me/player/" + user.getNick() + "/128");
+        if (args.length == 2 && Utils.checkAccount(args[1])) {
+            event.respond("https://tntup.me/player/" + args[1] + "/128  |  " + "http://api.bionikcraft.com/ftb-launcher/?u=" + args[1] + "&p=d1-p1-r&s=256&f=1");
             return true;
+        } else {
+            event.getChannel().send().message("Please enter a valid MineCraft name!");
         }
-        return false;
+        return true;
     }
 
     @Override

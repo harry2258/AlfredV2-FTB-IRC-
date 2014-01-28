@@ -1,13 +1,21 @@
 package com.harry2258.Alfred.listeners;
 
+import bsh.EvalError;
+import bsh.Interpreter;
 import com.harry2258.Alfred.Main;
 import com.harry2258.Alfred.api.*;
 import com.harry2258.Alfred.commands.Ignore;
+import org.apache.commons.configuration.ConfigurationException;
+import org.apache.commons.configuration.PropertiesConfiguration;
+import org.apache.commons.lang.RandomStringUtils;
+import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.commons.lang.StringUtils;
 import org.pircbotx.Colors;
 import org.pircbotx.PircBotX;
 import org.pircbotx.hooks.ListenerAdapter;
 
 import java.io.*;
+import java.util.ArrayList;
 import java.util.Date;
 
 import static com.harry2258.Alfred.api.CommandRegistry.commands;
@@ -16,6 +24,7 @@ public class MessageEvent extends ListenerAdapter {
     public static PircBotX bot;
     private Config config;
     private PermissionManager manager;
+    static Interpreter interpreter = new Interpreter();
 
     public MessageEvent(Config conf, PermissionManager man) {
         this.config = conf;
@@ -41,7 +50,6 @@ public class MessageEvent extends ListenerAdapter {
         if (Main.relay.containsKey(event.getChannel())) {
             Main.relay.get(event.getChannel()).send().message("[" + event.getChannel().getName() + "] <" + eventuser + "> " + event.getMessage());
         }
-
         if (event.getMessage().startsWith(trigger) && !Ignore.ignored.contains(Main.Login.get(eventuser))) {
             if (event.getMessage().startsWith(config.getTrigger() + "login")) {
                 if (event.getUser().isVerified()) {
@@ -94,6 +102,22 @@ public class MessageEvent extends ListenerAdapter {
                     }
                     String classname = Character.toUpperCase(event.getMessage().split(" ")[0].charAt(1)) + event.getMessage().split(" ")[0].substring(2).toLowerCase();
                     String permission = "command." + classname.toLowerCase();
+
+                    if (new File("plugins/" + classname + ".bsh").exists() && manager.hasPermission(permission, event.getUser(), event.getChannel(), event)) {
+                        try {
+
+                            interpreter.set("event", event);
+                            interpreter.set("bot", event.getBot());
+                            interpreter.set("chan", event.getChannel());
+                            interpreter.set("user", event.getUser());
+                            interpreter.eval(String.format("source(\"plugins/%s.bsh\")", classname));
+                        } catch (EvalError ex) {
+                            ex.printStackTrace();
+                            event.respond(ex.getLocalizedMessage());
+                            return;
+                        }
+                    }
+
                     if (event.getUser().isVerified()) {
                         if (commands.containsKey(classname)) {
                             if (manager.hasPermission(permission, event.getUser(), event.getChannel(), event)) {

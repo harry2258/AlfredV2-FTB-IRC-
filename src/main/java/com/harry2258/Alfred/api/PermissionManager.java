@@ -78,9 +78,12 @@ public class PermissionManager {
         return false;
     }
 
-    public static boolean hasExec(User user, org.pircbotx.hooks.events.MessageEvent event) throws Exception {
+    public static boolean hasExec(User user, org.pircbotx.hooks.events.MessageEvent event) {
         System.out.println("Checking for Exec perms!");
-        String Exec = JsonUtils.getStringFromFile(JsonUtils.Jsonfile);
+        String Exec = null;
+        try {
+            Exec = JsonUtils.getStringFromFile(Main.jsonFilePath.toString());
+
         JSONObject exec = new JSONObject(Exec);
 
         if (exec.getJSONObject("Perms").getString("Exec").contains(Utils.getAccount(user, event))) {
@@ -88,7 +91,9 @@ public class PermissionManager {
                 return true;
             }
         }
-
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return false;
     }
 

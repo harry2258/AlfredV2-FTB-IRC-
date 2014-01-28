@@ -33,6 +33,8 @@ public class Log extends Command {
         ArrayList<String> error = new ArrayList<>();
         ArrayList<String> Message = new ArrayList<>();
         ArrayList<String> Suggestion = new ArrayList<>();
+        ArrayList<String> Errors = new ArrayList<>();
+        ArrayList<String> Diagnosis = new ArrayList<>();
 
         String message = "";
         String temp = "";
@@ -108,19 +110,30 @@ public class Log extends Command {
                     if (!info.contains(temp) && jsonObj.getBoolean("OSName")) {
                         info.add(temp);
                     }
-                } else if (tmp.contains("Description: ")) {
-                    temp = Colors.BOLD + "Error: " + Colors.NORMAL + tmp.replaceAll("^.*?(?=[A-Z][a-z])", "").replaceAll("\\\\[.*?\\\\]", "").replaceAll("Description: ", "");
+                } else if (tmp.contains("java.lang.NullPointerException")) {
+                    temp = Colors.BOLD + "Errors: " + Colors.NORMAL + tmp.replaceAll("^.*?(?=[A-Z][a-z])", "").replaceAll("\\\\[.*?\\\\]", "").replaceAll("Description: ", "").replaceAll(".*(?=java.lang.NullPointerException)","");
                     if (!error.contains(temp) && jsonObj.getBoolean("Description")) {
                         error.add(temp);
                     }
                 }
+
+
                 //Suggestions
+                if (tmp.contains("at net.minecraft.client.renderer.tileentity.TileEntityRenderer")) {
+                    if(!Errors.contains("TileEntityRenderer") && jsonObj.getBoolean("Suggestion")) {
+                        error.add("TileEntityRenderer");
+                        Errors.add("TileEntityRenderer");
+                    }
+                }
             }
 
             if (jsonObj.getBoolean("Suggestion")) {
 
                 if (Integer.parseInt(Java) < 17045) {
                     Suggestion.add("Update your java to the latest version.");
+                }
+                if (Errors.contains("TileEntityRenderer")) {
+                    Suggestion.add("Start a single-player game first, then disconnect and join the server and if you have RailCraft tanks, Move them.");
                 }
 
             }
@@ -139,6 +152,10 @@ public class Log extends Command {
 
             for (String s : Suggestion) {
                 suggestion += s + " | \t";
+            }
+
+            for (String s : Diagnosis) {
+                Error += s + " | \t";
             }
 
             event.getChannel().send().message(message);

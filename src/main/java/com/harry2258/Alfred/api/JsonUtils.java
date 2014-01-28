@@ -13,8 +13,8 @@ import java.io.*;
  * @author Hardik
  */
 public class JsonUtils {
-    public static File jsonFilePath = new File(System.getProperty("user.dir") + "/Perms/perms.json");
-    public static final String Jsonfile = System.getProperty("user.dir") + "/perms.json";
+    //public static File jsonFilePath = new File(System.getProperty("user.dir") + "/Perms/perms.json");
+    public static final String Jsonfile = System.getProperty("user.dir") + "/exec.json";
 
 
     public static boolean isJSONObject(String possibleJson) {

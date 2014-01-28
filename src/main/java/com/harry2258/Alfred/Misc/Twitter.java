@@ -14,102 +14,105 @@ import twitter4j.conf.ConfigurationBuilder;
 import java.io.File;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * Created by Hardik on 1/26/14.
  */
+@SuppressWarnings("InfiniteLoopStatement")
 public class Twitter extends Thread {
     PircBotX bot;
+    public static HashMap<String, String> tweets = new HashMap<>();
 
     public Twitter(PircBotX bot) {
         this.bot = bot;
     }
 
-    public void run() {
-        HashMap<String, String> tweets = new HashMap<>();
+    public void start() {
         try {
             System.out.println("Sleeping for 2 minutes. Waiting for bot to start up.");
             Thread.sleep(120000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        System.out.println("Twitter Updates are ENABLED!");
-        while (true) {
-            try {
 
-                String test = "";
+        Timer timer = new Timer();
 
-                File TweetUsers = new File(System.getProperty("user.dir") + "/Twitter/" + "tweetuser.json");
-                File auth = new File(System.getProperty("user.dir") + "/Twitter/" + "oauth.json");
+        TimerTask task = new TimerTask() {
 
-                if (!TweetUsers.exists()) {
-                    TweetUsers.getParentFile().mkdir();
-                    TweetUsers.createNewFile();
-                    Utils.TweetUser(TweetUsers);
-                }
+            public void run() {
+                try {
 
-                if (!auth.exists()) {
-                    auth.getParentFile().mkdir();
-                    auth.createNewFile();
-                    Utils.TweetAuth(auth);
-                }
+                    String test = "";
 
-                String OAuth = JsonUtils.getStringFromFile(auth.toString());
-                JSONObject Auth = new JSONObject(OAuth);
+                    File TweetUsers = new File(System.getProperty("user.dir") + "/Twitter/" + "tweetuser.json");
+                    File auth = new File(System.getProperty("user.dir") + "/Twitter/" + "oauth.json");
 
-                String users = JsonUtils.getStringFromFile(TweetUsers.toString());
-                JSONObject tweetuser = new JSONObject(users);
-                if (Auth.getString("OAuthConsumerKey").isEmpty() | Auth.getString("OAuthConsumerSecret").isEmpty() | Auth.getString("OAuthAccessToken").isEmpty() | Auth.getString("OAuthAccessTokenSecret").isEmpty()) {
-                    for (Channel chan : bot.getUserBot().getChannels()) {
-                        chan.send().message("Holy Crap! This is something wrong with your \"oauth.json\" file in Twitter folder.");
+                    if (!TweetUsers.exists()) {
+                        TweetUsers.getParentFile().mkdir();
+                        TweetUsers.createNewFile();
+                        Utils.TweetUser(TweetUsers);
                     }
-                }
 
-                TwitterFactory twitterFactory;
-                twitter4j.Twitter twitter;
-                ConfigurationBuilder cb = new ConfigurationBuilder();
-                cb.setDebugEnabled(true)
-                        .setUseSSL(true)
-                        .setOAuthConsumerKey(Auth.getString("OAuthConsumerKey"))
-                        .setOAuthConsumerSecret(Auth.getString("OAuthConsumerSecret"))
-                        .setOAuthAccessToken(Auth.getString("OAuthAccessToken"))
-                        .setOAuthAccessTokenSecret(Auth.getString("OAuthAccessTokenSecret"))
-                        .setHttpConnectionTimeout(100000);
+                    if (!auth.exists()) {
+                        auth.getParentFile().mkdir();
+                        auth.createNewFile();
+                        Utils.TweetAuth(auth);
+                    }
 
-                twitterFactory = new TwitterFactory(cb.build());
-                twitter = twitterFactory.getInstance();
+                    String OAuth = JsonUtils.getStringFromFile(auth.toString());
+                    JSONObject Auth = new JSONObject(OAuth);
 
-                String[] args = tweetuser.getString("Users").replaceAll("[\\[\"\\]]", "").split(",");
-
-                for (int i = 0; i < args.length; i++) {
-                    try {
-                        List<Status> statuses;
-                        statuses = twitter.getUserTimeline(args[i]);
-                        test = "[" + Colors.RED + "Twitter" + Colors.NORMAL + "] [" + Colors.BOLD + statuses.get(0).getUser().getName() + Colors.NORMAL + "] " + statuses.get(0).getText();
-                        System.out.println(test);
-                        if (!tweets.containsValue(test)) {
-                            tweets.put(args[i], test);
-                            for (Channel chan : bot.getUserBot().getChannels()) {
-                                chan.send().message(test);
-                            }
+                    String users = JsonUtils.getStringFromFile(TweetUsers.toString());
+                    JSONObject tweetuser = new JSONObject(users);
+                    if (Auth.getString("OAuthConsumerKey").isEmpty() | Auth.getString("OAuthConsumerSecret").isEmpty() | Auth.getString("OAuthAccessToken").isEmpty() | Auth.getString("OAuthAccessTokenSecret").isEmpty()) {
+                        for (Channel chan : bot.getUserBot().getChannels()) {
+                            chan.send().message("Holy Crap! This is something wrong with your \"oauth.json\" file in Twitter folder.");
                         }
-
-                    } catch (TwitterException te) {
-                        te.printStackTrace();
-                        System.out.println("Failed to get timeline: " + te.getMessage());
                     }
+
+                    TwitterFactory twitterFactory;
+                    twitter4j.Twitter twitter;
+                    ConfigurationBuilder cb = new ConfigurationBuilder();
+                    cb.setDebugEnabled(true)
+                            .setUseSSL(true)
+                            .setOAuthConsumerKey(Auth.getString("OAuthConsumerKey"))
+                            .setOAuthConsumerSecret(Auth.getString("OAuthConsumerSecret"))
+                            .setOAuthAccessToken(Auth.getString("OAuthAccessToken"))
+                            .setOAuthAccessTokenSecret(Auth.getString("OAuthAccessTokenSecret"))
+                            .setHttpConnectionTimeout(100000);
+
+                    twitterFactory = new TwitterFactory(cb.build());
+                    twitter = twitterFactory.getInstance();
+
+                    String[] args = tweetuser.getString("Users").replaceAll("[\\[\"\\]]", "").split(",");
+
+                    for (int i = 0; i < args.length; i++) {
+                        try {
+                            List<Status> statuses;
+                            statuses = twitter.getUserTimeline(args[i]);
+                            test = "[" + Colors.RED + "Twitter" + Colors.NORMAL + "] [" + Colors.BOLD + statuses.get(0).getUser().getName() + Colors.NORMAL + "] " + statuses.get(0).getText();
+                            System.out.println(test);
+                            if (!tweets.containsValue(test)) {
+                                tweets.put(args[i], test);
+                                for (Channel chan : bot.getUserBot().getChannels()) {
+                                    chan.send().message(test);
+                                }
+                            }
+
+                        } catch (TwitterException te) {
+                            te.printStackTrace();
+                            System.out.println("Failed to get timeline: " + te.getMessage());
+                        }
+                    }
+
+
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
-
-
-            } catch (Exception e) {
-                e.printStackTrace();
             }
-
-            try {
-                Thread.sleep(600000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
+        };
+        timer.scheduleAtFixedRate(task, 0, 600000);
     }
 }

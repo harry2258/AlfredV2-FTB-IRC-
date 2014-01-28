@@ -39,7 +39,6 @@ public class Geo extends Command {
         }
 
         if (args.length == 3 && PermissionManager.hasExec(event.getUser(), event) && args[1].equals("exec")) {
-
             if (event.getChannel().getUsers().toString().contains(args[2])) {
                 User u = event.getBot().getUserChannelDao().getUser(args[2]);
                 String user = "";
@@ -79,10 +78,13 @@ public class Geo extends Command {
                     message += s + " | \t";
                 }
 
-                event.getChannel().send().message(message);
+                event.getUser().send().message(message);
                 return true;
             } catch (Exception e) {
                 e.printStackTrace();
+                if (e.getMessage().contains("400")) {
+                    event.getChannel().send().message("IPV6 aren't supported yet!");
+                }
                 return false;
             }
         }
@@ -111,7 +113,6 @@ public class Geo extends Command {
             BufferedReader re = new BufferedReader(new InputStreamReader(url.openStream()));
             String jsonstring = re.readLine();
             JSONObject jsonObj = new JSONObject(jsonstring);
-            System.out.println(jsonObj.toString());
             info.add(Colors.BOLD + "State: " + Colors.NORMAL + jsonObj.getString("region_name"));
             info.add(Colors.BOLD + "Country: " + Colors.NORMAL + jsonObj.getString("country_name"));
             info.add(Colors.BOLD + "Coords: " + Colors.NORMAL + jsonObj.getString("latitude").replaceAll("(?:\\.).*", "") + " " + jsonObj.getString("longitude").replaceAll("(?:\\.).*", ""));
@@ -127,6 +128,9 @@ public class Geo extends Command {
             event.getChannel().send().message(message);
         } catch (Exception e) {
             e.printStackTrace();
+            if (e.getMessage().contains("400")) {
+                event.getChannel().send().message("IPV6 aren't supported yet!");
+            }
             return false;
         }
         return true;

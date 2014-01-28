@@ -58,8 +58,10 @@ public class Setcmd extends Command {
                     writer.flush();
                     writer.close();
                     event.getUser().send().notice("'" + commandname + "' was set to '" + sb.toString() + "'");
+
                     return true;
                 } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }
         } else {

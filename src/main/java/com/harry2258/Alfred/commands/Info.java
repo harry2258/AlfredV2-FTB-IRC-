@@ -37,7 +37,7 @@ public class Info extends Command {
         String perms = Main.map.get(event.getChannel().getName());
         JSONObject jsonObj = new JSONObject(perms);
 
-        String exece = System.getProperty("user.dir") + "/perms.json";
+        String exece = System.getProperty("user.dir") + "/exec.json";
         String exe = JsonUtils.getStringFromFile(exece);
         JSONObject exec = new JSONObject(exe);
 
@@ -67,11 +67,11 @@ public class Info extends Command {
 
     @Override
     public void setConfig(Config config) {
-
+        this.config = config;
     }
 
     @Override
     public void setManager(PermissionManager manager) {
-
+        this.manager = manager;
     }
 }

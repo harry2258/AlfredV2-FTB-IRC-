@@ -1,0 +1,13 @@
+String url = "http://imgur.com/gallery/";
+String[] args = event.getMessage().split(" ");
+int count = Integer.valueOf(args[1]);
+java.lang.String list = "";
+java.net.HttpURLConnection conn;
+while(list.split(" ").length < count){
+  java.lang.String random = org.apache.commons.lang.RandomStringUtils.randomAlphanumeric(5);
+  conn = (java.net.HttpURLConnection) new java.net.URL(url + random).openConnection();
+  if(conn.getResponseCode() != 404){
+    list += conn.getURL() + " ";
+  }
+}
+chan.send().message(list.trim());
