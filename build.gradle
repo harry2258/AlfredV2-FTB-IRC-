@@ -50,6 +50,7 @@ dependencies {
     compile 'org.json:json:20090211'
     compile 'org.twitter4j:twitter4j-core:3.0.5'
     compile 'commons-configuration:commons-configuration:1.9'
+    compile 'org.xerial:sqlite-jdbc:3.7.2'
 
     compile 'junit:junit:3.8.1'
 }

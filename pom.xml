@@ -73,6 +73,11 @@
             <artifactId>twitter4j-core</artifactId>
             <version>[3.0,)</version>
         </dependency>
+        <dependency>
+            <groupId>org.xerial</groupId>
+            <artifactId>sqlite-jdbc</artifactId>
+            <version>3.7.2</version>
+        </dependency>
     </dependencies>
     <build>
         <defaultGoal>clean package</defaultGoal>
