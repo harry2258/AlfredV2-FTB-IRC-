@@ -36,6 +36,9 @@ public class Config {
     private String botPassword;
     private String ctcpFinger;
     private String ctcpVersion;
+    private String DBhost;
+    private String DBuser;
+    private String DBpass;
     private List<String> channels;
     private List<String> loggedChannels;
     private String permissionDenied;
@@ -60,6 +63,7 @@ public class Config {
                 out.close();
                 System.out.println("[!!] Done! [!!]");
             }
+
             properties.load(new FileInputStream("bot.properties"));
             this.setBotNickname(properties.getProperty("bot-nickname"));
             this.setBotUsername(properties.getProperty("bot-username"));
@@ -84,6 +88,9 @@ public class Config {
             this.setServerPort(properties.getProperty("server-port"));
             this.setServerPassword(properties.getProperty("server-password"));
             this.setPermissionDenied(properties.getProperty("permission-denied"));
+            this.DBHostName(properties.getProperty("Host"));
+            this.DBUserName(properties.getProperty("Username"));
+            this.DBPassName(properties.getProperty("Password"));
 
         } catch (IOException ex) {
             Logger.getLogger(Config.class.getName()).log(Level.SEVERE, null, ex);
@@ -429,5 +436,28 @@ public class Config {
             return true;
         }
         return false;
+    }
+
+    public String DatabaseHost() {
+        return DBhost;
+    }
+
+    private void DBHostName(String host) {
+        this.DBhost = host;
+    }
+
+    public String DatabaseUser() {
+        return DBuser;
+    }
+
+    private void DBUserName(String user) {
+        this.DBuser = user;
+    }
+
+    public String DatabasePass() {
+        return DBpass;
+    }
+    private void DBPassName(String pass) {
+        this.DBpass = pass;
     }
 }

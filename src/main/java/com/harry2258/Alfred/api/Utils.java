@@ -253,7 +253,8 @@ public class Utils {
             user = test.getRegisteredAs();
         } catch (InterruptedException ex) {
             Logger.getLogger(MessageEvent.class.getName()).log(Level.SEVERE, null, ex);
-
+            event.getChannel().send().message("Please enter a valid username!");
+            user = "";
         }
         return user;
     }

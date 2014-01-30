@@ -33,7 +33,7 @@ public class McStatusChecker extends Thread {
                 }
             }
             try {
-                Thread.sleep(60000);
+                Thread.sleep(120000);
 
             } catch (InterruptedException e) {
                 e.printStackTrace();

@@ -9,10 +9,11 @@ import org.pircbotx.hooks.events.MessageEvent;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 /**
  * Created by Hardik on 1/23/14.
@@ -30,19 +31,13 @@ public class Log extends Command {
         String[] args = event.getMessage().split(" ");
 
         ArrayList<String> info = new ArrayList<>();
-        ArrayList<String> error = new ArrayList<>();
         ArrayList<String> Message = new ArrayList<>();
-        ArrayList<String> Suggestion = new ArrayList<>();
-        ArrayList<String> Errors = new ArrayList<>();
-        ArrayList<String> Diagnosis = new ArrayList<>();
 
         String message = "";
         String temp = "";
-        String Error = "";
-        String suggestion = "";
         String Raw = args[1];
         String Java = "1";
-
+        String webpage = "";
         System.out.println(args[1]);
 
 
@@ -67,9 +62,9 @@ public class Log extends Command {
         try {
             String test = JsonUtils.getStringFromFile(Main.cmd.toString());
             JSONObject jsonObj = new JSONObject(test);
-            URL insult;
-            insult = new URL(Raw);
-            BufferedReader br = new BufferedReader(new InputStreamReader(insult.openStream()));
+            URL url;
+            url = new URL(Raw);
+            BufferedReader br = new BufferedReader(new InputStreamReader(url.openStream()));
             while ((tmp = br.readLine()) != null) {
                 if (tmp.contains("FTBLaunch ")) {
                     temp = Colors.BOLD + "Launcher: " + Colors.NORMAL + tmp.replaceAll(".*(?:version )|\\)", "");
@@ -110,33 +105,11 @@ public class Log extends Command {
                     if (!info.contains(temp) && jsonObj.getBoolean("OSName")) {
                         info.add(temp);
                     }
-                } else if (tmp.contains("java.lang.NullPointerException")) {
-                    temp = Colors.BOLD + "Errors: " + Colors.NORMAL + tmp.replaceAll("^.*?(?=[A-Z][a-z])", "").replaceAll("\\\\[.*?\\\\]", "").replaceAll("Description: ", "").replaceAll(".*(?=java.lang.NullPointerException)","");
-                    if (!error.contains(temp) && jsonObj.getBoolean("Description")) {
-                        error.add(temp);
-                    }
                 }
-
-
-                //Suggestions
-                if (tmp.contains("at net.minecraft.client.renderer.tileentity.TileEntityRenderer")) {
-                    if(!Errors.contains("TileEntityRenderer") && jsonObj.getBoolean("Suggestion")) {
-                        error.add("TileEntityRenderer");
-                        Errors.add("TileEntityRenderer");
-                    }
-                }
+                webpage += tmp;
             }
 
-            if (jsonObj.getBoolean("Suggestion")) {
-
-                if (Integer.parseInt(Java) < 17045) {
-                    Suggestion.add("Update your java to the latest version.");
-                }
-                if (Errors.contains("TileEntityRenderer")) {
-                    Suggestion.add("Start a single-player game first, then disconnect and join the server and if you have RailCraft tanks, Move them.");
-                }
-
-            }
+            Error.getProblems(webpage, event);
 
             for (int x = 0; x < info.size(); x++) {
                 Message.add(info.get(x));
@@ -146,32 +119,20 @@ public class Log extends Command {
                 message += s + " | \t";
             }
 
-            for (String s : error) {
-                Error += s + " | \t";
-            }
-
-            for (String s : Suggestion) {
-                suggestion += s + " | \t";
-            }
-
-            for (String s : Diagnosis) {
-                Error += s + " | \t";
-            }
-
             event.getChannel().send().message(message);
-            event.getChannel().send().message(Error);
-            if (!Suggestion.isEmpty()) {
-                event.getChannel().send().message(Colors.BOLD + "Suggestion: " + Colors.NORMAL + suggestion);
-            }
+
             return true;
         } catch (JSONException e1) {
             event.getChannel().send().message("OH NO! The parser.json is corrupted, Please delete it and retry.");
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
         } catch (Exception e) {
             e.printStackTrace();
         }
         return true;
+    }
+
+    public static String readString(InputStream stream) {
+        Scanner scanner = new Scanner(stream).useDelimiter("\\ A");
+        return scanner.hasNext() ? scanner.next() : "";
     }
 
     @Override

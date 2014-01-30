@@ -1,6 +1,5 @@
 package com.harry2258.Alfred.commands;
 
-import com.harry2258.Alfred.Database.*;
 import com.harry2258.Alfred.api.Command;
 import com.harry2258.Alfred.api.Config;
 import com.harry2258.Alfred.api.PermissionManager;
@@ -16,23 +15,26 @@ import java.util.List;
  * Created by Hardik on 1/27/14.
  */
 public class Error extends Command {
-    private Config config;
-    private PermissionManager manager;
     public static HashMap<String, String> Diagnosis = new HashMap<>();
     public static HashMap<String, String> Errors = new HashMap<>();
     public static HashMap<String, String> Suggestion = new HashMap<>();
+    ArrayList<String> errorlist = new ArrayList<>();
 
     public Error() {
 
         super("Error", "Errors Database!");
     }
 
+    private static Config config;
+    private PermissionManager manager;
+
     @Override
     public boolean execute(MessageEvent event) {
-        String[] args = event.getMessage().split(" ");
-        try {
-            Class.forName("org.sqlite.JDBC");
 
+        String[] args = event.getMessage().split(" ");
+
+        try {
+            Class.forName("com.mysql.jdbc.Driver");
             if (args.length==2 && args[1].equalsIgnoreCase("create")){
             createTables();
             event.getChannel().send().message("Created Table!");
@@ -46,7 +48,7 @@ public class Error extends Command {
             }
             if (args.length==2 && args[1].equalsIgnoreCase("submit")){
                 ArrayList<String> test1 = new ArrayList<>();
-                String[] test = Errors.get(event.getUser().getNick()).split(" ", 2)[1].split(",");
+                String[] test = Errors.get(event.getUser().getNick()).split(", ");
                 for (int i = 0; i < test.length; i++) {
                     test1.add(test[i]);
                 }
@@ -54,22 +56,22 @@ public class Error extends Command {
                 Diagnosis.remove(event.getUser().getNick());
                 Suggestion.remove(event.getUser().getNick());
                 Errors.remove(event.getUser().getNick());
-
+                event.getChannel().send().message("Submissions successful!");
                 return true;
             }
 
         } catch (Exception e) {
             e.printStackTrace();
             event.getChannel().send().message(e.toString());
+            return true;
         }
-
 
 
         StringBuilder br= new StringBuilder();
-
         for (int i = 1; i < args.length; i++) {
             br.append(args[i]).append(" ");
         }
+        Errors.remove(event.getUser().getNick());
         Errors.put(event.getUser().getNick(), br.toString());
         event.getUser().send().notice("Added " + br.toString() + "to Error List!");
         return true;
@@ -85,14 +87,22 @@ this.config = config;
 this.manager = manager;
     }
 
-    protected Connection getConnection() throws SQLException {
-        return DriverManager.getConnection("jdbc:sqlite:" + System.getProperty("user.dir") + "\\main.db");
+    protected static Connection getConnection() throws SQLException {
+        String host = config.DatabaseHost();
+        String user = config.DatabaseUser();
+        String password = config.DatabasePass();
+        try {
+            Class.forName("com.mysql.jdbc.Driver");
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        return DriverManager.getConnection("jdbc:mysql://" + host, user, password);
     }
 
     public void createTables() throws SQLException {
         Connection conn = getConnection();
-        conn.prepareStatement("CREATE TABLE IF NOT EXISTS Problems ( ID integer PRIMARY KEY AUTOINCREMENT, Diagnosis VARCHAR(255), Suggestion VARCHAR(255) ) ").execute();
-        conn.prepareStatement("CREATE TABLE IF NOT EXISTS ProblemErrors ( ID integer PRIMARY KEY AUTOINCREMENT, ProblemID integer, Error VARCHAR(255) )").execute();
+        conn.prepareStatement("CREATE TABLE IF NOT EXISTS Problems ( ID INT NOT NULL AUTO_INCREMENT PRIMARY KEY, Diagnosis VARCHAR(255), Suggestion VARCHAR(255) ) ").execute();
+        conn.prepareStatement("CREATE TABLE IF NOT EXISTS ProblemErrors ( ID INT NOT NULL AUTO_INCREMENT PRIMARY KEY, ProblemID integer, Error VARCHAR(255) )").execute();
         conn.close();
     }
 
@@ -110,7 +120,7 @@ this.manager = manager;
             for(String error : errors) {
                 PreparedStatement stmtError = conn.prepareStatement("INSERT INTO ProblemErrors (ProblemID, Error) VALUES (?,?)");
                 stmtError.setInt(1, rs.getInt(1));
-                stmtError.setString(2, error);
+                stmtError.setString(2, error.trim());
                 stmtError.execute();
                 stmtError.close();
             }
@@ -144,5 +154,40 @@ this.manager = manager;
         }
 
         conn.close();
+    }
+
+    public static void getProblems(String pasteContent, MessageEvent event){
+        String errors = "";
+        ArrayList<String> Diag = new ArrayList<>();
+        ArrayList<String> Sugg = new ArrayList<>();
+        Connection conn = null;
+        try {
+
+            conn = getConnection();
+
+            PreparedStatement stmt = conn.prepareStatement("SELECT Problems.ID as ID, Diagnosis, Suggestion, CONCAT('%', GROUP_CONCAT(Error, '%')) as Errors FROM Problems, ProblemErrors WHERE Problems.ID = ProblemErrors.ProblemID GROUP BY ID, Diagnosis, Suggestion HAVING ? LIKE Errors");
+            stmt.setString(1, pasteContent);
+            ResultSet rs = stmt.executeQuery();
+            while(rs.next()) {
+                System.out.println("Errors: " + rs.getString("Errors"));
+                System.out.println("Diagnosis: " + rs.getString("Diagnosis"));
+                System.out.println("Suggestion: " + rs.getString("Suggestion"));
+                errors += rs.getString("Errors")  + " | ";
+                Diag.add(rs.getString("Diagnosis"));
+                Sugg.add(rs.getString("Suggestion"));
+            }
+            rs.close();
+            stmt.close();
+            event.getChannel().send().message(Colors.BOLD + "Errors: " + Colors.NORMAL + errors);
+            for (int i = 0; i < Diag.size(); i++){
+                event.getChannel().send().message(Colors.BOLD + "Diagnosis: " + Colors.NORMAL +Diag.get(i));
+                event.getChannel().send().message(Colors.BOLD + "Suggestion: " + Colors.NORMAL +Sugg.get(i));
+
+            }
+        } catch (SQLException ex) {
+            System.out.println("SQLException: " + ex.getMessage());
+            System.out.println("SQLState: " + ex.getSQLState());
+            System.out.println("VendorError: " + ex.getErrorCode());
+        }
     }
 }

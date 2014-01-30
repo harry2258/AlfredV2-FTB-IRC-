@@ -24,6 +24,7 @@ public class Suggestion extends Command {
         }
 
         Error.Suggestion.put(event.getUser().getNick(), br.toString());
+        event.getUser().send().notice("Added to suggestion list!");
         return true;
     }
 

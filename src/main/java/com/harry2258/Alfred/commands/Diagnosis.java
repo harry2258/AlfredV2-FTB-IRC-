@@ -28,7 +28,7 @@ public class Diagnosis extends Command {
             br.append(args[i]).append(" ");
         }
         Error.Diagnosis.put(event.getUser().getNick(), br.toString());
-        event.getUser().send().notice("Added diagnosis to list!");
+        event.getUser().send().notice("Added to diagnosis list!");
 
         return true;
     }

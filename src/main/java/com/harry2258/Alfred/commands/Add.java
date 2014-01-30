@@ -37,7 +37,11 @@ public class Add extends Command {
         if (type.equalsIgnoreCase("mod")) {
             if (args.length == 3) {
                 try {
+                    if (!event.getChannel().getUsers().contains(event.getBot().getUserChannelDao().getUser(args[2]))) {
+                        event.getChannel().send().message("There is no user by that name!"); return false;
+                    }
                     String newuser = Utils.getAccount(event.getBot().getUserChannelDao().getUser(args[2]), event);
+                    if (newuser.isEmpty()){ return false;}
                     String strFileJson = JsonUtils.getStringFromFile(Jsonfile);
                     JSONObject jsonObj = new JSONObject(strFileJson);
                     if (!jsonObj.getJSONObject("Perms").getString("Mods").contains(newuser)) {
@@ -54,6 +58,8 @@ public class Add extends Command {
                     }
                 } catch (Exception ex) {
                     System.out.println(ex);
+                    event.getChannel().send().message("Please enter a valid username!");
+                    return true;
                 }
             }
         }
@@ -96,7 +102,11 @@ public class Add extends Command {
         if (type.equalsIgnoreCase("admin")) {
             if (args.length == 3) {
                 try {
+                    if (!event.getChannel().getUsers().contains(event.getBot().getUserChannelDao().getUser(args[2]))) {
+                        event.getChannel().send().message("There is no user by that name!"); return false;
+                    }
                     String newuser = Utils.getAccount(event.getBot().getUserChannelDao().getUser(args[2]), event);
+                    if (newuser.isEmpty()){ return false;}
                     String strFileJson = JsonUtils.getStringFromFile(Jsonfile);
                     JSONObject jsonObj = new JSONObject(strFileJson);
                     if (!jsonObj.getJSONObject("Perms").getString("Admins").contains(newuser)) {
@@ -112,7 +122,10 @@ public class Add extends Command {
                         return true;
                     }
                 } catch (Exception ex) {
+                    System.out.println("NOPE!");
                     System.out.println(ex);
+                    event.getChannel().send().message("Please enter a valid username!");
+                    return true;
                 }
             }
         }
