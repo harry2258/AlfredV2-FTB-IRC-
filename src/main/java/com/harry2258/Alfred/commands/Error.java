@@ -35,17 +35,28 @@ public class Error extends Command {
 
         try {
             Class.forName("com.mysql.jdbc.Driver");
+            if (args.length==2 && args[1].equalsIgnoreCase("test")){
+                if (getConnection().isValid(5000)) {
+                    event.getChannel().send().message("Connection to database was succesful!");
+                } else {
+                    event.getChannel().send().message("Could not connect to the database, Please check your bot.properties files.");
+                }
+                return true;
+            }
+
             if (args.length==2 && args[1].equalsIgnoreCase("create")){
             createTables();
             event.getChannel().send().message("Created Table!");
                 return true;
             }
+
             if (args.length==2 && args[1].equalsIgnoreCase("review")){
                 event.getUser().send().notice(Colors.BOLD + "Errors: " + Colors.NORMAL + Errors.get(event.getUser().getNick()));
                 event.getUser().send().notice(Colors.BOLD + "Diagnosis: " + Colors.NORMAL + Diagnosis.get(event.getUser().getNick()));
                 event.getUser().send().notice(Colors.BOLD + "Suggestion: " + Colors.NORMAL + Suggestion.get(event.getUser().getNick()));
                 return true;
             }
+
             if (args.length==2 && args[1].equalsIgnoreCase("submit")){
                 ArrayList<String> test1 = new ArrayList<>();
                 String[] test = Errors.get(event.getUser().getNick()).split(", ");
