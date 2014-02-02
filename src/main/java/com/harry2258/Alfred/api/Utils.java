@@ -23,6 +23,7 @@ import org.pircbotx.hooks.events.WhoisEvent;
 
 import java.io.*;
 import java.net.*;
+import java.nio.CharBuffer;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -127,7 +128,7 @@ public class Utils {
             BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream()));
             String result;
             while ((result = reader.readLine()) != null) {
-                String a = result.replace("red", Colors.RED + "Offline" + Colors.NORMAL).replace("green", Colors.DARK_GREEN + "Online" + Colors.NORMAL).replace("[", "").replace("]", "");
+                String a = result.replace("red", Colors.RED + "✘" + Colors.NORMAL).replace("green", Colors.DARK_GREEN + "✓" + Colors.NORMAL).replace("[", "").replace("]", "");
                 String b = a.replace("{", "").replace("}", "").replace(":", ": ").replace("\"", "").replaceAll(",", " | ");
                 returns = b.replace("login.minecraft.net", "Login").replace("session.minecraft.net", "Session").replace("account.mojang.com", "Account").replace("auth.mojang.com", "Auth").replace("skins.minecraft.net", "Skins").replace("authserver.mojang.com", "Auth Server").replace("sessionserver.mojang.com", "Session Server").replace("minecraft.net", "Minecraft");
             }
@@ -317,6 +318,27 @@ public class Utils {
 
         return insult1;
     }
+
+    /*
+    public static String getCompliment() {
+        String compliment = null;
+        do {
+            try {
+                URL insult;
+                insult = new URL("http://www.madsci.org/cgi-bin/cgiwrap/~lynn/jardin/SCG");
+                BufferedReader br = new BufferedReader(new InputStreamReader(insult.openStream()));
+                for (int i = 0; i < 51; ++i)
+                br.readLine();
+                String line = br.readLine();
+                compliment = line;
+                br.close();
+            } catch (Exception e1) {
+                e1.printStackTrace();
+            }
+        } while (compliment.isEmpty());
+        return compliment;
+    }
+    */
 
     public static void Parser(File file) {
         JSONObject obj = new JSONObject();

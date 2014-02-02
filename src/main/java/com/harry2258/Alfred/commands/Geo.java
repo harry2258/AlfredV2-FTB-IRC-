@@ -33,6 +33,7 @@ public class Geo extends Command {
         ArrayList<String> Message = new ArrayList<>();
         String message = "";
         String ip = "";
+
         if (event.getChannel().isChannelPrivate() || event.getChannel().isSecret() || event.getChannel().isInviteOnly()) {
             event.getChannel().send().message("No no no! Not in here!");
             return true;
@@ -103,7 +104,7 @@ public class Geo extends Command {
                 Logger.getLogger(com.harry2258.Alfred.listeners.MessageEvent.class.getName()).log(Level.SEVERE, null, ex);
 
             }
-        }
+        } else { ip = args[1]; }
 
         String geo = "http://freegeoip.net/json/" + ip;
         String tmp = "";

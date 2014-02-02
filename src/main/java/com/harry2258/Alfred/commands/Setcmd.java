@@ -32,7 +32,6 @@ public class Setcmd extends Command {
         Date date = new Date();
         String[] args = event.getMessage().split(" ");
         String classname = Character.toUpperCase(args[1].charAt(0)) + event.getMessage().split(" ")[1].substring(1).toLowerCase();
-        event.getUser().send().notice(classname);
         if (!commands.containsKey(classname)) {
             if (args.length > 1) {
                 String commandname = args[1];

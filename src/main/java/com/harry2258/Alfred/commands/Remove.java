@@ -36,6 +36,7 @@ public class Remove extends Command {
 
 
         if (type.equalsIgnoreCase("mod")) {
+            System.out.println("Removing user from " + Jsonfile);
             if (args.length == 3) {
                 String mod = Utils.getAccount(event.getBot().getUserChannelDao().getUser(args[2]), event);
                 try {

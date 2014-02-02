@@ -31,7 +31,7 @@ public class Twitter extends Thread {
 
     public void start() {
         try {
-            System.out.println("Sleeping for 2 minutes. Waiting for bot to start up.");
+            System.out.println("[Twitter] Sleeping for 2 minutes. Waiting for bot to start up.");
             Thread.sleep(120000);
         } catch (InterruptedException e) {
             e.printStackTrace();
@@ -97,7 +97,12 @@ public class Twitter extends Thread {
                             if (!tweets.containsValue(test)) {
                                 tweets.put(args[i], test);
                                 for (Channel chan : bot.getUserBot().getChannels()) {
-                                    chan.send().message(test);
+                                    if (statuses.get(0).getUser().getName().equals("TPPIModPack") && chan.getName().equals("TestPackPleaseIgnore")) {
+                                        Channel TPPI = chan;
+                                        chan.send().message(test);
+                                    } else {
+                                        chan.send().message(test);
+                                    }
                                 }
                             }
 

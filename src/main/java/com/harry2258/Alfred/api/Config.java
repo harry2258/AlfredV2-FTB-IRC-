@@ -457,6 +457,7 @@ public class Config {
     public String DatabasePass() {
         return DBpass;
     }
+
     private void DBPassName(String pass) {
         this.DBpass = pass;
     }

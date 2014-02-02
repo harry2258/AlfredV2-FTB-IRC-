@@ -5,17 +5,11 @@ import bsh.Interpreter;
 import com.harry2258.Alfred.Main;
 import com.harry2258.Alfred.api.*;
 import com.harry2258.Alfred.commands.Ignore;
-import org.apache.commons.configuration.ConfigurationException;
-import org.apache.commons.configuration.PropertiesConfiguration;
-import org.apache.commons.lang.RandomStringUtils;
-import org.apache.commons.lang.StringEscapeUtils;
-import org.apache.commons.lang.StringUtils;
 import org.pircbotx.Colors;
 import org.pircbotx.PircBotX;
 import org.pircbotx.hooks.ListenerAdapter;
 
 import java.io.*;
-import java.util.ArrayList;
 import java.util.Date;
 
 import static com.harry2258.Alfred.api.CommandRegistry.commands;
@@ -116,7 +110,10 @@ public class MessageEvent extends ListenerAdapter {
                             event.respond(ex.getLocalizedMessage());
                             return;
                         }
+                        return;
                     }
+
+
 
                     if (event.getUser().isVerified()) {
                         if (commands.containsKey(classname)) {

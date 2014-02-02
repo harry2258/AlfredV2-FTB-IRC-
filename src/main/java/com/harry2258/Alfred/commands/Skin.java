@@ -4,7 +4,6 @@ import com.harry2258.Alfred.api.Command;
 import com.harry2258.Alfred.api.Config;
 import com.harry2258.Alfred.api.PermissionManager;
 import com.harry2258.Alfred.api.Utils;
-import org.pircbotx.User;
 import org.pircbotx.hooks.events.MessageEvent;
 
 /**

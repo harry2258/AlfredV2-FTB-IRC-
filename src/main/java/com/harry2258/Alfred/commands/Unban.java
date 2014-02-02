@@ -24,11 +24,11 @@ public class Unban extends Command {
         if (args.length == 3) {
             Channel target = event.getBot().getUserChannelDao().getChannel(args[1]);
             //target.send().unBan();
-            target.send().ban(args[2]);
+            target.send().unBan(args[2]);
             return true;
         }
         if (args.length == 2) {
-            event.getChannel().send().ban(args[1]);
+            event.getChannel().send().unBan(args[1]);
             return true;
         }
         return false;

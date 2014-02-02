@@ -18,7 +18,7 @@ public class Suggestion extends Command {
 
         String[] args = event.getMessage().split(" ");
 
-        StringBuilder br= new StringBuilder();
+        StringBuilder br = new StringBuilder();
         for (int i = 1; i < args.length; i++) {
             br.append(args[i]).append(" ");
         }

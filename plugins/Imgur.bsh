@@ -1,5 +1,10 @@
 String url = "http://imgur.com/gallery/";
 String[] args = event.getMessage().split(" ");
+if (java.lang.Integer.valueOf(args[1]) > 20 ) {
+chan.send().message("Awwww hell naw, thats way toooooo many!");
+return;
+}
+System.out.println("Connecting to Imgur!");
 int count = Integer.valueOf(args[1]);
 java.lang.String list = "";
 java.net.HttpURLConnection conn;

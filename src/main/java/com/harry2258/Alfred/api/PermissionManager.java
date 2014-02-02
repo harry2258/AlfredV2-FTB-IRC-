@@ -84,13 +84,13 @@ public class PermissionManager {
         try {
             Exec = JsonUtils.getStringFromFile(Main.jsonFilePath.toString());
 
-        JSONObject exec = new JSONObject(Exec);
+            JSONObject exec = new JSONObject(Exec);
 
-        if (exec.getJSONObject("Perms").getString("Exec").contains(Utils.getAccount(user, event))) {
-            if (user.isVerified()) {
-                return true;
+            if (exec.getJSONObject("Perms").getString("Exec").contains(Utils.getAccount(user, event))) {
+                if (user.isVerified()) {
+                    return true;
+                }
             }
-        }
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -72,9 +72,9 @@ public class Chstatus extends Command {
                 tests.add(test);
                 if (!test) {
                     event.getUser().send().notice("Ping to " + url + " timedout!");
+                    System.out.println("Could not connect!");
                 }
             }
-
         }
 
         for (int y = 0; y < chURLNames.size(); y++) {
@@ -85,28 +85,28 @@ public class Chstatus extends Command {
                 newURL = new URL(jsonURL);
                 String ts;
                 BufferedReader re = new BufferedReader(new InputStreamReader(newURL.openStream()));
+                String test = null;
                 while ((ts = re.readLine()) != null) {
                     JSONObject jsonObj = new JSONObject(ts);
-                    String test = jsonObj.getString("Bandwidth");
+                    test = jsonObj.getString("Bandwidth");
                     int x = (int) (Integer.parseInt(test) * 100) / 1000000;
                     Load.add(x);
                 }
             } catch (Exception ex) {
                 Logger.getLogger(Chstatus.class.getName()).log(Level.SEVERE, null, ex);
-                Load.add(Integer.parseInt("0"));
+                Load.add(0);
             }
         }
 
-
-        for (int x = 0; x < tests.size(); x++) {
-            if (tests.get(x).equals(true)) {
+        for (Boolean test1 : tests) {
+            if (test1) {
                 Status.add(Colors.DARK_GREEN + "✓");
             } else {
                 Status.add(Colors.RED + "✘");
             }
         }
-
         String test = null;
+
         if (Json) {
             test = Colors.DARK_GREEN + "✓";
         } else {
@@ -123,7 +123,6 @@ public class Chstatus extends Command {
         for (String s : Message) {
             sendMessage += s + "\t";
         }
-
 
         event.getChannel().send().message(sendMessage);
         return true;

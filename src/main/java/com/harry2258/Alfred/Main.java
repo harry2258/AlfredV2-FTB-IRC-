@@ -1,6 +1,7 @@
 package com.harry2258.Alfred;
 
 import com.harry2258.Alfred.Misc.McStatusChecker;
+import com.harry2258.Alfred.Misc.Reddit;
 import com.harry2258.Alfred.Misc.Twitter;
 import com.harry2258.Alfred.api.*;
 import com.harry2258.Alfred.runnables.ChatSocketListener;
@@ -116,7 +117,7 @@ public class Main {
             if (config.isEnabledTwitter()) {
                 new Thread(new Twitter(bot)).start();
             }
-            new Thread(new McStatusChecker(bot)).start();
+            new Thread(new Reddit(bot)).start();
             bot.startBot();
             System.out.println("Shutting down");
         } catch (Exception ex) {

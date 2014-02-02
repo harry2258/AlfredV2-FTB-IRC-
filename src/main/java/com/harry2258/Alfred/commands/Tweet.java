@@ -4,7 +4,6 @@ import com.harry2258.Alfred.api.*;
 import org.json.JSONObject;
 import org.pircbotx.Colors;
 import org.pircbotx.hooks.events.MessageEvent;
-import com.harry2258.Alfred.Misc.*;
 import twitter4j.Status;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
@@ -76,7 +75,7 @@ public class Tweet extends Command {
                 List<Status> statuses;
                 statuses = twitter.getUserTimeline(tests[1]);
                 event.getChannel().send().message("[" + Colors.RED + "Twitter" + Colors.NORMAL + "] [" + Colors.BOLD + statuses.get(0).getUser().getName() + Colors.NORMAL + "] " + statuses.get(0).getText());
-                if (!com.harry2258.Alfred.Misc.Twitter.tweets.containsValue(test)){
+                if (!com.harry2258.Alfred.Misc.Twitter.tweets.containsValue(test)) {
                     tweets.put(args[1], test);
                 }
                 return true;
@@ -96,7 +95,7 @@ public class Tweet extends Command {
                     tweets.put(args[i], test);
                     event.getChannel().send().message(test);
                 }
-                if (!com.harry2258.Alfred.Misc.Twitter.tweets.containsValue(test)){
+                if (!com.harry2258.Alfred.Misc.Twitter.tweets.containsValue(test)) {
                     tweets.put(args[i], test);
                 }
 

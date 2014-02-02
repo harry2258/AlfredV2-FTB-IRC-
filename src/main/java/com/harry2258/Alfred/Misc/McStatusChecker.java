@@ -19,7 +19,7 @@ public class McStatusChecker extends Thread {
 
     public void run() {
         try {
-            System.out.println("Sleeping for 2 minutes. Waiting for bot to start up.");
+            System.out.println("[Minecraft] Sleeping for 2 minutes. Waiting for bot to start up.");
             Thread.sleep(120000);
         } catch (InterruptedException e) {
             e.printStackTrace();

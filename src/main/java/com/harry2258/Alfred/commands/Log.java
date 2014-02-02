@@ -38,8 +38,6 @@ public class Log extends Command {
         String Raw = args[1];
         String Java = "1";
         String webpage = "";
-        System.out.println(args[1]);
-
 
         for (String word : event.getMessage().split(" ")) {
             if (word.toLowerCase().contains("pastebin.com")) {
@@ -50,6 +48,9 @@ public class Log extends Command {
             }
             if (word.toLowerCase().contains("paste.atlauncher.com")) {
                 Raw = "http://paste.atlauncher.com/view/raw/" + args[1].replaceAll("http://paste.atlauncher.com/view/", "");
+            }
+            if (word.toLowerCase().contains("paste.ee")) {
+                Raw = "http://paste.ee/r/" + args[1].replaceAll("http://paste.ee/p/", "");
             }
         }
 
@@ -110,7 +111,6 @@ public class Log extends Command {
             }
 
             Error.getProblems(webpage, event);
-
             for (int x = 0; x < info.size(); x++) {
                 Message.add(info.get(x));
             }
