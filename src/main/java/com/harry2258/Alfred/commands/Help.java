@@ -27,8 +27,8 @@ public class Help extends Command {
                 event.getUser().send().notice(String.format(Colors.RED + "%s" + Colors.NORMAL + " - %s", command.getName(), command.getDescription()));
             }
             */
-            event.getChannel().send().message("Please go to the http://harry2258.com/alfred !");
-            event.getChannel().send().message("or you can use Help [command name]");
+            event.getUser().send().notice("Please go to the http://harry2258.com/alfred !");
+            event.getUser().send().notice("or you can use Help [command name]");
             return true;
         }
         if (args.length == 2) {

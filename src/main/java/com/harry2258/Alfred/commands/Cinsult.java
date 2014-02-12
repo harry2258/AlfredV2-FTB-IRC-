@@ -23,8 +23,18 @@ public class Cinsult extends Command {
     public boolean execute(MessageEvent event) throws Exception {
         String[] args = event.getMessage().split(" ");
 
-        if (args.length == 2) {
+        if (args.length >= 2) {
             Channel chan = event.getBot().getUserChannelDao().getChannel(args[1]);
+
+            String user = "";
+
+            if (args.length == 3) {
+                if (args[1].contains("batman") || args[1].equalsIgnoreCase("alfred") || args[1].contains("progwml6")) {
+                    user = event.getUser().getNick();
+                } else {
+                    user = args[2] + ", ";
+                }
+            }
 
             if (chan.getName().equalsIgnoreCase("#dragonweyr") || chan.getName().equalsIgnoreCase("#help") || chan.getName().equalsIgnoreCase("#lobby") || chan.getName().equalsIgnoreCase("#coders") || chan.getName().equalsIgnoreCase("#esper") || chan.getName().equalsIgnoreCase("#helper")) {
                 event.getChannel().send().message("YOU CRAZY SENDIN' ME OUT THERE?! AWW HELL NAW!!");
@@ -35,22 +45,31 @@ public class Cinsult extends Command {
             while (insult1.isEmpty()) {
                 wait();
             }
-            System.out.println(chan.isInviteOnly());
-            if (chan.isInviteOnly() || chan.isSecret() || chan.isChannelPrivate()) {
-                event.respond("I cannot join " + chan.getName() + "!");
+            try {
+                sendInsult(event, user + insult1);
                 return true;
-            } else {
-                if (event.getBot().getUserBot().getChannels().contains(chan)) {
-                    chan.send().message(insult1);
-                    return true;
-                }
-                event.getBot().sendIRC().joinChannel(chan.getName());
-                chan.send().message(insult1);
-                chan.send().part();
-                return true;
+            } catch (Exception e) {
+                e.printStackTrace();
             }
+
         }
         return false;
+    }
+
+    private static void sendInsult(MessageEvent event, String insult) {
+        String[] args = event.getMessage().split(" ");
+        Channel chan = event.getBot().getUserChannelDao().getChannel(args[1]);
+        if (chan.isInviteOnly() || chan.isSecret() || chan.isChannelPrivate()) {
+            event.respond("I cannot join " + chan.getName() + "!");
+        } else {
+            if (event.getBot().getUserBot().getChannels().contains(chan)) {
+                chan.send().message(insult);
+            } else {
+                event.getBot().sendIRC().joinChannel(chan.getName());
+                chan.send().message(insult);
+                chan.send().part();
+            }
+        }
     }
 
     @Override

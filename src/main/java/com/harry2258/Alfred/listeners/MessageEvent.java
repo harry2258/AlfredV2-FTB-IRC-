@@ -44,6 +44,11 @@ public class MessageEvent extends ListenerAdapter {
         if (Main.relay.containsKey(event.getChannel())) {
             Main.relay.get(event.getChannel()).send().message("[" + event.getChannel().getName() + "] <" + eventuser + "> " + event.getMessage());
         }
+
+        if (event.getMessage().equalsIgnoreCase("prefix")) {
+            event.getUser().send().notice("The prefix is: " + config.getTrigger());
+        }
+
         if (event.getMessage().startsWith(trigger) && !Ignore.ignored.contains(Main.Login.get(eventuser))) {
             if (event.getMessage().startsWith(config.getTrigger() + "login")) {
                 if (event.getUser().isVerified()) {
@@ -114,7 +119,6 @@ public class MessageEvent extends ListenerAdapter {
                     }
 
 
-
                     if (event.getUser().isVerified()) {
                         if (commands.containsKey(classname)) {
                             if (manager.hasPermission(permission, event.getUser(), event.getChannel(), event)) {
@@ -170,6 +174,10 @@ public class MessageEvent extends ListenerAdapter {
                 }
             }
 
+        }
+
+        if (event.getMessage().equalsIgnoreCase("Im better than alfred")) {
+            event.getChannel().send().message(eventuser + ", It's good to dream big");
         }
 
 

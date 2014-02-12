@@ -17,20 +17,23 @@ public class Part extends Command {
     @Override
     public boolean execute(MessageEvent event) {
         String[] args = event.getMessage().split(" ");
-        if (args.length == 2) {
-            Channel target = event.getBot().getUserChannelDao().getChannel(args[1]);
-            event.getBot().getUserChannelDao().getAllChannels();
-            if (event.getBot().getUserChannelDao().getAllChannels().contains(target)) {
-                target.send().part();
-                return true;
+        if (manager.hasExec(event.getUser(), event)) {
+            if (args.length == 2) {
+                Channel target = event.getBot().getUserChannelDao().getChannel(args[1]);
+                event.getBot().getUserChannelDao().getAllChannels();
+                if (event.getBot().getUserChannelDao().getAllChannels().contains(target)) {
+                    target.send().part();
+                    return true;
+                } else {
+                    event.getUser().send().notice("I'm not in the channel " + args[1] + "!");
+                    return true;
+                }
             } else {
-                event.getUser().send().notice("I'm not in the channel " + args[1] + "!");
+                event.getChannel().send().part();
                 return true;
             }
-        } else {
-            event.getChannel().send().part();
-            return true;
         }
+        return false;
     }
 
     @Override

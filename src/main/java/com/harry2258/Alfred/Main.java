@@ -1,6 +1,5 @@
 package com.harry2258.Alfred;
 
-import com.harry2258.Alfred.Misc.McStatusChecker;
 import com.harry2258.Alfred.Misc.Reddit;
 import com.harry2258.Alfred.Misc.Twitter;
 import com.harry2258.Alfred.api.*;
@@ -84,7 +83,7 @@ public class Main {
             builder.setFinger(config.getCtcpFinger());
             builder.setEncoding(Charset.isSupported("UTF-8") ? Charset.forName("UTF-8") : Charset.defaultCharset());
             builder.setNickservPassword(config.getBotPassword());
-            builder.setVersion("Alfred v2.1");
+            builder.setVersion("2.1.1");
             builder.setServer(config.getServerHostame(), Integer.parseInt(config.getServerPort()), config.getServerPassword());
             builder.getListenerManager().addListener(new com.harry2258.Alfred.listeners.MessageEvent(config, manager));
             builder.getListenerManager().addListener(new com.harry2258.Alfred.listeners.InviteEvent(config, manager));
@@ -119,6 +118,7 @@ public class Main {
             }
             new Thread(new Reddit(bot)).start();
             bot.startBot();
+
             System.out.println("Shutting down");
         } catch (Exception ex) {
             ex.printStackTrace();

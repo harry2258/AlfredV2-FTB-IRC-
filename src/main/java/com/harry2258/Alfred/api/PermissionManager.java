@@ -59,7 +59,7 @@ public class PermissionManager {
         }
 
         if (jsonObj.getJSONObject("Perms").getString("ModPerms").contains(permission)) {
-            if (jsonObj.getJSONObject("Perms").getString("Mods").contains(sender) && user.isVerified() || channel.hasVoice(user)) {
+            if (jsonObj.getJSONObject("Perms").getString("Admins").contains(sender) || jsonObj.getJSONObject("Perms").getString("Mods").contains(sender) && user.isVerified()) {
                 return true;
             }
         }

@@ -5,6 +5,7 @@ import com.harry2258.Alfred.api.Config;
 import com.harry2258.Alfred.api.PermissionManager;
 import com.harry2258.Alfred.api.Utils;
 import org.json.JSONObject;
+import org.pircbotx.Colors;
 import org.pircbotx.hooks.events.MessageEvent;
 
 import java.io.BufferedReader;
@@ -46,9 +47,9 @@ public class Wiki extends Command {
         }
 
         String name = null;
-        String finalurl = null;
-        String tmp = null;
         String info = null;
+        String xy = "";
+        String searchJson = "";
 
 
         try {
@@ -58,32 +59,48 @@ public class Wiki extends Command {
             BufferedReader xx = new BufferedReader(new InputStreamReader(read.openStream()));
             String search = xx.readLine();
             JSONObject json = new JSONObject(search);
-            String searchJson = json.getJSONObject("query").getJSONArray("search").getJSONObject(0).getString("title");
-
+            searchJson = json.getJSONObject("query").getJSONArray("search").getJSONObject(0).getString("title");
+            if (searchJson.contains("Getting Started")) {
+                searchJson = json.getJSONObject("query").getJSONArray("search").getJSONObject(1).getString("title");
+            }
             if (json.getJSONObject("query").getJSONArray("search").getJSONObject(0).getString("snippet").contains("#REDIRECT")) {
                 name = (json.getJSONObject("query").getJSONArray("search").getJSONObject(0).getString("snippet")).replaceAll("\\{\\{[^}]+\\}\\}|\\[\\[Category:[^\\]]+\\]\\]|\\[\\[|\\]\\]|^\\s+|\\s+$|<[^>]+>", "").trim().replaceAll("\\r?\\n.*", "").replaceAll("\\S+\\|(\\S+)", "$1").replaceAll("#REDIRECT ", "");
             } else {
                 name = (searchJson).replace("/ko", "");
             }
 
-            String temp = ("http://wiki.feed-the-beast.com/api.php?action=wikilinkquery&query=" + name + "&format=json").replaceAll(" ", "%20");
+            String temp = ("http://wiki.feed-the-beast.com/api.php?format=xml&action=query&titles=" + name + "&prop=revisions&rvprop=content&format=json").replaceAll(" ", "%20");
             URL u = new URL(temp);
             URLConnection c = u.openConnection();
             BufferedReader in = new BufferedReader(new InputStreamReader(c.getInputStream()));
-            String xy = in.readLine();
+            xy = in.readLine();
+
+            //\{\{[^}]+\}\}|\[\[Category:[^\]]+\]\]|.*\[\[|\]\].*|^\s+|\s+$|<[^>]+>
+
+            if (xy.contains("#REDIRECT")) {
+                String redirect = xy.replaceAll("\\{\\{[^}]+\\}\\}|\\[\\[Category:[^\\]]+\\]\\]|.*\\[\\[|\\]\\].*|^\\s+|\\s+$|<[^>]+>", "");
+                name = redirect;
+                String newtemp = ("http://wiki.feed-the-beast.com/api.php?format=xml&action=query&titles=" + redirect + "&prop=revisions&rvprop=content&format=json").replaceAll(" ", "%20");
+                URL url = new URL(newtemp);
+                URLConnection x = url.openConnection();
+                BufferedReader br = new BufferedReader(new InputStreamReader(x.getInputStream()));
+                xy = br.readLine();
+            }
+
             String json1 = xy.replaceAll("\n", " ");
+            String[] getid = json1.replaceAll("[{\"/>}{\\\\']", "").split(":");
+            String id = getid[2];
             JSONObject jsonObj = new JSONObject(json1);
 
-            if (jsonObj.getJSONObject("pages").getString(name).contains("Vanilla|type=")) {
+            if (jsonObj.getJSONObject("query").getString("pages").contains("Vanilla|type=")) {
                 event.getChannel().send().message(name + " (Vanilla):" + ("http://minecraft.gamepedia.com/" + name).replaceAll(" ", "_"));
                 return true;
             }
 
-            String APItest = jsonObj.getJSONObject("pages").getString(name);
-            String df = APItest.replaceAll("\\{\\{[^}]+\\}\\}|\\[\\[Category:[^\\]]+\\]\\]|\\[\\[|\\]\\]|^\\s+|\\s+$|<[^>]+>", "").trim().replaceAll("\\r?\\n.*", "").replaceAll("\\S+\\|(\\S+)", "$1");
-            String fd = df.replaceAll("'", "").trim();
+            String APItest = jsonObj.getJSONObject("query").getJSONObject("pages").getJSONObject(id).getJSONArray("revisions").getJSONObject(0).getString("*");
+            String df = APItest.replaceAll("\\{\\{[^}]+\\}\\}|\\[\\[Category:[^\\]]+\\]\\]|\\[\\[|\\]\\]|^\\s+|\\s+$|<[^>]+>|\\\\n", "").trim().replaceAll("\\r?\\n.*", "").replaceAll("\\S+\\|(\\S+)", "$1");
+            String fd = df.replaceAll("'''" + name + "'''", Colors.BOLD + name + Colors.NORMAL);
             int maxLength = (fd.length() < 220) ? fd.length() : 220;
-
             info = fd.substring(0, maxLength);
 
         } catch (Exception e) {

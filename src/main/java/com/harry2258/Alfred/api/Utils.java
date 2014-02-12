@@ -23,7 +23,6 @@ import org.pircbotx.hooks.events.WhoisEvent;
 
 import java.io.*;
 import java.net.*;
-import java.nio.CharBuffer;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -155,6 +154,14 @@ public class Utils {
             bufferedreader.close();
         } catch (Exception e) {
             e.printStackTrace();
+            if (e.getMessage().contains("502")) {
+                try {
+                    System.out.println("Got error 502! sleeping for 5 mins");
+                    Thread.sleep(300000);
+                } catch (InterruptedException e1) {
+                    e1.printStackTrace();
+                }
+            }
         }
         return shortened;
     }
@@ -226,7 +233,7 @@ public class Utils {
         try {
             final URL url = new URL("http://" + address);
             final HttpURLConnection urlConn = (HttpURLConnection) url.openConnection();
-            urlConn.setConnectTimeout(4000);
+            urlConn.setConnectTimeout(1500);
             final long startTime = System.currentTimeMillis();
             urlConn.connect();
             final long endTime = System.currentTimeMillis();

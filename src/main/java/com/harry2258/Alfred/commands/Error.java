@@ -35,7 +35,7 @@ public class Error extends Command {
 
         try {
             Class.forName("com.mysql.jdbc.Driver");
-            if (args.length==2 && args[1].equalsIgnoreCase("test")){
+            if (args.length == 2 && args[1].equalsIgnoreCase("test")) {
                 if (getConnection().isValid(5000)) {
                     event.getChannel().send().message("Connection to database was succesful!");
                 } else {
@@ -44,20 +44,20 @@ public class Error extends Command {
                 return true;
             }
 
-            if (args.length==2 && args[1].equalsIgnoreCase("create")){
-            createTables();
-            event.getChannel().send().message("Created Table!");
+            if (args.length == 2 && args[1].equalsIgnoreCase("create")) {
+                createTables();
+                event.getChannel().send().message("Created Table!");
                 return true;
             }
 
-            if (args.length==2 && args[1].equalsIgnoreCase("review")){
+            if (args.length == 2 && args[1].equalsIgnoreCase("review")) {
                 event.getUser().send().notice(Colors.BOLD + "Errors: " + Colors.NORMAL + Errors.get(event.getUser().getNick()));
                 event.getUser().send().notice(Colors.BOLD + "Diagnosis: " + Colors.NORMAL + Diagnosis.get(event.getUser().getNick()));
                 event.getUser().send().notice(Colors.BOLD + "Suggestion: " + Colors.NORMAL + Suggestion.get(event.getUser().getNick()));
                 return true;
             }
 
-            if (args.length==2 && args[1].equalsIgnoreCase("submit")){
+            if (args.length == 2 && args[1].equalsIgnoreCase("submit")) {
                 ArrayList<String> test1 = new ArrayList<>();
                 String[] test = Errors.get(event.getUser().getNick()).split(", ");
                 for (int i = 0; i < test.length; i++) {
@@ -78,7 +78,7 @@ public class Error extends Command {
         }
 
 
-        StringBuilder br= new StringBuilder();
+        StringBuilder br = new StringBuilder();
         for (int i = 1; i < args.length; i++) {
             br.append(args[i]).append(" ");
         }
@@ -90,24 +90,22 @@ public class Error extends Command {
 
     @Override
     public void setConfig(Config config) {
-this.config = config;
+        Error.config = config;
     }
 
     @Override
     public void setManager(PermissionManager manager) {
-this.manager = manager;
+        this.manager = manager;
     }
 
-    protected static Connection getConnection() throws SQLException {
-        String host = config.DatabaseHost();
-        String user = config.DatabaseUser();
-        String password = config.DatabasePass();
+    private static Connection getConnection() throws SQLException {
         try {
             Class.forName("com.mysql.jdbc.Driver");
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
-        return DriverManager.getConnection("jdbc:mysql://" + host, user, password);
+
+        return DriverManager.getConnection("jdbc:mysql://127.0.0.1/alfred", "alfred", "cleverpassword");
     }
 
     public void createTables() throws SQLException {
@@ -127,8 +125,8 @@ this.manager = manager;
         ResultSet rs = stmt.getGeneratedKeys();
         System.out.println(rs);
 
-        if(rs.next()) {
-            for(String error : errors) {
+        if (rs.next()) {
+            for (String error : errors) {
                 PreparedStatement stmtError = conn.prepareStatement("INSERT INTO ProblemErrors (ProblemID, Error) VALUES (?,?)");
                 stmtError.setInt(1, rs.getInt(1));
                 stmtError.setString(2, error.trim());
@@ -152,11 +150,11 @@ this.manager = manager;
         stmt.close();
 
         stmt = conn.prepareStatement("DELETE FROM ProblemErrors WHERE ProblemID=?");
-        stmt.setInt(1,  ID);
+        stmt.setInt(1, ID);
         stmt.execute();
         stmt.close();
 
-        for(String error : errors) {
+        for (String error : errors) {
             PreparedStatement stmtError = conn.prepareStatement("INSERT INTO ProblemErrors (ProblemID, Error) VALUES (?,?)");
             stmtError.setInt(1, ID);
             stmtError.setString(2, error);
@@ -167,7 +165,7 @@ this.manager = manager;
         conn.close();
     }
 
-    public static void getProblems(String pasteContent, MessageEvent event){
+    public static void getProblems(String pasteContent, MessageEvent event) {
         String errors = "";
         ArrayList<String> Diag = new ArrayList<>();
         ArrayList<String> Sugg = new ArrayList<>();
@@ -179,20 +177,20 @@ this.manager = manager;
             PreparedStatement stmt = conn.prepareStatement("SELECT Problems.ID as ID, Diagnosis, Suggestion, CONCAT('%', GROUP_CONCAT(Error, '%')) as Errors FROM Problems, ProblemErrors WHERE Problems.ID = ProblemErrors.ProblemID GROUP BY ID, Diagnosis, Suggestion HAVING ? LIKE Errors");
             stmt.setString(1, pasteContent);
             ResultSet rs = stmt.executeQuery();
-            while(rs.next()) {
+            while (rs.next()) {
                 System.out.println("Errors: " + rs.getString("Errors"));
                 System.out.println("Diagnosis: " + rs.getString("Diagnosis"));
                 System.out.println("Suggestion: " + rs.getString("Suggestion"));
-                errors += rs.getString("Errors")  + " | ";
+                errors += rs.getString("Errors") + " | ";
                 Diag.add(rs.getString("Diagnosis"));
                 Sugg.add(rs.getString("Suggestion"));
             }
             rs.close();
             stmt.close();
             event.getChannel().send().message(Colors.BOLD + "Errors: " + Colors.NORMAL + errors);
-            for (int i = 0; i < Diag.size(); i++){
-                event.getChannel().send().message(Colors.BOLD + "Diagnosis: " + Colors.NORMAL +Diag.get(i));
-                event.getChannel().send().message(Colors.BOLD + "Suggestion: " + Colors.NORMAL +Sugg.get(i));
+            for (int i = 0; i < Diag.size(); i++) {
+                event.getChannel().send().message(Colors.BOLD + "Diagnosis: " + Colors.NORMAL + Diag.get(i));
+                event.getChannel().send().message(Colors.BOLD + "Suggestion: " + Colors.NORMAL + Sugg.get(i));
 
             }
         } catch (SQLException ex) {

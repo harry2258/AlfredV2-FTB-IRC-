@@ -33,25 +33,27 @@ public class Kick extends Command {
             return true;
         }
         if (args.length > 3) {
-            if (args[1].startsWith("#")) {
-                StringBuilder sb = new StringBuilder();
-                for (int i = 3; i < args.length; i++) {
-                    sb.append(args[i]).append(" ");
+            if (PermissionManager.hasExec(event.getUser(), event)) {
+                if (args[1].startsWith("#")) {
+                    StringBuilder sb = new StringBuilder();
+                    for (int i = 3; i < args.length; i++) {
+                        sb.append(args[i]).append(" ");
+                    }
+                    String reason = sb.toString().trim();
+                    Channel chan = event.getBot().getUserChannelDao().getChannel(args[1]);
+                    User target = event.getBot().getUserChannelDao().getUser(args[2]);
+                    chan.send().kick(target, reason);
+                    return true;
+                } else {
+                    StringBuilder sb = new StringBuilder();
+                    for (int i = 2; i < args.length; i++) {
+                        sb.append(args[i]).append(" ");
+                    }
+                    Channel chan = event.getChannel();
+                    User target = event.getBot().getUserChannelDao().getUser(args[1]);
+                    chan.send().kick(target, sb.toString().trim());
+                    return true;
                 }
-                String reason = sb.toString().trim();
-                Channel chan = event.getBot().getUserChannelDao().getChannel(args[1]);
-                User target = event.getBot().getUserChannelDao().getUser(args[2]);
-                chan.send().kick(target, reason);
-                return true;
-            } else {
-                StringBuilder sb = new StringBuilder();
-                for (int i = 2; i < args.length; i++) {
-                    sb.append(args[i]).append(" ");
-                }
-                Channel chan = event.getChannel();
-                User target = event.getBot().getUserChannelDao().getUser(args[1]);
-                chan.send().kick(target, sb.toString().trim());
-                return true;
             }
         }
         return false;

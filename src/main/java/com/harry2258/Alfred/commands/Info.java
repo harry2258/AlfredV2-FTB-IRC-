@@ -8,6 +8,8 @@ import com.harry2258.Alfred.api.PermissionManager;
 import org.json.JSONObject;
 import org.pircbotx.hooks.events.MessageEvent;
 
+import java.io.File;
+
 /**
  * Created by Hardik on 1/8/14.
  */
@@ -22,17 +24,37 @@ public class Info extends Command {
 
     @Override
     public boolean execute(MessageEvent event) throws Exception {
+        String[] args = event.getMessage().split(" ");
         String temp;
         String mod;
         String modpermissions;
         String everyone;
         String Admins;
         String Exec;
-
+        String filename = "";
         Boolean URL = false;
         if (Main.URL.contains(event.getChannel().getName())) {
             URL = true;
         }
+
+        if (args.length == 2 && args[1].equalsIgnoreCase("commands")) {
+            File folder = new File("commands/" + event.getChannel().getName() + "/");
+            File[] listOfFiles = folder.listFiles();
+
+            for (int i = 0; i < listOfFiles.length; i++) {
+                if (listOfFiles[i].isFile()) {
+                    filename += listOfFiles[i].getName() + " | \t";
+                }
+            }
+            if (!filename.isEmpty()) {
+                event.getUser().send().notice(filename.replaceAll(".cmd", ""));
+            } else {
+                event.getUser().send().notice("There are no custom command for this channel yet!");
+            }
+            return true;
+        }
+
+
         //String Jsonfile = System.getProperty("user.dir") + "/perms/" + event.getChannel().getName().toLowerCase() + "/" + "perms.json";
         String perms = Main.map.get(event.getChannel().getName());
         JSONObject jsonObj = new JSONObject(perms);
@@ -54,13 +76,15 @@ public class Info extends Command {
         Admins = "Admins: " + temp.replace("{", "").replace("}", "").replace(":", ": ").replace("\"", "").replaceAll(",", " | ");
 
         temp = exec.getJSONObject("Perms").getString("Exec");
-        Exec = "God of Alfred: " + temp.replace("{", "").replace("}", "").replace(":", ": ").replace("\"", "").replaceAll(",", " | ");
+        Exec = "Global Exec: " + temp.replace("{", "").replace("}", "").replace(":", ": ").replace("\"", "").replaceAll(",", " | ");
 
+        int NumberofCommand = new File("commands/" + event.getChannel().getName() + "/").listFiles().length;
         event.getUser().send().notice(everyone); //Everyone Perms
         event.getUser().send().notice(modpermissions); //Mod Permissions
         event.getUser().send().notice(mod); //Mod List
         event.getUser().send().notice(Admins); //Admin List
-        event.getUser().send().notice(Exec);  //God of the bot!
+        event.getUser().send().notice(Exec);  //Global Exec!!
+        event.getUser().send().notice("Number of custom command: " + NumberofCommand + ". For a full list, type " + config.getTrigger() + "info commands");
         event.getUser().send().notice("URL scanning: " + URL);
         return true;
     }

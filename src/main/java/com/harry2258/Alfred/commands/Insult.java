@@ -24,13 +24,13 @@ public class Insult extends Command {
 
         if (args.length == 2) {
             if (args[1].contains("batman") || args[1].equalsIgnoreCase("alfred") || args[1].contains("progwml6")) {
-            event.getChannel().send().message(event.getUser().getNick() + ", " + insult1);
+                event.getChannel().send().message(event.getUser().getNick() + ", " + insult1);
             } else {
                 event.getChannel().send().message(args[1] + ", " + insult1);
             }
             return true;
         }
-            event.getChannel().send().message(insult1);
+        event.getChannel().send().message(insult1);
 
         return true;
     }
