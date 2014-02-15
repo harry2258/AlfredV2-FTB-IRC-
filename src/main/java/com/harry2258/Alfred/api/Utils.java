@@ -156,9 +156,12 @@ public class Utils {
             e.printStackTrace();
             if (e.getMessage().contains("502")) {
                 try {
-                    System.out.println("Got error 502! sleeping for 5 mins");
-                    Thread.sleep(300000);
-                } catch (InterruptedException e1) {
+                    URL Url;
+                    Url = new URL("http://tinyurl.com/create.php?url=" + longUrl);
+                    BufferedReader br = new BufferedReader(new InputStreamReader(Url.openStream()));
+                    for (int i = 0; i < 125; ++i)
+                        shortened = br.readLine().replaceAll("<.*?>|Open in new window|\\[|]", "");
+                } catch (Exception e1) {
                     e1.printStackTrace();
                 }
             }

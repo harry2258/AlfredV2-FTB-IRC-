@@ -40,7 +40,6 @@ public class MessageEvent extends ListenerAdapter {
                 System.out.println(eventuser + " was added to the HashMap");
             }
         }
-
         if (Main.relay.containsKey(event.getChannel())) {
             Main.relay.get(event.getChannel()).send().message("[" + event.getChannel().getName() + "] <" + eventuser + "> " + event.getMessage());
         }

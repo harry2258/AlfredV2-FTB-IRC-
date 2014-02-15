@@ -77,31 +77,36 @@ public class Reddit extends Thread {
                     infotitle = title.substring(0, maxLengthtitle) + " |";
                     int maxLengthtext = (text.length() < 220) ? text.length() : 220;
                     infotext = (text.substring(0, maxLengthtext) + " |").trim();
-
                     result = "[" + Colors.RED + "Reddit" + Colors.NORMAL + "] " + " [ " + URL + " ] " + Colors.BOLD + author + Colors.NORMAL + ": " + infotitle + " " + infotext;
                     System.out.println(result);
                     try {
-                        if (!chaninfo.containsKey(hur + result)) {
+                        if (chaninfo.containsKey(hur)) {
 
-                            System.out.println(":O Found a new post! sending to " + chan.getName());
-                            chan.send().message("[" + Colors.RED + "Reddit" + Colors.NORMAL + "] " + " [ " + Utils.shortenUrl(URL) + " ] " + Colors.BOLD + author + Colors.NORMAL + ": " + infotitle + " " + infotext);
+                            if (chaninfo.get(hur).isEmpty()) {
+                                chaninfo.put(hur, "Nothing!!");
+                            }
+
+                            if (!chaninfo.get(hur).equalsIgnoreCase(result)) {
+                                System.out.println("[Reddit] :O Found a new post! sending to #TestPackPleaseIgnore");
+                                chan.send().message("[" + Colors.RED + "Reddit" + Colors.NORMAL + "] " + " [ " + Utils.shortenUrl(URL) + " ] " + Colors.BOLD + author + Colors.NORMAL + ": " + infotitle + " " + infotext);
+                            } else {
+                                System.out.println("[Reddit] No new post found.");
+                            }
 
                         } else {
-
-                            System.out.println("No new post found!");
-
+                            chan.send().message("[" + Colors.RED + "Reddit" + Colors.NORMAL + "] " + " [ " + Utils.shortenUrl(URL) + " ] " + Colors.BOLD + author + Colors.NORMAL + ": " + infotitle + " " + infotext);
                         }
+
                     } catch (Exception ex) {
-                        if (ex.getMessage().contains("502")) {
-                            try {
-                                System.out.println("Got error 502! sleeping for 5 mins");
-                                Thread.sleep(300000);
-                            } catch (InterruptedException e1) {
-                                e1.printStackTrace();
-                            }
+                        try {
+                            System.out.println("Got error 502! sleeping for 5 mins");
+                            Thread.sleep(300000);
+                        } catch (InterruptedException e1) {
+                            e1.printStackTrace();
                         }
                     }
-                    chaninfo.put(hur + result, result);
+                    chaninfo.put(hur, result);
+                    chaninfo.get("#TestPackPleaseIgnore:testpackpleaseignoretestpackpleaseignore");
                 }
 
                 Thread.sleep(60000);

@@ -1,8 +1,8 @@
 package com.harry2258.Alfred;
 
-import com.harry2258.Alfred.Misc.Reddit;
 import com.harry2258.Alfred.Misc.Twitter;
 import com.harry2258.Alfred.api.*;
+import com.harry2258.Alfred.listeners.*;
 import com.harry2258.Alfred.runnables.ChatSocketListener;
 import org.apache.commons.configuration.PropertiesConfiguration;
 import org.pircbotx.Channel;
@@ -75,6 +75,7 @@ public class Main {
                 System.out.println("Registered command " + cmd.getName() + " as key " + c.getSimpleName());
                 CommandRegistry.register(cmd);
             }
+
             //i have no idea what this is, but IDEA wouldn't shut the fuck up about changing it.
             Configuration.Builder<PircBotX> builder = new Configuration.Builder<>();
             builder.setName(config.getBotNickname());
@@ -85,13 +86,15 @@ public class Main {
             builder.setNickservPassword(config.getBotPassword());
             builder.setVersion("2.1.1");
             builder.setServer(config.getServerHostame(), Integer.parseInt(config.getServerPort()), config.getServerPassword());
-            builder.getListenerManager().addListener(new com.harry2258.Alfred.listeners.MessageEvent(config, manager));
-            builder.getListenerManager().addListener(new com.harry2258.Alfred.listeners.InviteEvent(config, manager));
-            builder.getListenerManager().addListener(new com.harry2258.Alfred.listeners.JoinEvent(config, manager));
-            builder.getListenerManager().addListener(new com.harry2258.Alfred.listeners.NickChangeEvent(config, manager));
-            builder.getListenerManager().addListener(new com.harry2258.Alfred.listeners.PartEvent(config, manager));
-            builder.getListenerManager().addListener(new com.harry2258.Alfred.listeners.ActionEvent(config, manager));
 
+            //Gotta listen to 'em
+            builder.getListenerManager().addListener(new MessageEvent(config, manager));
+            builder.getListenerManager().addListener(new InviteEvent(config, manager));
+            builder.getListenerManager().addListener(new JoinEvent(config, manager));
+            builder.getListenerManager().addListener(new NickChangeEvent(config, manager));
+            builder.getListenerManager().addListener(new PartEvent(config, manager));
+            builder.getListenerManager().addListener(new ActionEvent(config, manager));
+            builder.getListenerManager().addListener(new KickEvent(config, manager));
 
             System.out.println("------Permissions------");
             for (String channel : config.getChannels()) {
@@ -116,7 +119,7 @@ public class Main {
             if (config.isEnabledTwitter()) {
                 new Thread(new Twitter(bot)).start();
             }
-            new Thread(new Reddit(bot)).start();
+            //new Thread(new Reddit(bot)).start();
             bot.startBot();
 
             System.out.println("Shutting down");

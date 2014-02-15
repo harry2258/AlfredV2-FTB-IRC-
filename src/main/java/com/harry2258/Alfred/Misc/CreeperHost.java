@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -29,6 +30,7 @@ public class CreeperHost extends Thread {
         ArrayList<String> chRepos = new ArrayList<>();
         ArrayList<String> chURLs = new ArrayList<>();
         ArrayList<String> chURLNames = new ArrayList<>();
+        HashMap<String, Boolean> RPstatus = new HashMap<>();
         ArrayList<Boolean> tests = new ArrayList<>();
         ArrayList<String> Status = new ArrayList<>();
         ArrayList<String> Message = new ArrayList<>();
@@ -54,17 +56,55 @@ public class CreeperHost extends Thread {
                 }
             }
         } catch (IOException E) {
-            if (E.getMessage().contains("503")) {
+            E.printStackTrace();
+        }
+
+        chRepos.remove("Chicago");
+
+        for (int i = 0; i < chURLs.size(); i++) {
+            if (chURLs.get(i).contains("chicago2")) {
+                continue;
             }
-            if (E.getMessage().contains("404")) {
+            if (chURLs.get(i).contains("creeperrepo.net")) {
+                try {
+                    boolean test = Utils.pingUrl(chURLs.get(i));
+                    tests.add(test);
+                    if (!test) {
+                        event.getUser().send().notice("Ping to " + chURLs.get(i) + " timedout!");
+                        System.out.println("Could not connect!");
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                if (chURLNames.get(i).contains("chicago2")) {
+                    continue;
+                }
+                String jsonURL = "http://status.creeperrepo.net/fetchjson.php?l=" + chURLNames.get(i);
+                System.out.println("Connecting to " + jsonURL);
+                try {
+                    URL newURL;
+                    newURL = new URL(jsonURL);
+                    String ts;
+                    BufferedReader re = new BufferedReader(new InputStreamReader(newURL.openStream()));
+                    String test = "0";
+                    while ((ts = re.readLine()) != null) {
+                        JSONObject jsonObj = new JSONObject(ts);
+                        test = jsonObj.getString("Bandwidth");
+                        int x = (int) (Integer.parseInt(test) * 100) / 1000000;
+                        Load.add(x);
+                    }
+                } catch (Exception ex) {
+                    Load.add(0);
+                }
             }
         }
 
-        chURLs.remove("chicago2.creeperrepo.net");
-        chURLNames.remove("chicago2");
-        chRepos.remove("Chicago");
-
+        /*
         for (String url : chURLs) {
+            if (url.contains("chicago2")){
+                continue;
+            }
             if (url.contains("creeperrepo.net")) {
                 try {
                     boolean test = Utils.pingUrl(url);
@@ -79,8 +119,11 @@ public class CreeperHost extends Thread {
             }
         }
 
-        for (int y = 0; y < chURLNames.size(); y++) {
-            String jsonURL = "http://status.creeperrepo.net/fetchjson.php?l=" + chURLNames.get(y);
+        for (String chURLName : chURLNames) {
+            if (chURLName.contains("chicago2")) {
+                continue;
+            }
+            String jsonURL = "http://status.creeperrepo.net/fetchjson.php?l=" + chURLName;
             System.out.println("Connecting to " + jsonURL);
             try {
                 URL newURL;
@@ -98,7 +141,7 @@ public class CreeperHost extends Thread {
                 Load.add(0);
             }
         }
-
+        */
         for (Boolean test1 : tests) {
             if (test1) {
                 Status.add(Colors.DARK_GREEN + "✓");

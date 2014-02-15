@@ -57,6 +57,16 @@ public class Ignore extends Command {
                         return true;
                     }
 
+                } else if (manager.hasExec(event.getUser(), event)) {
+
+                    if (!ignored.contains(user)) {
+                        ignored.add(user);
+                        event.respond(user + " was added to the ignore list.");
+                        return true;
+                    } else {
+                        event.respond(user + " is already in the ignore list");
+                        return true;
+                    }
                 } else {
                     event.respond("You cannot add that person to the list!");
                     return true;
