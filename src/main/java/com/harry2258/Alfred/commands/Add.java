@@ -36,7 +36,6 @@ public class Add extends Command {
 
         if (type.equalsIgnoreCase("mod")) {
             if (args.length == 3) {
-                System.out.println("Adding user to " + Jsonfile);
                 try {
                     if (!event.getChannel().getUsers().contains(event.getBot().getUserChannelDao().getUser(args[2]))) {
                         event.getChannel().send().message("There is no user by that name!");

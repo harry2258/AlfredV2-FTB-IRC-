@@ -38,7 +38,14 @@ public class Remove extends Command {
         if (type.equalsIgnoreCase("mod")) {
             System.out.println("Removing user from " + Jsonfile);
             if (args.length == 3) {
-                String mod = Utils.getAccount(event.getBot().getUserChannelDao().getUser(args[2]), event);
+                String mod = null;
+                try {
+                    mod = Utils.getAccount(event.getBot().getUserChannelDao().getUser(args[2]), event);
+                } catch (Exception ex) {
+                    System.out.println("Got Error getting player login!");
+                    mod = args[2];
+                }
+                System.out.println(mod);
                 try {
                     String strFileJson = JsonUtils.getStringFromFile(Jsonfile);
                     JSONObject jsonObj = new JSONObject(strFileJson);
@@ -115,7 +122,14 @@ public class Remove extends Command {
 
         if (type.equalsIgnoreCase("admin")) {
             if (args.length == 3) {
-                String mod = Utils.getAccount(event.getBot().getUserChannelDao().getUser(args[2]), event);
+                String mod = null;
+                try {
+                    mod = Utils.getAccount(event.getBot().getUserChannelDao().getUser(args[2]), event);
+                } catch (Exception ex) {
+                    System.out.println("Got Error getting player login!");
+                    mod = args[2];
+                }
+                System.out.println(mod);
                 try {
                     String strFileJson = JsonUtils.getStringFromFile(Jsonfile);
                     JSONObject jsonObj = new JSONObject(strFileJson);
@@ -134,7 +148,6 @@ public class Remove extends Command {
                         }
 
                         JsonUtils.writeJsonFile(file, jsonObj.toString());
-                        String strJson = JsonUtils.getStringFromFile(JsonUtils.Jsonfile);
                         event.getUser().send().notice(mod + " was removed from the list!");
                         String perms = JsonUtils.getStringFromFile(Jsonfile);
                         Main.map.put(event.getChannel().getName(), perms);

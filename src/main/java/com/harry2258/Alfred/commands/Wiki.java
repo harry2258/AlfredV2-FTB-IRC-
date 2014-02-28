@@ -12,7 +12,6 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
-import java.net.URLEncoder;
 
 /**
  * Created by Hardik on 1/17/14.
@@ -40,7 +39,7 @@ public class Wiki extends Command {
         if (args[1].equalsIgnoreCase("bc")) {
             test = "Buildcraft";
         }
-        String message = test.replaceAll("User talk", "User_talk").replaceAll(" ", "%20");
+        String message = test.replaceAll("User talk", "User_talk").replaceAll(" ", "%20").replace("'", "%E2%80%99");
 
 
         for (int i = 1; i < args.length; i++) {
@@ -51,10 +50,7 @@ public class Wiki extends Command {
         String info = null;
         String xy = "";
         String searchJson = "";
-
-
         try {
-
             URL read;
             read = new URL("http://wiki.feed-the-beast.com/api.php?format=json&action=query&list=search&srsearch=" + message + "&srwhat=title");
             System.out.println(read.toString());
@@ -66,11 +62,10 @@ public class Wiki extends Command {
                 searchJson = json.getJSONObject("query").getJSONArray("search").getJSONObject(1).getString("title");
             }
             if (json.getJSONObject("query").getJSONArray("search").getJSONObject(0).getString("snippet").contains("#REDIRECT")) {
-                name = (json.getJSONObject("query").getJSONArray("search").getJSONObject(0).getString("snippet")).replaceAll("\\{\\{[^}]+\\}\\}|\\[\\[Category:[^\\]]+\\]\\]|\\[\\[|\\]\\]|^\\s+|\\s+$|<[^>]+>", "").trim().replaceAll("\\r?\\n.*", "").replaceAll("\\S+\\|(\\S+)", "$1").replaceAll("#REDIRECT ", "");
+                name = (json.getJSONObject("query").getJSONArray("search").getJSONObject(0).getString("snippet")).replaceAll("\\{\\{[^}]+\\}\\}|\\[\\[Category:[^\\]]+\\]\\]|\\[\\[|\\]\\]|^\\s+|\\s+$|<[^>]+>", "").trim().replaceAll("\\r?\\n.*", "").replaceAll("\\S+\\|(\\S+)", "$1").replaceAll("#REDIRECT ", "").replace("/ko", "").replaceAll("/ru", "").replaceAll("/fr", "").replaceAll("/zh", "").replaceAll("/pl", "");
             } else {
-                name = (searchJson).replace("/ko", "");
+                name = (searchJson).replace("/ko", "").replaceAll("/ru", "").replaceAll("/fr", "").replaceAll("/zh", "").replaceAll("/pl", "");
             }
-
             String temp = ("http://wiki.feed-the-beast.com/api.php?format=xml&action=query&titles=" + name + "&prop=revisions&rvprop=content&format=json").replaceAll(" ", "%20");
             System.out.println(temp);
             URL u = new URL(temp);
@@ -104,7 +99,7 @@ public class Wiki extends Command {
             String df = APItest.replaceAll("\\{\\{[^}]+\\}\\}|\\[\\[Category:[^\\]]+\\]\\]|\\[\\[|\\]\\]|^\\s+|\\s+$|<[^>]+>|\\\\n", "").trim().replaceAll("\\r?\\n.*", "").replaceAll("\\S+\\|(\\S+)", "$1");
             String tempname = jsonObj.getJSONObject("query").getJSONObject("pages").getJSONObject(id).getString("title");
             String fd;
-            fd = df.replaceAll("'''", Colors.BOLD);
+            fd = df.replaceAll("'''", Colors.BOLD).replaceAll("''", Colors.BOLD);
             int maxLength = (fd.length() < 220) ? fd.length() : 220;
             info = fd.substring(0, maxLength);
 
@@ -113,7 +108,8 @@ public class Wiki extends Command {
             event.getChannel().send().message("http://youtu.be/gvdf5n-zI14  |  Please check your spelling!  | Since the Wiki is being updated, That page might not be added yet.");
             return true;
         }
-        String x = URLEncoder.encode("http://wiki.feed-the-beast.com/" + name, "UTF-8");
+
+        String x = ("http://wiki.feed-the-beast.com/" + name).replaceAll(" ", "_");
         String URL;
         if (x.length() > 50) {
             URL = Utils.shortenUrl(x);

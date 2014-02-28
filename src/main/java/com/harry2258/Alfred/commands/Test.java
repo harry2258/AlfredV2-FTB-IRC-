@@ -21,9 +21,15 @@ public class Test extends Command {
 
     @Override
     public boolean execute(MessageEvent event) throws Exception {
+
         event.getChannel().send().message("Test!");
         event.getChannel().send().message(event.getUser().getUserLevels(event.getChannel()).toString());
         event.getChannel().send().message(("Logged in as: " + Utils.getAccount(event.getUser(), event)));
+        /*
+        Ignore this
+        for (org.pircbotx.User user : chan.getUsers()) { if (chan.getVoices().contains(user)) { chan.send().message(user.getNick() + ", " + com.harry2258.Alfred.api.Utils.getInsult());}}
+        */
+
         return true;
     }
 

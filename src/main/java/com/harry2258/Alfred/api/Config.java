@@ -92,6 +92,7 @@ public class Config {
             this.DBUserName(properties.getProperty("Username"));
             this.DBPassName(properties.getProperty("Password"));
 
+
         } catch (IOException ex) {
             Logger.getLogger(Config.class.getName()).log(Level.SEVERE, null, ex);
         }

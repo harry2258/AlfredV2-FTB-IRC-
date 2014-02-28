@@ -85,7 +85,7 @@ public class Main {
             builder.setFinger(config.getCtcpFinger());
             builder.setEncoding(Charset.isSupported("UTF-8") ? Charset.forName("UTF-8") : Charset.defaultCharset());
             builder.setNickservPassword(config.getBotPassword());
-            builder.setVersion("2.1.1");
+            builder.setVersion("2.1.2");
             builder.setServer(config.getServerHostame(), Integer.parseInt(config.getServerPort()), config.getServerPassword());
 
             //Gotta listen to 'em
@@ -122,7 +122,6 @@ public class Main {
             }
             new Thread(new Reddit(bot)).start();
             bot.startBot();
-
             System.out.println("Shutting down");
         } catch (Exception ex) {
             ex.printStackTrace();

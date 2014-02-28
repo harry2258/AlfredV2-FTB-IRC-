@@ -18,19 +18,18 @@ public class KickEvent extends ListenerAdapter {
     }
 
     public void onKick(org.pircbotx.hooks.events.KickEvent event) {
-
-        if (config.isAutoRejoinChannel() && event.getUser().getNick().equalsIgnoreCase(event.getBot().getNick())) {
+        System.out.println(event.getRecipient().getNick() + " | " + event.getBot().getNick());
+        if (config.isAutoRejoinChannel() && event.getRecipient().getNick().equalsIgnoreCase(event.getBot().getNick())) {
             String rejoin = event.getChannel().getName();
             event.getBot().sendIRC().joinChannel(rejoin);
         }
-
-        if (Main.Login.containsKey(event.getUser().getNick())) {
-            Main.Login.remove(event.getUser().getNick());
-            System.out.println(event.getUser().getNick() + " was removed from the HashMap");
+        if (Main.Login.containsKey(event.getRecipient().getNick())) {
+            Main.Login.remove(event.getRecipient().getNick());
+            System.out.println(event.getRecipient().getNick() + " was removed from the HashMap");
         }
 
         if (Main.relay.containsKey(event.getChannel())) {
-            Main.relay.get(event.getChannel()).send().message("[" + event.getChannel().getName() + "] " + event.getUser().getNick() + " was kicked from the channel.");
+            Main.relay.get(event.getChannel()).send().message("[" + event.getChannel().getName() + "] " + event.getRecipient().getNick() + " was kicked from the channel by " + event.getUser().getNick());
         }
     }
 }

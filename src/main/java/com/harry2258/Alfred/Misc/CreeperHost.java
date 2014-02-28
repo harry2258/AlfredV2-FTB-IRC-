@@ -100,48 +100,6 @@ public class CreeperHost extends Thread {
             }
         }
 
-        /*
-        for (String url : chURLs) {
-            if (url.contains("chicago2")){
-                continue;
-            }
-            if (url.contains("creeperrepo.net")) {
-                try {
-                    boolean test = Utils.pingUrl(url);
-                    tests.add(test);
-                    if (!test) {
-                        event.getUser().send().notice("Ping to " + url + " timedout!");
-                        System.out.println("Could not connect!");
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-
-        for (String chURLName : chURLNames) {
-            if (chURLName.contains("chicago2")) {
-                continue;
-            }
-            String jsonURL = "http://status.creeperrepo.net/fetchjson.php?l=" + chURLName;
-            System.out.println("Connecting to " + jsonURL);
-            try {
-                URL newURL;
-                newURL = new URL(jsonURL);
-                String ts;
-                BufferedReader re = new BufferedReader(new InputStreamReader(newURL.openStream()));
-                String test = "0";
-                while ((ts = re.readLine()) != null) {
-                    JSONObject jsonObj = new JSONObject(ts);
-                    test = jsonObj.getString("Bandwidth");
-                    int x = (int) (Integer.parseInt(test) * 100) / 1000000;
-                    Load.add(x);
-                }
-            } catch (Exception ex) {
-                Load.add(0);
-            }
-        }
-        */
         for (Boolean test1 : tests) {
             if (test1) {
                 Status.add(Colors.DARK_GREEN + "✓");
