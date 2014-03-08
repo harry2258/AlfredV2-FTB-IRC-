@@ -29,7 +29,10 @@ public class Wiki extends Command {
     public boolean execute(MessageEvent event) throws Exception {
         StringBuilder sb = new StringBuilder();
         String[] args = event.getMessage().split(" ");
-
+        if (args.length == 1) {
+            event.getChannel().send().message("Official FTB Wiki: http://wiki.feed-the-beast.com");
+            return true;
+        }
         for (int i = 1; i < args.length; i++) {
             sb.append(args[i]).append(" ");
         }
@@ -62,6 +65,7 @@ public class Wiki extends Command {
                     exist = false;
                 }
             }
+
             if (exist) {
                 String temp = ("http://wiki.feed-the-beast.com/api.php?format=xml&action=query&titles=" + message + "&prop=revisions&rvprop=content&format=json").replaceAll(" ", "%20");
                 System.out.println(temp);
@@ -94,7 +98,7 @@ public class Wiki extends Command {
                 String df = APItest.replaceAll("\\{\\{[^}]+\\}\\}|\\[\\[Category:[^\\]]+\\]\\]|\\[\\[|\\]\\]|^\\s+|\\s+$|<[^>]+>|\\\\n", "").trim().replaceAll("\\r?\\n.*", "").replaceAll("\\S+\\|(\\S+)", "$1");
                 String tempname = jsonObj.getJSONObject("query").getJSONObject("pages").getJSONObject(id).getString("title");
                 String fd;
-                fd = df.replaceAll("'''", Colors.BOLD).replaceAll("''", Colors.BOLD);
+                fd = df.replaceAll("'''", Colors.BOLD).replaceAll("''", Colors.UNDERLINE);
                 int maxLength = (fd.length() < 220) ? fd.length() : 220;
                 info = fd.substring(0, maxLength);
                 String x = ("http://wiki.feed-the-beast.com/" + message).replaceAll(" ", "_");
@@ -160,7 +164,7 @@ public class Wiki extends Command {
             String df = APItest.replaceAll("\\{\\{[^}]+\\}\\}|\\[\\[Category:[^\\]]+\\]\\]|\\[\\[|\\]\\]|^\\s+|\\s+$|<[^>]+>|\\\\n", "").trim().replaceAll("\\r?\\n.*", "").replaceAll("\\S+\\|(\\S+)", "$1");
             String tempname = jsonObj.getJSONObject("query").getJSONObject("pages").getJSONObject(id).getString("title");
             String fd;
-            fd = df.replaceAll("'''", Colors.BOLD).replaceAll("''", Colors.BOLD);
+            fd = df.replaceAll("'''", Colors.BOLD).replaceAll("''", Colors.UNDERLINE);
             int maxLength = (fd.length() < 220) ? fd.length() : 220;
             info = fd.substring(0, maxLength);
 

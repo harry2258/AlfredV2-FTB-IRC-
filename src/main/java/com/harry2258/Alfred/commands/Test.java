@@ -29,7 +29,6 @@ public class Test extends Command {
         Ignore this
         for (org.pircbotx.User user : chan.getUsers()) { if (chan.getVoices().contains(user)) { chan.send().message(user.getNick() + ", " + com.harry2258.Alfred.api.Utils.getInsult());}}
         */
-
         return true;
     }
 

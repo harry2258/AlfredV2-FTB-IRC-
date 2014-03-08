@@ -27,7 +27,7 @@ public class Ping extends Command {
         try {
             String[] args = event.getMessage().split(" ");
             if (args.length == 2) {
-                String host = args[1];
+                String host = args[1].replaceAll("http://", "");
                 int port = Integer.valueOf("80");
 
                 Long start = System.currentTimeMillis();
@@ -38,6 +38,7 @@ public class Ping extends Command {
                 event.getChannel().send().message(returns);
                 return true;
             }
+
             String host = args[1];
             int port = Integer.valueOf(args[2]);
             Long start = System.currentTimeMillis();

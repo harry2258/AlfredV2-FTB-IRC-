@@ -11,7 +11,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -25,21 +24,43 @@ public class CreeperHost extends Thread {
         this.event = event;
     }
 
+
+    public static ArrayList<String> ChReposlist = new ArrayList<>();
+    private static String edges = "new";
+
     public void run() {
 
         ArrayList<String> chRepos = new ArrayList<>();
         ArrayList<String> chURLs = new ArrayList<>();
         ArrayList<String> chURLNames = new ArrayList<>();
-        HashMap<String, Boolean> RPstatus = new HashMap<>();
         ArrayList<Boolean> tests = new ArrayList<>();
         ArrayList<String> Status = new ArrayList<>();
         ArrayList<String> Message = new ArrayList<>();
         ArrayList<Integer> Load = new ArrayList<>();
         String sendMessage = "";
         Boolean Json = false;
+        Boolean connect = false;
+        int ch = ChReposlist.size();
+
+        do {
+            if (Utils.pingUrl("http://" + edges + ".creeperrepo.net/edges.json")) {
+                connect = true;
+            } else {
+                if (ChReposlist.isEmpty()) {
+                    edges = "losangeles1";
+                    event.getUser().send().notice("Could not connect to: http://" + edges + ".creeperrepo.net/edges.json");
+                } else {
+                    event.getUser().send().notice("Could not connect to: http://" + edges + ".creeperrepo.net/edges.json");
+                    ch--;
+                    edges = ChReposlist.get(ch);
+                    connect = false;
+                }
+            }
+        } while (connect = false);
+
         try {
             URL url;
-            url = new URL("http://new.creeperrepo.net/edges.json");
+            url = new URL("http://" + edges + ".creeperrepo.net/edges.json");
             BufferedReader re = new BufferedReader(new InputStreamReader(url.openStream()));
             String st;
             while ((st = re.readLine()) != null) {
@@ -52,6 +73,9 @@ public class CreeperHost extends Thread {
                         chRepos.add(splitEntry[0]);
                         chURLs.add(splitEntry[1]);
                         chURLNames.add(splitEntry[1].substring(0, splitEntry[1].indexOf(".creeperrepo.net")));
+                        if (!ChReposlist.contains(splitEntry[1].substring(0, splitEntry[1].indexOf(".creeperrepo.net")))) {
+                            ChReposlist.add(splitEntry[1].substring(0, splitEntry[1].indexOf(".creeperrepo.net")));
+                        }
                     }
                 }
             }
@@ -71,31 +95,34 @@ public class CreeperHost extends Thread {
                     tests.add(test);
                     if (!test) {
                         event.getUser().send().notice("Ping to " + chURLs.get(i) + " timedout!");
-                        System.out.println("Could not connect!");
+                        System.out.println("Ping to " + chURLs.get(i) + " timedout!");
                     }
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    //e.printStackTrace();
                 }
 
                 if (chURLNames.get(i).contains("chicago2")) {
                     continue;
                 }
                 String jsonURL = "http://status.creeperrepo.net/fetchjson.php?l=" + chURLNames.get(i);
-                System.out.println("Connecting to " + jsonURL);
                 try {
                     URL newURL;
                     newURL = new URL(jsonURL);
                     String ts;
                     BufferedReader re = new BufferedReader(new InputStreamReader(newURL.openStream()));
                     String test = "0";
+                    int x = 0;
                     while ((ts = re.readLine()) != null) {
                         JSONObject jsonObj = new JSONObject(ts);
                         test = jsonObj.getString("Bandwidth");
-                        int x = (int) (Integer.parseInt(test) * 100) / 1000000;
-                        Load.add(x);
+                        x = Integer.parseInt(test) * 100 / 1000000;
                     }
+                    Load.add(x);
+                    System.out.println(chURLNames.get(i) + " : " + x);
                 } catch (Exception ex) {
+                    System.out.println(chURLNames.get(i) + ": " + 0);
                     Load.add(0);
+
                 }
             }
         }
@@ -130,6 +157,7 @@ public class CreeperHost extends Thread {
         }
 
         event.getChannel().send().message(sendMessage);
+
     }
 
     private double calculateAverage(List<Integer> marks) {

@@ -30,7 +30,7 @@ public class Query extends Command {
             try {
                 result = Utils.checkServerStatus(InetAddress.getByName(args[1]), 25565);
             } catch (UnknownHostException ex) {
-                event.getChannel().send().message("Please verify if the server is set to default port (25565) else user " + config.getTrigger() + "query [ip] [port]");
+                event.getChannel().send().message("Please verify if the server is set to default port (25565) else use " + config.getTrigger() + "query [ip] [port]");
                 return false;
             }
         } else if (args.length == 3) {

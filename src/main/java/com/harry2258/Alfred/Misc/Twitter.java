@@ -27,6 +27,8 @@ public class Twitter extends Thread {
         this.bot = bot;
     }
 
+    private static volatile boolean isRunning = true;
+
     public void run() {
         try {
             System.out.println("[Twitter] Sleeping for 1 minutes. Waiting for bot to start up.");
@@ -34,7 +36,7 @@ public class Twitter extends Thread {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        while (true) {
+        while (isRunning) {
             try {
 
                 String test = "";
@@ -108,5 +110,9 @@ public class Twitter extends Thread {
                 e.printStackTrace();
             }
         }
+    }
+
+    public static void kill() {
+        isRunning = false;
     }
 }

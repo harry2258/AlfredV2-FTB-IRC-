@@ -52,6 +52,9 @@ public class Log extends Command {
             if (word.toLowerCase().contains("paste.ee")) {
                 Raw = "http://paste.ee/r/" + args[1].replaceAll("http://paste.ee/p/", "");
             }
+            if (word.toLowerCase().contains("https://gist.githubusercontent.com")) {
+                Raw = args[1] + "raw";
+            }
         }
 
         if (!Main.cmd.exists()) {
@@ -101,8 +104,13 @@ public class Log extends Command {
                     if (!info.contains(temp) && jsonObj.getBoolean("Modded")) {
                         info.add(temp);
                     }
+                } else if (tmp.contains("Feed The Beast Mod Pack")) {
+                    temp = Colors.BOLD + "Mods: " + Colors.NORMAL + tmp.replaceAll("^.*?(?=[A-Z][a-z])", "").replaceAll("\\\\[.*?\\\\]", "").replaceAll(".*(?:, )|mods active", "");
+                    if (!info.contains(temp) && jsonObj.getBoolean("Modded")) {
+                        info.add(temp);
+                    }
                 } else if (tmp.contains("Operating System: ") || tmp.contains("OS: ")) {
-                    temp = Colors.BOLD + "OS: " + Colors.NORMAL + tmp.replaceAll("^.*?(?=[A-Z][a-z])", "").replaceAll("\\\\[.*?\\\\]", "").replaceAll(".*(?:Operating System: )|.*(?:OS: )", "");
+                    temp = Colors.BOLD + "OS: " + Colors.NORMAL + tmp.replaceAll("^.*?(?=[A-Z][a-z])", "").replaceAll("\\\\[.*?\\\\]", "").replaceAll(".*(?:Operating System: )|.*(?:OS: )", "").replaceAll("x86", "32-Bit").replaceAll("x64", "64-Bit");
                     if (!info.contains(temp) && jsonObj.getBoolean("OSName")) {
                         info.add(temp);
                     }
@@ -110,7 +118,7 @@ public class Log extends Command {
                 webpage += tmp;
             }
 
-            Error.getProblems(webpage, event);
+            //Error.getProblems(webpage, event);
             for (int x = 0; x < info.size(); x++) {
                 Message.add(info.get(x));
             }
@@ -118,7 +126,10 @@ public class Log extends Command {
             for (String s : Message) {
                 message += s + " | \t";
             }
-
+            if (message.length() > 500) {
+                event.getChannel().send().message("The log was too big and was not sent! Please retry again or disable some features in parser.json");
+                return false;
+            }
             event.getChannel().send().message(message);
 
             return true;

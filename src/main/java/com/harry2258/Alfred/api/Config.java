@@ -26,6 +26,7 @@ public class Config {
     private boolean verifySSL;
     private boolean enableChatSocket;
     private boolean TwitterEnabled;
+    private boolean RedditEnabled;
     private String trigger;
     private String serverHostame;
     private String serverPassword;
@@ -79,6 +80,7 @@ public class Config {
             this.setAutoAcceptInvite(Boolean.parseBoolean(properties.getProperty("auto-accept-invite")));
             this.setEnableChatSocket(Boolean.parseBoolean(properties.getProperty("enable-chat-socket")));
             this.setTwitterEnabled(Boolean.parseBoolean(properties.getProperty("Twitter")));
+            this.setRedditEnabled(Boolean.parseBoolean(properties.getProperty("Reddit")));
             this.setChatSocketPort(Integer.parseInt(properties.getProperty("chat-socket-port")));
             this.setChannels(Arrays.asList(properties.getProperty("channels").split(" ")));
             this.setLoggedChannels(Arrays.asList(properties.getProperty("channels-log").split(" ")));
@@ -411,6 +413,14 @@ public class Config {
 
     private void setTwitterEnabled(boolean Twitterenable) {
         this.TwitterEnabled = Twitterenable;
+    }
+
+    public boolean isRedditEnabled() {
+        return RedditEnabled;
+    }
+
+    private void setRedditEnabled(boolean Redditenabled) {
+        this.RedditEnabled = Redditenabled;
     }
 
     public boolean isAdmin(String username, String hostmask) {

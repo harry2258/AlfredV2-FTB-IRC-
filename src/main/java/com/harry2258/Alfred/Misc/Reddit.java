@@ -27,14 +27,17 @@ public class Reddit extends Thread {
         this.bot = bot;
     }
 
+    private static volatile boolean isRunning = true;
+
     public void run() {
+
         try {
             System.out.println("[Reddit] Sleeping for 1 minutes. Waiting for bot to start up.");
             Thread.sleep(60000);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        while (true) {
+        while (isRunning) {
             File reddit = new File(System.getProperty("user.dir") + "/Reddit/" + "Reddit.json");
             try {
 
@@ -121,6 +124,10 @@ public class Reddit extends Thread {
         }
     }
 
+    public static void kill() {
+        isRunning = false;
+    }
+
     public static String getTime(long time) {
         String dif = null;
         String hur = String.valueOf(time);
@@ -139,6 +146,10 @@ public class Reddit extends Thread {
 
             //Thanks mkyong
 
+            //Yes Paula, out of all the things i could be working, i work on this.
+            //What do you mean i have better things to do? My homework can wait till tomorrow morning :D
+            //Do i have to do it?
+            //GOD FINE! i'll do it -.-
 
             d1 = dateFormat.parse(ctime);
             d2 = dateFormat.parse(ptime);

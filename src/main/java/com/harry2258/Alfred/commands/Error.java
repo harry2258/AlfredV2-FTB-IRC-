@@ -187,11 +187,13 @@ public class Error extends Command {
             }
             rs.close();
             stmt.close();
-            event.getChannel().send().message(Colors.BOLD + "Errors: " + Colors.NORMAL + errors);
-            for (int i = 0; i < Diag.size(); i++) {
-                event.getChannel().send().message(Colors.BOLD + "Diagnosis: " + Colors.NORMAL + Diag.get(i));
-                event.getChannel().send().message(Colors.BOLD + "Suggestion: " + Colors.NORMAL + Sugg.get(i));
+            if (!errors.isEmpty() || !Diag.isEmpty() || !Sugg.isEmpty()) {
+                event.getChannel().send().message(Colors.BOLD + "Errors: " + Colors.NORMAL + errors);
+                for (int i = 0; i < Diag.size(); i++) {
+                    event.getChannel().send().message(Colors.BOLD + "Diagnosis: " + Colors.NORMAL + Diag.get(i));
+                    event.getChannel().send().message(Colors.BOLD + "Suggestion: " + Colors.NORMAL + Sugg.get(i));
 
+                }
             }
         } catch (SQLException ex) {
             System.out.println("SQLException: " + ex.getMessage());
