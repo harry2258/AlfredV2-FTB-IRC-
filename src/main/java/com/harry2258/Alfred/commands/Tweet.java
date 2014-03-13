@@ -10,6 +10,7 @@ import twitter4j.TwitterException;
 import twitter4j.TwitterFactory;
 import twitter4j.conf.ConfigurationBuilder;
 
+
 import java.io.File;
 import java.util.HashMap;
 import java.util.List;
@@ -58,7 +59,7 @@ public class Tweet extends Command {
         Twitter twitter;
         ConfigurationBuilder cb = new ConfigurationBuilder();
         cb.setDebugEnabled(true)
-                .setUseSSL(true)
+                //.setUseSSL(true)
                 .setOAuthConsumerKey(Auth.getString("OAuthConsumerKey"))
                 .setOAuthConsumerSecret(Auth.getString("OAuthConsumerSecret"))
                 .setOAuthAccessToken(Auth.getString("OAuthAccessToken"))
@@ -70,11 +71,23 @@ public class Tweet extends Command {
 
         String[] args = tweetuser.getString("Users").replaceAll("[\\[\"\\]]", "").split(",");
 
-        if (tests.length == 2) {
+        if (tests.length >= 2) {
+            int post = 0;
+            if (tests.length == 3) {
+                post = Integer.valueOf(tests[1]);
+            }
             try {
                 List<Status> statuses;
-                statuses = twitter.getUserTimeline(tests[1]);
-                event.getChannel().send().message("[" + Colors.RED + "Twitter" + Colors.NORMAL + "] [" + Colors.BOLD + statuses.get(0).getUser().getName() + Colors.NORMAL + "] " + statuses.get(0).getText());
+                statuses = twitter.getUserTimeline(tests[2]);
+                String text = "";
+                text += statuses.get(post).getText().replace("\n", " ").replace("\r", " ");
+                StringBuffer address = new StringBuffer();
+                address.append("http://twitter.com/");
+                address.append(statuses.get(post).getUser().getName());
+                address.append("/status/");
+                address.append(statuses.get(post).getId());
+                String url = address.toString();
+                event.getChannel().send().message("[" + Colors.RED + "Twitter" + Colors.NORMAL + "] [ " + Utils.shortenUrl(url) + "] [" + Colors.BOLD + statuses.get(post).getUser().getName() + Colors.NORMAL + "] " + text);
                 if (!com.harry2258.Alfred.Misc.Twitter.tweets.containsValue(test)) {
                     tweets.put(args[1], test);
                 }

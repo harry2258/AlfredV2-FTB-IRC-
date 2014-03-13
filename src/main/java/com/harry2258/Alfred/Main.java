@@ -2,6 +2,7 @@ package com.harry2258.Alfred;
 
 import com.harry2258.Alfred.Misc.Reddit;
 import com.harry2258.Alfred.Misc.Twitter;
+import com.harry2258.Alfred.Misc.Update;
 import com.harry2258.Alfred.api.*;
 import com.harry2258.Alfred.listeners.*;
 import com.harry2258.Alfred.runnables.ChatSocketListener;
@@ -34,8 +35,9 @@ public class Main {
     public static PropertiesConfiguration customcmd;
     public static File cmd = new File(System.getProperty("user.dir") + "/parser.json");
     public static File globalperm = new File(System.getProperty("user.dir") + "/global.json");
+    public static File edgesjsonfile = new File(System.getProperty("user.dir") + "/edges.json");
     public static List<String> users = new ArrayList<String>();
-    public static HashMap<String, Integer> violation = new HashMap<String, Integer>();
+    public static String version = "";
 
     public static void main(String[] args) {
         System.setProperty(SimpleLogger.SHOW_DATE_TIME_KEY, "true");
@@ -57,18 +59,25 @@ public class Main {
                 String jsonString = "{\"Perms\":{\"Exec\":[\"batman\", \"progwml6\"]}}";
                 writeJsonFile(jsonFilePath, jsonString);
             }
+
             //creates Parse.Json for Log command
             if (!cmd.exists()) {
                 cmd.getParentFile().mkdirs();
                 cmd.createNewFile();
                 Utils.Parser(cmd);
             }
+
             //Creates Global Everyone permission
             if (!globalperm.exists()) {
                 globalperm.createNewFile();
                 Utils.Geveryone(globalperm);
             }
 
+            //Creates Edges.json for ChStatus command
+            if (!edgesjsonfile.exists()) {
+                edgesjsonfile.createNewFile();
+                Utils.edges(edgesjsonfile);
+            }
             Reflections reflections = new Reflections("com.harry2258.Alfred.commands");
             Set<Class<? extends Command>> subTypes = reflections.getSubTypesOf(Command.class);
             for (Class c : subTypes) {
@@ -85,7 +94,7 @@ public class Main {
             builder.setFinger(config.getCtcpFinger());
             builder.setEncoding(Charset.isSupported("UTF-8") ? Charset.forName("UTF-8") : Charset.defaultCharset());
             builder.setNickservPassword(config.getBotPassword());
-            builder.setVersion("2.1.4");
+            builder.setVersion("2.1.8");
             builder.setServer(config.getServerHostame(), Integer.parseInt(config.getServerPort()), config.getServerPassword());
 
             //Gotta listen to 'em
@@ -114,6 +123,7 @@ public class Main {
             System.out.println("-----------------------");
             PircBotX bot = new PircBotX(builder.buildConfiguration());
             System.out.println("Starting bot...");
+            version = bot.getConfiguration().getVersion();
             if (config.isEnableChatSocket()) {
                 new Thread(new ChatSocketListener(bot, config.getChatSocketPort())).start();
             }
@@ -123,6 +133,10 @@ public class Main {
             if (config.isRedditEnabled()) {
                 new Thread(new Reddit(bot)).start();
             }
+            if (config.UpdaterChecker()) {
+                new Thread(new Update(bot, config)).start();
+            }
+
             bot.startBot();
             System.out.println("Shutting down");
             if (config.isEnabledTwitter()) {
@@ -130,6 +144,9 @@ public class Main {
             }
             if (config.isRedditEnabled()) {
                 Reddit.kill();
+            }
+            if (config.UpdaterChecker()) {
+                Update.kill();
             }
         } catch (Exception ex) {
             ex.printStackTrace();

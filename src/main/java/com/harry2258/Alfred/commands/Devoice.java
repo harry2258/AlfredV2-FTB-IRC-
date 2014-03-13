@@ -20,9 +20,12 @@ public class Devoice extends Command {
     @Override
     public boolean execute(MessageEvent event) throws Exception {
         String[] args = event.getMessage().split(" ");
-        if (args.length == 2) {
-            event.getChannel().send().deVoice(event.getBot().getUserChannelDao().getUser(args[1]));
-            return true;
+        if (PermissionManager.hasExec(event.getUser(), event)) {
+            if (args.length == 2) {
+                event.getChannel().send().deVoice(event.getBot().getUserChannelDao().getUser(args[1]));
+                event.getChannel().send().message("You didn't see that coming, did you now " + args[1]);
+                return true;
+            }
         }
         return false;
     }

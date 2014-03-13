@@ -27,6 +27,7 @@ public class Config {
     private boolean enableChatSocket;
     private boolean TwitterEnabled;
     private boolean RedditEnabled;
+    private boolean updater;
     private String trigger;
     private String serverHostame;
     private String serverPassword;
@@ -40,11 +41,13 @@ public class Config {
     private String DBhost;
     private String DBuser;
     private String DBpass;
+    private String updatechan;
     private List<String> channels;
     private List<String> loggedChannels;
     private String permissionDenied;
     private Properties properties;
     private int chatSocketPort;
+    private int UpdateInterval;
 
     public void load() {
         try {
@@ -90,10 +93,12 @@ public class Config {
             this.setServerPort(properties.getProperty("server-port"));
             this.setServerPassword(properties.getProperty("server-password"));
             this.setPermissionDenied(properties.getProperty("permission-denied"));
+            this.setUpdater(Boolean.parseBoolean(properties.getProperty("check-update")));
+            this.setUpdateChan(properties.getProperty("update-channel"));
+            this.setUpdateInterval(Integer.parseInt(properties.getProperty("update-interval")));
             this.DBHostName(properties.getProperty("Host"));
             this.DBUserName(properties.getProperty("Username"));
             this.DBPassName(properties.getProperty("Password"));
-
 
         } catch (IOException ex) {
             Logger.getLogger(Config.class.getName()).log(Level.SEVERE, null, ex);
@@ -471,5 +476,29 @@ public class Config {
 
     private void DBPassName(String pass) {
         this.DBpass = pass;
+    }
+
+    private void setUpdater(boolean Updater) {
+        this.updater = Updater;
+    }
+
+    public boolean UpdaterChecker() {
+        return updater;
+    }
+
+    private void setUpdateChan(String updateChan) {
+        this.updatechan = updateChan;
+    }
+
+    public String Updaterchannel() {
+        return updatechan;
+    }
+
+    public int getUpdateInterval() {
+        return UpdateInterval;
+    }
+
+    private void setUpdateInterval(int updateInterval) {
+        UpdateInterval = updateInterval;
     }
 }

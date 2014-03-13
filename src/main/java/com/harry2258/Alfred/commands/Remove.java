@@ -38,13 +38,17 @@ public class Remove extends Command {
         if (type.equalsIgnoreCase("mod")) {
             System.out.println("Removing user from " + Jsonfile);
             if (args.length == 3) {
-                String mod = null;
-                try {
-                    mod = Utils.getAccount(event.getBot().getUserChannelDao().getUser(args[2]), event);
-                } catch (Exception ex) {
-                    System.out.println("Got Error getting player login!");
+                String mod = args[2];
+                if (event.getChannel().getUsers().contains(event.getBot().getUserChannelDao().getUser(args[2]))) {
+                    try {
+                        mod = Utils.getAccount(event.getBot().getUserChannelDao().getUser(args[2]), event);
+                    } catch (Exception ex) {
+                        System.out.println("Got an error while getting player login!");
+                    }
+                } else {
                     mod = args[2];
                 }
+
                 System.out.println(mod);
                 try {
                     String strFileJson = JsonUtils.getStringFromFile(Jsonfile);
@@ -122,14 +126,16 @@ public class Remove extends Command {
 
         if (type.equalsIgnoreCase("admin")) {
             if (args.length == 3) {
-                String mod = null;
-                try {
-                    mod = Utils.getAccount(event.getBot().getUserChannelDao().getUser(args[2]), event);
-                } catch (Exception ex) {
-                    System.out.println("Got Error getting player login!");
+                String mod = args[2];
+                if (event.getChannel().getUsers().contains(event.getBot().getUserChannelDao().getUser(args[2]))) {
+                    try {
+                        mod = Utils.getAccount(event.getBot().getUserChannelDao().getUser(args[2]), event);
+                    } catch (Exception ex) {
+                        System.out.println("Got an error while getting player login!");
+                    }
+                } else {
                     mod = args[2];
                 }
-                System.out.println(mod);
                 try {
                     String strFileJson = JsonUtils.getStringFromFile(Jsonfile);
                     JSONObject jsonObj = new JSONObject(strFileJson);

@@ -29,3 +29,4 @@ global.json
 lib/twitter4j-core-3.0.0.jar
 lib/
 plugins/
+edges.json

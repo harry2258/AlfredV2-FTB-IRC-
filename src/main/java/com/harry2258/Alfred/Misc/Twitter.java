@@ -36,6 +36,7 @@ public class Twitter extends Thread {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+
         while (isRunning) {
             try {
 
@@ -71,7 +72,7 @@ public class Twitter extends Thread {
                 twitter4j.Twitter twitter;
                 ConfigurationBuilder cb = new ConfigurationBuilder();
                 cb.setDebugEnabled(true)
-                        .setUseSSL(true)
+                        //.setUseSSL(true)
                         .setOAuthConsumerKey(Auth.getString("OAuthConsumerKey"))
                         .setOAuthConsumerSecret(Auth.getString("OAuthConsumerSecret"))
                         .setOAuthAccessToken(Auth.getString("OAuthAccessToken"))

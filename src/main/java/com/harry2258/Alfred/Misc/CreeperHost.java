@@ -40,30 +40,15 @@ public class CreeperHost extends Thread {
         String sendMessage = "";
         Boolean Json = false;
         Boolean connect = false;
+        Boolean harry2258Json = false;
         int ch = ChReposlist.size();
 
-        do {
-            if (Utils.pingUrl("http://" + edges + ".creeperrepo.net/edges.json")) {
-                connect = true;
-            } else {
-                if (ChReposlist.isEmpty()) {
-                    edges = "losangeles1";
-                    event.getUser().send().notice("Could not connect to: http://" + edges + ".creeperrepo.net/edges.json");
-                } else {
-                    event.getUser().send().notice("Could not connect to: http://" + edges + ".creeperrepo.net/edges.json");
-                    ch--;
-                    edges = ChReposlist.get(ch);
-                    connect = false;
-                }
-            }
-        } while (connect = false);
-
         try {
-            URL url;
-            url = new URL("http://" + edges + ".creeperrepo.net/edges.json");
-            BufferedReader re = new BufferedReader(new InputStreamReader(url.openStream()));
+            URL harry2258;
+            harry2258 = new URL("http://harry2258.com/alfred/edges.json");
+            BufferedReader h = new BufferedReader(new InputStreamReader(harry2258.openStream()));
             String st;
-            while ((st = re.readLine()) != null) {
+            while ((st = h.readLine()) != null) {
                 Json = JsonUtils.isJSONObject(st);
                 st = st.replace("{", "").replace("}", "").replace("\"", "");
                 String[] splitString = st.split(",");
@@ -79,13 +64,80 @@ public class CreeperHost extends Thread {
                     }
                 }
             }
-        } catch (IOException E) {
-            E.printStackTrace();
+            event.getUser().send().notice("Got edges.json from harry2258.com");
+            harry2258Json = true;
+        } catch (Exception f) {
+            f.printStackTrace();
+        }
+
+        if (!harry2258Json) {
+            do {
+                if (Utils.pingUrl("http://" + edges + ".creeperrepo.net/edges.json")) {
+                    event.getUser().send().notice("Connected using: http://" + edges + ".creeperrepo.net/edges.json");
+                    connect = true;
+                } else {
+                    if (ChReposlist.isEmpty()) {
+                        try {
+                            String temp;
+                            String edgesjson = JsonUtils.getStringFromFile(System.getProperty("user.dir") + "/edges.json");
+                            Json = JsonUtils.isJSONObject(edgesjson);
+                            temp = edgesjson.replace("{", "").replace("}", "").replace("\"", "");
+                            String[] splitString = edgesjson.split(",");
+                            for (String entry : splitString) {
+                                String[] splitEntry = entry.split(":");
+                                if (splitEntry.length == 2) {
+                                    if (!ChReposlist.contains(splitEntry[1].substring(0, splitEntry[1].indexOf(".creeperrepo.net")))) {
+                                        ChReposlist.add(splitEntry[1].substring(0, splitEntry[1].indexOf(".creeperrepo.net")));
+                                    }
+                                }
+                            }
+                            event.getUser().send().notice("Could not connect to new.creeperrepo.net, getting edges from edges.json");
+                            ch--;
+                            edges = ChReposlist.get(ch);
+                        } catch (Exception jsonfile) {
+                            jsonfile.printStackTrace();
+                        }
+                    } else {
+                        event.getUser().send().notice("Could not connect to: http://" + edges + ".creeperrepo.net/edges.json");
+                        ch--;
+                        edges = ChReposlist.get(ch);
+                        connect = false;
+                    }
+                }
+            } while (!connect);
+
+            try {
+                URL url;
+                url = new URL("http://" + edges + ".creeperrepo.net/edges.json");
+                BufferedReader re = new BufferedReader(new InputStreamReader(url.openStream()));
+                String st;
+                while ((st = re.readLine()) != null) {
+                    Json = JsonUtils.isJSONObject(st);
+                    //File file = new File(System.getProperty("user.dir") + "/edges.json");
+                    //JsonUtils.writeJsonFile(file, st);
+                    st = st.replace("{", "").replace("}", "").replace("\"", "");
+                    String[] splitString = st.split(",");
+                    for (String entry : splitString) {
+                        String[] splitEntry = entry.split(":");
+                        if (splitEntry.length == 2) {
+                            chRepos.add(splitEntry[0]);
+                            chURLs.add(splitEntry[1]);
+                            chURLNames.add(splitEntry[1].substring(0, splitEntry[1].indexOf(".creeperrepo.net")));
+                            if (!ChReposlist.contains(splitEntry[1].substring(0, splitEntry[1].indexOf(".creeperrepo.net")))) {
+                                ChReposlist.add(splitEntry[1].substring(0, splitEntry[1].indexOf(".creeperrepo.net")));
+                            }
+                        }
+                    }
+                }
+            } catch (IOException E) {
+                E.printStackTrace();
+            }
         }
 
         chRepos.remove("Chicago");
 
         for (int i = 0; i < chURLs.size(); i++) {
+            boolean canConnect = false;
             if (chURLs.get(i).contains("chicago2")) {
                 continue;
             }
@@ -96,6 +148,8 @@ public class CreeperHost extends Thread {
                     if (!test) {
                         event.getUser().send().notice("Ping to " + chURLs.get(i) + " timedout!");
                         System.out.println("Ping to " + chURLs.get(i) + " timedout!");
+                    } else {
+                        canConnect = true;
                     }
                 } catch (Exception e) {
                     //e.printStackTrace();
@@ -105,24 +159,28 @@ public class CreeperHost extends Thread {
                     continue;
                 }
                 String jsonURL = "http://status.creeperrepo.net/fetchjson.php?l=" + chURLNames.get(i);
-                try {
-                    URL newURL;
-                    newURL = new URL(jsonURL);
-                    String ts;
-                    BufferedReader re = new BufferedReader(new InputStreamReader(newURL.openStream()));
-                    String test = "0";
-                    int x = 0;
-                    while ((ts = re.readLine()) != null) {
-                        JSONObject jsonObj = new JSONObject(ts);
-                        test = jsonObj.getString("Bandwidth");
-                        x = Integer.parseInt(test) * 100 / 1000000;
-                    }
-                    Load.add(x);
-                    System.out.println(chURLNames.get(i) + " : " + x);
-                } catch (Exception ex) {
-                    System.out.println(chURLNames.get(i) + ": " + 0);
-                    Load.add(0);
+                if (canConnect) {
+                    try {
+                        URL newURL;
+                        newURL = new URL(jsonURL);
+                        String ts;
+                        BufferedReader re = new BufferedReader(new InputStreamReader(newURL.openStream()));
+                        String test = "0";
+                        int x = 0;
+                        while ((ts = re.readLine()) != null) {
+                            JSONObject jsonObj = new JSONObject(ts);
+                            test = jsonObj.getString("Bandwidth");
+                            x = Integer.parseInt(test) * 100 / 1000000;
+                        }
+                        Load.add(x);
+                        System.out.println(chURLNames.get(i) + " : " + x);
+                    } catch (Exception ex) {
+                        System.out.println(chURLNames.get(i) + ": " + 0);
+                        Load.add(0);
 
+                    }
+                } else {
+                    Load.add(0);
                 }
             }
         }
@@ -171,9 +229,4 @@ public class CreeperHost extends Thread {
         return sum;
     }
 
-    public static String Split(String message) {
-        String[] string;
-        string = message.split(".");
-        return string[0];
-    }
 }

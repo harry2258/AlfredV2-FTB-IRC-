@@ -236,7 +236,7 @@ public class Utils {
         try {
             final URL url = new URL("http://" + address);
             final HttpURLConnection urlConn = (HttpURLConnection) url.openConnection();
-            urlConn.setConnectTimeout(1500);
+            urlConn.setConnectTimeout(3000);
             final long startTime = System.currentTimeMillis();
             urlConn.connect();
             final long endTime = System.currentTimeMillis();
@@ -245,10 +245,8 @@ public class Utils {
                 System.out.println("Ping to " + address + " was success");
                 return true;
             }
-        } catch (final MalformedURLException e1) {
+        } catch (final Exception e1) {
             e1.printStackTrace();
-        } catch (final IOException e) {
-            e.printStackTrace();
         }
         return false;
     }
@@ -371,6 +369,11 @@ public class Utils {
 
     public static void Geveryone(File file) throws JSONException {
         String perms = "{\"Permissions\":[\"command.wiki\", \"command.mcstatus\", \"command.chstatus\"]}";
+        JsonUtils.writeJsonFile(file, perms);
+    }
+
+    public static void edges(File file) throws JSONException {
+        String perms = "{\"Miami\":\"miami1.creeperrepo.net\",\"Chicago\":\"chicago2.creeperrepo.net\",\"Nottingham\":\"england2.creeperrepo.net\",\"Grantham\":\"england3.creeperrepo.net\",\"Los Angeles\":\"losangeles1.creeperrepo.net\",\"Atlanta\":\"atlanta1.creeperrepo.net\",\"Atlanta-2\":\"atlanta2.creeperrepo.net\",\"Maidenhead\":\"england1.creeperrepo.net\"}";
         JsonUtils.writeJsonFile(file, perms);
     }
 

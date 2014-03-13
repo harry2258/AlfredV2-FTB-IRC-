@@ -20,14 +20,16 @@ public class Op extends Command {
     @Override
     public boolean execute(MessageEvent event) throws Exception {
         String[] args = event.getMessage().split(" ");
-        if (event.getChannel().getOps().contains(event.getUser())) {
-            if (args.length == 2) {
-                User u = event.getBot().getUserChannelDao().getUser(args[1]);
-                event.getChannel().send().op(u);
-                return true;
+        if (PermissionManager.hasExec(event.getUser(), event)) {
+            if (event.getChannel().getOps().contains(event.getUser())) {
+                if (args.length == 2) {
+                    User u = event.getBot().getUserChannelDao().getUser(args[1]);
+                    event.getChannel().send().op(u);
+                    return true;
+                }
+            } else {
+                event.respond("You are not an OP!");
             }
-        } else {
-            event.respond("You are not an OP!");
         }
         return false;
     }

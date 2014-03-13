@@ -20,18 +20,20 @@ public class Deop extends Command {
     @Override
     public boolean execute(MessageEvent event) throws Exception {
         String[] args = event.getMessage().split(" ");
-        if (event.getChannel().isOp(event.getBot().getUserBot())) {
-            if (event.getChannel().getOps().contains(event.getUser())) {
-                User u = event.getBot().getUserChannelDao().getUser(args[1]);
-                event.getChannel().send().message("It sucks to be " + u.getNick() + " right now :/");
-                event.getChannel().send().deOp(u);
-                return true;
+        if (PermissionManager.hasExec(event.getUser(), event)) {
+            if (event.getChannel().isOp(event.getBot().getUserBot())) {
+                if (event.getChannel().getOps().contains(event.getUser())) {
+                    User u = event.getBot().getUserChannelDao().getUser(args[1]);
+                    event.getChannel().send().message("It sucks to be " + u.getNick() + " right now :/");
+                    event.getChannel().send().deOp(u);
+                    return true;
+                } else {
+                    event.respond("You are not an OP!");
+                }
             } else {
-                event.respond("You are not an OP!");
+                event.getUser().send().notice("I can't do that!");
+                return true;
             }
-        } else {
-            event.getUser().send().notice("I can't do that!");
-            return true;
         }
         return false;
     }
