@@ -41,20 +41,24 @@ public class Log extends Command {
 
         for (String word : event.getMessage().split(" ")) {
             if (word.toLowerCase().contains("pastebin.com")) {
-                Raw = "http://pastebin.com/raw.php?i=" + args[1].replaceAll("http://pastebin.com/", "");
+                Raw = "http://pastebin.com/raw.php?i=" + args[1].replaceAll(".*(?:bin..om/)", "");
             }
             if (word.toLowerCase().contains("hastebin.com")) {
-                Raw = "http://hastebin.com/raw/" + args[1].replaceAll("http://hastebin.com/", "");
+                Raw = "http://hastebin.com/raw/" + args[1].replaceAll(".*(?:bin..om/)", "");
             }
             if (word.toLowerCase().contains("paste.atlauncher.com")) {
-                Raw = "http://paste.atlauncher.com/view/raw/" + args[1].replaceAll("http://paste.atlauncher.com/view/", "");
+                Raw = "http://paste.atlauncher.com/view/raw/" + args[1].replaceAll(".*(?:view/)", "");
             }
             if (word.toLowerCase().contains("paste.ee")) {
-                Raw = "http://paste.ee/r/" + args[1].replaceAll("http://paste.ee/p/", "");
+                Raw = "http://paste.ee/r/" + args[1].replaceAll(".*(?:p/)", "");
             }
             if (word.toLowerCase().contains("https://gist.githubusercontent.com")) {
                 Raw = args[1] + "raw";
             }
+            if (word.toLowerCase().contains("http://pastie.org")) {
+                Raw = "http://pastie.org/pastes/" + args[1].replaceAll(".*(?:org/)","") + "/text";
+            }
+            System.out.println(Raw);
         }
 
         if (!Main.cmd.exists()) {
@@ -70,7 +74,7 @@ public class Log extends Command {
             url = new URL(Raw);
             BufferedReader br = new BufferedReader(new InputStreamReader(url.openStream()));
             while ((tmp = br.readLine()) != null) {
-                if (tmp.contains("FTBLaunch ")) {
+                if (tmp.contains("FTBLaunch starting up")) {
                     temp = Colors.BOLD + "Launcher: " + Colors.NORMAL + tmp.replaceAll(".*(?:version )|\\)", "");
                     if (!info.contains(temp)) {
                         info.add(temp);

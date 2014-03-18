@@ -161,12 +161,8 @@ public class MessageEvent extends ListenerAdapter {
             }
         }
 
-        if (Main.URL.contains(event.getChannel().getName())) {
+        if (Main.URL.containsKey(event.getChannel().getName()) && Main.URL.get(event.getChannel().getName()).equalsIgnoreCase("youtube")) {
             for (String word : event.getMessage().split(" ")) {
-                if (Utils.isUrl(word) && !word.toLowerCase().contains("youtube") && !word.toLowerCase().contains("youtu.be") && !word.equals(config.getTrigger() + "setcmd")) {
-                    event.getChannel().send().message("[" + Colors.RED + event.getUser().getNick() + Colors.NORMAL + "] " + Utils.getTitle(word));
-                }
-
                 if (Utils.isUrl(word) && word.toLowerCase().contains("youtube") || word.toLowerCase().contains("youtu.be") && !word.equals(config.getTrigger() + "ping")) {
                     event.getChannel().send().message("[" + Colors.RED + "YouTube" + Colors.NORMAL + "] " + Utils.getYoutubeInfo(word));
 
@@ -175,10 +171,21 @@ public class MessageEvent extends ListenerAdapter {
 
         }
 
+        if (Main.URL.containsKey(event.getChannel().getName()) && Main.URL.get(event.getChannel().getName()).equalsIgnoreCase("all")) {
+            for (String word : event.getMessage().split(" ")) {
+            if (Utils.isUrl(word) && !word.toLowerCase().contains("youtube") && !word.toLowerCase().contains("youtu.be") && !word.equals(config.getTrigger() + "setcmd")) {
+                event.getChannel().send().message("[" + Colors.RED + event.getUser().getNick() + Colors.NORMAL + "] " + Utils.getTitle(word));
+            }
+                if (Utils.isUrl(word) && word.toLowerCase().contains("youtube") || word.toLowerCase().contains("youtu.be") && !word.equals(config.getTrigger() + "ping")) {
+                    event.getChannel().send().message("[" + Colors.RED + "YouTube" + Colors.NORMAL + "] " + Utils.getYoutubeInfo(word));
+
+                }
+            }
+        }
+
         if (event.getMessage().equalsIgnoreCase("Im better than alfred")) {
             event.getChannel().send().message(eventuser + ", It's good to dream big");
         }
-
 
         String Ruser = null;
 

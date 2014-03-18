@@ -9,8 +9,10 @@ import org.pircbotx.hooks.events.MessageEvent;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -29,7 +31,7 @@ public class CreeperHost extends Thread {
     private static String edges = "new";
 
     public void run() {
-
+        HashMap<String, String> Jsons = new HashMap<>();
         ArrayList<String> chRepos = new ArrayList<>();
         ArrayList<String> chURLs = new ArrayList<>();
         ArrayList<String> chURLNames = new ArrayList<>();
@@ -42,6 +44,7 @@ public class CreeperHost extends Thread {
         Boolean connect = false;
         Boolean harry2258Json = false;
         int ch = ChReposlist.size();
+        final long startTime = System.currentTimeMillis();
 
         try {
             URL harry2258;
@@ -68,6 +71,7 @@ public class CreeperHost extends Thread {
             harry2258Json = true;
         } catch (Exception f) {
             f.printStackTrace();
+            event.getUser().send().notice("Failed to get edges.json from harry2258.com");
         }
 
         if (!harry2258Json) {
@@ -160,30 +164,38 @@ public class CreeperHost extends Thread {
                 }
                 String jsonURL = "http://status.creeperrepo.net/fetchjson.php?l=" + chURLNames.get(i);
                 if (canConnect) {
+
                     try {
-                        URL newURL;
-                        newURL = new URL(jsonURL);
+                        URL newURL = new URL(jsonURL);
+                        HttpURLConnection urlConn = (HttpURLConnection) newURL.openConnection();
+                        urlConn.setConnectTimeout(3000);
+                        urlConn.setReadTimeout(5000);
+                        final long startTime1 = System.currentTimeMillis();
+                        urlConn.connect();
+
                         String ts;
-                        BufferedReader re = new BufferedReader(new InputStreamReader(newURL.openStream()));
+                        BufferedReader re = new BufferedReader(new InputStreamReader(urlConn.getInputStream()));
+                        final long endTime = System.currentTimeMillis();
+                        String jsons = re.readLine();
+                        System.out.println("[" + chURLNames.get(i) + "] Connected to stats page in " + (endTime - startTime1) + "(MS)");
                         String test = "0";
                         int x = 0;
-                        while ((ts = re.readLine()) != null) {
-                            JSONObject jsonObj = new JSONObject(ts);
-                            test = jsonObj.getString("Bandwidth");
-                            x = Integer.parseInt(test) * 100 / 1000000;
-                        }
+                        JSONObject jsonObj = new JSONObject(jsons);
+                        test = jsonObj.getString("Bandwidth");
+                        x = Integer.parseInt(test) * 100 / 1000000;
+                        re.close();
+                        urlConn.disconnect();
                         Load.add(x);
-                        System.out.println(chURLNames.get(i) + " : " + x);
                     } catch (Exception ex) {
-                        System.out.println(chURLNames.get(i) + ": " + 0);
+                        ex.printStackTrace();
                         Load.add(0);
-
                     }
                 } else {
                     Load.add(0);
                 }
             }
         }
+
 
         for (Boolean test1 : tests) {
             if (test1) {
@@ -215,6 +227,8 @@ public class CreeperHost extends Thread {
         }
 
         event.getChannel().send().message(sendMessage);
+        final long endTime = System.currentTimeMillis();
+        event.getUser().send().notice("Took me " + (endTime - startTime) / 1000 + " seconds");
 
     }
 

@@ -40,4 +40,5 @@ public class PartEvent extends ListenerAdapter {
             System.out.println(event.getUser().getNick() + " was removed from the HashMap");
         }
     }
+
 }

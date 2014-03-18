@@ -73,12 +73,14 @@ public class Tweet extends Command {
 
         if (tests.length >= 2) {
             int post = 0;
+            String status = tests[1];
             if (tests.length == 3) {
                 post = Integer.valueOf(tests[1]);
+                status = tests[2];
             }
             try {
                 List<Status> statuses;
-                statuses = twitter.getUserTimeline(tests[2]);
+                statuses = twitter.getUserTimeline(status);
                 String text = "";
                 text += statuses.get(post).getText().replace("\n", " ").replace("\r", " ");
                 StringBuffer address = new StringBuffer();

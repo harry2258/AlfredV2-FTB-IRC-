@@ -80,14 +80,27 @@ public class Reddit extends Thread {
                         author = jsonObj.getJSONObject("data").getJSONArray("children").getJSONObject(0).getJSONObject("data").getString("author");
                         CreateTime = jsonObj.getJSONObject("data").getJSONArray("children").getJSONObject(0).getJSONObject("data").getLong("created_utc");
                     }
+
+                    //---------------
                     int maxLengthtitle = (title.length() < 70) ? title.length() : 70;
-                    infotitle = title.substring(0, maxLengthtitle) + " |";
+                    if (title.length() > 69) {
+                        infotitle = title.substring(0, maxLengthtitle) + "... |";
+                    } else {
+                        infotitle = title + " |";
+                    }
+
                     int maxLengthtext = (text.length() < 220) ? text.length() : 220;
-                    infotext = (text.substring(0, maxLengthtext) + " |").trim();
+
+                    if (text.length() > 219) {
+                        infotext = (text.substring(0, maxLengthtext) + "... |").trim();
+                    } else {
+                        infotext = (text + " |").trim();
+                    }
+                    //---------------
+
                     result = "[" + Colors.RED + "Reddit" + Colors.NORMAL + "] " + " [ " + URL + " ] " + Colors.BOLD + author + Colors.NORMAL + ": " + infotitle + " " + infotext;
-                    System.out.println(result);
+
                     try {
-                        System.out.println(chaninfo.containsKey(hur));
                         if (chaninfo.containsKey(hur)) {
 
                             if (chaninfo.get(hur).isEmpty()) {
@@ -95,7 +108,7 @@ public class Reddit extends Thread {
                             }
 
                             if (!chaninfo.get(hur).equalsIgnoreCase(result)) {
-                                System.out.println("[Reddit] :O Found a new post! sending to #TestPackPleaseIgnore");
+                                System.out.println("[Reddit] :O Found a new post! sending to " + chan.getName());
                                 chan.send().message("[" + Colors.RED + "Reddit" + Colors.NORMAL + "] " + " [ " + Utils.shortenUrl(URL) + " ] [" + getTime(CreateTime) + "] " + Colors.BOLD + author + Colors.NORMAL + ": " + infotitle + " " + infotext);
                             } else {
                                 System.out.println("[Reddit] No new post found.");
@@ -114,8 +127,6 @@ public class Reddit extends Thread {
                         }
                     }
                     chaninfo.put(hur, result);
-                    chaninfo.get("#TestPackPleaseIgnore:testpackpleaseignoretestpackpleaseignore");
-                    System.out.println(chaninfo.containsKey(hur));
                 }
                 Thread.sleep(60000);
             } catch (Exception e) {
@@ -147,9 +158,6 @@ public class Reddit extends Thread {
             //Thanks mkyong
 
             //Yes Paula, out of all the things i could be working, i work on this.
-            //What do you mean i have better things to do? My homework can wait till tomorrow morning :D
-            //Do i have to do it?
-            //GOD FINE! i'll do it -.-
 
             d1 = dateFormat.parse(ctime);
             d2 = dateFormat.parse(ptime);

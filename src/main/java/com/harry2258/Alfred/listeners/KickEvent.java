@@ -23,6 +23,7 @@ public class KickEvent extends ListenerAdapter {
             String rejoin = event.getChannel().getName();
             event.getBot().sendIRC().joinChannel(rejoin);
         }
+
         if (Main.Login.containsKey(event.getRecipient().getNick())) {
             Main.Login.remove(event.getRecipient().getNick());
             System.out.println(event.getRecipient().getNick() + " was removed from the HashMap");

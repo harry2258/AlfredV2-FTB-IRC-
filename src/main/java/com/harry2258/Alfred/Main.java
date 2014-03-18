@@ -31,7 +31,7 @@ public class Main {
     public static Map<String, String> map = new HashMap<>();
     public static Map<String, String> Login = new HashMap<>();
     public static HashMap<Channel, Channel> relay = new HashMap<>();
-    public static ArrayList<String> URL = new ArrayList<>();
+    public static HashMap<String, String> URL = new HashMap<>();
     public static PropertiesConfiguration customcmd;
     public static File cmd = new File(System.getProperty("user.dir") + "/parser.json");
     public static File globalperm = new File(System.getProperty("user.dir") + "/global.json");
@@ -94,13 +94,14 @@ public class Main {
             builder.setFinger(config.getCtcpFinger());
             builder.setEncoding(Charset.isSupported("UTF-8") ? Charset.forName("UTF-8") : Charset.defaultCharset());
             builder.setNickservPassword(config.getBotPassword());
-            builder.setVersion("2.1.8");
+            builder.setVersion("2.1.9");
             builder.setServer(config.getServerHostame(), Integer.parseInt(config.getServerPort()), config.getServerPassword());
 
             //Gotta listen to 'em
             builder.getListenerManager().addListener(new MessageEvent(config, manager));
             builder.getListenerManager().addListener(new InviteEvent(config, manager));
             builder.getListenerManager().addListener(new JoinEvent(config, manager));
+            builder.getListenerManager().addListener(new BanEvent(config, manager));
             builder.getListenerManager().addListener(new NickChangeEvent(config, manager));
             builder.getListenerManager().addListener(new PartEvent(config, manager));
             builder.getListenerManager().addListener(new ActionEvent(config, manager));
@@ -148,6 +149,7 @@ public class Main {
             if (config.UpdaterChecker()) {
                 Update.kill();
             }
+
         } catch (Exception ex) {
             ex.printStackTrace();
             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);

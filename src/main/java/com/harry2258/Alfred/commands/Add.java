@@ -69,7 +69,7 @@ public class Add extends Command {
 
         if (type.equalsIgnoreCase("modperms")) {
             if (args.length == 3) {
-                if (commands.containsKey(Character.toUpperCase(args[2].charAt(0)) + event.getMessage().split(" ")[2].substring(1).toLowerCase())) {
+                if (commands.containsKey(Character.toUpperCase(args[2].charAt(0)) + event.getMessage().split(" ")[2].substring(1).toLowerCase()) || new File("plugins/" + Character.toUpperCase(args[2].charAt(0)) + event.getMessage().split(" ")[2].substring(1).toLowerCase() + ".bsh").exists()) {
                     try {
                         String check = args[2];
                         String command = null;
@@ -106,7 +106,7 @@ public class Add extends Command {
             System.out.println("Adding user to " + Jsonfile);
             if (args.length == 3) {
                 try {
-                    if (!event.getChannel().getUsers().contains(event.getBot().getUserChannelDao().getUser(args[2]))) {
+                    if (!event.getChannel().getUsers().contains(event.getBot().getUserChannelDao().getUser(args[2])) || new File("plugins/" + Character.toUpperCase(args[2].charAt(0)) + event.getMessage().split(" ")[2].substring(1).toLowerCase() + ".bsh").exists()) {
                         event.getChannel().send().message("There is no user by that name!");
                         return false;
                     }
@@ -139,7 +139,7 @@ public class Add extends Command {
 
         if (type.equalsIgnoreCase("everyone")) {
             if (args.length == 3) {
-                if (commands.containsKey(Character.toUpperCase(args[2].charAt(0)) + event.getMessage().split(" ")[2].substring(1).toLowerCase())) {
+                if (commands.containsKey(Character.toUpperCase(args[2].charAt(0)) + event.getMessage().split(" ")[2].substring(1).toLowerCase()) || new File("plugins/" + Character.toUpperCase(args[2].charAt(0)) + event.getMessage().split(" ")[2].substring(1).toLowerCase() + ".bsh").exists()) {
                     try {
                         String check = args[2];
                         String command = null;
@@ -175,7 +175,7 @@ public class Add extends Command {
         if (type.equalsIgnoreCase("global")) {
             if (PermissionManager.hasExec(event.getUser(), event)) {
                 if (args.length == 3) {
-                    if (commands.containsKey(Character.toUpperCase(args[2].charAt(0)) + event.getMessage().split(" ")[2].substring(1).toLowerCase())) {
+                    if (commands.containsKey(Character.toUpperCase(args[2].charAt(0)) + event.getMessage().split(" ")[2].substring(1).toLowerCase()) || new File("plugins/" + Character.toUpperCase(args[2].charAt(0)) + event.getMessage().split(" ")[2].substring(1).toLowerCase() + ".bsh").exists()) {
                         try {
                             String check = args[2];
                             String command = null;

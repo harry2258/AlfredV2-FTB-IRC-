@@ -33,7 +33,8 @@ public class Info extends Command {
         String Exec;
         String filename = "";
         Boolean URL = false;
-        if (Main.URL.contains(event.getChannel().getName())) {
+
+        if (Main.URL.containsKey(event.getChannel().getName())) {
             URL = true;
         }
 
