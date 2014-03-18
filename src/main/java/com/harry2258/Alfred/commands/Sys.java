@@ -23,6 +23,7 @@ public class Sys extends Command {
 
     @Override
     public boolean execute(MessageEvent event) throws Exception {
+        //automatically assuming that the system is a *nix system is stupid. don't do it, at least have an if statment or something.
         int unixTime = Integer.valueOf(new Scanner(new FileInputStream("/proc/uptime")).next().replaceAll("\\.[0-9]+", ""));
         int day = (int) TimeUnit.SECONDS.toDays(unixTime);
         long hours = TimeUnit.SECONDS.toHours(unixTime) - (day * 24);

@@ -6,6 +6,7 @@ package com.harry2258.Alfred.api;
 
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonParser;
+import com.google.common.io.Files;
 
 import java.io.*;
 
@@ -29,12 +30,7 @@ public class JsonUtils {
     }
 
     public static String getStringFromFile(String filePath) throws Exception {
-        File fl = new File(filePath);
-        FileInputStream fin = new FileInputStream(fl);
-        String ret = convertStreamToString(fin);
-        fin.close();
-        return ret;
-
+        return Files.toString(new File(filePath),Charset.isSupported("UTF-8") ? Charset.forName("UTF-8") : Charset.defaultCharset());
     }
 
     public static String convertStreamToString(InputStream is) throws Exception {
@@ -69,6 +65,7 @@ public class JsonUtils {
     }
 
     public static void createJsonStructure(File file) {
+        //you do realize you can literally make a file in the resources directory and just save it outside of the jar instead of this, right?
         try {
             file.getParentFile().mkdirs();
             file.createNewFile();
