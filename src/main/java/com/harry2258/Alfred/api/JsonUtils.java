@@ -9,6 +9,7 @@ import com.google.gson.JsonParser;
 import com.google.common.io.Files;
 
 import java.io.*;
+import java.nio.charset.Charset;
 
 /**
  * @author Hardik
@@ -30,7 +31,7 @@ public class JsonUtils {
     }
 
     public static String getStringFromFile(String filePath) throws Exception {
-        return Files.toString(new File(filePath),Charset.isSupported("UTF-8") ? Charset.forName("UTF-8") : Charset.defaultCharset());
+        return Files.toString(new File(filePath), Charset.isSupported("UTF-8") ? Charset.forName("UTF-8") : Charset.defaultCharset());
     }
 
     public static String convertStreamToString(InputStream is) throws Exception {

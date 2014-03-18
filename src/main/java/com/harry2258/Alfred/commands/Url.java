@@ -28,35 +28,12 @@ public class Url extends Command {
                     event.getUser().send().notice("There are no channels that have URL scanning!");
                     return true;
                 }
-                /*
-                ArrayList<String> url = new ArrayList<>();
-                String Message = null;
 
-                for (int i = 0; i < Main.URL.size(); i++) {
-                    url.add(Main.URL.get(i) + ": ");
-                }
-
-                for (String s : url) {
-                    Message += s + " \t";
-                }
-                */
                 String Message = Main.URL.toString();
                 event.getUser().send().notice(Message);
                 return true;
             }
-
-            //boolean state = Boolean.valueOf(args[1]);
             String state = args[1];
-            /*
-            if (state.equalsIgnoreCase("on") || state.equalsIgnoreCase("true") || state.equalsIgnoreCase("yes")) {
-                Main.URL.add(event.getChannel().getName());
-                event.getUser().send().notice("Added " + event.getChannel().getName() + " to URL scanning!");
-            }
-            if (state.equalsIgnoreCase("off") || state.equalsIgnoreCase("false") || state.equalsIgnoreCase("no")) {
-                Main.URL.remove(event.getChannel().getName());
-                event.getUser().send().notice("Removed " + event.getChannel().getName() + " from URL scanning!");
-            }
-            */
 
             if (state.equalsIgnoreCase("youtube") || state.equalsIgnoreCase("yt")) {
                 Main.URL.put(event.getChannel().getName(), "YouTube");

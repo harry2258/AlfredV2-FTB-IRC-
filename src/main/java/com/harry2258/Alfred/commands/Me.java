@@ -13,8 +13,7 @@ public class Me extends Command {
     private PermissionManager manager;
   
     public Me() {
-        //The idea is to have the name of the command be the name of the class
-        super("Action", "Send an action to the channel", "Action [action]");
+        super("Me", "Send an action to the channel", "Action [action]");
     }
 
     @Override
