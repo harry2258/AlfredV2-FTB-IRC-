@@ -16,7 +16,7 @@ public class Url extends Command {
     private PermissionManager manager;
 
     public Url() {
-        super("URL", "Turn of url scanning!", "ulr [on/off]");
+        super("URL", "Toggle url scanning!", "ulr [on/off]");
     }
 
     @Override
