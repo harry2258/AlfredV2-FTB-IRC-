@@ -69,13 +69,11 @@ public class Main {
 
             //Creates Global Everyone permission
             if (!globalperm.exists()) {
-                globalperm.createNewFile();
                 Utils.Geveryone(globalperm);
             }
 
             //Creates Edges.json for ChStatus command
             if (!edgesjsonfile.exists()) {
-                edgesjsonfile.createNewFile();
                 Utils.edges(edgesjsonfile);
             }
             Reflections reflections = new Reflections("com.harry2258.Alfred.commands");

@@ -7,6 +7,7 @@ package com.harry2258.Alfred.api;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.harry2258.Alfred.Main;
 import com.harry2258.Alfred.listeners.MessageEvent;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.json.JSONException;
@@ -219,7 +220,7 @@ public class Utils {
             JsonElement jelement = new JsonParser().parse(json);
             JsonObject output = jelement.getAsJsonObject();
             output = output.getAsJsonObject("responseData").getAsJsonArray("results").get(0).getAsJsonObject();
-            String result = String.format("Google: %s | %s | [ %s ]", StringEscapeUtils.unescapeHtml4(output.get("titleNoFormatting").toString().replaceAll("\"", "")), StringEscapeUtils.unescapeHtml4(output.get("content").toString().replaceAll("\\s+", " ").replaceAll("\\<.*?>", "").replaceAll("\"", "").replaceAll("\\\\n","")), output.get("url").toString().replaceAll("\"", ""));
+            String result = String.format("Google: %s | %s | [ %s ]", StringEscapeUtils.unescapeHtml4(output.get("titleNoFormatting").toString().replaceAll("\"", "")), StringEscapeUtils.unescapeHtml4(output.get("content").toString().replaceAll("\\s+", " ").replaceAll("\\<.*?>", "").replaceAll("\"", "").replaceAll("\\\\n", "")), output.get("url").toString().replaceAll("\"", ""));
             if (result != null) {
                 return result;
             } else {
@@ -367,13 +368,37 @@ public class Utils {
     }
 
     public static void Geveryone(File file) throws JSONException {
-        String perms = "{\"Permissions\":[\"command.wiki\", \"command.mcstatus\", \"command.chstatus\"]}";
-        JsonUtils.writeJsonFile(file, perms);
+        try {
+            BufferedReader s = new BufferedReader(new InputStreamReader(Main.class.getResourceAsStream("/global.json")));
+            String tmp = "";
+            file.createNewFile();
+            BufferedWriter out = new BufferedWriter(new FileWriter(file));
+            while ((tmp = s.readLine()) != null) {
+                out.write(tmp);
+                out.flush();
+                out.newLine();
+            }
+            out.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public static void edges(File file) throws JSONException {
-        String perms = "{\"Miami\":\"miami1.creeperrepo.net\",\"Chicago\":\"chicago2.creeperrepo.net\",\"Nottingham\":\"england2.creeperrepo.net\",\"Grantham\":\"england3.creeperrepo.net\",\"Los Angeles\":\"losangeles1.creeperrepo.net\",\"Atlanta\":\"atlanta1.creeperrepo.net\",\"Atlanta-2\":\"atlanta2.creeperrepo.net\",\"Maidenhead\":\"england1.creeperrepo.net\"}";
-        JsonUtils.writeJsonFile(file, perms);
+        try {
+            BufferedReader s = new BufferedReader(new InputStreamReader(Main.class.getResourceAsStream("/edges.json")));
+            String tmp = "";
+            file.createNewFile();
+            BufferedWriter out = new BufferedWriter(new FileWriter(file));
+            while ((tmp = s.readLine()) != null) {
+                out.write(tmp);
+                out.flush();
+                out.newLine();
+            }
+            out.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public static void TweetAuth(File file) {

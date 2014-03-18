@@ -31,3 +31,5 @@ lib/
 plugins/
 Reddit/
 edges.json
+nbactions.xml
+AlfredV2.iml
