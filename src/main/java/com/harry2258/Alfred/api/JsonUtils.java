@@ -4,9 +4,9 @@
  */
 package com.harry2258.Alfred.api;
 
+import com.google.common.io.Files;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonParser;
-import com.google.common.io.Files;
 
 import java.io.*;
 import java.nio.charset.Charset;

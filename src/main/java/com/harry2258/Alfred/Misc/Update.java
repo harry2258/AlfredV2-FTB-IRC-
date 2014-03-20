@@ -40,8 +40,8 @@ public class Update extends Thread {
                 url = new URL("http://harry2258.com/alfred/version.txt");
                 BufferedReader br = new BufferedReader(new InputStreamReader(url.openStream()));
                 String result = br.readLine();
-                int remote = Integer.valueOf(result.replaceAll("\\.",""));
-                int current = Integer.valueOf(Main.version.replaceAll("\\.",""));
+                int remote = Integer.valueOf(result.replaceAll("\\.", ""));
+                int current = Integer.valueOf(Main.version.replaceAll("\\.", ""));
                 if (remote > current) {
                     chan.send().message("New version of Alfred (" + result + ") is available now!");
                     Thread.sleep(10800000);

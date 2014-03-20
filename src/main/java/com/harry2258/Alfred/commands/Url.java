@@ -6,8 +6,6 @@ import com.harry2258.Alfred.api.Config;
 import com.harry2258.Alfred.api.PermissionManager;
 import org.pircbotx.hooks.events.MessageEvent;
 
-import java.util.ArrayList;
-
 /**
  * Created by Hardik on 1/17/14.
  */

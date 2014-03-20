@@ -11,7 +11,7 @@ import org.pircbotx.hooks.events.MessageEvent;
 public class Me extends Command {
     private Config config;
     private PermissionManager manager;
-  
+
     public Me() {
         super("Me", "Send an action to the channel", "Action [action]");
     }

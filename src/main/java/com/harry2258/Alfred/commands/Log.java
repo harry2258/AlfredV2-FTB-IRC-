@@ -56,7 +56,7 @@ public class Log extends Command {
                 Raw = args[1] + "raw";
             }
             if (word.toLowerCase().contains("http://pastie.org")) {
-                Raw = "http://pastie.org/pastes/" + args[1].replaceAll(".*(?:org/)","") + "/text";
+                Raw = "http://pastie.org/pastes/" + args[1].replaceAll(".*(?:org/)", "") + "/text";
             }
             System.out.println(Raw);
         }

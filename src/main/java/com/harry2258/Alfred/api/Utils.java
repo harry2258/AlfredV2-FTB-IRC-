@@ -24,7 +24,10 @@ import org.pircbotx.hooks.events.WhoisEvent;
 
 import java.io.*;
 import java.net.*;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
@@ -418,5 +421,42 @@ public class Utils {
     public static void TweetUser(File file) {
         String Auth = "{\"Users\":[\"FTB_Team\", \"TPPIModPack\"]}";
         JsonUtils.writeJsonFile(file, Auth);
+    }
+
+    public static String getTime(long time) {
+        String dif = null;
+        String hur = String.valueOf(time);
+        try {
+            DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
+
+            Date currenttime = new Date(System.currentTimeMillis());
+
+            Date posttime = new java.util.Date(time * 1000);
+
+            String ctime = dateFormat.format(currenttime);
+            String ptime = dateFormat.format(posttime);
+
+            Date d1;
+            Date d2;
+
+            //Thanks mkyong
+
+            //Yes Paula, out of all the things i could be working, i work on this.
+
+            d1 = dateFormat.parse(ctime);
+            d2 = dateFormat.parse(ptime);
+
+            //in milliseconds
+            long diff = d2.getTime() - d1.getTime(); //Gets difference in time
+
+            long diffSeconds = diff / 1000 % 60;
+            long diffMinutes = diff / (60 * 1000) % 60;
+            long diffHours = diff / (60 * 60 * 1000) % 24;
+            long diffDays = diff / (24 * 60 * 60 * 1000);
+            dif = diffDays + "d" + diffHours + "h" + diffMinutes + "m" + diffSeconds + "s";
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return dif;
     }
 }
