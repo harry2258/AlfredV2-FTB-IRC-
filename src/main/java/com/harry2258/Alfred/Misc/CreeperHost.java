@@ -87,7 +87,7 @@ public class CreeperHost extends Thread {
                             for (String entry : splitString) {
                                 String[] splitEntry = entry.split(":");
                                 if (splitEntry.length == 2) {
-                                    chURLNames.add(splitEntry[1].substring(0, splitEntry[1].indexOf(getRepoURL(splitEntry[1]))));
+                                    chURLNames.add(splitEntry[1]);
                                     if (!ChReposlist.contains(splitEntry[1])) {
                                         ChReposlist.add(splitEntry[1].substring(0));
                                     }
