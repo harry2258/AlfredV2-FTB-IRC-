@@ -5,6 +5,7 @@
 *.ear
 #IntelljI stuff
 .idea/
+*.iml
 #useless linux editor garbage
 ~*
 # Auto-generated stuff
@@ -33,3 +34,4 @@ Reddit/
 edges.json
 nbactions.xml
 AlfredV2.iml
+dependency-reduced-pom.xml
