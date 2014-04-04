@@ -14,7 +14,7 @@ import java.io.IOException;
  */
 
 //IGNORE THIS!
-    //YOU ALREADY FAILED
+//YOU ALREADY FAILED
 
 public class Disconnect extends ListenerAdapter {
     private PircBotX bot;

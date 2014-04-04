@@ -14,7 +14,7 @@ import java.net.URL;
 import java.util.HashMap;
 
 /**
- * Created by Hardik on 2/1/14.
+ * Created by Hardik at 11:26 PM on 2/1/14.
  */
 public class Reddit extends Thread {
     PircBotX bot;
@@ -36,6 +36,7 @@ public class Reddit extends Thread {
         }
         while (isRunning) {
             File reddit = new File(System.getProperty("user.dir") + "/Reddit/" + "Reddit.json");
+
             try {
 
                 if (!reddit.exists()) {

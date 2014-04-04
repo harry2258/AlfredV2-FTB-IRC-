@@ -12,11 +12,10 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 /**
- * Created by Hardik on 2/4/14.
+ * Created by Hardik at 11:24 PM on 2/4/14.
  */
 
 public class CreeperHost extends Thread {
@@ -30,7 +29,6 @@ public class CreeperHost extends Thread {
     private static String edges = "new";
 
     public void run() {
-        HashMap<String, String> Jsons = new HashMap<>();
         ArrayList<String> chRepos = new ArrayList<>();
         ArrayList<String> chURLs = new ArrayList<>();
         ArrayList<String> chURLNames = new ArrayList<>();
@@ -41,7 +39,7 @@ public class CreeperHost extends Thread {
         String sendMessage = "";
         Boolean Json = false;
         Boolean connect = false;
-        Boolean harry2258Json = false;
+        Boolean progwml6 = false;
         int ch = ChReposlist.size();
         final long startTime = System.currentTimeMillis();
 
@@ -67,13 +65,13 @@ public class CreeperHost extends Thread {
                 }
             }
             event.getUser().send().notice("Got edges.json from progwml6");
-            harry2258Json = true;
+            progwml6 = true;
         } catch (Exception f) {
             f.printStackTrace();
             event.getUser().send().notice("Failed to get edges.json from progwml6");
         }
 
-        if (!harry2258Json) {
+        if (!progwml6) {
             do {
                 if (Utils.pingUrl("http://" + edges + "/edges.json")) {
                     event.getUser().send().notice("Connected using: http://" + edges + "/edges.json");
@@ -85,7 +83,7 @@ public class CreeperHost extends Thread {
                             String edgesjson = JsonUtils.getStringFromFile(System.getProperty("user.dir") + "/edges.json");
                             Json = JsonUtils.isJSONObject(edgesjson);
                             temp = edgesjson.replace("{", "").replace("}", "").replace("\"", "");
-                            String[] splitString = edgesjson.split(",");
+                            String[] splitString = temp.split(",");
                             for (String entry : splitString) {
                                 String[] splitEntry = entry.split(":");
                                 if (splitEntry.length == 2) {
@@ -101,6 +99,7 @@ public class CreeperHost extends Thread {
                         } catch (Exception jsonfile) {
                             jsonfile.printStackTrace();
                         }
+
                     } else {
                         event.getUser().send().notice("Could not connect to: http://" + edges + "/edges.json");
                         ch--;
@@ -174,13 +173,12 @@ public class CreeperHost extends Thread {
                             final long startTime1 = System.currentTimeMillis();
                             urlConn.connect();
 
-                            String ts;
                             BufferedReader re = new BufferedReader(new InputStreamReader(urlConn.getInputStream()));
                             final long endTime = System.currentTimeMillis();
                             String jsons = re.readLine();
                             System.out.println("[" + chURLNames.get(i) + "] Connected to stats page in " + (endTime - startTime1) + "(MS)");
-                            String test = "0";
-                            int x = 0;
+                            String test;
+                            int x;
                             JSONObject jsonObj = new JSONObject(jsons);
                             test = jsonObj.getString("Bandwidth");
                             x = Integer.parseInt(test) * 100 / 1000000;
@@ -209,7 +207,7 @@ public class CreeperHost extends Thread {
                 Status.add(Colors.RED + "✘");
             }
         }
-        String test = null;
+        String test;
 
         if (Json) {
             test = Colors.DARK_GREEN + "✓";

@@ -5,7 +5,6 @@ import bsh.Interpreter;
 import com.harry2258.Alfred.Main;
 import com.harry2258.Alfred.api.*;
 import com.harry2258.Alfred.commands.Ignore;
-import com.harry2258.Alfred.commands.Sys;
 import org.pircbotx.Colors;
 import org.pircbotx.PircBotX;
 import org.pircbotx.hooks.ListenerAdapter;
