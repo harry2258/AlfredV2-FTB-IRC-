@@ -34,14 +34,13 @@ public class Setcmd extends Command {
         String classname = Character.toUpperCase(args[1].charAt(0)) + event.getMessage().split(" ")[1].substring(1).toLowerCase();
         if (!commands.containsKey(classname)) {
             if (args.length > 1) {
-                String commandname = args[1];
                 StringBuilder sb = new StringBuilder();
                 for (int i = 2; i < args.length; i++) {
                     sb.append(args[i]).append(" ");
                 }
                 try {
 
-                    File command = new File("commands/" + event.getChannel().getName() + "/" + commandname + ".cmd");
+                    File command = new File("commands/" + event.getChannel().getName() + "/" + classname + ".cmd");
                     command.getParentFile().mkdirs();
                     command.createNewFile();
                     PrintWriter writer = new PrintWriter(new FileWriter(command));
@@ -56,7 +55,7 @@ public class Setcmd extends Command {
                     }
                     writer.flush();
                     writer.close();
-                    event.getUser().send().notice("'" + commandname + "' was set to '" + sb.toString() + "'");
+                    event.getUser().send().notice("'" + classname + "' was set to '" + sb.toString() + "'");
 
                     return true;
                 } catch (Exception e) {

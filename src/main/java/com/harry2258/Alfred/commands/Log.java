@@ -94,7 +94,7 @@ public class Log extends Command {
                     if (!info.contains(temp) && jsonObj.getBoolean("MCVersion")) {
                         info.add(temp);
                     }
-                } else if (tmp.contains("Java Version: ")) {
+                } else if (tmp.contains("Java Version: ") && tmp.contains("LaunchFrame.main")) {
                     temp = Colors.BOLD + "Java Version: " + Colors.NORMAL + tmp.replaceAll(".*(?:Java Version:)|(?:sorted as: ).*", "");
                     if (!info.contains(temp) && jsonObj.getBoolean("JavaVersion")) {
                         info.add(temp);

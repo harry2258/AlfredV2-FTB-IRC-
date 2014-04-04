@@ -40,6 +40,7 @@ public class Main {
     public static String version = "";
 
     public static void main(String[] args) {
+
         System.setProperty(SimpleLogger.SHOW_DATE_TIME_KEY, "true");
         System.setProperty(SimpleLogger.DATE_TIME_FORMAT_KEY, "[HH:mm:ss]");
         System.setProperty(SimpleLogger.SHOW_THREAD_NAME_KEY, "false");
@@ -92,7 +93,7 @@ public class Main {
             builder.setFinger(config.getCtcpFinger());
             builder.setEncoding(Charset.isSupported("UTF-8") ? Charset.forName("UTF-8") : Charset.defaultCharset());
             builder.setNickservPassword(config.getBotPassword());
-            builder.setVersion("2.2.0");
+            builder.setVersion("2.2.1");
             builder.setServer(config.getServerHostame(), Integer.parseInt(config.getServerPort()), config.getServerPassword());
 
             //Gotta listen to 'em

@@ -32,11 +32,7 @@ public class Spy extends Command {
                     Channels.add(Main.relay.get(i).getName());
                 }
 
-                for (String s : Channels) {
-                    Message += s + "\t";
-                }
-
-                event.getUser().send().notice(Message);
+                event.getUser().send().notice(Channels.toString());
                 return true;
             }
 

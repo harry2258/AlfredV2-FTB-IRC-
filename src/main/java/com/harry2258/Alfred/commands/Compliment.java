@@ -8,35 +8,31 @@ import org.pircbotx.Channel;
 import org.pircbotx.hooks.events.MessageEvent;
 
 /**
- * Created by Hardik on 1/14/14.
+ * Created by Hardik on 3/20/14.
  */
-public class Insult extends Command {
+public class Compliment extends Command {
     private Config config;
     private PermissionManager manager;
 
-    public Insult() {
-        super("Insult", "SHAKESPEAREAN INSULTS!", "Insult");
+    public Compliment() {
+        super("Compliment", "Make someones day a little brighter!", "Compliment [user]");
     }
 
     private String last = "";
 
     @Override
     public boolean execute(MessageEvent event) throws Exception {
-        String insult1 = "";
+        String compliment = "";
         do {
-            insult1 = Utils.getInsult();
-        } while (last.equalsIgnoreCase(insult1));
+            compliment = Utils.getCompliment();
+        } while (last.equalsIgnoreCase(compliment));
 
+        last = compliment;
         String[] args = event.getMessage().split(" ");
         if (args.length == 2) {
-            if (args[1].contains("batman") || args[1].equalsIgnoreCase("alfred") || args[1].contains("progwml6")) {
-                event.getChannel().send().message(event.getUser().getNick() + ", " + insult1);
-            } else {
-                event.getChannel().send().message(args[1] + ", " + insult1);
-            }
+            event.getChannel().send().message(args[1] + ", " + compliment);
             return true;
         }
-
         if (args.length >= 2) {
             String channel = args[1];
             if (args[1].startsWith("#")) {
@@ -44,49 +40,39 @@ public class Insult extends Command {
             } else {
                 channel = "#" + args[1];
             }
+
             Channel chan = event.getBot().getUserChannelDao().getChannel(channel);
             String user = "";
-
             if (args.length == 3) {
-                if (args[1].contains("batman") || args[1].equalsIgnoreCase("alfred") || args[1].contains("progwml6")) {
-                    user = event.getUser().getNick();
-                } else {
-                    user = args[2] + ", ";
-                }
+                user = args[2] + ", ";
             }
 
-            while (insult1.isEmpty()) {
-                wait();
-            }
             try {
-                sendInsult(event, user + insult1);
+                sendCompliment(event, user + compliment, chan);
                 return true;
             } catch (Exception e) {
                 e.printStackTrace();
             }
-
         }
-        event.getChannel().send().message(insult1);
+        event.getChannel().send().message(compliment);
         return true;
     }
 
-    private static void sendInsult(MessageEvent event, String insult) {
+    private static void sendCompliment(MessageEvent event, String Compliment, Channel chan) {
         String[] args = event.getMessage().split(" ");
-        String channel = args[1];
-        if (args[1].startsWith("#")) {
-            channel = args[1];
-        } else {
-            channel = "#" + args[1];
+
+        if (chan.getName().equalsIgnoreCase("#dragonweyr") || chan.getName().equalsIgnoreCase("#help") || chan.getName().equalsIgnoreCase("#lobby") || chan.getName().equalsIgnoreCase("#coders") || chan.getName().equalsIgnoreCase("#esper") || chan.getName().equalsIgnoreCase("#helper")) {
+            event.getChannel().send().message("YOU CRAZY SENDIN' ME OUT THERE?! AWW HELL NAW!!");
+            return;
         }
-        Channel chan = event.getBot().getUserChannelDao().getChannel(channel);
         if (chan.isInviteOnly() || chan.isSecret() || chan.isChannelPrivate()) {
             event.respond("I cannot join " + chan.getName() + "!");
         } else {
             if (event.getBot().getUserBot().getChannels().contains(chan)) {
-                chan.send().message(insult);
+                chan.send().message(Compliment);
             } else {
                 event.getBot().sendIRC().joinChannel(chan.getName());
-                chan.send().message(insult);
+                chan.send().message(Compliment);
                 chan.send().part();
             }
         }
@@ -95,10 +81,12 @@ public class Insult extends Command {
     @Override
     public void setConfig(Config config) {
         this.config = config;
+
     }
 
     @Override
     public void setManager(PermissionManager manager) {
         this.manager = manager;
+
     }
 }

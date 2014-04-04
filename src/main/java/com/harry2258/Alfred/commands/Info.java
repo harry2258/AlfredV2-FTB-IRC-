@@ -39,20 +39,24 @@ public class Info extends Command {
         }
 
         if (args.length == 2 && args[1].equalsIgnoreCase("commands")) {
-            File folder = new File("commands/" + event.getChannel().getName() + "/");
-            File[] listOfFiles = folder.listFiles();
+            if (new File("commands/" + event.getChannel().getName() + "/").exists()) {
+                File folder = new File("commands/" + event.getChannel().getName() + "/");
+                File[] listOfFiles = folder.listFiles();
 
-            for (int i = 0; i < listOfFiles.length; i++) {
-                if (listOfFiles[i].isFile()) {
-                    filename += listOfFiles[i].getName() + " | \t";
+                for (int i = 0; i < listOfFiles.length; i++) {
+                    if (listOfFiles[i].isFile()) {
+                        filename += listOfFiles[i].getName() + " | \t";
+                    }
                 }
+                if (!filename.isEmpty()) {
+                    event.getUser().send().notice(filename.replaceAll(".cmd", ""));
+                } else {
+                    event.getUser().send().notice("There are no custom command for this channel yet!");
+                }
+                return true;
             }
-            if (!filename.isEmpty()) {
-                event.getUser().send().notice(filename.replaceAll(".cmd", ""));
-            } else {
-                event.getUser().send().notice("There are no custom command for this channel yet!");
-            }
-            return true;
+        } else {
+            event.getUser().send().notice("There are no custom command for this channel yet!");
         }
 
 
@@ -79,7 +83,10 @@ public class Info extends Command {
         temp = exec.getJSONObject("Perms").getString("Exec");
         Exec = "Global Exec: " + temp.replace("{", "").replace("}", "").replace(":", ": ").replace("\"", "").replaceAll(",", " | ");
 
-        int NumberofCommand = new File("commands/" + event.getChannel().getName() + "/").listFiles().length;
+        int NumberofCommand = 0;
+        if (new File("commands/" + event.getChannel().getName() + "/").exists()) {
+            NumberofCommand = new File("commands/" + event.getChannel().getName() + "/").listFiles().length;
+        }
         event.getUser().send().notice(everyone); //Everyone Perms
         event.getUser().send().notice(modpermissions); //Mod Permissions
         event.getUser().send().notice(mod); //Mod List

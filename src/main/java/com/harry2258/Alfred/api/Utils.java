@@ -15,6 +15,7 @@ import org.json.JSONObject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 import org.pircbotx.Channel;
 import org.pircbotx.Colors;
 import org.pircbotx.User;
@@ -331,26 +332,19 @@ public class Utils {
         return insult1;
     }
 
-    /*
+
     public static String getCompliment() {
         String compliment = null;
-        do {
-            try {
-                URL insult;
-                insult = new URL("http://www.madsci.org/cgi-bin/cgiwrap/~lynn/jardin/SCG");
-                BufferedReader br = new BufferedReader(new InputStreamReader(insult.openStream()));
-                for (int i = 0; i < 51; ++i)
-                br.readLine();
-                String line = br.readLine();
-                compliment = line;
-                br.close();
-            } catch (Exception e1) {
-                e1.printStackTrace();
-            }
-        } while (compliment.isEmpty());
+        try {
+            Document doc = Jsoup.connect("http://www.chainofgood.co.uk/passiton").userAgent("Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/537.17 (KHTML, like Gecko) Chrome/24.0.1312.57 Safari/537.17").get();
+            Elements medium = doc.select(".medium");
+            compliment = medium.first().toString().replaceAll("<.*?>", "");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return compliment;
     }
-    */
+
 
     public static void Parser(File file) {
         JSONObject obj = new JSONObject();
@@ -439,9 +433,8 @@ public class Utils {
             Date d1;
             Date d2;
 
-            //Thanks mkyong
-
             //Yes Paula, out of all the things i could be working, i work on this.
+            //I'LL WORK ON THE SPEECH LATER!
 
             d1 = dateFormat.parse(ctime);
             d2 = dateFormat.parse(ptime);

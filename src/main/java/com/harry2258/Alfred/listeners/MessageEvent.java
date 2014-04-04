@@ -5,6 +5,7 @@ import bsh.Interpreter;
 import com.harry2258.Alfred.Main;
 import com.harry2258.Alfred.api.*;
 import com.harry2258.Alfred.commands.Ignore;
+import com.harry2258.Alfred.commands.Sys;
 import org.pircbotx.Colors;
 import org.pircbotx.PircBotX;
 import org.pircbotx.hooks.ListenerAdapter;
@@ -49,7 +50,7 @@ public class MessageEvent extends ListenerAdapter {
         }
 
         if (event.getMessage().startsWith(trigger) && !Ignore.ignored.contains(Main.Login.get(eventuser))) {
-            if (event.getMessage().startsWith(config.getTrigger() + "login")) {
+            if (event.getMessage().equalsIgnoreCase(config.getTrigger() + "login")) {
                 if (event.getUser().isVerified()) {
                     String classname = "Login";
                     Command command = CommandRegistry.getCommand(classname);
@@ -63,7 +64,12 @@ public class MessageEvent extends ListenerAdapter {
                     event.getUser().send().notice("You need to be logged in with NickServ!");
                 }
             }
-
+            /*
+            if (event.getMessage().equalsIgnoreCase(config.getTrigger() + "version")) {
+                event.getChannel().send().message("Current Version: " + event.getBot().getConfiguration().getVersion());
+                return;
+            }
+            */
 
             if (Main.Login.containsKey(eventuser)) {
                 File file = new File(System.getProperty("user.dir") + "/Logs/" + event.getChannel().getName() + "/" + "CommandIssued.txt");
@@ -76,7 +82,7 @@ public class MessageEvent extends ListenerAdapter {
                     String commandname = event.getMessage().split(" ")[0].substring(1).toLowerCase();
                     File commandfile = new File("commands/" + event.getChannel().getName() + "/" + commandname + ".cmd");
                     String mod = "command.custom";
-                    if (commandfile.exists() && manager.hasPermission(mod, event.getUser(), event.getChannel(), event)) {
+                    if (commandfile.exists() || new File("commands/" + event.getChannel().getName() + "/" + commandname.toLowerCase() + ".cmd").exists() && manager.hasPermission(mod, event.getUser(), event.getChannel(), event)) {
                         BufferedReader in = new BufferedReader(new FileReader(commandfile));
                         String tmp;
                         if (args.length == 2) {
@@ -98,10 +104,12 @@ public class MessageEvent extends ListenerAdapter {
                             return;
                         }
                     }
+
                     String classname = Character.toUpperCase(event.getMessage().split(" ")[0].charAt(1)) + event.getMessage().split(" ")[0].substring(2).toLowerCase();
+                    System.out.println(classname);
                     String permission = "command." + classname.toLowerCase();
 
-                    if (new File("plugins/" + classname + ".bsh").exists() && manager.hasPermission(permission, event.getUser(), event.getChannel(), event)) {
+                    if (new File("plugins/" + classname + ".bsh").exists() || new File("plugins/" + classname.toLowerCase() + ".bsh").exists() && manager.hasPermission(permission, event.getUser(), event.getChannel(), event)) {
                         try {
 
                             interpreter.set("event", event);
