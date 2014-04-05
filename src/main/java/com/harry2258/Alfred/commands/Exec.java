@@ -46,6 +46,7 @@ public class Exec extends Command {
     public boolean execute(MessageEvent event) {
         try {
             if (PermissionManager.hasExec(event.getUser(), event)) {
+                if(!(event.getMessage().toLowerCase().contains("processbuilder") || event.getMessage().toLowerCase().contains("process") || event.getMessage().toLowerCase().contains("system.getproperty"))) {
                 String[] args = event.getMessage().split(" ");
                 StringBuilder sb = new StringBuilder();
                 if (args.length >= 2) {
@@ -66,7 +67,7 @@ public class Exec extends Command {
                         return true;
                     }
                 }
-            }
+            }}else{event.getChannel().send().message("system shell & file property access is prohibited!");}
         } catch (Exception ex) {
             Logger.getLogger(Exec.class.getName()).log(Level.SEVERE, null, ex);
             event.getChannel().send().message(ex.getMessage());
