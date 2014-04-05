@@ -70,7 +70,7 @@ public class JsonUtils {
         try {
             file.getParentFile().mkdirs();
             file.createNewFile();
-            String jsonString = "{\"Perms\":{\"Mods\":[\"niel\"], \"ModPerms\": [\"command.custom\", \"command.google\"], \"Admins\":[\"batman\", \"progwml6\"], \"Everyone\": [\"command.mcstatus\", \"command.chstatus\"], \"Exec\":[\"batman\", \"progwml6\"]}}";
+            String jsonString = "{\"Perms\":{\"Mods\":[\"niel\"], \"ModPerms\": [\"command.custom\", \"command.google\"], \"Admins\":[\"batman\", \"progwml6\"], \"Everyone\": [\"command.mcstatus\", \"command.chstatus\"]}}";
             writeJsonFile(file, jsonString);
 
         } catch (IOException e) {

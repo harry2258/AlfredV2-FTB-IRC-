@@ -10,6 +10,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
+import java.net.InetAddress;
+import java.net.Socket;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -73,8 +75,7 @@ public class CreeperHost extends Thread {
 
         if (!progwml6) {
             do {
-                System.out.println("http://" + edges + "/edges.json");
-                if (Utils.pingUrl(edges + "..creeperrepo.net/edges.json")) {
+                if (Utils.pingUrl(edges + "/edges.json")) {
                     event.getUser().send().notice("Connected using: http://" + edges + "/edges.json");
                     connect = true;
                 } else {
@@ -89,11 +90,16 @@ public class CreeperHost extends Thread {
                             for (String entry : splitString) {
                                 String[] splitEntry = entry.split(":");
                                 if (splitEntry.length == 2) {
-                                    chRepos.add(splitEntry[0]);
-                                    chURLs.add(splitEntry[1]);
-                                    chURLNames.add(splitEntry[1].substring(0, splitEntry[1].indexOf(".creeperrepo.net")));
-                                    if (!ChReposlist.contains(splitEntry[1].substring(0, splitEntry[1].indexOf(".creeperrepo.net")))) {
-                                        ChReposlist.add(splitEntry[1].substring(0, splitEntry[1].indexOf(".creeperrepo.net")));
+
+                                }
+                                chRepos.add(splitEntry[0]);
+                                chURLs.add(splitEntry[1]);
+                                chURLNames.add(splitEntry[1].substring(0, splitEntry[1].indexOf(".creeperrepo.net")));
+                                if (!ChReposlist.contains(splitEntry[1].substring(0, splitEntry[1].indexOf(".creeperrepo.net")))) {
+                                    ChReposlist.add(splitEntry[1].substring(0, splitEntry[1].indexOf(".creeperrepo.net")));
+                                    chURLNames.add(splitEntry[1]);
+                                    if (!ChReposlist.contains(splitEntry[1])) {
+                                        ChReposlist.add(splitEntry[1].substring(0));
                                     }
                                 }
                             }
@@ -104,7 +110,7 @@ public class CreeperHost extends Thread {
                         }
 
                     } else {
-                        event.getUser().send().notice("Could not connect to: http://" + edges + ".creeperrepo.net/edges.json");
+                        event.getUser().send().notice("Could not connect to: http://" + edges + "/edges.json");
                         ch--;
                         edges = ChReposlist.get(ch);
                         connect = false;
@@ -149,7 +155,12 @@ public class CreeperHost extends Thread {
             }
             if (chURLs.get(i).contains("creeperrepo.net") || chURLs.get(i).contains("cursecdn.com")) {
                 try {
-                    boolean test = Utils.pingUrl(chURLs.get(i));
+                    boolean test = false;
+                    Socket s = new Socket(InetAddress.getByName(chURLs.get(i)), 80);
+                    s.setSoTimeout(3000);
+                    if (s.isConnected()) {
+                        test = true;
+                    }
                     tests.add(test);
                     if (!test) {
                         event.getUser().send().notice("Ping to " + chURLs.get(i) + " timedout!");
@@ -157,6 +168,7 @@ public class CreeperHost extends Thread {
                     } else {
                         canConnect = true;
                     }
+                    s.close();
                 } catch (Exception e) {
                     //e.printStackTrace();
                 }
