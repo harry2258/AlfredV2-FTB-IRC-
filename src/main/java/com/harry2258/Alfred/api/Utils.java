@@ -238,8 +238,14 @@ public class Utils {
 
 
     public static boolean pingUrl(final String address) {
+        String URL;
+        if (address.contains("http://")) {
+            URL = address;
+        } else {
+            URL = "http://" + address;
+        }
         try {
-            final URL url = new URL("http://" + address);
+            final URL url = new URL(URL);
             final HttpURLConnection urlConn = (HttpURLConnection) url.openConnection();
             urlConn.setConnectTimeout(3000);
             final long startTime = System.currentTimeMillis();

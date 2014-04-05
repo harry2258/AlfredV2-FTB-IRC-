@@ -4,7 +4,7 @@
   <groupId>com.harr2258</groupId>
   <artifactId>AlfredV2</artifactId>
   <name>AlfredV2(FTB-IRC-BOT)</name>
-  <version>2.2.1</version>
+  <version>2.2.2</version>
   <url>http://bots.zack6849.com/</url>
   <build>
     <defaultGoal>clean package</defaultGoal>

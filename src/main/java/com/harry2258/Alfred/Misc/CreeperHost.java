@@ -73,27 +73,30 @@ public class CreeperHost extends Thread {
 
         if (!progwml6) {
             do {
-                if (Utils.pingUrl("http://" + edges + "/edges.json")) {
+                System.out.println("http://" + edges + "/edges.json");
+                if (Utils.pingUrl(edges + "..creeperrepo.net/edges.json")) {
                     event.getUser().send().notice("Connected using: http://" + edges + "/edges.json");
                     connect = true;
                 } else {
                     if (ChReposlist.isEmpty()) {
+                        event.getUser().send().notice("Could not connect to new.creeperrepo.net, getting edges from edges.json");
                         try {
                             String temp;
                             String edgesjson = JsonUtils.getStringFromFile(System.getProperty("user.dir") + "/edges.json");
                             Json = JsonUtils.isJSONObject(edgesjson);
                             temp = edgesjson.replace("{", "").replace("}", "").replace("\"", "");
-                            String[] splitString = temp.split(",");
+                            String[] splitString = edgesjson.split(",");
                             for (String entry : splitString) {
                                 String[] splitEntry = entry.split(":");
                                 if (splitEntry.length == 2) {
-                                    chURLNames.add(splitEntry[1].substring(0, splitEntry[1].indexOf(getRepoURL(splitEntry[1]))));
-                                    if (!ChReposlist.contains(splitEntry[1])) {
-                                        ChReposlist.add(splitEntry[1].substring(0));
+                                    chRepos.add(splitEntry[0]);
+                                    chURLs.add(splitEntry[1]);
+                                    chURLNames.add(splitEntry[1].substring(0, splitEntry[1].indexOf(".creeperrepo.net")));
+                                    if (!ChReposlist.contains(splitEntry[1].substring(0, splitEntry[1].indexOf(".creeperrepo.net")))) {
+                                        ChReposlist.add(splitEntry[1].substring(0, splitEntry[1].indexOf(".creeperrepo.net")));
                                     }
                                 }
                             }
-                            event.getUser().send().notice("Could not connect to new.creeperrepo.net, getting edges from edges.json");
                             ch--;
                             edges = ChReposlist.get(ch);
                         } catch (Exception jsonfile) {
@@ -101,7 +104,7 @@ public class CreeperHost extends Thread {
                         }
 
                     } else {
-                        event.getUser().send().notice("Could not connect to: http://" + edges + "/edges.json");
+                        event.getUser().send().notice("Could not connect to: http://" + edges + ".creeperrepo.net/edges.json");
                         ch--;
                         edges = ChReposlist.get(ch);
                         connect = false;
@@ -248,8 +251,9 @@ public class CreeperHost extends Thread {
     }
 
     public static String getRepoURL(String fullURL) {
-        if (fullURL.contains("creeper"))
+        if (fullURL.contains("creeper")) {
             return ".creeperrepo.net";
+        }
         return ".cursecdn.com";
 
     }
