@@ -46,7 +46,7 @@ public class Exec extends Command {
     public boolean execute(MessageEvent event) {
         try {
             if (PermissionManager.hasExec(event.getUser(), event)) {
-                if(!(event.getMessage().toLowerCase().contains("processbuilder") || event.getMessage().toLowerCase().contains("process") || event.getMessage().toLowerCase().contains("system.getproperty"))) {
+                if(!(event.getMessage().toLowerCase().contains("processbuilder") || event.getMessage().toLowerCase().contains("runtime") || event.getMessage().toLowerCase().contains("process") || event.getMessage().toLowerCase().contains("system.getproperty"))) {
                 String[] args = event.getMessage().split(" ");
                 StringBuilder sb = new StringBuilder();
                 if (args.length >= 2) {
