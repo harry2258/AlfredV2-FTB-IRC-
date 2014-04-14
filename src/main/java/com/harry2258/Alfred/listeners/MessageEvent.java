@@ -63,12 +63,6 @@ public class MessageEvent extends ListenerAdapter {
                     event.getUser().send().notice("You need to be logged in with NickServ!");
                 }
             }
-            /*
-            if (event.getMessage().equalsIgnoreCase(config.getTrigger() + "version")) {
-                event.getChannel().send().message("Current Version: " + event.getBot().getConfiguration().getVersion());
-                return;
-            }
-            */
 
             if (Main.Login.containsKey(eventuser)) {
                 File file = new File(System.getProperty("user.dir") + "/Logs/" + event.getChannel().getName() + "/" + "CommandIssued.txt");
@@ -105,7 +99,6 @@ public class MessageEvent extends ListenerAdapter {
                     }
 
                     String classname = Character.toUpperCase(event.getMessage().split(" ")[0].charAt(1)) + event.getMessage().split(" ")[0].substring(2).toLowerCase();
-                    System.out.println(classname);
                     String permission = "command." + classname.toLowerCase();
 
                     if (new File("plugins/" + classname + ".bsh").exists() || new File("plugins/" + classname.toLowerCase() + ".bsh").exists() && manager.hasPermission(permission, event.getUser(), event.getChannel(), event)) {

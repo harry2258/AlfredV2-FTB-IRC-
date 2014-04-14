@@ -18,16 +18,21 @@ public class ChatSocketListener extends Thread {
         this.bot = bot;
         System.out.println("Starting chat socket listener on port " + port);
     }
+    private static volatile boolean isRunning = true;
 
     public void run() {
         try {
             this.server = new ServerSocket(port);
             System.out.println("Accepting connections!");
-            while (true) {
+            while (isRunning) {
                 new Thread(new ChatSocketHandler(server.accept(), bot)).start();
             }
         } catch (Exception ex) {
             ex.printStackTrace();
         }
+    }
+
+    public static void kill() {
+        isRunning = false;
     }
 }

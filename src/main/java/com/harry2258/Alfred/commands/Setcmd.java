@@ -40,7 +40,7 @@ public class Setcmd extends Command {
                 }
                 try {
 
-                    File command = new File("commands/" + event.getChannel().getName() + "/" + classname + ".cmd");
+                    File command = new File("commands/" + event.getChannel().getName() + "/" + args[1] + ".cmd");
                     command.getParentFile().mkdirs();
                     command.createNewFile();
                     PrintWriter writer = new PrintWriter(new FileWriter(command));
@@ -55,7 +55,7 @@ public class Setcmd extends Command {
                     }
                     writer.flush();
                     writer.close();
-                    event.getUser().send().notice("'" + classname + "' was set to '" + sb.toString() + "'");
+                    event.getUser().send().notice("'" + args[1] + "' was set to '" + sb.toString() + "'");
 
                     return true;
                 } catch (Exception e) {

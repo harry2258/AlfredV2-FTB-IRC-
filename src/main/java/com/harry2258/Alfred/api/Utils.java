@@ -134,7 +134,7 @@ public class Utils {
             while ((result = reader.readLine()) != null) {
                 String a = result.replace("red", Colors.RED + "✘" + Colors.NORMAL).replace("green", Colors.DARK_GREEN + "✓" + Colors.NORMAL).replace("[", "").replace("]", "");
                 String b = a.replace("{", "").replace("}", "").replace(":", ": ").replace("\"", "").replaceAll(",", " | ");
-                returns = b.replace("login.minecraft.net", "Login").replace("session.minecraft.net", "Session").replace("account.mojang.com", "Account").replace("auth.mojang.com", "Auth").replace("skins.minecraft.net", "Skins").replace("authserver.mojang.com", "Auth Server").replace("sessionserver.mojang.com", "Session Server").replace("minecraft.net", "Minecraft");
+                returns = b.replace("login.minecraft.net", "Legacy Login").replace("session.minecraft.net", "Legacy Session").replace("account.mojang.com", "Account").replace("auth.mojang.com", "Auth").replace("skins.minecraft.net", "Skins").replace("authserver.mojang.com", "Auth Server").replace("sessionserver.mojang.com", "Session Server").replace("minecraft.net", "Minecraft");
             }
             reader.close();
         } catch (IOException e) {

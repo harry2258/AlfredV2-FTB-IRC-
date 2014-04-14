@@ -139,16 +139,7 @@ public class Main {
 
             bot.startBot();
             System.out.println("Shutting down");
-            if (config.isEnabledTwitter()) {
-                Twitter.kill();
-            }
-            if (config.isRedditEnabled()) {
-                Reddit.kill();
-            }
-            if (config.UpdaterChecker()) {
-                Update.kill();
-            }
-
+            System.exit(1);
         } catch (Exception ex) {
             ex.printStackTrace();
             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
