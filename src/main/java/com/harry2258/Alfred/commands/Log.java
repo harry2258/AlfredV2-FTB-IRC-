@@ -138,8 +138,8 @@ public class Log extends Command {
 
             //System.out.println(readString(url.openStream()));
             //Error.getProblems(webpage, event);
-            for (int x = 0; x < info.size(); x++) {
-                Message.add(info.get(x));
+            for (String anInfo : info) {
+                Message.add(anInfo);
             }
 
             for (String s : Message) {
