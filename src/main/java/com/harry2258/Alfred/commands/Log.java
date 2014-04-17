@@ -5,6 +5,7 @@ import com.harry2258.Alfred.api.*;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.pircbotx.Colors;
+import org.pircbotx.User;
 import org.pircbotx.hooks.events.MessageEvent;
 
 import java.io.BufferedReader;
@@ -38,6 +39,8 @@ public class Log extends Command {
         String Raw = args[1];
         String Java = "1";
         String webpage = "";
+        String Description = "";
+        String CausedBy = "";
 
         for (String word : event.getMessage().split(" ")) {
             if (word.toLowerCase().contains("pastebin.com")) {
@@ -58,7 +61,6 @@ public class Log extends Command {
             if (word.toLowerCase().contains("http://pastie.org")) {
                 Raw = "http://pastie.org/pastes/" + args[1].replaceAll(".*(?:org/)", "") + "/text";
             }
-            System.out.println(Raw);
         }
 
         if (!Main.cmd.exists()) {
@@ -74,7 +76,10 @@ public class Log extends Command {
             url = new URL(Raw);
             BufferedReader br = new BufferedReader(new InputStreamReader(url.openStream()));
             while ((tmp = br.readLine()) != null) {
-                if (tmp.contains("FTBLaunch starting up")) {
+                if (tmp.contains("This paste has been removed!")) {
+                    event.getChannel().send().message("The paste cannot be found!");
+                    return true;
+                } else if (tmp.contains("FTBLaunch starting up")) {
                     temp = Colors.BOLD + "Launcher: " + Colors.NORMAL + tmp.replaceAll(".*(?:version )|\\)", "");
                     if (!info.contains(temp)) {
                         info.add(temp);
@@ -118,10 +123,20 @@ public class Log extends Command {
                     if (!info.contains(temp) && jsonObj.getBoolean("OSName")) {
                         info.add(temp);
                     }
+                } else if(tmp.contains("Description: ") && jsonObj.getBoolean("Information")) {
+                    temp = Colors.BOLD + "Description: " + Colors.NORMAL + tmp.replaceAll("Description: ","");
+                    Description = temp;
+                    String harhar = readString(url.openStream()).replaceAll("\\n|\\r|\\t"," ");
+                    CausedBy = Colors.BOLD + "Error: " + Colors.NORMAL + harhar.replaceAll(".*(?:" + tmp + "    )|   at.*", "");
+                } else if(tmp.contains("Stacktrace:") && jsonObj.getBoolean("Information")) {
+                    String harhar = readString(url.openStream()).replaceAll("\\n|\\r|\\t"," ");
+                    CausedBy = Colors.BOLD + "Error: " + Colors.NORMAL + harhar.replaceAll(".*(?:Stacktrace:)|\\)   at.*","").replaceAll("   ","") + ")";
                 }
-                webpage += tmp;
+                //webpage += tmp;
+
             }
 
+            //System.out.println(readString(url.openStream()));
             //Error.getProblems(webpage, event);
             for (int x = 0; x < info.size(); x++) {
                 Message.add(info.get(x));
@@ -135,7 +150,12 @@ public class Log extends Command {
                 return false;
             }
             event.getChannel().send().message(message);
-
+            if(!Description.isEmpty()) {
+                event.getChannel().send().message(Description);
+            }
+            if(!CausedBy.isEmpty()) {
+                event.getChannel().send().message(CausedBy);
+            }
             return true;
         } catch (JSONException e1) {
             event.getChannel().send().message("OH NO! The parser.json is corrupted, Please delete it and retry.");

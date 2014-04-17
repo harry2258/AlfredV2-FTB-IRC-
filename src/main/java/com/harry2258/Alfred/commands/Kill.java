@@ -25,7 +25,8 @@ public class Kill extends Command {
         try {
             if (PermissionManager.hasExec(event.getUser(), event)) {
                 event.getBot().stopBotReconnect();
-                event.getBot().sendIRC().quitServer(event.getUser().getNick() + ", " + Utils.getInsult());
+                //event.getUser().getNick() + ", " + Utils.getInsult()
+                event.getBot().sendIRC().quitServer("Killed by " + event.getUser().getNick());
                 if (config.isEnableChatSocket()) {
                     ChatSocketListener.kill();
                 }

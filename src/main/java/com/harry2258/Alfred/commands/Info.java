@@ -32,10 +32,10 @@ public class Info extends Command {
         String Admins;
         String Exec;
         String filename = "";
-        Boolean URL = false;
+        String URL = "None";
 
         if (Main.URL.containsKey(event.getChannel().getName())) {
-            URL = true;
+            URL = Main.URL.get(event.getChannel().getName());
         }
 
         if (args.length == 2 && args[1].equalsIgnoreCase("commands")) {
@@ -55,10 +55,7 @@ public class Info extends Command {
                 }
                 return true;
             }
-        } else {
-            event.getUser().send().notice("There are no custom command for this channel yet!");
         }
-
 
         //String Jsonfile = System.getProperty("user.dir") + "/perms/" + event.getChannel().getName().toLowerCase() + "/" + "perms.json";
         String perms = Main.map.get(event.getChannel().getName());

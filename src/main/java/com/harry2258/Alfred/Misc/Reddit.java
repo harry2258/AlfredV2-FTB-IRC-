@@ -74,7 +74,7 @@ public class Reddit extends Thread {
                         if (!jsonObj.getJSONObject("data").getJSONArray("children").getJSONObject(0).getJSONObject("data").getString("selftext").isEmpty()) {
                             text = jsonObj.getJSONObject("data").getJSONArray("children").getJSONObject(0).getJSONObject("data").getString("selftext").replaceAll("\\n", " ");
                         }
-                        URL = jsonObj.getJSONObject("data").getJSONArray("children").getJSONObject(0).getJSONObject("data").getString("url");
+                        URL = "http://reddit.com" + jsonObj.getJSONObject("data").getJSONArray("children").getJSONObject(0).getJSONObject("data").getString("permalink");
                         author = jsonObj.getJSONObject("data").getJSONArray("children").getJSONObject(0).getJSONObject("data").getString("author");
                         CreateTime = jsonObj.getJSONObject("data").getJSONArray("children").getJSONObject(0).getJSONObject("data").getLong("created_utc");
                     }
