@@ -41,6 +41,7 @@ public class Log extends Command {
         String webpage = "";
         String Description = "";
         String CausedBy = "";
+        String Stacktrace = "";
 
         for (String word : event.getMessage().split(" ")) {
             if (word.toLowerCase().contains("pastebin.com")) {
@@ -128,9 +129,9 @@ public class Log extends Command {
                     Description = temp;
                     String harhar = readString(url.openStream()).replaceAll("\\n|\\r|\\t"," ");
                     CausedBy = Colors.BOLD + "Error: " + Colors.NORMAL + harhar.replaceAll(".*(?:" + tmp + "    )|   at.*", "");
-                } else if(tmp.contains("Stacktrace:") && jsonObj.getBoolean("Information")) {
+                } else if(tmp.contains("Stacktrace:") && jsonObj.getBoolean("Stacktrace")) {
                     String harhar = readString(url.openStream()).replaceAll("\\n|\\r|\\t"," ");
-                    CausedBy = Colors.BOLD + "Error: " + Colors.NORMAL + harhar.replaceAll(".*(?:Stacktrace:)|\\)   at.*","").replaceAll("   ","") + ")";
+                    Stacktrace = Colors.BOLD + "Stacktrace: " + Colors.NORMAL + harhar.replaceAll(".*(?:Stacktrace:)|\\)   at.*","").replaceAll("   ","") + ")";
                 }
                 //webpage += tmp;
 
@@ -155,6 +156,9 @@ public class Log extends Command {
             }
             if(!CausedBy.isEmpty()) {
                 event.getChannel().send().message(CausedBy);
+            }
+            if(!Stacktrace.isEmpty()) {
+                event.getChannel().send().message(Stacktrace);
             }
             return true;
         } catch (JSONException e1) {

@@ -363,6 +363,8 @@ public class Utils {
             obj.put("Description", true);
             obj.put("OSName", true);
             obj.put("Suggestion", true);
+            obj.put("Information", true);
+            obj.put("Stacktrace", true);
             JsonUtils.writeJsonFile(file, obj.toString());
             System.out.println(obj.toString());
         } catch (JSONException e) {
