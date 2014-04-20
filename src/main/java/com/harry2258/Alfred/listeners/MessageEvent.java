@@ -34,7 +34,6 @@ public class MessageEvent extends ListenerAdapter {
 
         if (!Main.Login.containsKey(eventuser)) {
             if (event.getUser().isVerified()) {
-                System.out.println("Adding user to HashMap");
                 String account = Utils.getAccount(event.getUser(), event);
                 Main.Login.put(eventuser, account);
                 System.out.println(eventuser + " was added to the HashMap");

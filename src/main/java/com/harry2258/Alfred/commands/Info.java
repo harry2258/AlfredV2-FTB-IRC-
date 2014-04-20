@@ -66,10 +66,10 @@ public class Info extends Command {
         JSONObject exec = new JSONObject(exe);
 
         temp = jsonObj.getJSONObject("Perms").getString("Everyone");
-        everyone = "Permission everyone has: " + temp.replace("{", "").replace("}", "").replace(":", ": ").replace("\"", "").replaceAll(",", " | ");
+        everyone = "Permission everyone has: " + temp.replace("{", "").replace("}", "").replace(":", ": ").replace("\"", "").replaceAll(",", " | ").replaceAll("command.","");
 
         temp = jsonObj.getJSONObject("Perms").getString("ModPerms");
-        modpermissions = "Mod Permissions: " + temp.replace("{", "").replace("}", "").replace(":", ": ").replace("\"", "").replaceAll(",", " | ");
+        modpermissions = "Mod Permissions: " + temp.replace("{", "").replace("}", "").replace(":", ": ").replace("\"", "").replaceAll(",", " | ").replaceAll("command.","");
 
         temp = jsonObj.getJSONObject("Perms").getString("Mods");
         mod = "Mods: " + temp.replace("{", "").replace("}", "").replace(":", ": ").replace("\"", "").replaceAll(",", " | ");

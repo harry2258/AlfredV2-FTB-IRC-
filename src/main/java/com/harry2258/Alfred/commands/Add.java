@@ -50,7 +50,7 @@ public class Add extends Command {
                     if (!jsonObj.getJSONObject("Perms").getString("Mods").contains(newuser)) {
                         jsonObj.getJSONObject("Perms").append("Mods", newuser);
                         JsonUtils.writeJsonFile(file, jsonObj.toString());
-                        event.getUser().send().notice(newuser + " was added to the list!");
+                        event.getUser().send().notice(newuser + " is now a Moderator for channel " + event.getChannel().getName());
                         String perms = JsonUtils.getStringFromFile(Jsonfile);
                         Main.map.put(event.getChannel().getName(), perms);
                         event.getUser().send().notice("Reloaded Permissions");
@@ -83,7 +83,7 @@ public class Add extends Command {
                         if (!jsonObj.getJSONObject("Perms").getString("ModPerms").contains(command)) {
                             jsonObj.getJSONObject("Perms").append("ModPerms", command);
                             JsonUtils.writeJsonFile(file, jsonObj.toString());
-                            event.getUser().send().notice(args[2] + " was added to the list!");
+                            event.getUser().send().notice("Moderators are now able to use the command '" + args[2] + "'");
                             String perms = JsonUtils.getStringFromFile(Jsonfile);
                             Main.map.put(event.getChannel().getName(), perms);
                             event.getUser().send().notice("Reloaded Permissions");
@@ -119,7 +119,7 @@ public class Add extends Command {
                     if (!jsonObj.getJSONObject("Perms").getString("Admins").contains(newuser)) {
                         jsonObj.getJSONObject("Perms").append("Admins", newuser);
                         JsonUtils.writeJsonFile(file, jsonObj.toString());
-                        event.getUser().send().notice(newuser + " was added to the list!");
+                        event.getUser().send().notice(newuser + " is now a Admin for channel " + event.getChannel().getName());
                         String perms = JsonUtils.getStringFromFile(Jsonfile);
                         Main.map.put(event.getChannel().getName(), perms);
                         event.getUser().send().notice("Reloaded Permissions");
@@ -154,7 +154,7 @@ public class Add extends Command {
                         if (!jsonObj.getJSONObject("Perms").getString("Everyone").contains(command)) {
                             jsonObj.getJSONObject("Perms").append("Everyone", command);
                             JsonUtils.writeJsonFile(file, jsonObj.toString());
-                            event.getUser().send().notice(args[2] + " was added to the list!");
+                            event.getUser().send().notice("Moderators are now able to use the command '" + args[2] + "'");
                             String perms = JsonUtils.getStringFromFile(Jsonfile);
                             Main.map.put(event.getChannel().getName(), perms);
                             event.getUser().send().notice("Reloaded Permissions");
