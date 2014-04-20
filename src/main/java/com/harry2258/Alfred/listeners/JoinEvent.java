@@ -33,16 +33,14 @@ public class JoinEvent extends ListenerAdapter {
         Thread.sleep(1000);
         if (event.getUser().isVerified()) {
             if (!Main.Login.containsKey(event.getUser().getNick())) {
-                System.out.println("Addind " + event.getUser().getNick() + " to HashMap!");
+                System.out.println("Adding " + event.getUser().getNick() + " to HashMap!");
                 String user = getAccount(event.getUser(), event);
                 Main.Login.put(event.getUser().getNick(), user);
                 System.out.println(event.getUser().getNick() + " was added to the HashMap");
             }
-        } else {
-            //event.getUser().send().notice("You need to login to use the bot!");
         }
 
-        String path = null;
+        String path;
         if (Main.Login.containsKey(event.getUser().getNick())) {
             path = System.getProperty("user.dir") + "/Reminders/" + Main.Login.get(event.getUser().getNick()) + ".txt";
         } else {

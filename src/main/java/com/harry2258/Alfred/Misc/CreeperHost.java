@@ -125,8 +125,6 @@ public class CreeperHost extends Thread {
                 String st;
                 while ((st = re.readLine()) != null) {
                     Json = JsonUtils.isJSONObject(st);
-                    //File file = new File(System.getProperty("user.dir") + "/edges.json");
-                    //JsonUtils.writeJsonFile(file, st);
                     st = st.replace("{", "").replace("}", "").replace("\"", "");
                     String[] splitString = st.split(",");
                     for (String entry : splitString) {

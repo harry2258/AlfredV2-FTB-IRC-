@@ -4,7 +4,6 @@ import com.harry2258.Alfred.Misc.*;
 import com.harry2258.Alfred.api.Command;
 import com.harry2258.Alfred.api.Config;
 import com.harry2258.Alfred.api.PermissionManager;
-import com.harry2258.Alfred.api.Utils;
 import com.harry2258.Alfred.runnables.ChatSocketListener;
 import org.pircbotx.hooks.events.MessageEvent;
 
@@ -25,7 +24,6 @@ public class Kill extends Command {
         try {
             if (PermissionManager.hasExec(event.getUser(), event)) {
                 event.getBot().stopBotReconnect();
-                //event.getUser().getNick() + ", " + Utils.getInsult()
                 event.getBot().sendIRC().quitServer("Killed by " + event.getUser().getNick());
                 if (config.isEnableChatSocket()) {
                     ChatSocketListener.kill();

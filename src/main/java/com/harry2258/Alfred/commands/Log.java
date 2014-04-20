@@ -5,7 +5,6 @@ import com.harry2258.Alfred.api.*;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.pircbotx.Colors;
-import org.pircbotx.User;
 import org.pircbotx.hooks.events.MessageEvent;
 
 import java.io.BufferedReader;
@@ -37,11 +36,11 @@ public class Log extends Command {
         String message = "";
         String temp = "";
         String Raw = args[1];
-        String Java = "1";
         String webpage = "";
         String Description = "";
         String CausedBy = "";
         String Stacktrace = "";
+        String OS = "32-Bit";
 
         for (String word : event.getMessage().split(" ")) {
             if (word.toLowerCase().contains("pastebin.com")) {
@@ -105,10 +104,6 @@ public class Log extends Command {
                     if (!info.contains(temp) && jsonObj.getBoolean("JavaVersion")) {
                         info.add(temp);
                     }
-                    Java = tmp.replaceAll(".*(?:Java Version:)|(?:as: ).*|[._a-z]|[,A-Z]|\\-", "").trim();
-                    if (Java.equals("180")) {
-                        Java = "18000";
-                    }
                 } else if (tmp.contains("Is Modded: ")) {
                     temp = Colors.BOLD + "Client Brand: " + Colors.NORMAL + tmp.replaceAll("^.*?(?=[A-Z][a-z])", "").replaceAll("\\\\[.*?\\\\]", "").replace("Is Modded: Definitely; Client brand changed to ", "");
                     if (!info.contains(temp) && jsonObj.getBoolean("Modded")) {
@@ -119,26 +114,27 @@ public class Log extends Command {
                     if (!info.contains(temp) && jsonObj.getBoolean("Modded")) {
                         info.add(temp);
                     }
+                } else if (tmp.contains("\\Program Files (x86)\\")){
+                    OS = "64-Bit";
                 } else if (tmp.contains("Operating System: ") || tmp.contains("OS: ")) {
-                    temp = Colors.BOLD + "OS: " + Colors.NORMAL + tmp.replaceAll("^.*?(?=[A-Z][a-z])", "").replaceAll("\\\\[.*?\\\\]", "").replaceAll(".*(?:Operating System: )|.*(?:OS: )", "").replaceAll("x86", "32-Bit").replaceAll("x64", "64-Bit");
+                    temp = Colors.BOLD + "OS: "+ Colors.NORMAL  + OS  + tmp.replaceAll("^.*?(?=[A-Z][a-z])", "").replaceAll("\\\\[.*?\\\\]", "").replaceAll(".*(?:Operating System: )|.*(?:OS: )", "").replaceAll("x86", "").replaceAll("x64", "");
                     if (!info.contains(temp) && jsonObj.getBoolean("OSName")) {
                         info.add(temp);
                     }
-                } else if(tmp.contains("Description: ") && jsonObj.getBoolean("Information")) {
-                    temp = Colors.BOLD + "Description: " + Colors.NORMAL + tmp.replaceAll("Description: ","");
-                    Description = temp;
-                    String harhar = readString(url.openStream()).replaceAll("\\n|\\r|\\t"," ");
-                    CausedBy = Colors.BOLD + "Error: " + Colors.NORMAL + harhar.replaceAll(".*(?:" + tmp + "    )|   at.*", "");
-                } else if(tmp.contains("Stacktrace:") && jsonObj.getBoolean("Stacktrace")) {
-                    String harhar = readString(url.openStream()).replaceAll("\\n|\\r|\\t"," ");
-                    Stacktrace = Colors.BOLD + "Stacktrace: " + Colors.NORMAL + harhar.replaceAll(".*(?:Stacktrace:)|\\)   at.*","").replaceAll("   ","") + ")";
+                } else if (tmp.contains("Caused by")) {
+                    CausedBy = Colors.BOLD + "Caused by: " + Colors.NORMAL + tmp.replaceAll("Caused by: ", "");
+                } else if (tmp.contains("Description: ")) {
+                    String harhar = readString(url.openStream()).replaceAll("\\n|\\r", " ");
+                    System.out.println(harhar.replaceAll(".*(?:" + tmp + ")|at.*", "").trim());
+                    CausedBy = Colors.BOLD + "Error: " + Colors.NORMAL + harhar.replaceAll(".*(?:" + tmp + ")|at.*", "").trim();
+                    Description = Colors.BOLD + "Description: " + Colors.NORMAL + tmp.replaceAll("Description: ", "");
+                } else if (tmp.contains("Stacktrace:")) {
+                    String harhar = readString(url.openStream()).replaceAll("\\n|\\r|\\t", " ");
+                    Stacktrace = Colors.BOLD + "Stacktrace: " + Colors.NORMAL + harhar.replaceAll(".*(?:Stacktrace:)|\\)   at.*", "").replaceAll("   ", "") + ")";
                 }
                 //webpage += tmp;
 
             }
-
-            //System.out.println(readString(url.openStream()));
-            //Error.getProblems(webpage, event);
             for (String anInfo : info) {
                 Message.add(anInfo);
             }
@@ -151,14 +147,28 @@ public class Log extends Command {
                 return false;
             }
             event.getChannel().send().message(message);
-            if(!Description.isEmpty()) {
+            if (!Description.isEmpty()) {
+                if (jsonObj.getBoolean("Information")) {
                 event.getChannel().send().message(Description);
+                } else {
+                    event.getUser().send().message(Description);
+                }
             }
-            if(!CausedBy.isEmpty()) {
+
+            if (!CausedBy.isEmpty()) {
+                if (jsonObj.getBoolean("Information")) {
                 event.getChannel().send().message(CausedBy);
+                } else {
+                    event.getUser().send().message(CausedBy);
+                }
             }
-            if(!Stacktrace.isEmpty()) {
+
+            if (!Stacktrace.isEmpty()) {
+                if (jsonObj.getBoolean("Stacktrace")) {
                 event.getChannel().send().message(Stacktrace);
+                } else {
+                    event.getUser().send().message(Stacktrace);
+                }
             }
             return true;
         } catch (JSONException e1) {

@@ -29,6 +29,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
@@ -132,9 +133,9 @@ public class Utils {
             BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream()));
             String result;
             while ((result = reader.readLine()) != null) {
-                String a = result.replace("red", Colors.RED + "✘" + Colors.NORMAL).replace("green", Colors.DARK_GREEN + "✓" + Colors.NORMAL).replace("[", "").replace("]", "");
+                String a = result.replace(",{\"login.minecraft.net\":\"red\"}","").replace("red", Colors.RED + "✘" + Colors.NORMAL).replace("green", Colors.DARK_GREEN + "✓" + Colors.NORMAL).replace("[", "").replace("]", "");
                 String b = a.replace("{", "").replace("}", "").replace(":", ": ").replace("\"", "").replaceAll(",", " | ");
-                returns = b.replace("login.minecraft.net", "Legacy Login").replace("session.minecraft.net", "Legacy Session").replace("account.mojang.com", "Account").replace("auth.mojang.com", "Auth").replace("skins.minecraft.net", "Skins").replace("authserver.mojang.com", "Auth Server").replace("sessionserver.mojang.com", "Session Server").replace("minecraft.net", "Minecraft");
+                returns = b.replace("session.minecraft.net", "Legacy Session").replace("account.mojang.com", "Account").replace("auth.mojang.com", "Auth").replace("skins.minecraft.net", "Skins").replace("authserver.mojang.com", "Auth Server").replace("sessionserver.mojang.com", "Session Server").replace("minecraft.net", "Minecraft");
             }
             reader.close();
         } catch (IOException e) {
@@ -224,7 +225,7 @@ public class Utils {
             JsonElement jelement = new JsonParser().parse(json);
             JsonObject output = jelement.getAsJsonObject();
             output = output.getAsJsonObject("responseData").getAsJsonArray("results").get(0).getAsJsonObject();
-            String result = String.format("Google: %s | %s | [ %s ]", StringEscapeUtils.unescapeHtml4(output.get("titleNoFormatting").toString().replaceAll("\"", "")), StringEscapeUtils.unescapeHtml4(output.get("content").toString().replaceAll("\\s+", " ").replaceAll("\\<.*?>", "").replaceAll("\"", "").replaceAll("\\\\n", "")), output.get("url").toString().replaceAll("\"", ""));
+            String result = String.format("Google: %s | %s | [ %s ]", StringEscapeUtils.unescapeHtml4(output.get("titleNoFormatting").toString().replaceAll("\"", "")), StringEscapeUtils.unescapeHtml4(output.get("content").toString().replaceAll("\\s+", " ").replaceAll("\\<.*?>", "").replaceAll("\"", "").replaceAll("\\\\n", "")), Utils.shortenUrl(output.get("url").toString().replaceAll("\"", "")));
             if (result != null) {
                 return result;
             } else {
@@ -342,9 +343,10 @@ public class Utils {
     public static String getCompliment() {
         String compliment = null;
         try {
+            Random random = new Random();
             Document doc = Jsoup.connect("http://www.chainofgood.co.uk/passiton").userAgent("Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/537.17 (KHTML, like Gecko) Chrome/24.0.1312.57 Safari/537.17").get();
             Elements medium = doc.select(".medium");
-            compliment = medium.first().toString().replaceAll("<.*?>", "");
+            compliment = medium.get(random.nextInt(medium.size())).toString().replaceAll("<[^>]*>", "");
         } catch (Exception e) {
             e.printStackTrace();
         }
