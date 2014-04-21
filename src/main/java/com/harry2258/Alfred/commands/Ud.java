@@ -27,13 +27,20 @@ public class Ud extends Command {
     public boolean execute(MessageEvent event) throws Exception {
         StringBuilder sb = new StringBuilder();
         String[] args = event.getMessage().split(" ");
-
-        for (int i = 1; i < args.length; i++) {
-            sb.append(args[i]).append(" ");
+        int id = 0;
+        if (event.getMessage().contains(", ")) {
+            for (int i = 1; i < args.length - 1; i++) {
+                sb.append(args[i].replaceAll(",", "")).append(" ");
+            }
+            id = Integer.parseInt(event.getMessage().replaceAll(".*(?:, )", "")) - 1;
+        } else {
+            for (int i = 1; i < args.length; i++) {
+                sb.append(args[i]).append(" ");
+            }
         }
 
         String Word = sb.toString().trim();
-        String link = "http://api.urbandictionary.com/v0/define?term=" + Word.replaceAll(" ","%20");
+        String link = "http://api.urbandictionary.com/v0/define?term=" + Word.replaceAll(" ", "%20");
         String result = "";
         try {
             URL Urban = new URL(link);
@@ -42,16 +49,24 @@ public class Ud extends Command {
             result = first.readLine();
             String json1 = result.replaceAll("\n", " ");
             JSONObject jsonObj = new JSONObject(json1);
-            if (jsonObj.get("result_type").equals("no_results")){
+            if (jsonObj.get("result_type").equals("no_results")) {
                 event.getChannel().send().message("Could not find \"" + Word + "\" on Urban Dictionary :(");
                 return true;
             }
-            String definition = jsonObj.getJSONArray("list").getJSONObject(0).getString("definition").replaceAll("\\n|\\r|\\t", " ");
-            String example = jsonObj.getJSONArray("list").getJSONObject(0).getString("example").replaceAll("\\n|\\r|\\t", " ");
-            String permalink = jsonObj.getJSONArray("list").getJSONObject(0).getString("permalink");
+            String definition = "";
+            String example = "";
+            String permalink = "";
+            try {
+                definition = jsonObj.getJSONArray("list").getJSONObject(id).getString("definition").replaceAll("\\n|\\r|\\t", " ");
+                example = jsonObj.getJSONArray("list").getJSONObject(id).getString("example").replaceAll("\\n|\\r|\\t", " ");
+                permalink = jsonObj.getJSONArray("list").getJSONObject(id).getString("permalink");
+            } catch (Exception x) {
+                event.getChannel().send().message("Could not get #" + id + " definition for the word '" + Word + "'");
+                return true;
+            }
             String info = "";
             String Example;
-            if (example.length() > 220) {
+            if (definition.length() > 220) {
                 int maxLengthDef = (definition.length() < 220) ? definition.length() : 220;
                 info = definition.substring(0, maxLengthDef) + "...";
             } else {
@@ -64,7 +79,7 @@ public class Ud extends Command {
                 Example = example;
             }
             event.getChannel().send().message(Colors.BOLD + "Def: " + Colors.NORMAL + info + " | " + Colors.BOLD + "Ex: " + Colors.NORMAL + example + " [ " + permalink + " ]");
-        }catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
             return false;
         }
