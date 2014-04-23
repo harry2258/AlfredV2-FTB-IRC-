@@ -122,15 +122,15 @@ public class Log extends Command {
                         info.add(temp);
                     }
                 } else if (tmp.contains("Caused by")) {
-                    CausedBy = Colors.BOLD + "Caused by: " + Colors.NORMAL + tmp.replaceAll("Caused by: ", "");
+                    CausedBy = Colors.BOLD + "Caused by: " + Colors.NORMAL + tmp.replaceAll("Caused by: ", "").replaceAll("^.*?(?=[A-Z][a-z])", "").replaceAll("\\\\[.*?\\\\]", "");
                 } else if (tmp.contains("Description: ")) {
                     String harhar = readString(url.openStream()).replaceAll("\\n|\\r|\\t", " ");
                     System.out.println(harhar.replaceAll(".*(?:" + tmp + ")|at.*", "").trim());
-                    CausedBy = Colors.BOLD + "Error: " + Colors.NORMAL + harhar.replaceAll(".*(?:" + tmp + ")|at.*", "").trim();
-                    Description = Colors.BOLD + "Description: " + Colors.NORMAL + tmp.replaceAll("Description: ", "");
+                    CausedBy = Colors.BOLD + "Error: " + Colors.NORMAL + harhar.replaceAll(".*(?:" + tmp + ")|at.*", "").replaceAll("^.*?(?=[A-Z][a-z])", "").replaceAll("\\\\[.*?\\\\]", "").trim();
+                    Description = Colors.BOLD + "Description: " + Colors.NORMAL + tmp.replaceAll("Description: ", "").replaceAll("^.*?(?=[A-Z][a-z])", "").replaceAll("\\\\[.*?\\\\]", "");
                 } else if (tmp.contains("Stacktrace:")) {
                     String harhar = readString(url.openStream()).replaceAll("\\n|\\r|\\t", " ");
-                    Stacktrace = Colors.BOLD + "Stacktrace: " + Colors.NORMAL + harhar.replaceAll(".*(?:Stacktrace:)|\\)   at.*", "").replaceAll("   ", "") + ")";
+                    Stacktrace = Colors.BOLD + "Stacktrace: " + Colors.NORMAL + harhar.replaceAll("^.*?(?=[A-Z][a-z])", "").replaceAll("\\\\[.*?\\\\]", "").replaceAll(".*(?:Stacktrace:)|\\)   at.*", "").replaceAll("   ", "") + ")";
                 }
 
             }
