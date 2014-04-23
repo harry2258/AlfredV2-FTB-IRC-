@@ -105,6 +105,7 @@ public class Main {
             builder.getListenerManager().addListener(new PartEvent(config, manager));
             builder.getListenerManager().addListener(new ActionEvent(config, manager));
             builder.getListenerManager().addListener(new KickEvent(config, manager));
+            builder.getListenerManager().addListener(new Disconnect(config, manager));
 
             System.out.println("------Permissions------");
             for (String channel : config.getChannels()) {
@@ -136,7 +137,6 @@ public class Main {
             if (config.UpdaterChecker()) {
                 new Thread(new Update(bot, config)).start();
             }
-
             bot.startBot();
             System.out.println("Shutting down");
             System.exit(1);

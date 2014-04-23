@@ -18,6 +18,7 @@ public class ChatSocketListener extends Thread {
         this.bot = bot;
         System.out.println("Starting chat socket listener on port " + port);
     }
+
     private static volatile boolean isRunning = true;
 
     public void run() {

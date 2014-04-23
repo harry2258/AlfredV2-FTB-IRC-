@@ -1,6 +1,7 @@
 package com.harry2258.Alfred.commands;
 
-import com.harry2258.Alfred.Misc.*;
+import com.harry2258.Alfred.Misc.Reddit;
+import com.harry2258.Alfred.Misc.Twitter;
 import com.harry2258.Alfred.api.Command;
 import com.harry2258.Alfred.api.Config;
 import com.harry2258.Alfred.api.PermissionManager;

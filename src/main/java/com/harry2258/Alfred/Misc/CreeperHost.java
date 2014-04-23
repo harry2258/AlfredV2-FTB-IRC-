@@ -242,7 +242,7 @@ public class CreeperHost extends Thread {
 
         event.getChannel().send().message(sendMessage);
         final long endTime = System.currentTimeMillis();
-        Double time = (double)(endTime - startTime) / 1000;
+        Double time = (double) (endTime - startTime) / 1000;
         event.getUser().send().notice("Took me " + time + " seconds");
 
     }

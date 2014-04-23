@@ -46,28 +46,31 @@ public class Exec extends Command {
     public boolean execute(MessageEvent event) {
         try {
             if (PermissionManager.hasExec(event.getUser(), event)) {
-                if(!(event.getMessage().toLowerCase().contains("processbuilder") || event.getMessage().toLowerCase().contains("runtime") || event.getMessage().toLowerCase().contains("process") || event.getMessage().toLowerCase().contains("system.getproperty"))) {
-                String[] args = event.getMessage().split(" ");
-                StringBuilder sb = new StringBuilder();
-                if (args.length >= 2) {
-                    try {
-                        interpreter.set("event", event);
-                        interpreter.set("bot", event.getBot());
-                        interpreter.set("chan", event.getChannel());
-                        interpreter.set("user", event.getUser());
-                        for (int i = 1; i < args.length; i++) {
-                            sb.append(args[i]).append(" ");
+                if (!(event.getMessage().toLowerCase().contains("processbuilder") || event.getMessage().toLowerCase().contains("runtime") || event.getMessage().toLowerCase().contains("process") || event.getMessage().toLowerCase().contains("system.getproperty"))) {
+                    String[] args = event.getMessage().split(" ");
+                    StringBuilder sb = new StringBuilder();
+                    if (args.length >= 2) {
+                        try {
+                            interpreter.set("event", event);
+                            interpreter.set("bot", event.getBot());
+                            interpreter.set("chan", event.getChannel());
+                            interpreter.set("user", event.getUser());
+                            for (int i = 1; i < args.length; i++) {
+                                sb.append(args[i]).append(" ");
+                            }
+                            String command = sb.toString().trim();
+                            interpreter.eval(command);
+                            return true;
+                        } catch (EvalError ex) {
+                            Logger.getLogger(Exec.class.getName()).log(Level.SEVERE, null, ex);
+                            event.getChannel().send().message(ex.toString());
+                            return true;
                         }
-                        String command = sb.toString().trim();
-                        interpreter.eval(command);
-                        return true;
-                    } catch (EvalError ex) {
-                        Logger.getLogger(Exec.class.getName()).log(Level.SEVERE, null, ex);
-                        event.getChannel().send().message(ex.toString());
-                        return true;
                     }
                 }
-            }}else{event.getChannel().send().message("system shell & file property access is prohibited!");}
+            } else {
+                event.getChannel().send().message("system shell & file property access is prohibited!");
+            }
         } catch (Exception ex) {
             Logger.getLogger(Exec.class.getName()).log(Level.SEVERE, null, ex);
             event.getChannel().send().message(ex.getMessage());

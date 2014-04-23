@@ -154,7 +154,7 @@ public class Add extends Command {
                         if (!jsonObj.getJSONObject("Perms").getString("Everyone").contains(command)) {
                             jsonObj.getJSONObject("Perms").append("Everyone", command);
                             JsonUtils.writeJsonFile(file, jsonObj.toString());
-                            event.getUser().send().notice("Moderators are now able to use the command '" + args[2] + "'");
+                            event.getUser().send().notice("Everyone is now able to use the command '" + args[2] + "'");
                             String perms = JsonUtils.getStringFromFile(Jsonfile);
                             Main.map.put(event.getChannel().getName(), perms);
                             event.getUser().send().notice("Reloaded Permissions");

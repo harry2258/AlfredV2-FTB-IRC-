@@ -40,7 +40,7 @@ public class Log extends Command {
         String Description = "";
         String CausedBy = "";
         String Stacktrace = "";
-        String OS = "32-Bit";
+        String OS = "32-Bit ";
 
         for (String word : event.getMessage().split(" ")) {
             if (word.toLowerCase().contains("pastebin.com")) {
@@ -114,17 +114,17 @@ public class Log extends Command {
                     if (!info.contains(temp) && jsonObj.getBoolean("Modded")) {
                         info.add(temp);
                     }
-                } else if (tmp.contains("\\Program Files (x86)\\")){
-                    OS = "64-Bit";
+                } else if (tmp.contains("\\Program Files (x86)\\")) {
+                    OS = "64-Bit ";
                 } else if (tmp.contains("Operating System: ") || tmp.contains("OS: ")) {
-                    temp = Colors.BOLD + "OS: "+ Colors.NORMAL  + OS  + tmp.replaceAll("^.*?(?=[A-Z][a-z])", "").replaceAll("\\\\[.*?\\\\]", "").replaceAll(".*(?:Operating System: )|.*(?:OS: )", "").replaceAll("x86", "").replaceAll("x64", "");
+                    temp = Colors.BOLD + "OS: " + Colors.NORMAL + OS + tmp.replaceAll("^.*?(?=[A-Z][a-z])", "").replaceAll("\\\\[.*?\\\\]", "").replaceAll(".*(?:Operating System: )|.*(?:OS: )", "").replaceAll("x86", "").replaceAll("x64", "");
                     if (!info.contains(temp) && jsonObj.getBoolean("OSName")) {
                         info.add(temp);
                     }
                 } else if (tmp.contains("Caused by")) {
                     CausedBy = Colors.BOLD + "Caused by: " + Colors.NORMAL + tmp.replaceAll("Caused by: ", "");
                 } else if (tmp.contains("Description: ")) {
-                    String harhar = readString(url.openStream()).replaceAll("\\n|\\r", " ");
+                    String harhar = readString(url.openStream()).replaceAll("\\n|\\r|\\t", " ");
                     System.out.println(harhar.replaceAll(".*(?:" + tmp + ")|at.*", "").trim());
                     CausedBy = Colors.BOLD + "Error: " + Colors.NORMAL + harhar.replaceAll(".*(?:" + tmp + ")|at.*", "").trim();
                     Description = Colors.BOLD + "Description: " + Colors.NORMAL + tmp.replaceAll("Description: ", "");
@@ -132,7 +132,6 @@ public class Log extends Command {
                     String harhar = readString(url.openStream()).replaceAll("\\n|\\r|\\t", " ");
                     Stacktrace = Colors.BOLD + "Stacktrace: " + Colors.NORMAL + harhar.replaceAll(".*(?:Stacktrace:)|\\)   at.*", "").replaceAll("   ", "") + ")";
                 }
-                //webpage += tmp;
 
             }
             for (String anInfo : info) {
@@ -149,7 +148,7 @@ public class Log extends Command {
             event.getChannel().send().message(message);
             if (!Description.isEmpty()) {
                 if (jsonObj.getBoolean("Information")) {
-                event.getChannel().send().message(Description);
+                    event.getChannel().send().message(Description);
                 } else {
                     event.getUser().send().message(Description);
                 }
@@ -157,7 +156,7 @@ public class Log extends Command {
 
             if (!CausedBy.isEmpty()) {
                 if (jsonObj.getBoolean("Information")) {
-                event.getChannel().send().message(CausedBy);
+                    event.getChannel().send().message(CausedBy);
                 } else {
                     event.getUser().send().message(CausedBy);
                 }
@@ -165,7 +164,7 @@ public class Log extends Command {
 
             if (!Stacktrace.isEmpty()) {
                 if (jsonObj.getBoolean("Stacktrace")) {
-                event.getChannel().send().message(Stacktrace);
+                    event.getChannel().send().message(Stacktrace);
                 } else {
                     event.getUser().send().message(Stacktrace);
                 }

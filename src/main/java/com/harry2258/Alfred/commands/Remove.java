@@ -33,8 +33,7 @@ public class Remove extends Command {
         String Jsonfile = file.toString();
         String[] args = event.getMessage().split(" ");
         String type = args[1];
-
-
+        ArrayList<String> temp = new ArrayList<>();
         if (type.equalsIgnoreCase("mod")) {
             System.out.println("Removing user from " + Jsonfile);
             if (args.length == 3) {
@@ -51,25 +50,20 @@ public class Remove extends Command {
                 try {
                     String strFileJson = JsonUtils.getStringFromFile(Jsonfile);
                     JSONObject jsonObj = new JSONObject(strFileJson);
-                    ArrayList<String> tests = new ArrayList<String>();
-                    ArrayList<String> testss = new ArrayList<String>();
                     if (jsonObj.getJSONObject("Perms").getString("Mods").contains(mod)) {
-                        String test = jsonObj.getJSONObject("Perms").getJSONArray("Mods").toString();
-                        jsonObj.getJSONObject("Perms").remove("Mods");
-                        String string = test.replace(",\"" + mod + "\"", "").replace("\"", "").replaceAll("]", "").replace("[", "");
-                        String newstring = string.replaceAll(",", " ");
-                        String[] finalstring = newstring.split(" ");
-
-                        for (String aFinalstring : finalstring) {
-                            jsonObj.getJSONObject("Perms").append("Mods", aFinalstring);
-
+                        for (int i = 0, length = jsonObj.getJSONObject("Perms").getJSONArray("Mods").length(); i < length; i++) {
+                            temp.add(jsonObj.getJSONObject("Perms").getJSONArray("Mods").get(i).toString());
                         }
+                        temp.remove(mod);
+                        jsonObj.getJSONObject("Perms").remove("Mods");
+                        jsonObj.getJSONObject("Perms").put("Mods", temp);
 
                         JsonUtils.writeJsonFile(file, jsonObj.toString());
                         event.getUser().send().notice(args[2] + " is no longer a Moderator for channel " + event.getChannel().getName());
                         String perms = JsonUtils.getStringFromFile(Jsonfile);
                         Main.map.put(event.getChannel().getName(), perms);
                         event.getUser().send().notice("Reloaded Permissions");
+                        temp.clear();
                         return true;
                     } else {
                         event.getChannel().send().message(args[2] + " is not on the list!");
@@ -95,17 +89,12 @@ public class Remove extends Command {
                     String strFileJson = JsonUtils.getStringFromFile(Jsonfile);
                     JSONObject jsonObj = new JSONObject(strFileJson);
                     if (jsonObj.getJSONObject("Perms").getString("ModPerms").contains(command)) {
-                        String test = jsonObj.getJSONObject("Perms").getJSONArray("ModPerms").toString();
-                        jsonObj.getJSONObject("Perms").remove("ModPerms");
-                        String string = test.replace(",\"" + command + "\"", "").replace("\"", "").replaceAll("]", "").replace("[", "");
-                        String newstring = string.replaceAll(",", " ");
-                        String[] finalstring = newstring.split(" ");
-
-                        for (String aFinalstring : finalstring) {
-                            jsonObj.getJSONObject("Perms").append("ModPerms", aFinalstring);
-
+                        for (int i = 0, length = jsonObj.getJSONObject("Perms").getJSONArray("ModPerms").length(); i < length; i++) {
+                            temp.add(jsonObj.getJSONObject("Perms").getJSONArray("ModPerms").get(i).toString());
                         }
-
+                        temp.remove(command);
+                        jsonObj.getJSONObject("Perms").remove("ModPerms");
+                        jsonObj.getJSONObject("Perms").put("ModPerms", temp);
                         JsonUtils.writeJsonFile(file, jsonObj.toString());
                         event.getUser().send().notice("Moderators can no longer use the command '" + args[2] + "'");
                         String perms = JsonUtils.getStringFromFile(Jsonfile);
@@ -138,16 +127,12 @@ public class Remove extends Command {
                     String strFileJson = JsonUtils.getStringFromFile(Jsonfile);
                     JSONObject jsonObj = new JSONObject(strFileJson);
                     if (jsonObj.getJSONObject("Perms").getString("Admins").contains(mod)) {
-                        String test = jsonObj.getJSONObject("Perms").getJSONArray("Admins").toString();
-                        jsonObj.getJSONObject("Perms").remove("Admins");
-                        String string = test.replace(",\"" + mod + "\"", "").replace("\"", "").replaceAll("]", "").replace("[", "");
-                        String newstring = string.replaceAll(",", " ");
-                        String[] finalstring = newstring.split(" ");
-
-                        for (String aFinalstring : finalstring) {
-                            jsonObj.getJSONObject("Perms").append("Admins", aFinalstring);
-
+                        for (int i = 0, length = jsonObj.getJSONObject("Perms").getJSONArray("Admins").length(); i < length; i++) {
+                            temp.add(jsonObj.getJSONObject("Perms").getJSONArray("Admins").get(i).toString());
                         }
+                        temp.remove(mod);
+                        jsonObj.getJSONObject("Perms").remove("Admins");
+                        jsonObj.getJSONObject("Perms").put("Admins", temp);
 
                         JsonUtils.writeJsonFile(file, jsonObj.toString());
                         event.getUser().send().notice(args[2] + " is no longer an Admin for channel " + event.getChannel().getName());
@@ -179,16 +164,12 @@ public class Remove extends Command {
                     String strFileJson = JsonUtils.getStringFromFile(Jsonfile);
                     JSONObject jsonObj = new JSONObject(strFileJson);
                     if (jsonObj.getJSONObject("Perms").getString("Everyone").contains(command)) {
-                        String test = jsonObj.getJSONObject("Perms").getJSONArray("Everyone").toString();
-                        jsonObj.getJSONObject("Perms").remove("Everyone");
-                        String string = test.replace(",\"" + command + "\"", "").replace("\"", "").replaceAll("]", "").replace("[", "");
-                        String newstring = string.replaceAll(",", " ");
-                        String[] finalstring = newstring.split(" ");
-
-                        for (String aFinalstring : finalstring) {
-                            jsonObj.getJSONObject("Perms").append("Everyone", aFinalstring);
-
+                        for (int i = 0, length = jsonObj.getJSONObject("Perms").getJSONArray("Everyone").length(); i < length; i++) {
+                            temp.add(jsonObj.getJSONObject("Perms").getJSONArray("Everyone").get(i).toString());
                         }
+                        temp.remove(command);
+                        jsonObj.getJSONObject("Perms").remove("Everyone");
+                        jsonObj.getJSONObject("Perms").put("Everyone", temp);
 
                         JsonUtils.writeJsonFile(file, jsonObj.toString());
                         String strJson = JsonUtils.getStringFromFile(JsonUtils.Jsonfile);
@@ -221,16 +202,12 @@ public class Remove extends Command {
                     String strFileJson = JsonUtils.getStringFromFile(Main.globalperm.toString());
                     JSONObject jsonObj = new JSONObject(strFileJson);
                     if (jsonObj.getString("Permissions").contains(command)) {
-                        String test = jsonObj.getJSONArray("Permissions").toString();
-                        jsonObj.remove("Permissions");
-                        String string = test.replace(",\"" + command + "\"", "").replace("\"", "").replaceAll("]", "").replace("[", "");
-                        String newstring = string.replaceAll(",", " ");
-                        String[] finalstring = newstring.split(" ");
-
-                        for (String aFinalstring : finalstring) {
-                            jsonObj.append("Permissions", aFinalstring);
-
+                        for (int i = 0, length = jsonObj.getJSONArray("Permissions").length(); i < length; i++) {
+                            temp.add(jsonObj.getJSONArray("Permissions").get(i).toString());
                         }
+                        temp.remove(command);
+                        jsonObj.remove("Permissions");
+                        jsonObj.put("Permissions", temp);
 
                         JsonUtils.writeJsonFile(Main.globalperm, jsonObj.toString());
                         event.getUser().send().notice(args[2] + " was removed from the list!");

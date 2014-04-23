@@ -127,23 +127,39 @@ public class Utils {
 
     public static String checkMojangServers() {
         String returns = null;
+
         try {
             URL url;
             url = new URL("https://status.mojang.com/check");
             BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream()));
             String result;
             while ((result = reader.readLine()) != null) {
-                String a = result.replace(",{\"login.minecraft.net\":\"red\"}","").replace("red", Colors.RED + "✘" + Colors.NORMAL).replace("green", Colors.DARK_GREEN + "✓" + Colors.NORMAL).replace("[", "").replace("]", "");
+                String a = result.replace(",{\"login.minecraft.net\":\"red\"}", "").replace("red", Colors.RED + "✘" + Colors.NORMAL).replace("green", Colors.DARK_GREEN + "✓" + Colors.NORMAL).replace("[", "").replace("]", "");
                 String b = a.replace("{", "").replace("}", "").replace(":", ": ").replace("\"", "").replaceAll(",", " | ");
                 returns = b.replace("session.minecraft.net", "Legacy Session").replace("account.mojang.com", "Account").replace("auth.mojang.com", "Auth").replace("skins.minecraft.net", "Skins").replace("authserver.mojang.com", "Auth Server").replace("sessionserver.mojang.com", "Session Server").replace("minecraft.net", "Minecraft");
             }
             reader.close();
         } catch (IOException e) {
             if (e.getMessage().contains("503")) {
-                returns = "The minecraft status server is temporarily unavailable, please try again later";
+                System.out.println("The minecraft status server is temporarily unavailable, please try again later");
             }
-            if (e.getMessage().contains("404")) {
-                returns = "Uhoh, it would appear as if the status page has been removed or relocated >_>";
+
+            String result;
+            try {
+                URL xpaw = new URL("http://xpaw.ru/mcstatus/status.json");
+                URLConnection u = xpaw.openConnection();
+                u.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/537.17 (KHTML, like Gecko) Chrome/24.0.1312.57 Safari/537.17");
+                BufferedReader first = new BufferedReader(new InputStreamReader(u.getInputStream()));
+                result = first.readLine();
+                String json1 = result.replaceAll("\n", " ");
+                JSONObject jsonObj = new JSONObject(json1);
+                returns = ("Session: " + jsonObj.getJSONObject("report").getJSONObject("session").getString("title") +
+                        " | Login: " + jsonObj.getJSONObject("report").getJSONObject("login").getString("title") +
+                        " | Legacy Skins: " + jsonObj.getJSONObject("report").getJSONObject("skins").getString("title") +
+                        " | Website: " + jsonObj.getJSONObject("report").getJSONObject("website").getString("title") +
+                        " | Realms: " + jsonObj.getJSONObject("report").getJSONObject("realms").getString("title")).replaceAll("Online", Colors.DARK_GREEN + "✓" + Colors.NORMAL).replaceAll("Offline", Colors.RED + "✘" + Colors.NORMAL).replaceAll("Server Error", Colors.RED + "Server Error" + Colors.NORMAL);
+            } catch (Exception x) {
+                x.printStackTrace();
             }
 
         }

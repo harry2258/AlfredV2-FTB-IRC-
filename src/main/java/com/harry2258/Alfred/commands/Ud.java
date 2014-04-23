@@ -64,7 +64,7 @@ public class Ud extends Command {
                 event.getChannel().send().message("Could not get #" + id + " definition for the word '" + Word + "'");
                 return true;
             }
-            String info = "";
+            String info;
             String Example;
             if (definition.length() > 220) {
                 int maxLengthDef = (definition.length() < 220) ? definition.length() : 220;
@@ -78,7 +78,7 @@ public class Ud extends Command {
             } else {
                 Example = example;
             }
-            event.getChannel().send().message(Colors.BOLD + "Def: " + Colors.NORMAL + info + " | " + Colors.BOLD + "Ex: " + Colors.NORMAL + example + " [ " + permalink + " ]");
+            event.getChannel().send().message(Colors.BOLD + "Def: " + Colors.NORMAL + info + " | " + Colors.BOLD + "Ex: " + Colors.NORMAL + Example + " [ " + permalink + " ]");
         } catch (Exception e) {
             e.printStackTrace();
             return false;
