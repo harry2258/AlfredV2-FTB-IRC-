@@ -82,10 +82,8 @@ public class CreeperHost extends Thread {
                     if (ChReposlist.isEmpty()) {
                         event.getUser().send().notice("Could not connect to new.creeperrepo.net, getting edges from edges.json");
                         try {
-                            String temp;
                             String edgesjson = JsonUtils.getStringFromFile(System.getProperty("user.dir") + "/edges.json");
                             Json = JsonUtils.isJSONObject(edgesjson);
-                            temp = edgesjson.replace("{", "").replace("}", "").replace("\"", "");
                             String[] splitString = edgesjson.split(",");
                             for (String entry : splitString) {
                                 String[] splitEntry = entry.split(":");

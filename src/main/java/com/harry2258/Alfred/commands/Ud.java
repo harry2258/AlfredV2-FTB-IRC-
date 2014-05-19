@@ -57,8 +57,8 @@ public class Ud extends Command {
             String example = "";
             String permalink = "";
             try {
-                definition = jsonObj.getJSONArray("list").getJSONObject(id).getString("definition").replaceAll("\\n|\\r|\\t", " ");
-                example = jsonObj.getJSONArray("list").getJSONObject(id).getString("example").replaceAll("\\n|\\r|\\t", " ");
+                definition = jsonObj.getJSONArray("list").getJSONObject(id).getString("definition").replaceAll("\\n|\\r|\\t", " ").replaceAll("  ", " ");
+                example = jsonObj.getJSONArray("list").getJSONObject(id).getString("example").replaceAll("\\n|\\r|\\t", " ").replaceAll("  ", " ");
                 permalink = jsonObj.getJSONArray("list").getJSONObject(id).getString("permalink");
             } catch (Exception x) {
                 event.getChannel().send().message("Could not get #" + id + " definition for the word '" + Word + "'");
@@ -66,18 +66,21 @@ public class Ud extends Command {
             }
             String info;
             String Example;
-            if (definition.length() > 220) {
+            if (definition.length() > 200) {
                 int maxLengthDef = (definition.length() < 220) ? definition.length() : 220;
                 info = definition.substring(0, maxLengthDef) + "...";
             } else {
                 info = definition;
             }
-            if (example.length() > 220) {
-                int maxLengthEx = (example.length() < 220) ? example.length() : 220;
+
+            if (example.length() > 200) {
+                int maxLengthEx = (example.length() < 200) ? example.length() : 200;
                 Example = example.substring(0, maxLengthEx) + "...";
+                System.out.println(Example);
             } else {
                 Example = example;
             }
+
             event.getChannel().send().message(Colors.BOLD + "Def: " + Colors.NORMAL + info + " | " + Colors.BOLD + "Ex: " + Colors.NORMAL + Example + " [ " + permalink + " ]");
         } catch (Exception e) {
             e.printStackTrace();

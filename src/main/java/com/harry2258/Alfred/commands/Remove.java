@@ -60,8 +60,7 @@ public class Remove extends Command {
 
                         JsonUtils.writeJsonFile(file, jsonObj.toString());
                         event.getUser().send().notice(args[2] + " is no longer a Moderator for channel " + event.getChannel().getName());
-                        String perms = JsonUtils.getStringFromFile(Jsonfile);
-                        Main.map.put(event.getChannel().getName(), perms);
+                        Main.map.put(event.getChannel().getName(), JsonUtils.getStringFromFile(Jsonfile));
                         event.getUser().send().notice("Reloaded Permissions");
                         temp.clear();
                         return true;
@@ -97,8 +96,7 @@ public class Remove extends Command {
                         jsonObj.getJSONObject("Perms").put("ModPerms", temp);
                         JsonUtils.writeJsonFile(file, jsonObj.toString());
                         event.getUser().send().notice("Moderators can no longer use the command '" + args[2] + "'");
-                        String perms = JsonUtils.getStringFromFile(Jsonfile);
-                        Main.map.put(event.getChannel().getName(), perms);
+                        Main.map.put(event.getChannel().getName(), JsonUtils.getStringFromFile(Jsonfile));
                         event.getUser().send().notice("Reloaded Permissions");
                         return true;
                     } else {
@@ -136,8 +134,7 @@ public class Remove extends Command {
 
                         JsonUtils.writeJsonFile(file, jsonObj.toString());
                         event.getUser().send().notice(args[2] + " is no longer an Admin for channel " + event.getChannel().getName());
-                        String perms = JsonUtils.getStringFromFile(Jsonfile);
-                        Main.map.put(event.getChannel().getName(), perms);
+                        Main.map.put(event.getChannel().getName(), JsonUtils.getStringFromFile(Jsonfile));
                         event.getUser().send().notice("Reloaded Permissions");
                         return true;
                     } else {
@@ -174,8 +171,7 @@ public class Remove extends Command {
                         JsonUtils.writeJsonFile(file, jsonObj.toString());
                         String strJson = JsonUtils.getStringFromFile(JsonUtils.Jsonfile);
                         event.getUser().send().notice("Regular users can no longer use the command '" + args[2] + "'");
-                        String perms = JsonUtils.getStringFromFile(Jsonfile);
-                        Main.map.put(event.getChannel().getName(), perms);
+                        Main.map.put(event.getChannel().getName(), JsonUtils.getStringFromFile(Jsonfile));
                         event.getUser().send().notice("Reloaded Permissions");
                         return true;
                     } else {

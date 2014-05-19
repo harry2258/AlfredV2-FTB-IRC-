@@ -31,6 +31,7 @@ public class MessageEvent extends ListenerAdapter {
         String[] args = event.getMessage().split(" ");
         Date date = new Date();
         final String eventuser = event.getUser().getNick();
+        String Ruser;
 
         if (!Main.Login.containsKey(eventuser)) {
             if (event.getUser().isVerified()) {
@@ -45,6 +46,25 @@ public class MessageEvent extends ListenerAdapter {
 
         if (event.getMessage().equalsIgnoreCase("prefix")) {
             event.getUser().send().notice("The prefix is: " + config.getTrigger());
+        }
+
+        if (Main.Login.containsKey(eventuser)) {
+            Ruser = Main.Login.get(eventuser);
+        } else {
+            Ruser = eventuser;
+        }
+
+        String login = System.getProperty("user.dir") + "/Reminders/" + Ruser + ".txt";
+        File reminder = new File(login);
+        if (reminder.exists()) {
+            BufferedReader in = new BufferedReader(new FileReader(reminder));
+            String tmp;
+            event.getUser().send().notice("=========Reminders=========");
+            while ((tmp = in.readLine()) != null) {
+                event.getUser().send().notice(tmp);
+            }
+            in.close();
+            reminder.delete();
         }
 
         if (event.getMessage().startsWith(trigger) && !Ignore.ignored.contains(Main.Login.get(eventuser))) {
@@ -99,15 +119,24 @@ public class MessageEvent extends ListenerAdapter {
 
                     String classname = Character.toUpperCase(event.getMessage().split(" ")[0].charAt(1)) + event.getMessage().split(" ")[0].substring(2).toLowerCase();
                     String permission = "command." + classname.toLowerCase();
+                    String name = "";
+                    Boolean exist = false;
+                    if (new File("plugins/" + classname + ".bsh").exists()) {
+                        name = classname;
+                        exist = true;
+                    } else if (new File("plugins/" + classname.toLowerCase() + ".bsh").exists()) {
+                        name = classname.toLowerCase();
+                        exist = true;
+                    }
 
-                    if (new File("plugins/" + classname + ".bsh").exists() || new File("plugins/" + classname.toLowerCase() + ".bsh").exists() && manager.hasPermission(permission, event.getUser(), event.getChannel(), event)) {
+                    if (exist && manager.hasPermission(permission, event.getUser(), event.getChannel(), event)) {
                         try {
 
                             interpreter.set("event", event);
                             interpreter.set("bot", event.getBot());
                             interpreter.set("chan", event.getChannel());
                             interpreter.set("user", event.getUser());
-                            interpreter.eval(String.format("source(\"plugins/%s.bsh\")", classname));
+                            interpreter.eval(String.format("source(\"plugins/%s.bsh\")", name));
                         } catch (EvalError ex) {
                             ex.printStackTrace();
                             event.respond(ex.getLocalizedMessage());
@@ -184,27 +213,6 @@ public class MessageEvent extends ListenerAdapter {
 
         if (event.getMessage().equalsIgnoreCase("Im better than alfred")) {
             event.getChannel().send().message(eventuser + ", It's good to dream big");
-        }
-
-        String Ruser = null;
-
-        if (Main.Login.containsKey(eventuser)) {
-            Ruser = Main.Login.get(eventuser);
-        } else {
-            Ruser = eventuser;
-        }
-
-        String login = System.getProperty("user.dir") + "/Reminders/" + Ruser + ".txt";
-        File reminder = new File(login);
-        if (reminder.exists()) {
-            BufferedReader in = new BufferedReader(new FileReader(reminder));
-            String tmp;
-            event.getUser().send().notice("=========Reminders=========");
-            while ((tmp = in.readLine()) != null) {
-                event.getUser().send().notice(tmp);
-            }
-            in.close();
-            reminder.delete();
         }
 
         //Copy from old Alphabot :3

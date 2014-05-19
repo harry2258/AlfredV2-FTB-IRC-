@@ -93,7 +93,7 @@ public class Main {
             builder.setFinger(config.getCtcpFinger());
             builder.setEncoding(Charset.isSupported("UTF-8") ? Charset.forName("UTF-8") : Charset.defaultCharset());
             builder.setNickservPassword(config.getBotPassword());
-            builder.setVersion("2.2.3");
+            builder.setVersion("2.2.5");
             builder.setServer(config.getServerHostame(), Integer.parseInt(config.getServerPort()), config.getServerPassword());
 
             //Gotta listen to 'em
@@ -138,8 +138,6 @@ public class Main {
                 new Thread(new Update(bot, config)).start();
             }
             bot.startBot();
-            System.out.println("Shutting down");
-            System.exit(1);
         } catch (Exception ex) {
             ex.printStackTrace();
             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);

@@ -64,7 +64,7 @@ public class Twitter extends Thread {
                 JSONObject tweetuser = new JSONObject(users);
                 if (Auth.getString("OAuthConsumerKey").isEmpty() | Auth.getString("OAuthConsumerSecret").isEmpty() | Auth.getString("OAuthAccessToken").isEmpty() | Auth.getString("OAuthAccessTokenSecret").isEmpty()) {
                     for (Channel chan : bot.getUserBot().getChannels()) {
-                        chan.send().message("Holy Crap! This is something wrong with your \"oauth.json\" file in Twitter folder.");
+                        chan.send().message("UH-OH!! This is something wrong with your \"oauth.json\" file in Twitter folder.");
                     }
                 }
 

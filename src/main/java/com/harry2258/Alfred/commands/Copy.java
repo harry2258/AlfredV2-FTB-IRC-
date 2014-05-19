@@ -51,6 +51,7 @@ public class Copy extends Command {
             } else {
                 event.getChannel().send().message("There is no custom command by that names in the channel " + targetChan.getName());
             }
+
         } else {
             return false;
         }

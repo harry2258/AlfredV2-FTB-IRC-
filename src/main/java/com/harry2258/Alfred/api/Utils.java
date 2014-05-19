@@ -4,9 +4,11 @@
  */
 package com.harry2258.Alfred.api;
 
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.google.gson.reflect.TypeToken;
 import com.harry2258.Alfred.Main;
 import com.harry2258.Alfred.listeners.MessageEvent;
 import org.apache.commons.lang3.StringEscapeUtils;
@@ -22,13 +24,21 @@ import org.pircbotx.User;
 import org.pircbotx.UserLevel;
 import org.pircbotx.hooks.WaitForQueue;
 import org.pircbotx.hooks.events.WhoisEvent;
+import org.scribe.builder.ServiceBuilder;
+import org.scribe.builder.api.GoogleApi;
+import org.scribe.model.OAuthRequest;
+import org.scribe.model.Response;
+import org.scribe.model.Verb;
+import org.scribe.oauth.OAuthService;
 
 import java.io.*;
+import java.lang.reflect.Type;
 import java.net.*;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Map;
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -127,16 +137,15 @@ public class Utils {
 
     public static String checkMojangServers() {
         String returns = null;
-
         try {
             URL url;
             url = new URL("https://status.mojang.com/check");
             BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream()));
             String result;
             while ((result = reader.readLine()) != null) {
-                String a = result.replace(",{\"login.minecraft.net\":\"red\"}", "").replace("red", Colors.RED + "✘" + Colors.NORMAL).replace("green", Colors.DARK_GREEN + "✓" + Colors.NORMAL).replace("[", "").replace("]", "");
+                String a = result.replace("red", Colors.RED + "✘" + Colors.NORMAL).replace("green", Colors.DARK_GREEN + "✓" + Colors.NORMAL).replace("[", "").replace("]", "");
                 String b = a.replace("{", "").replace("}", "").replace(":", ": ").replace("\"", "").replaceAll(",", " | ");
-                returns = b.replace("session.minecraft.net", "Legacy Session").replace("account.mojang.com", "Account").replace("auth.mojang.com", "Auth").replace("skins.minecraft.net", "Skins").replace("authserver.mojang.com", "Auth Server").replace("sessionserver.mojang.com", "Session Server").replace("minecraft.net", "Minecraft");
+                returns = b.replace("session.minecraft.net", "Legacy Session").replace("account.mojang.com", "Account").replace("auth.mojang.com", "Auth").replace("skins.minecraft.net", "Skins").replace("authserver.mojang.com", "Auth Server").replace("sessionserver.mojang.com", "Session Server").replaceAll("api.mojang.com", "API Server").replaceAll("textures.minecraft.net", "Texture").replace("minecraft.net", "Minecraft");
             }
             reader.close();
         } catch (IOException e) {
@@ -148,6 +157,7 @@ public class Utils {
             try {
                 URL xpaw = new URL("http://xpaw.ru/mcstatus/status.json");
                 URLConnection u = xpaw.openConnection();
+
                 u.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/537.17 (KHTML, like Gecko) Chrome/24.0.1312.57 Safari/537.17");
                 BufferedReader first = new BufferedReader(new InputStreamReader(u.getInputStream()));
                 result = first.readLine();
@@ -167,28 +177,21 @@ public class Utils {
     }
 
     public static String shortenUrl(String longUrl) {
-        String shortened = null;
-        try {
-            URL url;
-            url = new URL("http://is.gd/create.php?format=simple&url=" + longUrl);
-            BufferedReader bufferedreader = new BufferedReader(new InputStreamReader(url.openStream()));
-            shortened = bufferedreader.readLine();
-            bufferedreader.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-            if (e.getMessage().contains("502")) {
-                try {
-                    URL Url;
-                    Url = new URL("http://tinyurl.com/create.php?url=" + longUrl);
-                    BufferedReader br = new BufferedReader(new InputStreamReader(Url.openStream()));
-                    for (int i = 0; i < 125; ++i)
-                        shortened = br.readLine().replaceAll("<.*?>|Open in new window|\\[|]", "");
-                } catch (Exception e1) {
-                    e1.printStackTrace();
-                }
-            }
-        }
-        return shortened;
+        OAuthService oAuthService = new ServiceBuilder()
+                .provider(GoogleApi.class)
+                .apiKey("anonymous")
+                .apiSecret("anonymous")
+                .scope("https://www.googleapis.com/auth/urlshortener")
+                .build();
+        OAuthRequest oAuthRequest = new OAuthRequest(Verb.POST, "https://www.googleapis.com/urlshortener/v1/url");
+        oAuthRequest.addHeader("Content-Type", "application/json");
+        String json = "{\"longUrl\": \"" + longUrl + "\"}";
+        oAuthRequest.addPayload(json);
+        Response response = oAuthRequest.send();
+        Type typeOfMap = new TypeToken<Map<String, String>>() {
+        }.getType();
+        Map<String, String> responseMap = new GsonBuilder().create().fromJson(response.getBody(), typeOfMap);
+        return responseMap.get("id");
     }
 
     public static String checkServerStatus(InetAddress i, int port) {
@@ -445,7 +448,6 @@ public class Utils {
 
     public static String getTime(long time) {
         String dif = null;
-        String hur = String.valueOf(time);
         try {
             DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
 

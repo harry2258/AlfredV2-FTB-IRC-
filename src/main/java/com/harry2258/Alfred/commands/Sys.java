@@ -38,7 +38,6 @@ public class Sys extends Command {
                     SimpleDateFormat format = new SimpleDateFormat("'Statistics since' MM/dd/yyyy hh:mm:ss a");
                     Date boottime = format.parse(line);
                     uptime = System.currentTimeMillis() - boottime.getTime();
-                    //uptime = boottime.getTime();
                     System.out.println(System.currentTimeMillis() + " | " + boottime.getTime());
                 }
             }
@@ -65,7 +64,7 @@ public class Sys extends Command {
                     int days = _days != null ? Integer.parseInt(_days) : 0;
                     int hours = _hours != null ? Integer.parseInt(_hours) : 0;
                     int minutes = _minutes != null ? Integer.parseInt(_minutes) : 0;
-                    uptime = (minutes * 60000) + (hours * 60000 * 60) + (days * 6000 * 60 * 24);
+                    //uptime = (minutes * 60000) + (hours * 60000 * 60) + (days * 6000 * 60 * 24);
                     time = String.format("%d Days, %d Hours, %d Min", days, hours, minutes);
                 }
             }

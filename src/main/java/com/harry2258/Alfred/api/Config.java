@@ -38,6 +38,7 @@ public class Config {
     private String botPassword;
     private String ctcpFinger;
     private String ctcpVersion;
+    private String DBtable;
     private String DBhost;
     private String DBuser;
     private String DBpass;
@@ -48,6 +49,7 @@ public class Config {
     private Properties properties;
     private int chatSocketPort;
     private int UpdateInterval;
+
 
     public void load() {
         try {
@@ -99,12 +101,12 @@ public class Config {
             this.DBHostName(properties.getProperty("Host"));
             this.DBUserName(properties.getProperty("Username"));
             this.DBPassName(properties.getProperty("Password"));
+            this.DB(properties.getProperty("Database"));
 
         } catch (IOException ex) {
             Logger.getLogger(Config.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-
 
     /**
      * @return the debug
@@ -452,6 +454,14 @@ public class Config {
             return true;
         }
         return false;
+    }
+
+    public String Database() {
+        return DBtable;
+    }
+
+    private void DB(String database) {
+        this.DBtable = database;
     }
 
     public String DatabaseHost() {

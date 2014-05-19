@@ -22,7 +22,7 @@ public class Error extends Command {
 
     public Error() {
 
-        super("Error", "Errors Database!");
+        super("Error", "Errors Database!", "Error [Error]");
     }
 
     private static Config config;
@@ -33,9 +33,14 @@ public class Error extends Command {
 
         String[] args = event.getMessage().split(" ");
 
+        if (args.length <= 1) {
+            return false;
+        }
+
         try {
             Class.forName("com.mysql.jdbc.Driver");
             if (args.length == 2 && args[1].equalsIgnoreCase("test")) {
+                event.getUser().send().notice("Trying to connect to datebase!");
                 if (getConnection().isValid(5000)) {
                     event.getChannel().send().message("Connection to database was succesful!");
                 } else {
@@ -104,8 +109,11 @@ public class Error extends Command {
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
-
-        return DriverManager.getConnection("jdbc:mysql://127.0.0.1/alfred", "alfred", "cleverpassword");
+        String host = config.DatabaseHost();
+        String user = config.DatabaseUser();
+        String pass = config.DatabasePass();
+        String database = config.Database();
+        return DriverManager.getConnection("jdbc:mysql://" + host + "/" + database, user, pass);
     }
 
     public void createTables() throws SQLException {
@@ -194,6 +202,8 @@ public class Error extends Command {
                     event.getChannel().send().message(Colors.BOLD + "Suggestion: " + Colors.NORMAL + Sugg.get(i));
 
                 }
+            } else {
+                event.getChannel().send().message("No match found in database!");
             }
         } catch (SQLException ex) {
             System.out.println("SQLException: " + ex.getMessage());

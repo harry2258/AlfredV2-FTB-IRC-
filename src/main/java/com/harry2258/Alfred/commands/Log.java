@@ -20,7 +20,7 @@ import java.util.Scanner;
  */
 public class Log extends Command {
     public Log() {
-        super("Log", "Parse a minecraft error log", "Log [pastebin link]");
+        super("Log", "Parse a minecraft error log", "Log [Crash log link]");
     }
 
     private Config config;
@@ -40,7 +40,6 @@ public class Log extends Command {
         String Description = "";
         String CausedBy = "";
         String Stacktrace = "";
-        String OS = "32-Bit ";
 
         for (String word : event.getMessage().split(" ")) {
             if (word.toLowerCase().contains("pastebin.com")) {
@@ -95,7 +94,7 @@ public class Log extends Command {
                         info.add(temp);
                     }
                 } else if (tmp.contains("Minecraft Version:")) {
-                    temp = Colors.BOLD + "Minecraft Version: " + Colors.NORMAL + tmp.replaceAll("^.*?(?=[A-Z][a-z])", "").replaceAll("\\\\[.*?\\\\]", "").replace("Minecraft Version: ", "");
+                    temp = Colors.BOLD + "Minecraft Version: " + Colors.NORMAL + tmp.replaceAll("^.*?(?=[A-Z][a-z])", "").replaceAll("\\\\[.*?\\\\]", "").replaceAll(".*(?:Minecraft Version: )", "");
                     if (!info.contains(temp) && jsonObj.getBoolean("MCVersion")) {
                         info.add(temp);
                     }
@@ -105,7 +104,7 @@ public class Log extends Command {
                         info.add(temp);
                     }
                 } else if (tmp.contains("Is Modded: ")) {
-                    temp = Colors.BOLD + "Client Brand: " + Colors.NORMAL + tmp.replaceAll("^.*?(?=[A-Z][a-z])", "").replaceAll("\\\\[.*?\\\\]", "").replace("Is Modded: Definitely; Client brand changed to ", "");
+                    temp = Colors.BOLD + "Client Brand: " + Colors.NORMAL + tmp.replaceAll("^.*?(?=[A-Z][a-z])", "").replaceAll("\\\\[.*?\\\\]", "").replaceAll(".*(?:Is Modded: Definitely; Client brand changed to )", "");
                     if (!info.contains(temp) && jsonObj.getBoolean("Modded")) {
                         info.add(temp);
                     }
@@ -114,26 +113,25 @@ public class Log extends Command {
                     if (!info.contains(temp) && jsonObj.getBoolean("Modded")) {
                         info.add(temp);
                     }
-                } else if (tmp.contains("\\Program Files (x86)\\")) {
-                    OS = "64-Bit ";
                 } else if (tmp.contains("Operating System: ") || tmp.contains("OS: ")) {
-                    temp = Colors.BOLD + "OS: " + Colors.NORMAL + OS + tmp.replaceAll("^.*?(?=[A-Z][a-z])", "").replaceAll("\\\\[.*?\\\\]", "").replaceAll(".*(?:Operating System: )|.*(?:OS: )", "").replaceAll("x86", "").replaceAll("x64", "");
+                    temp = Colors.BOLD + "OS: " + Colors.NORMAL + tmp.replaceAll("^.*?(?=[A-Z][a-z])", "").replaceAll("\\\\[.*?\\\\]", "").replaceAll(".*(?:Operating System: )|.*(?:OS: )", "").replaceAll("x86|x64|32-bit|64-bit", "");
                     if (!info.contains(temp) && jsonObj.getBoolean("OSName")) {
                         info.add(temp);
                     }
-                } else if (tmp.contains("Caused by")) {
-                    CausedBy = Colors.BOLD + "Caused by: " + Colors.NORMAL + tmp.replaceAll("Caused by: ", "").replaceAll("^.*?(?=[A-Z][a-z])", "").replaceAll("\\\\[.*?\\\\]", "");
+                } else if (tmp.contains("Caused by") || tmp.contains("java.lang.NoClassDefFoundError")) {
+                    System.out.println(tmp);
+                    CausedBy = Colors.BOLD + "Caused by: " + Colors.NORMAL + tmp.replaceAll(".*(?:Caused by: )", "").replaceAll("^.*?(?=[A-Z][a-z])", "").replaceAll("\\\\[.*?\\\\]", "");
                 } else if (tmp.contains("Description: ")) {
                     String harhar = readString(url.openStream()).replaceAll("\\n|\\r|\\t", " ");
-                    System.out.println(harhar.replaceAll(".*(?:" + tmp + ")|at.*", "").trim());
                     CausedBy = Colors.BOLD + "Error: " + Colors.NORMAL + harhar.replaceAll(".*(?:" + tmp + ")|at.*", "").replaceAll("^.*?(?=[A-Z][a-z])", "").replaceAll("\\\\[.*?\\\\]", "").trim();
-                    Description = Colors.BOLD + "Description: " + Colors.NORMAL + tmp.replaceAll("Description: ", "").replaceAll("^.*?(?=[A-Z][a-z])", "").replaceAll("\\\\[.*?\\\\]", "");
+                    Description = Colors.BOLD + "Description: " + Colors.NORMAL + tmp.replaceAll(".*(?:Description: )", "").replaceAll("^.*?(?=[A-Z][a-z])", "").replaceAll("\\\\[.*?\\\\]", "");
                 } else if (tmp.contains("Stacktrace:")) {
                     String harhar = readString(url.openStream()).replaceAll("\\n|\\r|\\t", " ");
-                    Stacktrace = Colors.BOLD + "Stacktrace: " + Colors.NORMAL + harhar.replaceAll("^.*?(?=[A-Z][a-z])", "").replaceAll("\\\\[.*?\\\\]", "").replaceAll(".*(?:Stacktrace:)|\\)   at.*", "").replaceAll("   ", "") + ")";
+                    Stacktrace = Colors.BOLD + "Stacktrace: " + Colors.NORMAL + harhar.replaceAll("^.*?(?=[A-Z][a-z])", "").replaceAll("\\\\[.*?\\\\]", "").replaceAll(".*(?:Stacktrace:)|\\)   at.*", "").replaceAll("   ", "").replaceAll("\\)  at.*", "") + ")";
                 }
-
+                webpage += tmp;
             }
+
             for (String anInfo : info) {
                 Message.add(anInfo);
             }
@@ -141,12 +139,17 @@ public class Log extends Command {
             for (String s : Message) {
                 message += s + " | \t";
             }
+
             if (message.length() > 500) {
                 event.getChannel().send().message("The log was too big and was not sent! Please retry again or disable some features in parser.json");
                 return false;
+            } else if (message.isEmpty()) {
+                event.getChannel().send().message("Could not get any information from that log!");
+            } else {
+                event.getChannel().send().message(message);
             }
-            event.getChannel().send().message(message);
-            if (!Description.isEmpty()) {
+            /*
+            if (!Description.isEmpty() && Description.length() < 500) {
                 if (jsonObj.getBoolean("Information")) {
                     event.getChannel().send().message(Description);
                 } else {
@@ -154,7 +157,7 @@ public class Log extends Command {
                 }
             }
 
-            if (!CausedBy.isEmpty()) {
+            if (!CausedBy.isEmpty() && CausedBy.length() < 500) {
                 if (jsonObj.getBoolean("Information")) {
                     event.getChannel().send().message(CausedBy);
                 } else {
@@ -162,13 +165,15 @@ public class Log extends Command {
                 }
             }
 
-            if (!Stacktrace.isEmpty()) {
+            if (!Stacktrace.isEmpty() && Stacktrace.length() < 500) {
                 if (jsonObj.getBoolean("Stacktrace")) {
                     event.getChannel().send().message(Stacktrace);
                 } else {
                     event.getUser().send().message(Stacktrace);
                 }
             }
+            */
+            Error.getProblems(webpage, event);
             return true;
         } catch (JSONException e1) {
             event.getChannel().send().message("OH NO! The parser.json is corrupted, Please delete it and retry.");
@@ -179,7 +184,7 @@ public class Log extends Command {
     }
 
     public static String readString(InputStream stream) {
-        Scanner scanner = new Scanner(stream).useDelimiter("\\ A");
+        Scanner scanner = new Scanner(stream).useDelimiter("\\A");
         return scanner.hasNext() ? scanner.next() : "";
     }
 

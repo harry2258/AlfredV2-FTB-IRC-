@@ -60,13 +60,13 @@ public class Reddit extends Thread {
                     URL url = new URL("http://www.reddit.com/r/" + args[1] + "/new.json");
                     String ts;
                     BufferedReader br = new BufferedReader(new InputStreamReader(url.openStream()));
-                    String result = "";
+                    String result;
                     String title = "";
                     String text = "";
                     String URL = "";
                     String author = "";
-                    String infotext = "";
-                    String infotitle = "";
+                    String infotext;
+                    String infotitle;
                     long CreateTime = 0;
                     while ((ts = br.readLine()) != null) {
                         JSONObject jsonObj = new JSONObject(ts);
@@ -106,7 +106,10 @@ public class Reddit extends Thread {
                             }
 
                             if (!chaninfo.get(hur).equalsIgnoreCase(result)) {
+
                                 System.out.println("[Reddit] :O Found a new post! sending to " + chan.getName());
+                                System.out.println(chaninfo.get(hur));
+                                System.out.println(result);
                                 chan.send().message("[" + Colors.RED + "Reddit" + Colors.NORMAL + "] " + " [ " + Utils.shortenUrl(URL) + " ] [" + Utils.getTime(CreateTime) + " ago] " + Colors.BOLD + author + Colors.NORMAL + ": " + infotitle + " " + infotext);
                             } else {
                                 System.out.println("[Reddit] No new post found.");

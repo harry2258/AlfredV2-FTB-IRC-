@@ -27,6 +27,6 @@ public class Disconnect extends ListenerAdapter {
     }
 
     public void onDisconnect(DisconnectEvent event) throws IOException, IrcException {
-        bot.startBot();
+        //bot.startBot();
     }
 }

@@ -34,7 +34,7 @@ public class Ping extends Command {
                 Socket s = new Socket(InetAddress.getByName(host), port);
                 s.close();
                 time = System.currentTimeMillis() - start;
-                returns = "Response time: " + time + " miliseconds";
+                returns = args[1] + " response time: " + time + " miliseconds";
                 event.getChannel().send().message(returns);
                 return true;
             }

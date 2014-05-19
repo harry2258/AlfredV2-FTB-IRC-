@@ -38,6 +38,8 @@ public class Kill extends Command {
                 if (config.UpdaterChecker()) {
                     com.harry2258.Alfred.Misc.Update.kill();
                 }
+                System.out.println("Shutting down");
+                System.exit(1);
                 return true;
             }
         } catch (Exception ex) {

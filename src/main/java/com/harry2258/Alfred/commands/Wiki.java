@@ -49,10 +49,10 @@ public class Wiki extends Command {
             sb.append(args[i]).append(" ");
         }
 
-        String name = null;
-        String info = null;
-        String xy = "";
-        String searchJson = "";
+        String name;
+        String info;
+        String xy;
+        String searchJson;
 
         boolean exist = true;
         try {
@@ -68,7 +68,6 @@ public class Wiki extends Command {
 
             if (exist) {
                 String temp = ("http://wiki.feed-the-beast.com/api.php?format=xml&action=query&titles=" + message + "&prop=revisions&rvprop=content&format=json").replaceAll(" ", "%20");
-                System.out.println(temp);
                 URL u = new URL(temp);
                 URLConnection c = u.openConnection();
                 BufferedReader in = new BufferedReader(new InputStreamReader(c.getInputStream()));
@@ -96,7 +95,6 @@ public class Wiki extends Command {
 
                 String APItest = jsonObj.getJSONObject("query").getJSONObject("pages").getJSONObject(id).getJSONArray("revisions").getJSONObject(0).getString("*");
                 String df = APItest.replaceAll("\\{\\{[^}]+\\}\\}|\\[\\[Category:[^\\]]+\\]\\]|\\[\\[|\\]\\]|^\\s+|\\s+$|<[^>]+>|\\\\n", "").trim().replaceAll("\\r?\\n.*", "").replaceAll("\\S+\\|(\\S+)", "$1");
-                String tempname = jsonObj.getJSONObject("query").getJSONObject("pages").getJSONObject(id).getString("title");
                 String fd;
                 fd = df.replaceAll("'''", Colors.BOLD).replaceAll("''", Colors.UNDERLINE);
                 int maxLength = (fd.length() < 220) ? fd.length() : 220;
@@ -167,14 +165,75 @@ public class Wiki extends Command {
             fd = df.replaceAll("'''", Colors.BOLD).replaceAll("''", Colors.UNDERLINE);
             int maxLength = (fd.length() < 220) ? fd.length() : 220;
             info = fd.substring(0, maxLength);
+            String x = ("http://wiki.feed-the-beast.com/" + name).replaceAll(" ", "_");
+            String URL;
+            if (x.length() > 50) {
+                URL = Utils.shortenUrl(x);
+            } else {
+                URL = x;
+            }
 
+            event.getChannel().send().message(info + "... [ " + URL + " ]");
+            return true;
         } catch (Exception e) {
             System.out.println(e);
-            event.getChannel().send().message("http://youtu.be/gvdf5n-zI14  |  Please check your spelling!  | Since the Wiki is being updated, That page might not be added yet.");
+        }
+
+        try {
+            URL read;
+            read = new URL("http://ftbwiki.org/api.php?format=json&action=query&list=search&srsearch=" + message + "&srwhat=title");
+            BufferedReader xx = new BufferedReader(new InputStreamReader(read.openStream()));
+            String search = xx.readLine();
+            JSONObject json = new JSONObject(search);
+            searchJson = json.getJSONObject("query").getJSONArray("search").getJSONObject(0).getString("title");
+            if (searchJson.contains("Getting Started")) {
+                searchJson = json.getJSONObject("query").getJSONArray("search").getJSONObject(1).getString("title");
+            }
+            if (json.getJSONObject("query").getJSONArray("search").getJSONObject(0).getString("snippet").contains("#REDIRECT")) {
+                name = (json.getJSONObject("query").getJSONArray("search").getJSONObject(0).getString("snippet")).replaceAll("\\{\\{[^}]+\\}\\}|\\[\\[Category:[^\\]]+\\]\\]|\\[\\[|\\]\\]|^\\s+|\\s+$|<[^>]+>", "").trim().replaceAll("\\r?\\n.*", "").replaceAll("\\S+\\|(\\S+)", "$1").replaceAll("#REDIRECT ", "").replace("/ko", "").replaceAll("/ru", "").replaceAll("/fr", "").replaceAll("/zh", "").replaceAll("/pl", "");
+            } else {
+                name = (searchJson).replace("/ko", "").replaceAll("/ru", "").replaceAll("/fr", "").replaceAll("/zh", "").replaceAll("/pl", "");
+            }
+            String temp = ("http://ftbwiki.org/api.php?format=xml&action=query&titles=" + name + "&prop=revisions&rvprop=content&format=json").replaceAll(" ", "%20");
+            URL u = new URL(temp);
+            URLConnection c = u.openConnection();
+            BufferedReader in = new BufferedReader(new InputStreamReader(c.getInputStream()));
+            xy = in.readLine();
+
+            //\{\{[^}]+\}\}|\[\[Category:[^\]]+\]\]|.*\[\[|\]\].*|^\s+|\s+$|<[^>]+>
+
+            if (xy.contains("#REDIRECT")) {
+                String redirect = xy.replaceAll("\\{\\{[^}]+\\}\\}|\\[\\[Category:[^\\]]+\\]\\]|.*\\[\\[|\\]\\].*|^\\s+|\\s+$|<[^>]+>", "");
+                name = redirect;
+                String newtemp = ("http://ftbwiki.org//api.php?format=xml&action=query&titles=" + redirect + "&prop=revisions&rvprop=content&format=json").replaceAll(" ", "%20");
+                URL url = new URL(newtemp);
+                URLConnection x = url.openConnection();
+                BufferedReader br = new BufferedReader(new InputStreamReader(x.getInputStream()));
+                xy = br.readLine();
+            }
+
+            String json1 = xy.replaceAll("\n", " ");
+            String[] getid = json1.replaceAll("[{\"/>}{\\\\']", "").split(":");
+            String id = getid[2];
+            JSONObject jsonObj = new JSONObject(json1);
+
+            if (jsonObj.getJSONObject("query").getString("pages").contains("Vanilla|type=")) {
+                event.getChannel().send().message(name + " (Vanilla):" + ("http://minecraft.gamepedia.com/" + name).replaceAll(" ", "_"));
+                return true;
+            }
+
+            String APItest = jsonObj.getJSONObject("query").getJSONObject("pages").getJSONObject(id).getJSONArray("revisions").getJSONObject(0).getString("*");
+            String df = APItest.replaceAll("\\{\\{[^}]+\\}\\}|\\[\\[Category:[^\\]]+\\]\\]|\\[\\[|\\]\\]|^\\s+|\\s+$|<[^>]+>|\\\\n", "").trim().replaceAll("\\r?\\n.*", "").replaceAll("\\S+\\|(\\S+)", "$1");
+            String fd;
+            fd = df.replaceAll("'''", Colors.BOLD).replaceAll("''", Colors.UNDERLINE);
+            int maxLength = (fd.length() < 220) ? fd.length() : 220;
+            info = fd.substring(0, maxLength);
+        } catch (Exception x) {
+            event.getChannel().send().message("http://youtu.be/gvdf5n-zI14  |  Please check your spelling!  | The item/block you are looking could not be found on official FTB and ftbwiki.org");
             return true;
         }
 
-        String x = ("http://wiki.feed-the-beast.com/" + name).replaceAll(" ", "_");
+        String x = ("http://ftbwiki.org/" + name).replaceAll(" ", "_");
         String URL;
         if (x.length() > 50) {
             URL = Utils.shortenUrl(x);
