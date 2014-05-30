@@ -22,9 +22,10 @@ public class ChatSocketHandler extends Thread {
         this.socket = socket;
         this.bot = bot;
     }
-
+    private static volatile boolean isRunning = true;
     @Override
     public void run() {
+        while (isRunning) {
         try {
             System.out.println("New connection from " + socket.getRemoteSocketAddress());
             this.reader = new BufferedReader(new InputStreamReader(this.socket.getInputStream()));
@@ -44,5 +45,10 @@ public class ChatSocketHandler extends Thread {
         } catch (Exception ex) {
             ex.printStackTrace();
         }
+    }
+    }
+
+    public static void kill() {
+        isRunning = false;
     }
 }

@@ -39,7 +39,7 @@ public class Exec extends Command {
     }
 
     public Exec() {
-        super("Exec", "Execute java code at runtime", "Exec <code> ex. exec bot.sendMessage(chan, \"Hello world!\");");
+        super("Exec", "Execute java code at runtime", "Exec <code> ex. exec chan.send().message(\"Hello World!\");");
     }
 
     @Override

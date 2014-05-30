@@ -42,7 +42,7 @@ public class Main {
     public static void main(String[] args) {
 
         System.setProperty(SimpleLogger.SHOW_DATE_TIME_KEY, "true");
-        System.setProperty(SimpleLogger.DATE_TIME_FORMAT_KEY, "[HH:mm:ss]");
+        System.setProperty(SimpleLogger.DATE_TIME_FORMAT_KEY, "[MM/dd HH:mm:ss]");
         System.setProperty(SimpleLogger.SHOW_THREAD_NAME_KEY, "false");
         System.setProperty(SimpleLogger.LEVEL_IN_BRACKETS_KEY, "true");
         System.setProperty(SimpleLogger.SHOW_LOG_NAME_KEY, "false");

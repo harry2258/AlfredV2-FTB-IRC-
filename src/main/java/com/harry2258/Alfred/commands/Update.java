@@ -48,7 +48,9 @@ public class Update extends Command {
             BufferedReader br = new BufferedReader(new InputStreamReader(url.openStream()));
             String result;
             result = br.readLine();
-            if (!result.equals(Main.version)) {
+            int remote = Integer.valueOf(result.replaceAll("\\.", ""));
+            int current = Integer.valueOf(Main.version.replaceAll("\\.", ""));
+            if (remote > current) {
                 event.getChannel().send().message("New version of Alfred (" + result + ") is available now!");
             } else {
                 event.getChannel().send().message("Alfred is up-to-date!");

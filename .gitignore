@@ -35,3 +35,6 @@ edges.json
 nbactions.xml
 AlfredV2.iml
 dependency-reduced-pom.xml
+AlfredV2.eml
+.classpath
+.project

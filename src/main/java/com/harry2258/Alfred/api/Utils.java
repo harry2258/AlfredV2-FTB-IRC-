@@ -109,13 +109,13 @@ public class Utils {
         String publishdate = null;
         Document doc = Jsoup.connect(s).userAgent("Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/537.17 (KHTML, like Gecko) Chrome/24.0.1312.57 Safari/537.17").get();
         for (Element e : doc.select("a")) {
-            if (e.attr("class").equalsIgnoreCase("yt-uix-sessionlink yt-user-videos")) {
-                user = e.attr("href").split("/user/")[1].split("/")[0];
+            if (e.attr("class").equalsIgnoreCase("g-hovercard yt-uix-sessionlink yt-user-name ")) {
+                user = e.text();
             }
         }
         for (Element e : doc.select("span")) {
-            if (e.attr("class").equalsIgnoreCase("watch-view-count ")) {
-                views = e.text();
+            if (e.attr("class").equalsIgnoreCase("watch-view-count")) {
+                views = e.text().replace(" views", "");
             }
             if (e.attr("class").equalsIgnoreCase("likes-count")) {
                 likes = e.text();
@@ -126,8 +126,14 @@ public class Utils {
             if (e.attr("class").equalsIgnoreCase("watch-title  yt-uix-expander-head") || e.attr("class").equalsIgnoreCase("watch-title long-title yt-uix-expander-head")) {
                 title = e.text();
             }
-            if (e.attr("class").equalsIgnoreCase("watch-video-date")) {
-                publishdate = e.text();
+            if (e.attr("class").equalsIgnoreCase("yt-uix-expander yt-uix-button-panel")) {
+                System.out.println(e.getElementsContainingOwnText("Uploaded on "));
+                //publishdate = e.text();
+            }
+        }
+        for (Element e : doc.select("p")) {
+            if (e.attr("id").equalsIgnoreCase("watch-uploader-info")) {
+                publishdate = e.text().replace("Uploaded on ", "");
             }
         }
         info = title + "  [" + Colors.DARK_GREEN + views + Colors.NORMAL + "]  [" + Colors.DARK_GREEN + "+" + likes + Colors.NORMAL + "]  [" + Colors.RED + "-" + dislikes + Colors.NORMAL + "]  [" + Colors.MAGENTA + user + Colors.NORMAL + " - " + Colors.PURPLE + publishdate + Colors.NORMAL + "]";
@@ -282,7 +288,7 @@ public class Utils {
     }
 
     public static String getAccount(User u, org.pircbotx.hooks.events.MessageEvent event) {
-        String user = "";
+        String user = null;
         event.getBot().sendRaw().rawLineNow("WHOIS " + u.getNick());
         WaitForQueue waitForQueue = new WaitForQueue(event.getBot());
         WhoisEvent test = null;
@@ -293,7 +299,6 @@ public class Utils {
         } catch (InterruptedException ex) {
             Logger.getLogger(MessageEvent.class.getName()).log(Level.SEVERE, null, ex);
             event.getUser().send().notice("Please enter a valid username!");
-            user = null;
         }
 
         return user;
@@ -328,8 +333,11 @@ public class Utils {
                     + Integer.parseInt(jsonObj.getJSONObject("bans").getJSONObject("service").getJSONObject("mcblockit").getString("bans"))
                     + Integer.parseInt(jsonObj.getJSONObject("bans").getJSONObject("service").getJSONObject("minebans").getString("bans"))
                     + Integer.parseInt(jsonObj.getJSONObject("bans").getJSONObject("service").getJSONObject("glizer").getString("bans"));
-
-            bans = Colors.BOLD + user + Colors.NORMAL + " has a total of " + Colors.BOLD + i + Colors.NORMAL + " bans!";
+            if (Integer.valueOf(i).equals(0) || Integer.valueOf(i).equals(1)) {
+            bans = Colors.BOLD + user + Colors.NORMAL + " has a total of " + Colors.BOLD + i + Colors.NORMAL + " ban!";
+            } else {
+                bans = Colors.BOLD + user + Colors.NORMAL + " has a total of " + Colors.BOLD + i + Colors.NORMAL + " bans!";
+            }
         } catch (Exception x) {
             System.out.println(x);
             bans = "Please make sure you spelled the Minecraft name right! ";

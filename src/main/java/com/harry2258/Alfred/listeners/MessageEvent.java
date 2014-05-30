@@ -211,7 +211,7 @@ public class MessageEvent extends ListenerAdapter {
             }
         }
 
-        if (event.getMessage().equalsIgnoreCase("Im better than alfred")) {
+        if (event.getMessage().equalsIgnoreCase("Im better than alfred") || event.getMessage().equalsIgnoreCase("I'm better than alfred")) {
             event.getChannel().send().message(eventuser + ", It's good to dream big");
         }
 

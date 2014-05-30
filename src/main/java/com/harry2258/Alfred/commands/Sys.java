@@ -7,9 +7,11 @@ import org.pircbotx.Colors;
 import org.pircbotx.hooks.events.MessageEvent;
 
 import java.io.BufferedReader;
+import java.io.FileInputStream;
 import java.io.InputStreamReader;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -49,6 +51,7 @@ public class Sys extends Command {
             event.getChannel().send().message(Colors.DARK_GREEN + "System uptime" + Colors.NORMAL + ": " + time);
 
         } else if (os.contains("mac") || os.contains("nix") || os.contains("nux") || os.contains("aix")) {
+            /*
             Process uptimeProc = Runtime.getRuntime().exec("uptime");
             BufferedReader in = new BufferedReader(new InputStreamReader(uptimeProc.getInputStream()));
             String line = in.readLine();
@@ -68,6 +71,13 @@ public class Sys extends Command {
                     time = String.format("%d Days, %d Hours, %d Min", days, hours, minutes);
                 }
             }
+            */
+            int unixTime = Integer.valueOf(new Scanner(new FileInputStream("/proc/uptime")).next().replaceAll("\\.[0-9]+", ""));
+            int day = (int) TimeUnit.SECONDS.toDays(unixTime);
+            long hours = TimeUnit.SECONDS.toHours(unixTime) - (day * 24);
+            long minute = TimeUnit.SECONDS.toMinutes(unixTime) - (TimeUnit.SECONDS.toHours(unixTime) * 60);
+            long seconds = TimeUnit.SECONDS.toSeconds(unixTime) - (TimeUnit.SECONDS.toMinutes(unixTime) * 60);
+            String time = String.format("%d Days %d Hours %d Minutes and %d seconds", day, hours, minute, seconds);
             event.getChannel().send().message(Colors.DARK_GREEN + "System uptime" + Colors.NORMAL + ": " + time);
         }
 

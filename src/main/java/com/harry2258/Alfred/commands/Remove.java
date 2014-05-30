@@ -34,6 +34,7 @@ public class Remove extends Command {
         String[] args = event.getMessage().split(" ");
         String type = args[1];
         ArrayList<String> temp = new ArrayList<>();
+        Boolean inChan = false;
         if (type.equalsIgnoreCase("mod")) {
             System.out.println("Removing user from " + Jsonfile);
             if (args.length == 3) {
@@ -44,6 +45,7 @@ public class Remove extends Command {
                     } catch (Exception ex) {
                         System.out.println("Got an error while getting player login!");
                     }
+                    event.getBot().getUserChannelDao().getUser(args[2]).send().notice("You are no longer a " + Colors.BOLD + "MODERATOR" +  Colors.NORMAL+" for channel " + event.getChannel().getName());
                 } else {
                     mod = args[2];
                 }
@@ -63,6 +65,9 @@ public class Remove extends Command {
                         Main.map.put(event.getChannel().getName(), JsonUtils.getStringFromFile(Jsonfile));
                         event.getUser().send().notice("Reloaded Permissions");
                         temp.clear();
+                        if (inChan) {
+                            event.getBot().getUserChannelDao().getUser(args[2]).send().notice("You are no longer a " + Colors.BOLD + "MODERATOR" +  Colors.NORMAL+" for channel " + event.getChannel().getName());
+                        }
                         return true;
                     } else {
                         event.getChannel().send().message(args[2] + " is not on the list!");
@@ -118,6 +123,7 @@ public class Remove extends Command {
                     } catch (Exception ex) {
                         System.out.println("Got an error while getting player login!");
                     }
+                    inChan = true;
                 } else {
                     mod = args[2];
                 }
@@ -136,6 +142,9 @@ public class Remove extends Command {
                         event.getUser().send().notice(args[2] + " is no longer an Admin for channel " + event.getChannel().getName());
                         Main.map.put(event.getChannel().getName(), JsonUtils.getStringFromFile(Jsonfile));
                         event.getUser().send().notice("Reloaded Permissions");
+                        if (inChan) {
+                            event.getBot().getUserChannelDao().getUser(args[2]).send().notice("You are no longer an " + Colors.BOLD + "ADMIN" +  Colors.NORMAL+" for channel " + event.getChannel().getName());
+                        }
                         return true;
                     } else {
                         event.getChannel().send().message(args[2] + " is not on the list!");

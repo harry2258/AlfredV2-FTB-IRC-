@@ -89,7 +89,6 @@ public class Twitter extends Thread {
                         List<Status> statuses;
                         statuses = twitter.getUserTimeline(args[i]);
                         test = "[" + Colors.RED + "Twitter" + Colors.NORMAL + "] [" + Colors.BOLD + statuses.get(0).getUser().getName() + Colors.NORMAL + "] " + statuses.get(0).getText();
-                        System.out.println(test);
                         if (!tweets.containsValue(test)) {
                             tweets.put(args[i], test);
                             for (Channel chan : bot.getUserBot().getChannels()) {

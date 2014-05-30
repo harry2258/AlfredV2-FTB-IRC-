@@ -7,6 +7,7 @@ package com.harry2258.Alfred.commands;
 import com.harry2258.Alfred.Main;
 import com.harry2258.Alfred.api.*;
 import org.json.JSONObject;
+import org.pircbotx.Colors;
 import org.pircbotx.hooks.events.MessageEvent;
 
 import java.io.File;
@@ -54,6 +55,7 @@ public class Add extends Command {
                         String perms = JsonUtils.getStringFromFile(Jsonfile);
                         Main.map.put(event.getChannel().getName(), perms);
                         event.getUser().send().notice("Reloaded Permissions");
+                        event.getBot().getUserChannelDao().getUser(args[2]).send().notice("You are now a " + Colors.BOLD + "MODERATOR" +  Colors.NORMAL+" for channel " + event.getChannel().getName());
                         return true;
                     } else {
                         event.getChannel().send().message(newuser + " is already on the list!");
@@ -123,6 +125,7 @@ public class Add extends Command {
                         String perms = JsonUtils.getStringFromFile(Jsonfile);
                         Main.map.put(event.getChannel().getName(), perms);
                         event.getUser().send().notice("Reloaded Permissions");
+                        event.getBot().getUserChannelDao().getUser(args[2]).send().notice("You are now an " + Colors.BOLD + "ADMIN" +  Colors.NORMAL+" for channel " + event.getChannel().getName());
                         return true;
                     } else {
                         event.getChannel().send().message(newuser + " is already on the list!");
@@ -172,6 +175,7 @@ public class Add extends Command {
                 }
             }
         }
+
         if (type.equalsIgnoreCase("global")) {
             if (PermissionManager.hasExec(event.getUser(), event)) {
                 if (args.length == 3) {
