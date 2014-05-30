@@ -17,7 +17,7 @@ public class Part extends Command {
     @Override
     public boolean execute(MessageEvent event) {
         String[] args = event.getMessage().split(" ");
-        if (manager.hasExec(event.getUser(), event)) {
+        if (PermissionManager.hasExec(event.getUser(), event)) {
             if (args.length == 2) {
                 Channel target = event.getBot().getUserChannelDao().getChannel(args[1]);
                 event.getBot().getUserChannelDao().getAllChannels();

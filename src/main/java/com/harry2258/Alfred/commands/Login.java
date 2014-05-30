@@ -1,8 +1,8 @@
 package com.harry2258.Alfred.commands;
 
+import com.google.gson.JsonObject;
 import com.harry2258.Alfred.Main;
 import com.harry2258.Alfred.api.*;
-import org.json.JSONObject;
 import org.pircbotx.hooks.events.MessageEvent;
 
 /**
@@ -50,20 +50,20 @@ public class Login extends Command {
     public static String Group(String user, String channel) throws Exception {
         String Jsonfile = System.getProperty("user.dir") + "/perms/" + channel + "/" + "perms.json";
         String perms = JsonUtils.getStringFromFile(Jsonfile);
-        JSONObject jsonObj = new JSONObject(perms);
+        JsonObject jsonObj = JsonUtils.getJsonObject(perms);
         String group = "None :<";
 
-        if (jsonObj.getJSONObject("Perms").getString("Mods").contains(user)) {
+        if (jsonObj.getAsJsonObject("Perms").get("Mods").getAsString().contains(user)) {
             group = "Moderator";
         }
 
-        if (jsonObj.getJSONObject("Perms").getString("Admins").contains(user)) {
+        if (jsonObj.getAsJsonObject("Perms").get("Admins").getAsString().contains(user)) {
             group = "Admin";
         }
 
         String Exec = JsonUtils.getStringFromFile(Main.jsonFilePath.toString());
-        JSONObject exec = new JSONObject(Exec);
-        if (exec.getJSONObject("Perms").getString("Exec").contains(user)) {
+        JsonObject exec = JsonUtils.getJsonObject(Exec);
+        if (exec.getAsJsonObject("Perms").get("Exec").getAsString().contains(user)) {
             group = "Exec";
         }
 

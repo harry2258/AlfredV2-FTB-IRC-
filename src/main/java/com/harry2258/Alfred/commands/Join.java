@@ -17,7 +17,7 @@ public class Join extends Command {
 
     @Override
     public boolean execute(MessageEvent event) throws Exception {
-        if (manager.hasExec(event.getUser(), event)) {
+        if (PermissionManager.hasExec(event.getUser(), event)) {
             String[] args = event.getMessage().split(" ");
             Channel target = event.getBot().getUserChannelDao().getChannel(args[1]);
 

@@ -11,7 +11,7 @@ public abstract class Command {
      * This constructor isn't recommended as it leaves the entry for the command in the help command rather sparse
      *
      * @param name The name of the command
-     * @see Command(String name, String description, String help)
+     * @see #Command(String name, String description, String help)
      */
     public Command(String name) {
         this.name = name;
@@ -24,7 +24,7 @@ public abstract class Command {
      *
      * @param name        The name of the command
      * @param description A brief description of the command
-     * @see Command(String name, String description, String help)
+     * @see #Command(String name, String description, String help)
      */
     public Command(String name, String description) {
         this.name = name;

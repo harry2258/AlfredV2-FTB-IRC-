@@ -5,8 +5,11 @@
 package com.harry2258.Alfred.api;
 
 import com.google.common.io.Files;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonParser;
+import org.apache.commons.io.FileUtils;
 
 import java.io.*;
 import java.nio.charset.Charset;
@@ -46,23 +49,19 @@ public class JsonUtils {
     }
 
     public static void writeJsonFile(File file, String json) {
-        BufferedWriter bufferedWriter = null;
         try {
-            FileWriter fileWriter = new FileWriter(file);
-            bufferedWriter = new BufferedWriter(fileWriter);
-            bufferedWriter.write(json);
-
+            FileUtils.write(file, json,"UTF-8");
         } catch (IOException e) {
             e.printStackTrace();
-        } finally {
-            try {
-                if (bufferedWriter != null) {
-                    bufferedWriter.close();
-                }
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            }
         }
+    }
+
+    public static JsonObject getJsonObject(String s){
+        JsonElement element = new JsonParser().parse(s);
+        if (element != null && element.isJsonObject()) {
+            return element.getAsJsonObject();
+        }
+        return null;
     }
 
     public static void createJsonStructure(File file) {

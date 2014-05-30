@@ -1,11 +1,11 @@
 package com.harry2258.Alfred.commands;
 
+import com.google.gson.JsonObject;
 import com.harry2258.Alfred.Main;
 import com.harry2258.Alfred.api.Command;
 import com.harry2258.Alfred.api.Config;
 import com.harry2258.Alfred.api.JsonUtils;
 import com.harry2258.Alfred.api.PermissionManager;
-import org.json.JSONObject;
 import org.pircbotx.Colors;
 import org.pircbotx.hooks.events.MessageEvent;
 
@@ -44,9 +44,9 @@ public class Info extends Command {
             if (new File("commands/" + event.getChannel().getName() + "/").exists()) {
                 File folder = new File("commands/" + event.getChannel().getName() + "/");
                 File[] listOfFiles = folder.listFiles();
-                for (int i = 0; i < listOfFiles.length; i++) {
-                    if (listOfFiles[i].isFile()) {
-                        filename += listOfFiles[i].getName() + " | \t";
+                for (File listOfFile : listOfFiles) {
+                    if (listOfFile.isFile()) {
+                        filename += listOfFile.getName() + " | \t";
                     }
                 }
                 if (!filename.isEmpty()) {
@@ -57,28 +57,28 @@ public class Info extends Command {
                 return true;
             }
         }
-
+    
         String perms = Main.map.get(event.getChannel().getName());
-        JSONObject jsonObj = new JSONObject(perms);
+        JsonObject jsonObj = JsonUtils.getJsonObject(perms);
 
         String exe = JsonUtils.getStringFromFile(System.getProperty("user.dir") + "/exec.json");
-        JSONObject exec = new JSONObject(exe);
+        JsonObject exec = JsonUtils.getJsonObject(exe);
 
         if (args.length == 2 && args[1].equalsIgnoreCase("full") | args[1].equalsIgnoreCase("all")) {
 
-            temp = jsonObj.getJSONObject("Perms").getString("Everyone");
+            temp = jsonObj.getAsJsonObject("Perms").get("Everyone").getAsString();
             everyone = temp.replace("{", "").replace("}", "").replace(":", ": ").replace("\"", "").replaceAll(",", " | ").replaceAll("command.", "");
 
-            temp = jsonObj.getJSONObject("Perms").getString("ModPerms");
+            temp = jsonObj.getAsJsonObject("Perms").get("ModPerms").getAsString();
             modpermissions = temp.replace("{", "").replace("}", "").replace(":", ": ").replace("\"", "").replaceAll(",", " | ").replaceAll("command.", "");
 
-            temp = jsonObj.getJSONObject("Perms").getString("Mods");
+            temp = jsonObj.getAsJsonObject("Perms").get("Mods").getAsString();
             mod = temp.replace("{", "").replace("}", "").replace(":", ": ").replace("\"", "").replaceAll(",", " | ");
 
-            temp = jsonObj.getJSONObject("Perms").getString("Admins");
+            temp = jsonObj.getAsJsonObject("Perms").get("Admins").getAsString();
             Admins = temp.replace("{", "").replace("}", "").replace(":", ": ").replace("\"", "").replaceAll(",", " | ");
 
-            temp = exec.getJSONObject("Perms").getString("Exec");
+            temp = exec.getAsJsonObject("Perms").get("Exec").getAsString();
             Exec = temp.replace("{", "").replace("}", "").replace(":", ": ").replace("\"", "").replaceAll(",", " | ");
 
             int NumberofCommand = 0;
@@ -100,15 +100,15 @@ public class Info extends Command {
         String Usergroup = Login.Group(Main.Login.get(event.getUser().getNick()), event.getChannel().getName().toLowerCase());
 
         if (Usergroup.equalsIgnoreCase("None :<")) {
-            temp = jsonObj.getJSONObject("Perms").getString("Everyone");
+            temp = jsonObj.getAsJsonObject("Perms").get("Everyone").getAsString();
             everyone = temp.replace("{", "").replace("}", "").replace(":", ": ").replace("\"", "").replaceAll(",", " | ").replaceAll("command.", "");
             event.getUser().send().notice("You are in the default group and have access to: " + everyone);
 
         }
         if (Usergroup.equalsIgnoreCase("Moderator")) {
-            temp = jsonObj.getJSONObject("Perms").getString("ModPerms");
+            temp = jsonObj.getAsJsonObject("Perms").get("ModPerms").getAsString();
             modpermissions = temp.replace("{", "").replace("}", "").replace(":", ": ").replace("\"", "").replaceAll(",", " | ").replaceAll("command.", "");
-            temp = jsonObj.getJSONObject("Perms").getString("Everyone");
+            temp = jsonObj.getAsJsonObject("Perms").get("Everyone").getAsString();
             everyone = temp.replace("{", "").replace("}", "").replace(":", ": ").replace("\"", "").replaceAll(",", " | ").replaceAll("command.", "");
             event.getUser().send().notice("You are in the Moderator group and have access to: " + modpermissions + everyone);
 

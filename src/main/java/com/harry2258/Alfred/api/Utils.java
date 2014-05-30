@@ -11,9 +11,8 @@ import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
 import com.harry2258.Alfred.Main;
 import com.harry2258.Alfred.listeners.MessageEvent;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringEscapeUtils;
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -24,12 +23,9 @@ import org.pircbotx.User;
 import org.pircbotx.UserLevel;
 import org.pircbotx.hooks.WaitForQueue;
 import org.pircbotx.hooks.events.WhoisEvent;
-import org.scribe.builder.ServiceBuilder;
-import org.scribe.builder.api.GoogleApi;
 import org.scribe.model.OAuthRequest;
 import org.scribe.model.Response;
 import org.scribe.model.Verb;
-import org.scribe.oauth.OAuthService;
 
 import java.io.*;
 import java.lang.reflect.Type;
@@ -168,12 +164,12 @@ public class Utils {
                 BufferedReader first = new BufferedReader(new InputStreamReader(u.getInputStream()));
                 result = first.readLine();
                 String json1 = result.replaceAll("\n", " ");
-                JSONObject jsonObj = new JSONObject(json1);
-                returns = ("Session: " + jsonObj.getJSONObject("report").getJSONObject("session").getString("title") +
-                        " | Login: " + jsonObj.getJSONObject("report").getJSONObject("login").getString("title") +
-                        " | Legacy Skins: " + jsonObj.getJSONObject("report").getJSONObject("skins").getString("title") +
-                        " | Website: " + jsonObj.getJSONObject("report").getJSONObject("website").getString("title") +
-                        " | Realms: " + jsonObj.getJSONObject("report").getJSONObject("realms").getString("title")).replaceAll("Online", Colors.DARK_GREEN + "✓" + Colors.NORMAL).replaceAll("Offline", Colors.RED + "✘" + Colors.NORMAL).replaceAll("Server Error", Colors.RED + "Server Error" + Colors.NORMAL);
+                JsonObject report = JsonUtils.getJsonObject(json1).getAsJsonObject("report");
+                returns = ("Session: " + report.getAsJsonObject("session").get("title").getAsString() +
+                        " | Login: " + report.getAsJsonObject("login").get("title").getAsString() +
+                        " | Legacy Skins: " + report.getAsJsonObject("skins").get("title").getAsString() +
+                        " | Website: " + report.getAsJsonObject("website").get("title").getAsString() +
+                        " | Realms: " + report.getAsJsonObject("realms").get("title").getAsString()).replaceAll("Online", Colors.DARK_GREEN + "✓" + Colors.NORMAL).replaceAll("Offline", Colors.RED + "✘" + Colors.NORMAL).replaceAll("Server Error", Colors.RED + "Server Error" + Colors.NORMAL);
             } catch (Exception x) {
                 x.printStackTrace();
             }
@@ -183,12 +179,6 @@ public class Utils {
     }
 
     public static String shortenUrl(String longUrl) {
-        OAuthService oAuthService = new ServiceBuilder()
-                .provider(GoogleApi.class)
-                .apiKey("anonymous")
-                .apiSecret("anonymous")
-                .scope("https://www.googleapis.com/auth/urlshortener")
-                .build();
         OAuthRequest oAuthRequest = new OAuthRequest(Verb.POST, "https://www.googleapis.com/urlshortener/v1/url");
         oAuthRequest.addHeader("Content-Type", "application/json");
         String json = "{\"longUrl\": \"" + longUrl + "\"}";
@@ -291,7 +281,7 @@ public class Utils {
         String user = null;
         event.getBot().sendRaw().rawLineNow("WHOIS " + u.getNick());
         WaitForQueue waitForQueue = new WaitForQueue(event.getBot());
-        WhoisEvent test = null;
+        WhoisEvent test;
         try {
             test = waitForQueue.waitFor(WhoisEvent.class);
             waitForQueue.close();
@@ -320,19 +310,16 @@ public class Utils {
     }
 
     public static String McBans(String user) {
-        String bans = null;
-        int i = 0;
+        String bans;
+        int i;
         try {
             URL url = new URL("http://api.fishbans.com/bans/" + user);
-            BufferedReader br = new BufferedReader(new InputStreamReader(url.openStream()));
-            String json = br.readLine();
-            br.close();
-            JSONObject jsonObj = new JSONObject(json);
-            i = Integer.parseInt(jsonObj.getJSONObject("bans").getJSONObject("service").getJSONObject("mcbans").getString("bans"))
-                    + Integer.parseInt(jsonObj.getJSONObject("bans").getJSONObject("service").getJSONObject("mcbouncer").getString("bans"))
-                    + Integer.parseInt(jsonObj.getJSONObject("bans").getJSONObject("service").getJSONObject("mcblockit").getString("bans"))
-                    + Integer.parseInt(jsonObj.getJSONObject("bans").getJSONObject("service").getJSONObject("minebans").getString("bans"))
-                    + Integer.parseInt(jsonObj.getJSONObject("bans").getJSONObject("service").getJSONObject("glizer").getString("bans"));
+            JsonObject banservice = JsonUtils.getJsonObject(IOUtils.toString(url)).getAsJsonObject("bans").getAsJsonObject("service");
+            i = Integer.parseInt(banservice.getAsJsonObject("mcbans").get("bans").getAsString())
+                    + Integer.parseInt(banservice.getAsJsonObject("mcbouncer").get("bans").getAsString())
+                    + Integer.parseInt(banservice.getAsJsonObject("mcblockit").get("bans").getAsString())
+                    + Integer.parseInt(banservice.getAsJsonObject("minebans").get("bans").getAsString())
+                    + Integer.parseInt(banservice.getAsJsonObject("glizer").get("bans").getAsString());
             if (Integer.valueOf(i).equals(0) || Integer.valueOf(i).equals(1)) {
             bans = Colors.BOLD + user + Colors.NORMAL + " has a total of " + Colors.BOLD + i + Colors.NORMAL + " ban!";
             } else {
@@ -355,8 +342,7 @@ public class Utils {
                 for (int i = 0; i < 16; ++i)
                     br.readLine();
                 String line = br.readLine();
-                String y = line.replaceAll("</font>", " ").replace("</form><hr>", "").replaceAll("<br>", " ");
-                insult1 = y;
+                insult1 = line.replaceAll("</font>", " ").replace("</form><hr>", "").replaceAll("<br>", " ");
                 br.close();
             } catch (Exception e1) {
                 e1.printStackTrace();
@@ -382,26 +368,26 @@ public class Utils {
 
 
     public static void Parser(File file) {
-        JSONObject obj = new JSONObject();
+        JsonObject obj = new JsonObject();
         try {
-            obj.put("MCVersion", true);
-            obj.put("JavaVersion", true);
-            obj.put("Modded", true);
-            obj.put("ServerBrand", true);
-            obj.put("ServerType", true);
-            obj.put("Description", true);
-            obj.put("OSName", true);
-            obj.put("Suggestion", true);
-            obj.put("Information", true);
-            obj.put("Stacktrace", true);
+            obj.addProperty("MCVersion", true);
+            obj.addProperty("JavaVersion", true);
+            obj.addProperty("Modded", true);
+            obj.addProperty("ServerBrand", true);
+            obj.addProperty("ServerType", true);
+            obj.addProperty("Description", true);
+            obj.addProperty("OSName", true);
+            obj.addProperty("Suggestion", true);
+            obj.addProperty("Information", true);
+            obj.addProperty("Stacktrace", true);
             JsonUtils.writeJsonFile(file, obj.toString());
             System.out.println(obj.toString());
-        } catch (JSONException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public static void Geveryone(File file) throws JSONException {
+    public static void Geveryone(File file) {
         try {
             BufferedReader s = new BufferedReader(new InputStreamReader(Main.class.getResourceAsStream("/global.json")));
             String tmp = "";
@@ -418,7 +404,7 @@ public class Utils {
         }
     }
 
-    public static void edges(File file) throws JSONException {
+    public static void edges(File file) {
         try {
             BufferedReader s = new BufferedReader(new InputStreamReader(Main.class.getResourceAsStream("/edges.json")));
             String tmp = "";
@@ -436,15 +422,15 @@ public class Utils {
     }
 
     public static void TweetAuth(File file) {
-        JSONObject obj = new JSONObject();
+        JsonObject obj = new JsonObject();
         try {
-            obj.put("OAuthConsumerKey", "");
-            obj.put("OAuthConsumerSecret", "");
-            obj.put("OAuthAccessToken", "");
-            obj.put("OAuthAccessTokenSecret", "");
+            obj.addProperty("OAuthConsumerKey", "");
+            obj.addProperty("OAuthConsumerSecret", "");
+            obj.addProperty("OAuthAccessToken", "");
+            obj.addProperty("OAuthAccessTokenSecret", "");
             JsonUtils.writeJsonFile(file, obj.toString());
             System.out.println(obj.toString());
-        } catch (JSONException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

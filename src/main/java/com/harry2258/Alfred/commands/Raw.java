@@ -22,7 +22,7 @@ public class Raw extends Command {
             StringBuilder sb = new StringBuilder();
             String[] args = event.getMessage().split(" ");
             for (int i = 1; i < args.length; i++) {
-                sb.append(args[i] + " ");
+                sb.append(args[i]).append(" ");
             }
             event.getBot().sendRaw().rawLineNow(sb.toString().trim());
             return true;

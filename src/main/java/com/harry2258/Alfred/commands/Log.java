@@ -1,9 +1,8 @@
 package com.harry2258.Alfred.commands;
 
+import com.google.gson.JsonObject;
 import com.harry2258.Alfred.Main;
 import com.harry2258.Alfred.api.*;
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.pircbotx.Colors;
 import org.pircbotx.hooks.events.MessageEvent;
 
@@ -70,7 +69,7 @@ public class Log extends Command {
         String tmp;
         try {
             String test = JsonUtils.getStringFromFile(Main.cmd.toString());
-            JSONObject jsonObj = new JSONObject(test);
+            JsonObject jsonObj = JsonUtils.getJsonObject(test);
             URL url;
             url = new URL(Raw);
             BufferedReader br = new BufferedReader(new InputStreamReader(url.openStream()));
@@ -85,37 +84,37 @@ public class Log extends Command {
                     }
                 } else if (tmp.contains("Server brand: ")) {
                     temp = Colors.BOLD + "Server Brand: " + Colors.NORMAL + tmp.replaceAll("^.*?(?=[A-Z][a-z])", "").replaceAll("\\\\[.*?\\\\]", "").replace("Server brand: ", "");
-                    if (!info.contains(temp) && jsonObj.getBoolean("ServerBrand")) {
+                    if (!info.contains(temp) && jsonObj.get("ServerBrand").getAsBoolean()) {
                         info.add(temp);
                     }
                 } else if (tmp.contains("Server type: ")) {
                     temp = Colors.BOLD + "Server type: " + Colors.NORMAL + tmp.replaceAll("^.*?(?=[A-Z][a-z])", "").replaceAll("\\\\[.*?\\\\]", "").replace("Server type: ", "");
-                    if (!info.contains(temp) && jsonObj.getBoolean("ServerType")) {
+                    if (!info.contains(temp) && jsonObj.get("ServerType").getAsBoolean()) {
                         info.add(temp);
                     }
                 } else if (tmp.contains("Minecraft Version:")) {
                     temp = Colors.BOLD + "Minecraft Version: " + Colors.NORMAL + tmp.replaceAll("^.*?(?=[A-Z][a-z])", "").replaceAll("\\\\[.*?\\\\]", "").replaceAll(".*(?:Minecraft Version: )", "");
-                    if (!info.contains(temp) && jsonObj.getBoolean("MCVersion")) {
+                    if (!info.contains(temp) && jsonObj.get("MCVersion").getAsBoolean()) {
                         info.add(temp);
                     }
                 } else if (tmp.contains("Java Version: ") && tmp.contains("LaunchFrame.main")) {
                     temp = Colors.BOLD + "Java Version: " + Colors.NORMAL + tmp.replaceAll(".*(?:Java Version:)|(?:sorted as: ).*", "");
-                    if (!info.contains(temp) && jsonObj.getBoolean("JavaVersion")) {
+                    if (!info.contains(temp) && jsonObj.get("JavaVersion").getAsBoolean()) {
                         info.add(temp);
                     }
                 } else if (tmp.contains("Is Modded: ")) {
                     temp = Colors.BOLD + "Client Brand: " + Colors.NORMAL + tmp.replaceAll("^.*?(?=[A-Z][a-z])", "").replaceAll("\\\\[.*?\\\\]", "").replaceAll(".*(?:Is Modded: Definitely; Client brand changed to )", "");
-                    if (!info.contains(temp) && jsonObj.getBoolean("Modded")) {
+                    if (!info.contains(temp) && jsonObj.get("Modded").getAsBoolean()) {
                         info.add(temp);
                     }
                 } else if (tmp.contains("Feed The Beast Mod Pack")) {
                     temp = Colors.BOLD + "Mods: " + Colors.NORMAL + tmp.replaceAll("^.*?(?=[A-Z][a-z])", "").replaceAll("\\\\[.*?\\\\]", "").replaceAll(".*(?:, )|mods active", "");
-                    if (!info.contains(temp) && jsonObj.getBoolean("Modded")) {
+                    if (!info.contains(temp) && jsonObj.get("Modded").getAsBoolean()) {
                         info.add(temp);
                     }
                 } else if (tmp.contains("Operating System: ") || tmp.contains("OS: ")) {
                     temp = Colors.BOLD + "OS: " + Colors.NORMAL + tmp.replaceAll("^.*?(?=[A-Z][a-z])", "").replaceAll("\\\\[.*?\\\\]", "").replaceAll(".*(?:Operating System: )|.*(?:OS: )", "").replaceAll("x86|x64|32-bit|64-bit", "");
-                    if (!info.contains(temp) && jsonObj.getBoolean("OSName")) {
+                    if (!info.contains(temp) && jsonObj.get("OSName").getAsBoolean()) {
                         info.add(temp);
                     }
                 } else if (tmp.contains("Caused by") || tmp.contains("java.lang.NoClassDefFoundError")) {
@@ -175,8 +174,8 @@ public class Log extends Command {
             */
             Error.getProblems(webpage, event);
             return true;
-        } catch (JSONException e1) {
-            event.getChannel().send().message("OH NO! The parser.json is corrupted, Please delete it and retry.");
+        //} catch (JSONException e1) {
+        //    event.getChannel().send().message("OH NO! The parser.json is corrupted, Please delete it and retry.");
         } catch (Exception e) {
             e.printStackTrace();
         }

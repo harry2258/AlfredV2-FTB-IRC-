@@ -14,7 +14,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
+//TODO LOMBOKIZE!!!
 public class Config {
 
     private boolean debug;
@@ -450,10 +450,7 @@ public class Config {
                 nickmatch = true;
             }
         }
-        if (nickmatch && hostmatch) {
-            return true;
-        }
-        return false;
+        return nickmatch && hostmatch;
     }
 
     public String Database() {

@@ -5,8 +5,8 @@
 
 package com.harry2258.Alfred.api;
 
+import com.google.gson.JsonObject;
 import com.harry2258.Alfred.Main;
-import org.json.JSONObject;
 import org.pircbotx.Channel;
 import org.pircbotx.User;
 
@@ -45,37 +45,34 @@ public class PermissionManager {
 
         String sender = Main.Login.get(user.getNick());
         String perms = Main.map.get(event.getChannel().getName());
-        JSONObject jsonObj = new JSONObject(perms);
+        JsonObject jsonObj = JsonUtils.getJsonObject(perms);
 
         String Geveryone = JsonUtils.getStringFromFile(Main.globalperm.toString());
-        JSONObject everyone = new JSONObject(Geveryone);
+        JsonObject everyone = JsonUtils.getJsonObject(Geveryone);
 
-        if (everyone.getString("Permissions").contains(permission)) {
+        if (everyone.get("Permissions").getAsString().contains(permission)) {
             return true;
         }
 
-        if (jsonObj.getJSONObject("Perms").getString("Everyone").contains(permission)) {
+        if (jsonObj.getAsJsonObject("Perms").get("Everyone").getAsString().contains(permission)) {
             return true;
         }
 
-        if (jsonObj.getJSONObject("Perms").getString("ModPerms").contains(permission)) {
-            if (jsonObj.getJSONObject("Perms").getString("Admins").contains(sender) || jsonObj.getJSONObject("Perms").getString("Mods").contains(sender) && user.isVerified()) {
+        if (jsonObj.getAsJsonObject("Perms").get("ModPerms").getAsString().contains(permission)) {
+            if (jsonObj.getAsJsonObject("Perms").get("Admins").getAsString().contains(sender) || jsonObj.getAsJsonObject("Perms").get("Mods").getAsString().contains(sender) && user.isVerified()) {
                 return true;
             }
         }
 
-        if (jsonObj.getJSONObject("Perms").getString("Admins").contains(sender)) {
+        if (jsonObj.getAsJsonObject("Perms").get("Admins").getAsString().contains(sender)) {
             return true;
         }
 
         String Exec = JsonUtils.getStringFromFile(JsonUtils.Jsonfile);
-        JSONObject exec = new JSONObject(Exec);
+        JsonObject exec = JsonUtils.getJsonObject(Exec);
 
-        if (exec.getJSONObject("Perms").getString("Exec").contains(sender)) {
-            return true;
-        }
+        return exec.getAsJsonObject("Perms").get("Exec").getAsString().contains(sender);
 
-        return false;
     }
 
     public static boolean hasExec(User user, org.pircbotx.hooks.events.MessageEvent event) {
@@ -84,9 +81,9 @@ public class PermissionManager {
         try {
             Exec = JsonUtils.getStringFromFile(Main.jsonFilePath.toString());
 
-            JSONObject exec = new JSONObject(Exec);
+            JsonObject exec = JsonUtils.getJsonObject(Exec);
 
-            if (exec.getJSONObject("Perms").getString("Exec").contains(Utils.getAccount(user, event))) {
+            if (exec.getAsJsonObject("Perms").get("Exec").getAsString().contains(Utils.getAccount(user, event))) {
                 if (user.isVerified()) {
                     return true;
                 }
@@ -101,9 +98,9 @@ public class PermissionManager {
 
         String sender = Main.Login.get(user.getNick());
         String Admin = Main.map.get(event.getChannel().getName());
-        JSONObject admin = new JSONObject(Admin);
+        JsonObject admin = JsonUtils.getJsonObject(Admin);
 
-        if (admin.getJSONObject("Perms").getString("Admins").contains(sender)) {
+        if (admin.getAsJsonObject("Perms").get("Admins").getAsString().contains(sender)) {
             if (user.isVerified()) {
                 return true;
             }

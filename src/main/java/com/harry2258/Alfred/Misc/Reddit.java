@@ -1,8 +1,8 @@
 package com.harry2258.Alfred.Misc;
 
+import com.google.gson.JsonObject;
 import com.harry2258.Alfred.api.JsonUtils;
 import com.harry2258.Alfred.api.Utils;
-import org.json.JSONObject;
 import org.pircbotx.Channel;
 import org.pircbotx.Colors;
 import org.pircbotx.PircBotX;
@@ -51,10 +51,9 @@ public class Reddit extends Thread {
             }
             try {
                 String users = JsonUtils.getStringFromFile(reddit.toString());
-                JSONObject reddits = new JSONObject(users);
-                String[] test = reddits.getString("Reddit").replaceAll("[\\[\"\\]]", "").split(",");
-                for (int i = 0; i < test.length; i++) {
-                    String hur = test[i];
+                JsonObject reddits = JsonUtils.getJsonObject(users);
+                String[] test = reddits.get("Reddit").getAsString().replaceAll("[\\[\"\\]]", "").split(",");
+                for (String hur : test) {
                     String[] args = hur.split(":");
                     Channel chan = bot.getUserChannelDao().getChannel(args[0]);
                     URL url = new URL("http://www.reddit.com/r/" + args[1] + "/new.json");
@@ -69,14 +68,14 @@ public class Reddit extends Thread {
                     String infotitle;
                     long CreateTime = 0;
                     while ((ts = br.readLine()) != null) {
-                        JSONObject jsonObj = new JSONObject(ts);
-                        title = jsonObj.getJSONObject("data").getJSONArray("children").getJSONObject(0).getJSONObject("data").getString("title").trim();
-                        if (!jsonObj.getJSONObject("data").getJSONArray("children").getJSONObject(0).getJSONObject("data").getString("selftext").isEmpty()) {
-                            text = jsonObj.getJSONObject("data").getJSONArray("children").getJSONObject(0).getJSONObject("data").getString("selftext").replaceAll("\\n", " ");
+                        JsonObject jsonObj = JsonUtils.getJsonObject(ts);
+                        title = jsonObj.getAsJsonObject("data").getAsJsonArray("children").get(0).getAsJsonObject().getAsJsonObject("data").get("title").getAsString().trim();
+                        if (!jsonObj.getAsJsonObject("data").getAsJsonArray("children").get(0).getAsJsonObject().getAsJsonObject("data").get("selftext").getAsString().isEmpty()) {
+                            text = jsonObj.getAsJsonObject("data").getAsJsonArray("children").get(0).getAsJsonObject().getAsJsonObject("data").get("selftext").getAsString().replaceAll("\\n", " ");
                         }
-                        URL = "http://reddit.com" + jsonObj.getJSONObject("data").getJSONArray("children").getJSONObject(0).getJSONObject("data").getString("permalink");
-                        author = jsonObj.getJSONObject("data").getJSONArray("children").getJSONObject(0).getJSONObject("data").getString("author");
-                        CreateTime = jsonObj.getJSONObject("data").getJSONArray("children").getJSONObject(0).getJSONObject("data").getLong("created_utc");
+                        URL = "http://reddit.com" + jsonObj.getAsJsonObject("data").getAsJsonArray("children").get(0).getAsJsonObject().getAsJsonObject("data").get("permalink").getAsString();
+                        author = jsonObj.getAsJsonObject("data").getAsJsonArray("children").get(0).getAsJsonObject().getAsJsonObject("data").get("author").getAsString();
+                        CreateTime = jsonObj.getAsJsonObject("data").getAsJsonArray("children").get(0).getAsJsonObject().getAsJsonObject("data").get("created_utc").getAsLong();
                     }
 
                     //---------------

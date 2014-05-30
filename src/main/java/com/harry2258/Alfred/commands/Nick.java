@@ -19,7 +19,7 @@ public class Nick extends Command {
     @Override
     public boolean execute(MessageEvent event) {
         try {
-            if (manager.hasExec(event.getUser(), event)) {
+            if (PermissionManager.hasExec(event.getUser(), event)) {
                 String[] args = event.getMessage().split(" ");
                 if (args.length >= 1) {
                     event.getBot().sendIRC().changeNick(event.getMessage().split(" ")[1]);

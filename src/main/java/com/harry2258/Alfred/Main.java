@@ -36,7 +36,7 @@ public class Main {
     public static File cmd = new File(System.getProperty("user.dir") + "/parser.json");
     public static File globalperm = new File(System.getProperty("user.dir") + "/global.json");
     public static File edgesjsonfile = new File(System.getProperty("user.dir") + "/edges.json");
-    public static List<String> users = new ArrayList<String>();
+    public static List<String> users = new ArrayList<>();
     public static String version = "";
 
     public static void main(String[] args) {

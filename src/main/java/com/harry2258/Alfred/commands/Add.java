@@ -4,9 +4,9 @@
  */
 package com.harry2258.Alfred.commands;
 
+import com.google.gson.JsonObject;
 import com.harry2258.Alfred.Main;
 import com.harry2258.Alfred.api.*;
-import org.json.JSONObject;
 import org.pircbotx.Colors;
 import org.pircbotx.hooks.events.MessageEvent;
 
@@ -47,9 +47,9 @@ public class Add extends Command {
                         return false;
                     }
                     String strFileJson = JsonUtils.getStringFromFile(Jsonfile);
-                    JSONObject jsonObj = new JSONObject(strFileJson);
-                    if (!jsonObj.getJSONObject("Perms").getString("Mods").contains(newuser)) {
-                        jsonObj.getJSONObject("Perms").append("Mods", newuser);
+                    JsonObject jsonObj = JsonUtils.getJsonObject(strFileJson);
+                    if (!jsonObj.getAsJsonObject("Perms").get("Mods").getAsString().contains(newuser)) {
+                        jsonObj.getAsJsonObject("Perms").addProperty("Mods", newuser);
                         JsonUtils.writeJsonFile(file, jsonObj.toString());
                         event.getUser().send().notice(newuser + " is now a Moderator for channel " + event.getChannel().getName());
                         String perms = JsonUtils.getStringFromFile(Jsonfile);
@@ -81,9 +81,9 @@ public class Add extends Command {
                             command = check;
                         }
                         String strFileJson = JsonUtils.getStringFromFile(Jsonfile);
-                        JSONObject jsonObj = new JSONObject(strFileJson);
-                        if (!jsonObj.getJSONObject("Perms").getString("ModPerms").contains(command)) {
-                            jsonObj.getJSONObject("Perms").append("ModPerms", command);
+                        JsonObject jsonObj = JsonUtils.getJsonObject(strFileJson);
+                        if (!jsonObj.getAsJsonObject("Perms").get("ModPerms").getAsString().contains(command)) {
+                            jsonObj.getAsJsonObject("Perms").addProperty("ModPerms", command);
                             JsonUtils.writeJsonFile(file, jsonObj.toString());
                             event.getUser().send().notice("Moderators are now able to use the command '" + args[2] + "'");
                             String perms = JsonUtils.getStringFromFile(Jsonfile);
@@ -117,9 +117,9 @@ public class Add extends Command {
                         return false;
                     }
                     String strFileJson = JsonUtils.getStringFromFile(Jsonfile);
-                    JSONObject jsonObj = new JSONObject(strFileJson);
-                    if (!jsonObj.getJSONObject("Perms").getString("Admins").contains(newuser)) {
-                        jsonObj.getJSONObject("Perms").append("Admins", newuser);
+                    JsonObject jsonObj = JsonUtils.getJsonObject(strFileJson);
+                    if (!jsonObj.getAsJsonObject("Perms").get("Admins").getAsString().contains(newuser)) {
+                        jsonObj.getAsJsonObject("Perms").addProperty("Admins", newuser);
                         JsonUtils.writeJsonFile(file, jsonObj.toString());
                         event.getUser().send().notice(newuser + " is now a Admin for channel " + event.getChannel().getName());
                         String perms = JsonUtils.getStringFromFile(Jsonfile);
@@ -153,9 +153,9 @@ public class Add extends Command {
                         }
 
                         String strFileJson = JsonUtils.getStringFromFile(Jsonfile);
-                        JSONObject jsonObj = new JSONObject(strFileJson);
-                        if (!jsonObj.getJSONObject("Perms").getString("Everyone").contains(command)) {
-                            jsonObj.getJSONObject("Perms").append("Everyone", command);
+                        JsonObject jsonObj = JsonUtils.getJsonObject(strFileJson);
+                        if (!jsonObj.getAsJsonObject("Perms").get("Everyone").getAsString().contains(command)) {
+                            jsonObj.getAsJsonObject("Perms").addProperty("Everyone", command);
                             JsonUtils.writeJsonFile(file, jsonObj.toString());
                             event.getUser().send().notice("Everyone is now able to use the command '" + args[2] + "'");
                             String perms = JsonUtils.getStringFromFile(Jsonfile);
@@ -190,9 +190,9 @@ public class Add extends Command {
                             }
 
                             String strFileJson = JsonUtils.getStringFromFile(Main.globalperm.toString());
-                            JSONObject jsonObj = new JSONObject(strFileJson);
-                            if (!jsonObj.getString("Permissions").contains(command)) {
-                                jsonObj.append("Permissions", command);
+                            JsonObject jsonObj = JsonUtils.getJsonObject(strFileJson);
+                            if (!jsonObj.get("Permissions").getAsString().contains(command)) {
+                                jsonObj.addProperty("Permissions", command);
                                 JsonUtils.writeJsonFile(Main.globalperm, jsonObj.toString());
                                 event.getUser().send().notice(args[2] + " was added to the list!");
                                 event.getUser().send().notice("Reloaded Permissions");

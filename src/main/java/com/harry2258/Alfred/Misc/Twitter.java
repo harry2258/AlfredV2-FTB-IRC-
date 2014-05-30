@@ -1,8 +1,8 @@
 package com.harry2258.Alfred.Misc;
 
+import com.google.gson.JsonObject;
 import com.harry2258.Alfred.api.JsonUtils;
 import com.harry2258.Alfred.api.Utils;
-import org.json.JSONObject;
 import org.pircbotx.Channel;
 import org.pircbotx.Colors;
 import org.pircbotx.PircBotX;
@@ -58,11 +58,11 @@ public class Twitter extends Thread {
                 }
 
                 String OAuth = JsonUtils.getStringFromFile(auth.toString());
-                JSONObject Auth = new JSONObject(OAuth);
+                JsonObject Auth = JsonUtils.getJsonObject(OAuth);
 
                 String users = JsonUtils.getStringFromFile(TweetUsers.toString());
-                JSONObject tweetuser = new JSONObject(users);
-                if (Auth.getString("OAuthConsumerKey").isEmpty() | Auth.getString("OAuthConsumerSecret").isEmpty() | Auth.getString("OAuthAccessToken").isEmpty() | Auth.getString("OAuthAccessTokenSecret").isEmpty()) {
+                JsonObject tweetuser = JsonUtils.getJsonObject(users);
+                if (Auth.get("OAuthConsumerKey").getAsString().isEmpty() | Auth.get("OAuthConsumerSecret").getAsString().isEmpty() | Auth.get("OAuthAccessToken").getAsString().isEmpty() | Auth.get("OAuthAccessTokenSecret").getAsString().isEmpty()) {
                     for (Channel chan : bot.getUserBot().getChannels()) {
                         chan.send().message("UH-OH!! This is something wrong with your \"oauth.json\" file in Twitter folder.");
                     }
@@ -73,27 +73,26 @@ public class Twitter extends Thread {
                 ConfigurationBuilder cb = new ConfigurationBuilder();
                 cb.setDebugEnabled(true)
                         //.setUseSSL(true)
-                        .setOAuthConsumerKey(Auth.getString("OAuthConsumerKey"))
-                        .setOAuthConsumerSecret(Auth.getString("OAuthConsumerSecret"))
-                        .setOAuthAccessToken(Auth.getString("OAuthAccessToken"))
-                        .setOAuthAccessTokenSecret(Auth.getString("OAuthAccessTokenSecret"))
+                        .setOAuthConsumerKey(Auth.get("OAuthConsumerKey").getAsString())
+                        .setOAuthConsumerSecret(Auth.get("OAuthConsumerSecret").getAsString())
+                        .setOAuthAccessToken(Auth.get("OAuthAccessToken").getAsString())
+                        .setOAuthAccessTokenSecret(Auth.get("OAuthAccessTokenSecret").getAsString())
                         .setHttpConnectionTimeout(100000);
 
                 twitterFactory = new TwitterFactory(cb.build());
                 twitter = twitterFactory.getInstance();
 
-                String[] args = tweetuser.getString("Users").replaceAll("[\\[\"\\]]", "").split(",");
+                String[] args = tweetuser.get("Users").getAsString().replaceAll("[\\[\"\\]]", "").split(",");
 
-                for (int i = 0; i < args.length; i++) {
+                for (String arg : args) {
                     try {
                         List<Status> statuses;
-                        statuses = twitter.getUserTimeline(args[i]);
+                        statuses = twitter.getUserTimeline(arg);
                         test = "[" + Colors.RED + "Twitter" + Colors.NORMAL + "] [" + Colors.BOLD + statuses.get(0).getUser().getName() + Colors.NORMAL + "] " + statuses.get(0).getText();
                         if (!tweets.containsValue(test)) {
-                            tweets.put(args[i], test);
+                            tweets.put(arg, test);
                             for (Channel chan : bot.getUserBot().getChannels()) {
                                 if (statuses.get(0).getUser().getName().equals("TPPIModPack") && chan.getName().equals("TestPackPleaseIgnore")) {
-                                    Channel TPPI = chan;
                                     chan.send().message(test);
                                 } else {
                                 }

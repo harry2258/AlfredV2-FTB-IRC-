@@ -1,8 +1,8 @@
 package com.harry2258.Alfred.Misc;
 
+import com.google.gson.JsonObject;
 import com.harry2258.Alfred.api.JsonUtils;
 import com.harry2258.Alfred.api.Utils;
-import org.json.JSONObject;
 import org.pircbotx.Colors;
 import org.pircbotx.hooks.events.MessageEvent;
 
@@ -87,9 +87,6 @@ public class CreeperHost extends Thread {
                             String[] splitString = edgesjson.split(",");
                             for (String entry : splitString) {
                                 String[] splitEntry = entry.split(":");
-                                if (splitEntry.length == 2) {
-
-                                }
                                 chRepos.add(splitEntry[0]);
                                 chURLs.add(splitEntry[1]);
                                 chURLNames.add(splitEntry[1].substring(0, splitEntry[1].indexOf(".creeperrepo.net")));
@@ -190,8 +187,8 @@ public class CreeperHost extends Thread {
                             System.out.println("[" + chURLNames.get(i) + "] Connected to stats page in " + (endTime - startTime1) + "(MS)");
                             String test;
                             int x;
-                            JSONObject jsonObj = new JSONObject(jsons);
-                            test = jsonObj.getString("Bandwidth");
+                            JsonObject jsonObj = JsonUtils.getJsonObject(jsons);
+                            test = jsonObj.get("Bandwidth").getAsString();
                             x = Integer.parseInt(test) * 100 / 1000000;
                             re.close();
                             urlConn.disconnect();

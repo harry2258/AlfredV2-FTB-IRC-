@@ -1,14 +1,15 @@
 package com.harry2258.Alfred.commands;
 
+import com.google.gson.JsonObject;
 import com.harry2258.Alfred.api.Command;
 import com.harry2258.Alfred.api.Config;
-import com.harry2258.Alfred.api.PermissionManager;
-import org.json.JSONObject;
+import com.harry2258.Alfred.api.JsonUtils;
 import org.pircbotx.Colors;
 import org.pircbotx.User;
 import org.pircbotx.hooks.WaitForQueue;
 import org.pircbotx.hooks.events.MessageEvent;
 import org.pircbotx.hooks.events.WhoisEvent;
+import twitter4j.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -63,16 +64,16 @@ public class Geo extends Command {
                 url = new URL(geo);
                 BufferedReader re = new BufferedReader(new InputStreamReader(url.openStream()));
                 String jsonstring = re.readLine();
-                JSONObject jsonObj = new JSONObject(jsonstring);
+                JsonObject jsonObj = JsonUtils.getJsonObject(jsonstring);
                 System.out.println(jsonObj.toString());
-                info.add(Colors.BOLD + "City: " + Colors.NORMAL + jsonObj.getString("city"));
-                info.add(Colors.BOLD + "Zip: " + Colors.NORMAL + jsonObj.getString("zipcode"));
-                info.add(Colors.BOLD + "State: " + Colors.NORMAL + jsonObj.getString("region_name"));
-                info.add(Colors.BOLD + "Country: " + Colors.NORMAL + jsonObj.getString("country_name"));
-                info.add(Colors.BOLD + "Coords: " + Colors.NORMAL + jsonObj.getString("latitude") + " " + jsonObj.getString("longitude"));
+                info.add(Colors.BOLD + "City: " + Colors.NORMAL + jsonObj.get("city").getAsString());
+                info.add(Colors.BOLD + "Zip: " + Colors.NORMAL + jsonObj.get("zipcode").getAsString());
+                info.add(Colors.BOLD + "State: " + Colors.NORMAL + jsonObj.get("region_name").getAsString());
+                info.add(Colors.BOLD + "Country: " + Colors.NORMAL + jsonObj.get("country_name").getAsString());
+                info.add(Colors.BOLD + "Coords: " + Colors.NORMAL + jsonObj.get("latitude").getAsString() + " " + jsonObj.get("longitude").getAsString());
 
-                for (int x = 0; x < info.size(); x++) {
-                    Message.add(info.get(x));
+                for (String anInfo : info) {
+                    Message.add(anInfo);
                 }
 
                 for (String s : Message) {
@@ -120,8 +121,8 @@ public class Geo extends Command {
             info.add(Colors.BOLD + "Country: " + Colors.NORMAL + jsonObj.getString("country_name"));
             info.add(Colors.BOLD + "Coords: " + Colors.NORMAL + jsonObj.getString("latitude").replaceAll("(?:\\.).*", "") + " " + jsonObj.getString("longitude").replaceAll("(?:\\.).*", ""));
 
-            for (int x = 0; x < info.size(); x++) {
-                Message.add(info.get(x));
+            for (String anInfo : info) {
+                Message.add(anInfo);
             }
 
             for (String s : Message) {

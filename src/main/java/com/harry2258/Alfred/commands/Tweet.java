@@ -1,7 +1,7 @@
 package com.harry2258.Alfred.commands;
 
+import com.google.gson.JsonObject;
 import com.harry2258.Alfred.api.*;
-import org.json.JSONObject;
 import org.pircbotx.Colors;
 import org.pircbotx.hooks.events.MessageEvent;
 import twitter4j.Status;
@@ -45,11 +45,11 @@ public class Tweet extends Command {
         }
 
         String OAuth = JsonUtils.getStringFromFile(auth.toString());
-        JSONObject Auth = new JSONObject(OAuth);
+        JsonObject Auth = JsonUtils.getJsonObject(OAuth);
 
         String users = JsonUtils.getStringFromFile(TweetUsers.toString());
-        JSONObject tweetuser = new JSONObject(users);
-        if (Auth.getString("OAuthConsumerKey").isEmpty() | Auth.getString("OAuthConsumerSecret").isEmpty() | Auth.getString("OAuthAccessToken").isEmpty() | Auth.getString("OAuthAccessTokenSecret").isEmpty()) {
+        JsonObject tweetuser = JsonUtils.getJsonObject(users);
+        if (Auth.get("OAuthConsumerKey").getAsString().isEmpty() | Auth.get("OAuthConsumerSecret").getAsString().isEmpty() | Auth.get("OAuthAccessToken").getAsString().isEmpty() | Auth.get("OAuthAccessTokenSecret").getAsString().isEmpty()) {
             event.getChannel().send().message("Holy Crap! This is something wrong with your \"oauth.json\" file in Twitter folder.");
             return false;
         }
@@ -59,16 +59,16 @@ public class Tweet extends Command {
         ConfigurationBuilder cb = new ConfigurationBuilder();
         cb.setDebugEnabled(true)
                 //.setUseSSL(true)
-                .setOAuthConsumerKey(Auth.getString("OAuthConsumerKey"))
-                .setOAuthConsumerSecret(Auth.getString("OAuthConsumerSecret"))
-                .setOAuthAccessToken(Auth.getString("OAuthAccessToken"))
-                .setOAuthAccessTokenSecret(Auth.getString("OAuthAccessTokenSecret"))
+                .setOAuthConsumerKey(Auth.get("OAuthConsumerKey").getAsString())
+                .setOAuthConsumerSecret(Auth.get("OAuthConsumerSecret").getAsString())
+                .setOAuthAccessToken(Auth.get("OAuthAccessToken").getAsString())
+                .setOAuthAccessTokenSecret(Auth.get("OAuthAccessTokenSecret").getAsString())
                 .setHttpConnectionTimeout(100000);
 
         twitterFactory = new TwitterFactory(cb.build());
         twitter = twitterFactory.getInstance();
 
-        String[] args = tweetuser.getString("Users").replaceAll("[\\[\"\\]]", "").split(",");
+        String[] args = tweetuser.get("Users").getAsString().replaceAll("[\\[\"\\]]", "").split(",");
 
         if (tests.length >= 2) {
             int post = 0;
@@ -94,18 +94,18 @@ public class Tweet extends Command {
                 return false;
             }
         }
-        for (int i = 0; i < args.length; i++) {
+        for (String arg : args) {
             try {
                 List<Status> statuses;
-                statuses = twitter.getUserTimeline(args[i]);
+                statuses = twitter.getUserTimeline(arg);
                 test = "[" + Colors.RED + "Twitter" + Colors.NORMAL + "] [" + Colors.BOLD + statuses.get(0).getUser().getName() + Colors.NORMAL + "] " + statuses.get(0).getText();
                 System.out.println(test);
                 if (!tweets.containsValue(test)) {
-                    tweets.put(args[i], test);
+                    tweets.put(arg, test);
                     event.getChannel().send().message(test);
                 }
                 if (!com.harry2258.Alfred.Misc.Twitter.tweets.containsValue(test)) {
-                    tweets.put(args[i], test);
+                    tweets.put(arg, test);
                 }
 
             } catch (TwitterException te) {

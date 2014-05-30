@@ -4,11 +4,13 @@
  */
 package com.harry2258.Alfred.api;
 
+import com.google.common.collect.Maps;
+
 import java.util.HashMap;
 
 public class CommandRegistry {
 
-    public static HashMap<String, Command> commands = new HashMap<>();
+    public static HashMap<String, Command> commands = Maps.newHashMap();
 
     public static void register(Command command) {
         if (commands.containsKey(command.getName())) {

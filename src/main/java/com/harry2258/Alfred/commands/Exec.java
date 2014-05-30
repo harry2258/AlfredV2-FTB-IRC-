@@ -86,6 +86,6 @@ public class Exec extends Command {
 
     @Override
     public void setManager(PermissionManager manager) {
-        this.manager = manager;
+        Exec.manager = manager;
     }
 }

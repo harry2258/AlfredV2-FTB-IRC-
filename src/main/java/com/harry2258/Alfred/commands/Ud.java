@@ -1,9 +1,10 @@
 package com.harry2258.Alfred.commands;
 
+import com.google.gson.JsonObject;
 import com.harry2258.Alfred.api.Command;
 import com.harry2258.Alfred.api.Config;
+import com.harry2258.Alfred.api.JsonUtils;
 import com.harry2258.Alfred.api.PermissionManager;
-import org.json.JSONObject;
 import org.pircbotx.Colors;
 import org.pircbotx.hooks.events.MessageEvent;
 
@@ -48,8 +49,8 @@ public class Ud extends Command {
             BufferedReader first = new BufferedReader(new InputStreamReader(u.getInputStream()));
             result = first.readLine();
             String json1 = result.replaceAll("\n", " ");
-            JSONObject jsonObj = new JSONObject(json1);
-            if (jsonObj.get("result_type").equals("no_results")) {
+            JsonObject jsonObj = JsonUtils.getJsonObject(json1);
+            if (jsonObj.get("result_type").getAsString().equals("no_results")) {
                 event.getChannel().send().message("Could not find \"" + Word + "\" on Urban Dictionary :(");
                 return true;
             }
@@ -57,9 +58,9 @@ public class Ud extends Command {
             String example = "";
             String permalink = "";
             try {
-                definition = jsonObj.getJSONArray("list").getJSONObject(id).getString("definition").replaceAll("\\n|\\r|\\t", " ").replaceAll("  ", " ");
-                example = jsonObj.getJSONArray("list").getJSONObject(id).getString("example").replaceAll("\\n|\\r|\\t", " ").replaceAll("  ", " ");
-                permalink = jsonObj.getJSONArray("list").getJSONObject(id).getString("permalink");
+                definition = jsonObj.getAsJsonArray("list").get(id).getAsJsonObject().get("definition").getAsString().replaceAll("\\n|\\r|\\t", " ").replaceAll("  ", " ");
+                example = jsonObj.getAsJsonArray("list").get(id).getAsJsonObject().get("example").getAsString().replaceAll("\\n|\\r|\\t", " ").replaceAll("  ", " ");
+                permalink = jsonObj.getAsJsonArray("list").get(id).getAsJsonObject().get("permalink").getAsString();
             } catch (Exception x) {
                 event.getChannel().send().message("Could not get #" + id + " definition for the word '" + Word + "'");
                 return true;

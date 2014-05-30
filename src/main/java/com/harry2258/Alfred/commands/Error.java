@@ -8,6 +8,7 @@ import org.pircbotx.hooks.events.MessageEvent;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
@@ -40,9 +41,9 @@ public class Error extends Command {
         try {
             Class.forName("com.mysql.jdbc.Driver");
             if (args.length == 2 && args[1].equalsIgnoreCase("test")) {
-                event.getUser().send().notice("Trying to connect to datebase!");
+                event.getUser().send().notice("Trying to connect to database!");
                 if (getConnection().isValid(5000)) {
-                    event.getChannel().send().message("Connection to database was succesful!");
+                    event.getChannel().send().message("Connection to database was successful!");
                 } else {
                     event.getChannel().send().message("Could not connect to the database, Please check your bot.properties files.");
                 }
@@ -65,9 +66,7 @@ public class Error extends Command {
             if (args.length == 2 && args[1].equalsIgnoreCase("submit")) {
                 ArrayList<String> test1 = new ArrayList<>();
                 String[] test = Errors.get(event.getUser().getNick()).split(", ");
-                for (int i = 0; i < test.length; i++) {
-                    test1.add(test[i]);
-                }
+                Collections.addAll(test1, test);
                 addProblem(Diagnosis.get(event.getUser().getNick()), Suggestion.get(event.getUser().getNick()), test1);
                 Diagnosis.remove(event.getUser().getNick());
                 Suggestion.remove(event.getUser().getNick());
