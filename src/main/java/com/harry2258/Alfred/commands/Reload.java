@@ -5,6 +5,7 @@ import com.harry2258.Alfred.api.Command;
 import com.harry2258.Alfred.api.Config;
 import com.harry2258.Alfred.api.JsonUtils;
 import com.harry2258.Alfred.api.PermissionManager;
+import com.harry2258.Alfred.json.Perms;
 import org.pircbotx.hooks.events.MessageEvent;
 
 import java.io.File;
@@ -29,7 +30,9 @@ public class Reload extends Command {
             JsonUtils.createJsonStructure(file);
         }
         String perms = JsonUtils.getStringFromFile(file.toString());
-        Main.map.put(event.getChannel().getName().toLowerCase(), perms);
+        Perms p = JsonUtils.getPermsFromString(perms);
+        Main.map.put(event.getChannel().getName(), p);
+
         event.getUser().send().notice("Permissions were reloaded for " + event.getChannel().getName().toLowerCase() + "!");
         return true;
     }

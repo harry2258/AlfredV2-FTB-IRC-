@@ -7,6 +7,7 @@ package com.harry2258.Alfred.commands;
 import com.google.gson.JsonObject;
 import com.harry2258.Alfred.Main;
 import com.harry2258.Alfred.api.*;
+import com.harry2258.Alfred.json.Perms;
 import org.pircbotx.Colors;
 import org.pircbotx.hooks.events.MessageEvent;
 
@@ -53,7 +54,8 @@ public class Add extends Command {
                         JsonUtils.writeJsonFile(file, jsonObj.toString());
                         event.getUser().send().notice(newuser + " is now a Moderator for channel " + event.getChannel().getName());
                         String perms = JsonUtils.getStringFromFile(Jsonfile);
-                        Main.map.put(event.getChannel().getName(), perms);
+                        Perms p = JsonUtils.getPermsFromString(perms);
+                        Main.map.put(event.getChannel().getName(), p);
                         event.getUser().send().notice("Reloaded Permissions");
                         event.getBot().getUserChannelDao().getUser(args[2]).send().notice("You are now a " + Colors.BOLD + "MODERATOR" +  Colors.NORMAL+" for channel " + event.getChannel().getName());
                         return true;
@@ -87,7 +89,8 @@ public class Add extends Command {
                             JsonUtils.writeJsonFile(file, jsonObj.toString());
                             event.getUser().send().notice("Moderators are now able to use the command '" + args[2] + "'");
                             String perms = JsonUtils.getStringFromFile(Jsonfile);
-                            Main.map.put(event.getChannel().getName(), perms);
+                            Perms p = JsonUtils.getPermsFromString(perms);
+                            Main.map.put(event.getChannel().getName(), p);
                             event.getUser().send().notice("Reloaded Permissions");
                             return true;
                         } else {
@@ -123,7 +126,8 @@ public class Add extends Command {
                         JsonUtils.writeJsonFile(file, jsonObj.toString());
                         event.getUser().send().notice(newuser + " is now a Admin for channel " + event.getChannel().getName());
                         String perms = JsonUtils.getStringFromFile(Jsonfile);
-                        Main.map.put(event.getChannel().getName(), perms);
+                        Perms p = JsonUtils.getPermsFromString(perms);
+                        Main.map.put(event.getChannel().getName(), p);
                         event.getUser().send().notice("Reloaded Permissions");
                         event.getBot().getUserChannelDao().getUser(args[2]).send().notice("You are now an " + Colors.BOLD + "ADMIN" +  Colors.NORMAL+" for channel " + event.getChannel().getName());
                         return true;
@@ -159,7 +163,8 @@ public class Add extends Command {
                             JsonUtils.writeJsonFile(file, jsonObj.toString());
                             event.getUser().send().notice("Everyone is now able to use the command '" + args[2] + "'");
                             String perms = JsonUtils.getStringFromFile(Jsonfile);
-                            Main.map.put(event.getChannel().getName(), perms);
+                            Perms p = JsonUtils.getPermsFromString(perms);
+                            Main.map.put(event.getChannel().getName(), p);
                             event.getUser().send().notice("Reloaded Permissions");
                             return true;
                         } else {

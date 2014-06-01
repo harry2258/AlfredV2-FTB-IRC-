@@ -7,6 +7,8 @@ package com.harry2258.Alfred.api;
 
 import com.google.gson.JsonObject;
 import com.harry2258.Alfred.Main;
+import com.harry2258.Alfred.json.Permission;
+import com.harry2258.Alfred.json.Perms;
 import org.pircbotx.Channel;
 import org.pircbotx.User;
 
@@ -40,13 +42,13 @@ public class PermissionManager {
             System.out.println("Perms are not inside HashMap!\nAdding!");
             String Jsonfile = System.getProperty("user.dir") + "/perms/" + event.getChannel().getName().toLowerCase() + "/" + "perms.json";
             String perms = JsonUtils.getStringFromFile(Jsonfile);
-            Main.map.put(event.getChannel().getName(), perms);
+
+            Main.map.put(event.getChannel().getName(), JsonUtils.getPermsFromString(perms));
         }
 
         String sender = Main.Login.get(user.getNick());
-        String perms = Main.map.get(event.getChannel().getName());
-        JsonObject jsonObj = JsonUtils.getJsonObject(perms);
-
+        Perms perms = Main.map.get(event.getChannel().getName());
+        Permission p = perms.getPermission();
         String Geveryone = JsonUtils.getStringFromFile(Main.globalperm.toString());
         JsonObject everyone = JsonUtils.getJsonObject(Geveryone);
 
@@ -54,17 +56,17 @@ public class PermissionManager {
             return true;
         }
 
-        if (jsonObj.getAsJsonObject("Perms").get("Everyone").getAsString().contains(permission)) {
+        if (p.getEveryone().contains(permission)) {
             return true;
         }
 
-        if (jsonObj.getAsJsonObject("Perms").get("ModPerms").getAsString().contains(permission)) {
-            if (jsonObj.getAsJsonObject("Perms").get("Admins").getAsString().contains(sender) || jsonObj.getAsJsonObject("Perms").get("Mods").getAsString().contains(sender) && user.isVerified()) {
+        if (p.getModPerms().contains(permission)) {
+            if (p.getAdmins().contains(sender) || p.getMods().contains(sender) && user.isVerified()) {
                 return true;
             }
         }
 
-        if (jsonObj.getAsJsonObject("Perms").get("Admins").getAsString().contains(sender)) {
+        if (p.getAdmins().contains(sender)) {
             return true;
         }
 
@@ -97,10 +99,8 @@ public class PermissionManager {
     public static boolean hasAdmin(User user, org.pircbotx.hooks.events.MessageEvent event) throws Exception {
 
         String sender = Main.Login.get(user.getNick());
-        String Admin = Main.map.get(event.getChannel().getName());
-        JsonObject admin = JsonUtils.getJsonObject(Admin);
-
-        if (admin.getAsJsonObject("Perms").get("Admins").getAsString().contains(sender)) {
+        Perms perm = Main.map.get(event.getChannel().getName());
+        if (perm.getPermission().getAdmins().contains(sender)) {
             if (user.isVerified()) {
                 return true;
             }

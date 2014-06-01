@@ -4,6 +4,8 @@ import com.harry2258.Alfred.Misc.Reddit;
 import com.harry2258.Alfred.Misc.Twitter;
 import com.harry2258.Alfred.Misc.Update;
 import com.harry2258.Alfred.api.*;
+import com.harry2258.Alfred.json.Permission;
+import com.harry2258.Alfred.json.Perms;
 import com.harry2258.Alfred.listeners.*;
 import com.harry2258.Alfred.runnables.ChatSocketListener;
 import org.apache.commons.configuration.PropertiesConfiguration;
@@ -28,7 +30,7 @@ public class Main {
     public static long startup = 0;
     public static PircBotX bot;
     public static File jsonFilePath = new File(System.getProperty("user.dir") + "/exec.json");
-    public static Map<String, String> map = new HashMap<>();
+    public static Map<String, Perms> map = new HashMap<>();
     public static Map<String, String> Login = new HashMap<>();
     public static HashMap<Channel, Channel> relay = new HashMap<>();
     public static HashMap<String, String> URL = new HashMap<>();
@@ -116,7 +118,8 @@ public class Main {
                     JsonUtils.createJsonStructure(file);
                 }
                 String perms = JsonUtils.getStringFromFile(Jsonfile);
-                map.put(channel.toLowerCase(), perms);
+                Perms p = JsonUtils.getPermsFromString(perms);
+                map.put(channel.toLowerCase(), p);
                 System.out.println("Loaded perms for " + channel);
                 builder.addAutoJoinChannel(channel);
             }

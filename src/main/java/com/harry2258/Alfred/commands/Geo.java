@@ -4,6 +4,7 @@ import com.google.gson.JsonObject;
 import com.harry2258.Alfred.api.Command;
 import com.harry2258.Alfred.api.Config;
 import com.harry2258.Alfred.api.JsonUtils;
+import com.harry2258.Alfred.api.PermissionManager;
 import org.pircbotx.Colors;
 import org.pircbotx.User;
 import org.pircbotx.hooks.WaitForQueue;
@@ -18,9 +19,6 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-/**
- * Created by Hardik on 1/26/14.
- */
 public class Geo extends Command {
 
     public Geo() {

@@ -4,14 +4,18 @@
  */
 package com.harry2258.Alfred.commands;
 
+import com.google.common.collect.Lists;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.harry2258.Alfred.Main;
 import com.harry2258.Alfred.api.*;
+import com.harry2258.Alfred.json.Permission;
+import com.harry2258.Alfred.json.Perms;
 import org.pircbotx.Colors;
 import org.pircbotx.hooks.events.MessageEvent;
 
 import java.io.File;
+import java.util.List;
 
 /**
  * @author Hardik
@@ -34,8 +38,13 @@ public class Remove extends Command {
         String Jsonfile = file.toString();
         String[] args = event.getMessage().split(" ");
         String type = args[1];
-        JsonArray temp = new JsonArray();
+        List temp = Lists.newArrayList();
         Boolean inChan = false;
+        try{
+        String strFileJson = JsonUtils.getStringFromFile(Jsonfile);
+        Perms perm = JsonUtils.getPermsFromString(strFileJson);
+        Permission p = perm.getPermission();
+
         if (type.equalsIgnoreCase("mod")) {
             System.out.println("Removing user from " + Jsonfile);
             if (args.length == 3) {
@@ -52,17 +61,14 @@ public class Remove extends Command {
                     mod = args[2];
                 }
                 try {
-                    String strFileJson = JsonUtils.getStringFromFile(Jsonfile);
-                    JsonObject jsonObj = JsonUtils.getJsonObject(strFileJson);
-                    if (jsonObj.getAsJsonObject("Perms").get("Mods").getAsString().contains(mod)) {
-                        temp = (jsonObj.getAsJsonObject("Perms").getAsJsonArray("Mods"));
+                    if (p.getMods().contains(mod)) {
+                        temp = p.getMods();
                         temp.remove(mod);
-                        jsonObj.getAsJsonObject("Perms").remove("Mods");
-                        jsonObj.getAsJsonObject("Perms").add("Mods", temp);
-
-                        JsonUtils.writeJsonFile(file, jsonObj.toString());
+                        p.setMods(temp);
+                        perm.setPermission(p);
+                        JsonUtils.writeJsonFile(file, perm);
                         event.getUser().send().notice(args[2] + " is no longer a Moderator for channel " + event.getChannel().getName());
-                        Main.map.put(event.getChannel().getName(), JsonUtils.getStringFromFile(Jsonfile));
+                        Main.map.put(event.getChannel().getName(), perm);
                         event.getUser().send().notice("Reloaded Permissions");
                         if (inChan) {
                             event.getBot().getUserChannelDao().getUser(args[2]).send()
@@ -90,16 +96,14 @@ public class Remove extends Command {
                 }
 
                 try {
-                    String strFileJson = JsonUtils.getStringFromFile(Jsonfile);
-                    JsonObject jsonObj = JsonUtils.getJsonObject(strFileJson);
-                    if (jsonObj.getAsJsonObject("Perms").get("ModPerms").getAsString().contains(command)) {
-                        temp = (jsonObj.getAsJsonObject("Perms").getAsJsonArray("ModPerms"));
+                    if (p.getModPerms().contains(command)) {
+                        temp = (p.getModPerms());
                         temp.remove(command);
-                        jsonObj.getAsJsonObject("Perms").remove("ModPerms");
-                        jsonObj.getAsJsonObject("Perms").add("ModPerms", temp);
-                        JsonUtils.writeJsonFile(file, jsonObj.toString());
+                        p.setModPerms(temp);
+                        perm.setPermission(p);
+                        JsonUtils.writeJsonFile(file, perm);
                         event.getUser().send().notice("Moderators can no longer use the command '" + args[2] + "'");
-                        Main.map.put(event.getChannel().getName(), JsonUtils.getStringFromFile(Jsonfile));
+                        Main.map.put(event.getChannel().getName(), perm);
                         event.getUser().send().notice("Reloaded Permissions");
                         return true;
                     } else {
@@ -126,17 +130,14 @@ public class Remove extends Command {
                     mod = args[2];
                 }
                 try {
-                    String strFileJson = JsonUtils.getStringFromFile(Jsonfile);
-                    JsonObject jsonObj = JsonUtils.getJsonObject(strFileJson);
-                    if (jsonObj.getAsJsonObject("Perms").get("Admins").getAsString().contains(mod)) {
-                        temp = jsonObj.getAsJsonObject("Perms").getAsJsonArray("Admins");
+                    if (p.getAdmins().contains(mod)) {
+                        temp = p.getAdmins();
                         temp.remove(mod);
-                        jsonObj.getAsJsonObject("Perms").remove("Admins");
-                        jsonObj.getAsJsonObject("Perms").add("Admins", temp);
-
-                        JsonUtils.writeJsonFile(file, jsonObj.toString());
+                        p.setAdmins(temp);
+                        perm.setPermission(p);
+                        JsonUtils.writeJsonFile(file, perm);
                         event.getUser().send().notice(args[2] + " is no longer an Admin for channel " + event.getChannel().getName());
-                        Main.map.put(event.getChannel().getName(), JsonUtils.getStringFromFile(Jsonfile));
+                        Main.map.put(event.getChannel().getName(), perm);
                         event.getUser().send().notice("Reloaded Permissions");
                         if (inChan) {
                             event.getBot().getUserChannelDao().getUser(args[2]).send()
@@ -164,18 +165,15 @@ public class Remove extends Command {
                 }
 
                 try {
-                    String strFileJson = JsonUtils.getStringFromFile(Jsonfile);
-                    JsonObject jsonObj = JsonUtils.getJsonObject(strFileJson);
-                    if (jsonObj.getAsJsonObject("Perms").get("Everyone").getAsString().contains(command)) {
-                        temp = (jsonObj.getAsJsonObject("Perms").getAsJsonArray("Everyone"));
+                    if (p.getEveryone().contains(command)) {
+                        temp = p.getEveryone();
                         temp.remove(command);
-                        jsonObj.getAsJsonObject("Perms").remove("Everyone");
-                        jsonObj.getAsJsonObject("Perms").add("Everyone", temp);
-
-                        JsonUtils.writeJsonFile(file, jsonObj.toString());
+                        p.setEveryone(temp);
+                        perm.setPermission(p);
+                        JsonUtils.writeJsonFile(file, perm);
                         String strJson = JsonUtils.getStringFromFile(JsonUtils.Jsonfile);
                         event.getUser().send().notice("Regular users can no longer use the command '" + args[2] + "'");
-                        Main.map.put(event.getChannel().getName(), JsonUtils.getStringFromFile(Jsonfile));
+                        Main.map.put(event.getChannel().getName(), perm);
                         event.getUser().send().notice("Reloaded Permissions");
                         return true;
                     } else {
@@ -199,15 +197,13 @@ public class Remove extends Command {
                 }
 
                 try {
-                    String strFileJson = JsonUtils.getStringFromFile(Main.globalperm.toString());
-                    JsonObject jsonObj = JsonUtils.getJsonObject(strFileJson);
-                    if (jsonObj.get("Permissions").getAsString().contains(command)) {
-                        temp = (jsonObj.getAsJsonArray("Permissions"));
+                    String s  = JsonUtils.getStringFromFile(Main.globalperm.toString());
+                    Perms perm2 = JsonUtils.getPermsFromString(s);
+                    if (perm2.getGlobal().contains(command)) {
+                        temp = perm2.getGlobal();
                         temp.remove(command);
-                        jsonObj.remove("Permissions");
-                        jsonObj.add("Permissions", temp);
-
-                        JsonUtils.writeJsonFile(Main.globalperm, jsonObj.toString());
+                        perm2.setGlobal(temp);
+                        JsonUtils.writeJsonFile(Main.globalperm, perm2);
                         event.getUser().send().notice(args[2] + " was removed from the list!");
                         return true;
                     } else {
@@ -218,6 +214,8 @@ public class Remove extends Command {
                     System.out.println(ex);
                 }
             }
+        }}catch(Exception e){
+
         }
         return false;
     }
