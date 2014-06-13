@@ -34,10 +34,6 @@ jar {
         attributes 'Main-Class': project.mainClass
     }
 }
-shadow {
-    exclude 'META-INF/*.DSA'
-    exclude 'META-INF/*.RSA'
-}
 repositories {
     mavenCentral()
 }
