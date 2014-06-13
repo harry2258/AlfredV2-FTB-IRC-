@@ -83,7 +83,7 @@ public class Tweet extends Command {
                 String text = "";
                 text += statuses.get(post).getText().replace("\n", " ").replace("\r", " ");
                 String address = "http://twitter.com/" + statuses.get(post).getUser().getName() + "/status/" + statuses.get(post).getId();
-                event.getChannel().send().message("[" + Colors.RED + "Twitter" + Colors.NORMAL + "] [ " + Utils.shortenUrl(address) + "] [" + Colors.BOLD + statuses.get(post).getUser().getName() + Colors.NORMAL + "] " + text);
+                event.getChannel().send().message("[" + Colors.RED + "Twitter" + Colors.NORMAL + "] [ " + Utils.shortenUrl(address) + " ] [" + Colors.BOLD + statuses.get(post).getUser().getName() + Colors.NORMAL + "] " + text);
                 if (!com.harry2258.Alfred.Misc.Twitter.tweets.containsValue(test)) {
                     tweets.put(args[1], test);
                 }

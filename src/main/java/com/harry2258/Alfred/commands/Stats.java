@@ -10,9 +10,6 @@ import org.pircbotx.hooks.events.MessageEvent;
  */
 public class Stats extends Command {
 
-    private Config config;
-    private PermissionManager manager;
-
     public Stats() {
         super("Stats", "Gets stats on modpack that use YAMPST!", "Stats [Author] [Modpack Name]");
     }
@@ -26,11 +23,9 @@ public class Stats extends Command {
 
     @Override
     public void setConfig(Config config) {
-        this.config = config;
     }
 
     @Override
     public void setManager(PermissionManager manager) {
-        this.manager = manager;
     }
 }

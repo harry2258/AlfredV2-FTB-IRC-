@@ -9,20 +9,25 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
+
 import com.harry2258.Alfred.Main;
 import com.harry2258.Alfred.listeners.MessageEvent;
-import org.apache.commons.io.IOUtils;
+
+import org.apache.commons.io.*;
 import org.apache.commons.lang3.StringEscapeUtils;
+
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+
 import org.pircbotx.Channel;
 import org.pircbotx.Colors;
 import org.pircbotx.User;
 import org.pircbotx.UserLevel;
 import org.pircbotx.hooks.WaitForQueue;
 import org.pircbotx.hooks.events.WhoisEvent;
+
 import org.scribe.model.OAuthRequest;
 import org.scribe.model.Response;
 import org.scribe.model.Verb;
@@ -321,7 +326,7 @@ public class Utils {
                     + Integer.parseInt(banservice.getAsJsonObject("minebans").get("bans").getAsString())
                     + Integer.parseInt(banservice.getAsJsonObject("glizer").get("bans").getAsString());
             if (Integer.valueOf(i).equals(0) || Integer.valueOf(i).equals(1)) {
-            bans = Colors.BOLD + user + Colors.NORMAL + " has a total of " + Colors.BOLD + i + Colors.NORMAL + " ban!";
+                bans = Colors.BOLD + user + Colors.NORMAL + " has a total of " + Colors.BOLD + i + Colors.NORMAL + " ban!";
             } else {
                 bans = Colors.BOLD + user + Colors.NORMAL + " has a total of " + Colors.BOLD + i + Colors.NORMAL + " bans!";
             }
@@ -334,8 +339,8 @@ public class Utils {
 
     public static String getInsult() {
         String insult1 = null;
-        do {
-            try {
+        try {
+            do {
                 URL insult;
                 insult = new URL("http://www.pangloss.com/seidel/Shaker/index.html?");
                 BufferedReader br = new BufferedReader(new InputStreamReader(insult.openStream()));
@@ -344,10 +349,10 @@ public class Utils {
                 String line = br.readLine();
                 insult1 = line.replaceAll("</font>", " ").replace("</form><hr>", "").replaceAll("<br>", " ");
                 br.close();
-            } catch (Exception e1) {
-                e1.printStackTrace();
-            }
-        } while (insult1.isEmpty());
+            } while (insult1.isEmpty());
+        } catch (Exception e1) {
+            e1.printStackTrace();
+        }
 
         return insult1;
     }

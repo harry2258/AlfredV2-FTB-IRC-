@@ -22,30 +22,32 @@ public class ChatSocketHandler extends Thread {
         this.socket = socket;
         this.bot = bot;
     }
+
     private static volatile boolean isRunning = true;
+
     @Override
     public void run() {
         while (isRunning) {
-        try {
-            System.out.println("New connection from " + socket.getRemoteSocketAddress());
-            this.reader = new BufferedReader(new InputStreamReader(this.socket.getInputStream()));
-            writer = new BufferedWriter(new PrintWriter(socket.getOutputStream()));
-            String line;
-            while ((line = reader.readLine()) != null) {
-                if (!line.isEmpty()) {
-                    bot.sendRaw().rawLineNow(line);
-                } else {
-                    writer.write("Invalid format!\r\n");
-                    writer.flush();
+            try {
+                System.out.println("New connection from " + socket.getRemoteSocketAddress());
+                this.reader = new BufferedReader(new InputStreamReader(this.socket.getInputStream()));
+                writer = new BufferedWriter(new PrintWriter(socket.getOutputStream()));
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    if (!line.isEmpty()) {
+                        bot.sendRaw().rawLineNow(line);
+                    } else {
+                        writer.write("Invalid format!\r\n");
+                        writer.flush();
+                    }
                 }
+                writer.close();
+                reader.close();
+                socket.close();
+            } catch (Exception ex) {
+                ex.printStackTrace();
             }
-            writer.close();
-            reader.close();
-            socket.close();
-        } catch (Exception ex) {
-            ex.printStackTrace();
         }
-    }
     }
 
     public static void kill() {

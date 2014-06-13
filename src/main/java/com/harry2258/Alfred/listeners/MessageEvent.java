@@ -98,7 +98,6 @@ public class MessageEvent extends ListenerAdapter {
                         BufferedReader in = new BufferedReader(new FileReader(commandfile));
                         String tmp;
                         if (args.length == 2) {
-                            String user = args[1];
                             while ((tmp = in.readLine()) != null) {
                                 String temps = tmp.replaceAll("color.red", Colors.RED).replaceAll("color.green", Colors.GREEN).replaceAll("color.bold", Colors.BOLD).replaceAll("color.normal", Colors.NORMAL).replaceAll("color.darkgreen", Colors.DARK_GREEN).replaceAll("color.purple", Colors.PURPLE).replaceAll("color.darkblue", Colors.DARK_BLUE).replaceAll("color.blue", Colors.BLUE);
                                 //.replaceAll("%user%", user);
@@ -191,9 +190,13 @@ public class MessageEvent extends ListenerAdapter {
 
         if (Main.URL.containsKey(event.getChannel().getName()) && Main.URL.get(event.getChannel().getName()).equalsIgnoreCase("youtube")) {
             for (String word : event.getMessage().split(" ")) {
+                /*
                 if (Utils.isUrl(word) && word.toLowerCase().contains("youtube") || word.toLowerCase().contains("youtu.be") && !word.equals(config.getTrigger() + "ping")) {
                     event.getChannel().send().message("[" + Colors.RED + "YouTube" + Colors.NORMAL + "] " + Utils.getYoutubeInfo(word));
-
+                }
+                */
+                if (Utils.isUrl(word) && word.matches("(https?://)?(www\\.)?(youtube|yimg|youtu)\\.([A-Za-z]{2,4}|[A-Za-z]{2}\\.[A-Za-z]{2})/(watch\\?v=)?[A-Za-z0-9\\-_]{6,12}(&[A-Za-z0-9\\-_]{1,}=[A-Za-z0-9\\-_]{1,})*")) {
+                    event.getChannel().send().message("[" + Colors.RED + "YouTube" + Colors.NORMAL + "] " + Utils.getYoutubeInfo(word));
                 }
             }
 
@@ -201,10 +204,10 @@ public class MessageEvent extends ListenerAdapter {
 
         if (Main.URL.containsKey(event.getChannel().getName()) && Main.URL.get(event.getChannel().getName()).equalsIgnoreCase("all")) {
             for (String word : event.getMessage().split(" ")) {
-                if (Utils.isUrl(word) && !word.toLowerCase().contains("youtube") && !word.toLowerCase().contains("youtu.be") && !word.equals(config.getTrigger() + "setcmd")) {
+                if (Utils.isUrl(word) && !word.equals(config.getTrigger() + "setcmd") && !word.matches("(https?://)?(www\\.)?(youtube|yimg|youtu)\\.([A-Za-z]{2,4}|[A-Za-z]{2}\\.[A-Za-z]{2})/(watch\\?v=)?[A-Za-z0-9\\-_]{6,12}(&[A-Za-z0-9\\-_]{1,}=[A-Za-z0-9\\-_]{1,})*")) {
                     event.getChannel().send().message("[" + Colors.RED + event.getUser().getNick() + Colors.NORMAL + "] " + Utils.getTitle(word));
                 }
-                if (Utils.isUrl(word) && word.toLowerCase().contains("youtube") || word.toLowerCase().contains("youtu.be") && !word.equals(config.getTrigger() + "ping")) {
+                if (Utils.isUrl(word) && !word.equals(config.getTrigger() + "ping") && word.matches("(https?://)?(www\\.)?(youtube|yimg|youtu)\\.([A-Za-z]{2,4}|[A-Za-z]{2}\\.[A-Za-z]{2})/(watch\\?v=)?[A-Za-z0-9\\-_]{6,12}(&[A-Za-z0-9\\-_]{1,}=[A-Za-z0-9\\-_]{1,})*")) {
                     event.getChannel().send().message("[" + Colors.RED + "YouTube" + Colors.NORMAL + "] " + Utils.getYoutubeInfo(word));
 
                 }

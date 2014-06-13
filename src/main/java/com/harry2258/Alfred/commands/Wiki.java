@@ -50,6 +50,7 @@ public class Wiki extends Command {
         String info;
         String xy;
         String searchJson;
+        String id = "0";
 
         boolean exist = true;
         try {
@@ -62,7 +63,7 @@ public class Wiki extends Command {
                     exist = false;
                 }
             }
-
+            System.out.println(exist);
             if (exist) {
                 String temp = ("http://wiki.feed-the-beast.com/api.php?format=xml&action=query&titles=" + message + "&prop=revisions&rvprop=content&format=json").replaceAll(" ", "%20");
                 URL u = new URL(temp);
@@ -81,16 +82,15 @@ public class Wiki extends Command {
                 }
 
                 String json1 = xy.replaceAll("\n", " ");
-                String[] getid = json1.replaceAll("[{\"/>}{\\\\']", "").split(":");
-                String id = getid[2];
+                id = json1.replaceAll("[{\"/>}{\\\\']", "").replaceAll(".*(?:pages:)|(?::pageid.*)", "");
                 JsonObject jsonObj = JsonUtils.getJsonObject(json1);
 
-                if (jsonObj.getAsJsonObject("query").get("pages").getAsString().contains("Vanilla|type=")) {
+                if (jsonObj.getAsJsonObject("query").get("pages").toString().contains("Vanilla|type=")) {
                     event.getChannel().send().message(test + " (Vanilla):" + ("http://minecraft.gamepedia.com/" + test).replaceAll(" ", "_"));
                     return true;
                 }
 
-                String APItest = jsonObj.getAsJsonObject("query").getAsJsonObject("pages").getAsJsonObject(id).getAsJsonArray("revisions").get(0).getAsJsonObject().get("*").getAsString();
+                String APItest = jsonObj.getAsJsonObject("query").getAsJsonObject("pages").getAsJsonObject(id).getAsJsonArray("revisions").get(0).getAsJsonObject().get("*").toString();
                 String df = APItest.replaceAll("\\{\\{[^}]+\\}\\}|\\[\\[Category:[^\\]]+\\]\\]|\\[\\[|\\]\\]|^\\s+|\\s+$|<[^>]+>|\\\\n", "").trim().replaceAll("\\r?\\n.*", "").replaceAll("\\S+\\|(\\S+)", "$1");
                 String fd;
                 fd = df.replaceAll("'''", Colors.BOLD).replaceAll("''", Colors.UNDERLINE);
@@ -108,6 +108,7 @@ public class Wiki extends Command {
                 return true;
             }
         } catch (Exception p) {
+            p.printStackTrace();
         }
 
         //---------------------------------------------------------------------------
@@ -118,12 +119,12 @@ public class Wiki extends Command {
             BufferedReader xx = new BufferedReader(new InputStreamReader(read.openStream()));
             String search = xx.readLine();
             JsonObject json = JsonUtils.getJsonObject(search);
-            searchJson = json.getAsJsonObject("query").getAsJsonArray("search").get(0).getAsJsonObject().get("title").getAsString();
+            searchJson = json.getAsJsonObject("query").getAsJsonArray("search").get(0).getAsJsonObject().get("title").toString();
             if (searchJson.contains("Getting Started")) {
-                searchJson = json.getAsJsonObject("query").getAsJsonArray("search").get(1).getAsJsonObject().get("title").getAsString();
+                searchJson = json.getAsJsonObject("query").getAsJsonArray("search").get(1).getAsJsonObject().get("title").toString();
             }
-            if (json.getAsJsonObject("query").getAsJsonArray("search").get(0).getAsJsonObject().get("snippet").getAsString().contains("#REDIRECT")) {
-                name = (json.getAsJsonObject("query").getAsJsonArray("search").get(0).getAsJsonObject().get("snippet").getAsString()).replaceAll("\\{\\{[^}]+\\}\\}|\\[\\[Category:[^\\]]+\\]\\]|\\[\\[|\\]\\]|^\\s+|\\s+$|<[^>]+>", "").trim().replaceAll("\\r?\\n.*", "").replaceAll("\\S+\\|(\\S+)", "$1").replaceAll("#REDIRECT ", "").replace("/ko", "").replaceAll("/ru", "").replaceAll("/fr", "").replaceAll("/zh", "").replaceAll("/pl", "");
+            if (json.getAsJsonObject("query").getAsJsonArray("search").get(0).getAsJsonObject().get("snippet").toString().contains("#REDIRECT")) {
+                name = (json.getAsJsonObject("query").getAsJsonArray("search").get(0).getAsJsonObject().get("snippet").toString()).replaceAll("\\{\\{[^}]+\\}\\}|\\[\\[Category:[^\\]]+\\]\\]|\\[\\[|\\]\\]|^\\s+|\\s+$|<[^>]+>", "").trim().replaceAll("\\r?\\n.*", "").replaceAll("\\S+\\|(\\S+)", "$1").replaceAll("#REDIRECT ", "").replace("/ko", "").replaceAll("/ru", "").replaceAll("/fr", "").replaceAll("/zh", "").replaceAll("/pl", "");
             } else {
                 name = (searchJson).replace("/ko", "").replaceAll("/ru", "").replaceAll("/fr", "").replaceAll("/zh", "").replaceAll("/pl", "");
             }
@@ -146,18 +147,17 @@ public class Wiki extends Command {
             }
 
             String json1 = xy.replaceAll("\n", " ");
-            String[] getid = json1.replaceAll("[{\"/>}{\\\\']", "").split(":");
-            String id = getid[2];
+            id = json1.replaceAll("[{\"/>}{\\\\']", "").replaceAll(".*(?:pages:)|(?::pageid.*)", "");
             JsonObject jsonObj = JsonUtils.getJsonObject(json1);
 
-            if (jsonObj.getAsJsonObject("query").get("pages").getAsString().contains("Vanilla|type=")) {
+            if (jsonObj.getAsJsonObject("query").get("pages").toString().contains("Vanilla|type=")) {
                 event.getChannel().send().message(name + " (Vanilla):" + ("http://minecraft.gamepedia.com/" + name).replaceAll(" ", "_"));
                 return true;
             }
 
-            String APItest = jsonObj.getAsJsonObject("query").getAsJsonObject("pages").getAsJsonObject(id).getAsJsonArray("revisions").get(0).getAsJsonObject().get("*").getAsString();
+            String APItest = jsonObj.getAsJsonObject("query").getAsJsonObject("pages").getAsJsonObject(id).getAsJsonArray("revisions").get(0).getAsJsonObject().get("*").toString();
             String df = APItest.replaceAll("\\{\\{[^}]+\\}\\}|\\[\\[Category:[^\\]]+\\]\\]|\\[\\[|\\]\\]|^\\s+|\\s+$|<[^>]+>|\\\\n", "").trim().replaceAll("\\r?\\n.*", "").replaceAll("\\S+\\|(\\S+)", "$1");
-            String tempname = jsonObj.getAsJsonObject("query").getAsJsonObject("pages").getAsJsonObject(id).get("title").getAsString();
+            String tempname = jsonObj.getAsJsonObject("query").getAsJsonObject("pages").getAsJsonObject(id).get("title").toString();
             String fd;
             fd = df.replaceAll("'''", Colors.BOLD).replaceAll("''", Colors.UNDERLINE);
             int maxLength = (fd.length() < 220) ? fd.length() : 220;
@@ -173,7 +173,7 @@ public class Wiki extends Command {
             event.getChannel().send().message(info + "... [ " + URL + " ]");
             return true;
         } catch (Exception e) {
-            System.out.println(e);
+            e.printStackTrace();
         }
 
         try {
@@ -182,12 +182,12 @@ public class Wiki extends Command {
             BufferedReader xx = new BufferedReader(new InputStreamReader(read.openStream()));
             String search = xx.readLine();
             JsonObject json = JsonUtils.getJsonObject(search);
-            searchJson = json.getAsJsonObject("query").getAsJsonArray("search").get(0).getAsJsonObject().get("title").getAsString();
+            searchJson = json.getAsJsonObject("query").getAsJsonArray("search").get(0).getAsJsonObject().get("title").toString();
             if (searchJson.contains("Getting Started")) {
-                searchJson = json.getAsJsonObject("query").getAsJsonArray("search").get(1).getAsJsonObject().get("title").getAsString();
+                searchJson = json.getAsJsonObject("query").getAsJsonArray("search").get(1).getAsJsonObject().get("title").toString();
             }
-            if (json.getAsJsonObject("query").getAsJsonArray("search").get(0).getAsJsonObject().get("snippet").getAsString().contains("#REDIRECT")) {
-                name = (json.getAsJsonObject("query").getAsJsonArray("search").get(0).getAsJsonObject().get("snippet").getAsString()).replaceAll("\\{\\{[^}]+\\}\\}|\\[\\[Category:[^\\]]+\\]\\]|\\[\\[|\\]\\]|^\\s+|\\s+$|<[^>]+>", "").trim().replaceAll("\\r?\\n.*", "").replaceAll("\\S+\\|(\\S+)", "$1").replaceAll("#REDIRECT ", "").replace("/ko", "").replaceAll("/ru", "").replaceAll("/fr", "").replaceAll("/zh", "").replaceAll("/pl", "");
+            if (json.getAsJsonObject("query").getAsJsonArray("search").get(0).getAsJsonObject().get("snippet").toString().contains("#REDIRECT")) {
+                name = (json.getAsJsonObject("query").getAsJsonArray("search").get(0).getAsJsonObject().get("snippet").toString()).replaceAll("\\{\\{[^}]+\\}\\}|\\[\\[Category:[^\\]]+\\]\\]|\\[\\[|\\]\\]|^\\s+|\\s+$|<[^>]+>", "").trim().replaceAll("\\r?\\n.*", "").replaceAll("\\S+\\|(\\S+)", "$1").replaceAll("#REDIRECT ", "").replace("/ko", "").replaceAll("/ru", "").replaceAll("/fr", "").replaceAll("/zh", "").replaceAll("/pl", "");
             } else {
                 name = (searchJson).replace("/ko", "").replaceAll("/ru", "").replaceAll("/fr", "").replaceAll("/zh", "").replaceAll("/pl", "");
             }
@@ -210,16 +210,15 @@ public class Wiki extends Command {
             }
 
             String json1 = xy.replaceAll("\n", " ");
-            String[] getid = json1.replaceAll("[{\"/>}{\\\\']", "").split(":");
-            String id = getid[2];
+            id = json1.replaceAll("[{\"/>}{\\\\']", "").replaceAll(".*(?:pages:)|(?::pageid.*)", "");
             JsonObject jsonObj = JsonUtils.getJsonObject(json1);
 
-            if (jsonObj.getAsJsonObject("query").get("pages").getAsString().contains("Vanilla|type=")) {
+            if (jsonObj.getAsJsonObject("query").get("pages").toString().contains("Vanilla|type=")) {
                 event.getChannel().send().message(name + " (Vanilla):" + ("http://minecraft.gamepedia.com/" + name).replaceAll(" ", "_"));
                 return true;
             }
 
-            String APItest = jsonObj.getAsJsonObject("query").getAsJsonObject("pages").getAsJsonObject(id).getAsJsonArray("revisions").get(0).getAsJsonObject().get("*").getAsString();
+            String APItest = jsonObj.getAsJsonObject("query").getAsJsonObject("pages").getAsJsonObject(id).getAsJsonArray("revisions").get(0).getAsJsonObject().get("*").toString();
             String df = APItest.replaceAll("\\{\\{[^}]+\\}\\}|\\[\\[Category:[^\\]]+\\]\\]|\\[\\[|\\]\\]|^\\s+|\\s+$|<[^>]+>|\\\\n", "").trim().replaceAll("\\r?\\n.*", "").replaceAll("\\S+\\|(\\S+)", "$1");
             String fd;
             fd = df.replaceAll("'''", Colors.BOLD).replaceAll("''", Colors.UNDERLINE);

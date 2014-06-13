@@ -21,7 +21,7 @@ public class Deop extends Command {
     public boolean execute(MessageEvent event) throws Exception {
         String[] args = event.getMessage().split(" ");
         if (PermissionManager.hasExec(event.getUser(), event)) {
-            if (event.getChannel().isOp(event.getBot().getUserBot())) {
+            if (event.getChannel().isHalfOp(event.getBot().getUserBot())) {
                 if (event.getChannel().getOps().contains(event.getUser())) {
                     User u = event.getBot().getUserChannelDao().getUser(args[1]);
                     event.getChannel().send().message("It sucks to be " + u.getNick() + " right now :/");

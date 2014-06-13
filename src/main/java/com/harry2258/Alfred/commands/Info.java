@@ -1,7 +1,5 @@
 package com.harry2258.Alfred.commands;
 
-import com.google.common.collect.Lists;
-import com.google.gson.JsonObject;
 import com.harry2258.Alfred.Main;
 import com.harry2258.Alfred.api.Command;
 import com.harry2258.Alfred.api.Config;
@@ -13,8 +11,6 @@ import org.pircbotx.Colors;
 import org.pircbotx.hooks.events.MessageEvent;
 
 import java.io.File;
-import java.util.Collections;
-import java.util.List;
 
 /**
  * Created by Hardik on 1/8/14.
@@ -56,7 +52,7 @@ public class Info extends Command {
                 return true;
             }
         }
-    
+
         Perms perms = Main.map.get(event.getChannel().getName());
         Permission p = perms.getPermission();
 

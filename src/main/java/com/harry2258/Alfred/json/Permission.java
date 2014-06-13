@@ -7,14 +7,14 @@ import java.util.List;
 
 @Data
 public class Permission {
-    @SerializedName(value="Mods")
+    @SerializedName(value = "Mods")
     private List<String> mods;
-    @SerializedName(value="Admins")
+    @SerializedName(value = "Admins")
     private List<String> admins;
-    @SerializedName(value="ModPerms")
+    @SerializedName(value = "ModPerms")
     private List<String> modPerms;
-    @SerializedName(value="Everyone")
+    @SerializedName(value = "Everyone")
     private List<String> everyone;
-    @SerializedName(value="Exec")
+    @SerializedName(value = "Exec")
     private List<String> exec;
 }

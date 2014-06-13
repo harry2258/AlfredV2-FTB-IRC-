@@ -7,11 +7,10 @@ package com.harry2258.Alfred.api;
 import com.google.common.io.Files;
 import com.google.gson.*;
 import com.harry2258.Alfred.json.Perms;
-import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.*;
 
 import java.io.*;
 import java.nio.charset.Charset;
-import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
@@ -22,14 +21,16 @@ public class JsonUtils {
     //public static File jsonFilePath = new File(System.getProperty("user.dir") + "/Perms/perms.json");
     public static final String Jsonfile = System.getProperty("user.dir") + "/exec.json";
     public static final Gson GSON;
+
     static {
         GsonBuilder builder = new GsonBuilder();
         builder.enableComplexMapKeySerialization();
         builder.setPrettyPrinting();
         GSON = builder.create();
     }
-    public static Perms getPermsFromString(String s){
-       return GSON.fromJson(s, Perms.class);
+
+    public static Perms getPermsFromString(String s) {
+        return GSON.fromJson(s, Perms.class);
     }
 
     public static boolean isJSONObject(String possibleJson) {
@@ -42,12 +43,13 @@ public class JsonUtils {
         }
         return valid;
     }
-    public static String prettyPrint(List<String> l){
+
+    public static String prettyPrint(List<String> l) {
         String ret = "";
         Iterator i = l.listIterator();
-        while(i.hasNext()){
-            ret += ((String)i.next()).replace("commands.", "");
-            if(i.hasNext())
+        while (i.hasNext()) {
+            ret += ((String) i.next()).replace("commands.", "");
+            if (i.hasNext())
                 ret += " | ";
         }
         return ret;
@@ -70,20 +72,21 @@ public class JsonUtils {
 
     public static void writeJsonFile(File file, String json) {
         try {
-            FileUtils.write(file, json,"UTF-8");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-    public static void writeJsonFile(File file, Perms p) {
-        try {
-            FileUtils.write(file, GSON.toJson(p),"UTF-8");
+            FileUtils.write(file, json, "UTF-8");
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public static JsonObject getJsonObject(String s){
+    public static void writeJsonFile(File file, Perms p) {
+        try {
+            FileUtils.write(file, GSON.toJson(p), "UTF-8");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static JsonObject getJsonObject(String s) {
         JsonElement element = new JsonParser().parse(s);
         if (element != null && element.isJsonObject()) {
             return element.getAsJsonObject();

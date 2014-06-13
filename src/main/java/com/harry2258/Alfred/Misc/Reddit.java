@@ -110,8 +110,6 @@ public class Reddit extends Thread {
                                 System.out.println(chaninfo.get(hur));
                                 System.out.println(result);
                                 chan.send().message("[" + Colors.RED + "Reddit" + Colors.NORMAL + "] " + " [ " + Utils.shortenUrl(URL) + " ] [" + Utils.getTime(CreateTime) + " ago] " + Colors.BOLD + author + Colors.NORMAL + ": " + infotitle + " " + infotext);
-                            } else {
-                                System.out.println("[Reddit] No new post found.");
                             }
 
                         } else {
@@ -131,6 +129,8 @@ public class Reddit extends Thread {
                 Thread.sleep(60000);
             } catch (Exception e) {
                 e.printStackTrace();
+                bot.getUserChannelDao().getUser("batman").send().message(e.toString());
+
             }
         }
     }

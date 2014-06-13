@@ -1,5 +1,6 @@
 package com.harry2258.Alfred.commands;
 
+import com.harry2258.Alfred.Main;
 import com.harry2258.Alfred.Misc.Reddit;
 import com.harry2258.Alfred.Misc.Twitter;
 import com.harry2258.Alfred.api.Command;
@@ -7,7 +8,6 @@ import com.harry2258.Alfred.api.Config;
 import com.harry2258.Alfred.api.PermissionManager;
 import com.harry2258.Alfred.runnables.ChatSocketHandler;
 import com.harry2258.Alfred.runnables.ChatSocketListener;
-import com.harry2258.Alfred.Main;
 import org.pircbotx.hooks.events.MessageEvent;
 
 import java.io.File;
@@ -45,7 +45,7 @@ public class Restart extends Command {
             final String javaBin = System.getProperty("java.home") + File.separator + "bin" + File.separator + "java";
             final File currentJar = new File(Main.class.getProtectionDomain().getCodeSource().getLocation().toURI());
 
-            if(!currentJar.getName().endsWith(".jar")) {
+            if (!currentJar.getName().endsWith(".jar")) {
                 return false;
             }
 
@@ -55,7 +55,7 @@ public class Restart extends Command {
             command.add(currentJar.getPath());
             //final ProcessBuilder builder = new ProcessBuilder(command);
             System.out.println(command);
-            System.out.println(command.toString().replaceAll("\\]\\[",""));
+            System.out.println(command.toString().replaceAll("\\]\\[", ""));
             Runtime.getRuntime().exec(command.toString());
             //builder.start();
             System.exit(1);

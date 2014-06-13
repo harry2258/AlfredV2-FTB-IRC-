@@ -10,8 +10,6 @@ import org.pircbotx.hooks.events.MessageEvent;
  * Created by Hardik on 1/14/14.
  */
 public class Op extends Command {
-    private Config config;
-    private PermissionManager manager;
 
     public Op() {
         super("Op", "Gives +o to user", "Op [user]");
@@ -36,11 +34,9 @@ public class Op extends Command {
 
     @Override
     public void setConfig(Config config) {
-        this.config = config;
     }
 
     @Override
     public void setManager(PermissionManager manager) {
-        this.manager = manager;
     }
 }
