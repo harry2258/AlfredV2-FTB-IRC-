@@ -13,9 +13,6 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.HashMap;
 
-/**
- * Created by Hardik at 11:26 PM on 2/1/14.
- */
 public class Reddit extends Thread {
     PircBotX bot;
     public static HashMap<String, String> chaninfo = new HashMap<>();
@@ -75,9 +72,9 @@ public class Reddit extends Thread {
                         }
                         URL = "http://reddit.com" + jsonObj.getAsJsonObject("data").getAsJsonArray("children").get(0).getAsJsonObject().getAsJsonObject("data").get("permalink").getAsString();
                         author = jsonObj.getAsJsonObject("data").getAsJsonArray("children").get(0).getAsJsonObject().getAsJsonObject("data").get("author").getAsString();
-                        CreateTime = jsonObj.getAsJsonObject("data").getAsJsonArray("children").get(0).getAsJsonObject().getAsJsonObject("data").get("created_utc").getAsLong();
+                        CreateTime = Long.parseLong(jsonObj.getAsJsonObject("data").getAsJsonArray("children").get(0).getAsJsonObject().getAsJsonObject("data").get("created_utc").toString().replace(".0",""));
                     }
-
+                    
                     //---------------
                     int maxLengthtitle = (title.length() < 70) ? title.length() : 70;
                     if (title.length() > 69) {
@@ -105,10 +102,6 @@ public class Reddit extends Thread {
                             }
 
                             if (!chaninfo.get(hur).equalsIgnoreCase(result)) {
-
-                                System.out.println("[Reddit] :O Found a new post! sending to " + chan.getName());
-                                System.out.println(chaninfo.get(hur));
-                                System.out.println(result);
                                 chan.send().message("[" + Colors.RED + "Reddit" + Colors.NORMAL + "] " + " [ " + Utils.shortenUrl(URL) + " ] [" + Utils.getTime(CreateTime) + " ago] " + Colors.BOLD + author + Colors.NORMAL + ": " + infotitle + " " + infotext);
                             }
 
@@ -134,6 +127,7 @@ public class Reddit extends Thread {
             }
         }
     }
+
 
     public static void kill() {
         isRunning = false;
