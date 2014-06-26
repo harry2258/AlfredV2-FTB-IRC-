@@ -41,22 +41,22 @@ public class Log extends Command {
         String Stacktrace = "";
 
         for (String word : event.getMessage().split(" ")) {
-            if (word.toLowerCase().contains("pastebin.com")) {
+            if (word.matches("(https?://)?(www\\.)?(pastebin)\\.([A-Za-z]{2,4}|[A-Za-z]{2}\\.[A-Za-z]{2})/.*")) {
                 Raw = "http://pastebin.com/raw.php?i=" + args[1].replaceAll(".*(?:bin..om/)", "");
             }
-            if (word.toLowerCase().contains("hastebin.com")) {
+            if (word.matches("(https?://)?(www\\.)?(hastebin)\\.([A-Za-z]{2,4}|[A-Za-z]{2}\\.[A-Za-z]{2})/.*")) {
                 Raw = "http://hastebin.com/raw/" + args[1].replaceAll(".*(?:bin..om/)", "");
             }
-            if (word.toLowerCase().contains("paste.atlauncher.com")) {
+            if (word.matches("(https?://)?(www\\.)?(paste.atlauncher)\\.([A-Za-z]{2,4}|[A-Za-z]{2}\\.[A-Za-z]{2})/.*")) {
                 Raw = "http://paste.atlauncher.com/view/raw/" + args[1].replaceAll(".*(?:view/)", "");
             }
-            if (word.toLowerCase().contains("paste.ee")) {
+            if (word.matches("(https?://)?(www\\.)?(paste)\\.([A-Za-z]{2,4}|[A-Za-z]{2}\\.[A-Za-z]{2})/.*")) {
                 Raw = "http://paste.ee/r/" + args[1].replaceAll(".*(?:p/)", "");
             }
-            if (word.toLowerCase().contains("https://gist.githubusercontent.com")) {
+            if (word.matches("(https?://)?(www\\.)?(gist.github)\\.([A-Za-z]{2,4}|[A-Za-z]{2}\\.[A-Za-z]{2})/.*")) {
                 Raw = args[1] + "raw";
             }
-            if (word.toLowerCase().contains("http://pastie.org")) {
+            if (word.matches("(https?://)?(www\\.)?(pastie)\\.([A-Za-z]{2,4}|[A-Za-z]{2}\\.[A-Za-z]{2})/.*")) {
                 Raw = "http://pastie.org/pastes/" + args[1].replaceAll(".*(?:org/)", "") + "/text";
             }
         }

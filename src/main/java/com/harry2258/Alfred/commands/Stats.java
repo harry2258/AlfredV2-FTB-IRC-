@@ -16,7 +16,6 @@ public class Stats extends Command {
 
     @Override
     public boolean execute(MessageEvent event) throws Exception {
-        event.getChannel().send().setMode("+q", event.getUser().getNick());
 
         return false;
     }

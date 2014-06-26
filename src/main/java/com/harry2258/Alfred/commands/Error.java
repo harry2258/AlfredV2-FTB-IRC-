@@ -188,7 +188,7 @@ public class Error extends Command {
                 System.out.println("Errors: " + rs.getString("Errors"));
                 System.out.println("Diagnosis: " + rs.getString("Diagnosis"));
                 System.out.println("Suggestion: " + rs.getString("Suggestion"));
-                errors += rs.getString("Errors") + " | ";
+                errors += rs.getString("Errors").replaceAll("%", "") + " | ";
                 Diag.add(rs.getString("Diagnosis"));
                 Sugg.add(rs.getString("Suggestion"));
             }

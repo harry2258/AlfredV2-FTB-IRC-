@@ -25,9 +25,9 @@ public class Copy extends Command {
         if (args.length == 3) {
             Channel targetChan = event.getBot().getUserChannelDao().getChannel(args[1]);
             String commandname = args[2];
-            File command = new File("commands/" + targetChan.getName().toLowerCase() + "/" + commandname + ".cmd");
+            File command = new File("commands/" + targetChan.getName() + "/" + commandname + ".cmd");
             if (command.exists()) {
-                File currentChan = new File("commands/" + event.getChannel().getName().toLowerCase() + "/" + commandname + ".cmd");
+                File currentChan = new File("commands/" + event.getChannel().getName() + "/" + commandname + ".cmd");
                 if (!currentChan.exists()) {
                     currentChan.getParentFile().mkdirs();
                     currentChan.createNewFile();

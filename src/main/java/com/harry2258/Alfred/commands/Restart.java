@@ -27,6 +27,7 @@ public class Restart extends Command {
 
     @Override
     public boolean execute(MessageEvent event) throws Exception {
+        /*
         System.out.println("Restarting Bot!");
         if (PermissionManager.hasExec(event.getUser(), event)) {
             if (config.isEnableChatSocket()) {
@@ -53,14 +54,14 @@ public class Restart extends Command {
             command.add(javaBin);
             command.add("-jar");
             command.add(currentJar.getPath());
-            //final ProcessBuilder builder = new ProcessBuilder(command);
-            System.out.println(command);
-            System.out.println(command.toString().replaceAll("\\]\\[", ""));
-            Runtime.getRuntime().exec(command.toString());
-            //builder.start();
+            final ProcessBuilder builder = new ProcessBuilder(command);
+            builder.start();
+            //Runtime.getRuntime().exec(command.toString());
             System.exit(1);
+
         }
-        return true;
+        */
+        return false;
     }
 
     @Override

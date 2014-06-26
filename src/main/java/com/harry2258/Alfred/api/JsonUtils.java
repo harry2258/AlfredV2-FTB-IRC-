@@ -7,7 +7,7 @@ package com.harry2258.Alfred.api;
 import com.google.common.io.Files;
 import com.google.gson.*;
 import com.harry2258.Alfred.json.Perms;
-import org.apache.commons.io.*;
+import org.apache.commons.io.FileUtils;
 
 import java.io.*;
 import java.nio.charset.Charset;

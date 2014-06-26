@@ -72,9 +72,9 @@ public class Reddit extends Thread {
                         }
                         URL = "http://reddit.com" + jsonObj.getAsJsonObject("data").getAsJsonArray("children").get(0).getAsJsonObject().getAsJsonObject("data").get("permalink").getAsString();
                         author = jsonObj.getAsJsonObject("data").getAsJsonArray("children").get(0).getAsJsonObject().getAsJsonObject("data").get("author").getAsString();
-                        CreateTime = Long.parseLong(jsonObj.getAsJsonObject("data").getAsJsonArray("children").get(0).getAsJsonObject().getAsJsonObject("data").get("created_utc").toString().replace(".0",""));
+                        CreateTime = Long.parseLong(jsonObj.getAsJsonObject("data").getAsJsonArray("children").get(0).getAsJsonObject().getAsJsonObject("data").get("created_utc").toString().replace(".0", ""));
                     }
-                    
+
                     //---------------
                     int maxLengthtitle = (title.length() < 70) ? title.length() : 70;
                     if (title.length() > 69) {

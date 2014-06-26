@@ -93,17 +93,14 @@ public class PermissionManager {
                 return true;
             }
         }
-
         return false;
     }
-
 
     public PermissionManager getPermissionsManager() {
         return this;
     }
 
     public static boolean hasMod(User user, org.pircbotx.hooks.events.MessageEvent event) throws Exception {
-
         String sender = Main.Login.get(user.getNick());
         Perms perm = Main.map.get(event.getChannel().getName());
         for (String users : perm.getPermission().getMods()) {
@@ -111,7 +108,6 @@ public class PermissionManager {
                 return true;
             }
         }
-
         return false;
     }
 }

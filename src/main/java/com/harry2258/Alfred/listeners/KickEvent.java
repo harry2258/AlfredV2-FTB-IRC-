@@ -20,8 +20,7 @@ public class KickEvent extends ListenerAdapter {
     public void onKick(org.pircbotx.hooks.events.KickEvent event) {
         System.out.println(event.getRecipient().getNick() + " | " + event.getBot().getNick());
         if (config.isAutoRejoinChannel() && event.getRecipient().getNick().equalsIgnoreCase(event.getBot().getNick())) {
-            String rejoin = event.getChannel().getName();
-            event.getBot().sendIRC().joinChannel(rejoin);
+            event.getBot().sendIRC().joinChannel(event.getChannel().getName());
         }
 
         if (Main.Login.containsKey(event.getRecipient().getNick())) {

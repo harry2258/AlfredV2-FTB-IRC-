@@ -1,7 +1,7 @@
 package com.harry2258.Alfred.json;
 
-import com.google.gson.annotations.*;
-import lombok.*;
+import com.google.gson.annotations.SerializedName;
+import lombok.Data;
 
 import java.util.List;
 

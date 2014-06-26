@@ -74,7 +74,7 @@ public class Tweet extends Command {
             int post = 0;
             String status = tests[1];
             if (tests.length == 3) {
-                post = Integer.valueOf(tests[1]);
+                post = Integer.valueOf(tests[1]) - 1;
                 status = tests[2];
             }
             try {

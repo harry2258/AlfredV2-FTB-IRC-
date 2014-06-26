@@ -12,6 +12,7 @@ import com.harry2258.Alfred.Main;
 import com.harry2258.Alfred.api.*;
 import com.harry2258.Alfred.json.Perms;
 import org.pircbotx.Colors;
+import org.pircbotx.User;
 import org.pircbotx.hooks.events.MessageEvent;
 
 import java.io.File;
@@ -55,7 +56,7 @@ public class Add extends Command {
 
                     String strFileJson = JsonUtils.getStringFromFile(Jsonfile);
                     JsonObject jsonObj = JsonUtils.getJsonObject(strFileJson);
-                    if (!jsonObj.getAsJsonObject("Perms").get("Mods").toString().contains(newuser)) {
+                    if (!isAdded(event.getUser(), event, args)) {
                         temp = jsonObj.getAsJsonObject("Perms").get("Mods").toString();
                         String[] tempArray = (temp.replaceAll("[\\[\\]\"]", "") + "," + newuser + "").split(",");
                         jsonObj.getAsJsonObject("Perms").add("Mods", Json(tempArray));
@@ -92,8 +93,9 @@ public class Add extends Command {
                         }
                         String strFileJson = JsonUtils.getStringFromFile(Jsonfile);
                         JsonObject jsonObj = JsonUtils.getJsonObject(strFileJson);
+                        System.out.println(jsonObj.getAsJsonObject("Perms").get("ModPerms").toString());
                         if (!jsonObj.getAsJsonObject("Perms").get("ModPerms").toString().contains(command)) {
-                            temp = jsonObj.getAsJsonObject("Perms").get("ModsPerms").toString();
+                            temp = jsonObj.getAsJsonObject("Perms").get("ModPerms").toString();
                             String[] tempArray = (temp.replaceAll("[\\[\\]\"]", "") + "," + command + "").split(",");
                             jsonObj.getAsJsonObject("Perms").add("ModsPerms", Json(tempArray));
                             JsonUtils.writeJsonFile(file, jsonObj.toString());
@@ -118,7 +120,6 @@ public class Add extends Command {
         }
 
         if (type.equalsIgnoreCase("admin")) {
-            System.out.println("Adding user to " + Jsonfile);
             if (args.length == 3) {
                 try {
                     if (!event.getChannel().getUsers().contains(event.getBot().getUserChannelDao().getUser(args[2])) || new File("plugins/" + Character.toUpperCase(args[2].charAt(0)) + event.getMessage().split(" ")[2].substring(1).toLowerCase() + ".bsh").exists()) {
@@ -131,7 +132,7 @@ public class Add extends Command {
                     }
                     String strFileJson = JsonUtils.getStringFromFile(Jsonfile);
                     JsonObject jsonObj = JsonUtils.getJsonObject(strFileJson);
-                    if (!jsonObj.getAsJsonObject("Perms").get("Admins").toString().contains(newuser)) {
+                    if (!isAdded(event.getUser(), event, args)) {
                         temp = jsonObj.getAsJsonObject("Perms").get("Admins").toString();
                         String[] tempArray = (temp.replaceAll("[\\[\\]\"]", "") + "," + newuser + "").split(",");
                         jsonObj.getAsJsonObject("Perms").add("Admins", Json(tempArray));
@@ -255,6 +256,32 @@ public class Add extends Command {
     @Override
     public void setManager(PermissionManager manager) {
         this.manager = manager;
+    }
+
+    public static boolean isAdded(User user, org.pircbotx.hooks.events.MessageEvent event, String[] type) throws Exception {
+        String sender = Main.Login.get(user.getNick());
+        Perms perm = Main.map.get(event.getChannel().getName());
+
+        if (type[1].equalsIgnoreCase("mod")) {
+            for (String users : perm.getPermission().getMods()) {
+                if (users.equalsIgnoreCase(sender) && user.isVerified()) {
+                    return true;
+                }
+            }
+        } else if (type[1].equalsIgnoreCase("admin")) {
+            for (String users : perm.getPermission().getAdmins()) {
+                if (users.equalsIgnoreCase(sender) && user.isVerified()) {
+                    return true;
+                }
+            }
+        }
+
+        for (String users : perm.getPermission().getMods()) {
+            if (users.equalsIgnoreCase(sender) && user.isVerified()) {
+                return true;
+            }
+        }
+        return false;
     }
 
 }

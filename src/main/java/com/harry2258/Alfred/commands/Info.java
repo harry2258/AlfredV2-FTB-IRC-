@@ -36,6 +36,7 @@ public class Info extends Command {
         }
 
         if (args.length == 2 && args[1].contains("command")) {
+            //java.io.File folder = new File("commands/#ftb/"); java.io.File[] ListOfFiles = folder.listFiles(); for (java.io.File ListOfFile : ListOfFiles) {if (ListOfFile.isFile()) {filename += ListOfFile.getName() + " | \t";}}
             if (new File("commands/" + event.getChannel().getName() + "/").exists()) {
                 File folder = new File("commands/" + event.getChannel().getName() + "/");
                 File[] listOfFiles = folder.listFiles();
@@ -65,8 +66,8 @@ public class Info extends Command {
                 NumberofCommand = new File("commands/" + event.getChannel().getName() + "/").listFiles().length;
             }
 
-            event.getUser().send().notice("Permission everyone has: " + JsonUtils.prettyPrint(p.getEveryone())); //Everyone Perms
-            event.getUser().send().notice("Mod Permissions: " + JsonUtils.prettyPrint(p.getModPerms())); //Mod Permissions
+            event.getUser().send().notice("Permission everyone has: " + JsonUtils.prettyPrint(p.getEveryone()).replaceAll("command.", "")); //Everyone Perms
+            event.getUser().send().notice("Mod Permissions: " + JsonUtils.prettyPrint(p.getModPerms()).replaceAll("command.", "")); //Mod Permissions
             event.getUser().send().notice("Moderators: " + JsonUtils.prettyPrint(p.getMods())); //Mod List
             event.getUser().send().notice("Admins: " + JsonUtils.prettyPrint(p.getAdmins())); //Admin List
             event.getUser().send().notice("Global Exec: " + JsonUtils.prettyPrint(exec.getExec()));  //Global Exec!!
@@ -76,22 +77,19 @@ public class Info extends Command {
         }
 
 
-        String Usergroup = Login.Group(Main.Login.get(event.getUser().getNick()), event.getChannel().getName().toLowerCase());
+        String Usergroup = Login.Group(Main.Login.get(event.getUser().getNick()), event.getChannel().getName());
 
         if (Usergroup.equalsIgnoreCase("None :<")) {
             event.getUser().send().notice("You are in the default group and have access to: " + JsonUtils.prettyPrint(p.getEveryone()));
-
         }
         if (Usergroup.equalsIgnoreCase("Moderator")) {
             event.getUser().send().notice("You are in the Moderator group and have access to: " + JsonUtils.prettyPrint(p.getModPerms()) + JsonUtils.prettyPrint(p.getEveryone()));
-
         }
         if (Usergroup.equalsIgnoreCase("Admin")) {
             event.getUser().send().notice("You are a Admin! You have access to all commands " + Colors.BOLD + "except" + Colors.NORMAL + " a few critical commands such as Kill, Exec, Etc.");
-
         }
         if (Usergroup.equalsIgnoreCase("Exec")) {
-            event.getUser().send().notice("You own this town!.");
+            event.getUser().send().notice("You own this town!");
         }
         return true;
     }
