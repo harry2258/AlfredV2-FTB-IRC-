@@ -202,7 +202,6 @@ public class CreeperHost extends Thread {
                         Load.add(0);
                     }
                 } else if (chURLs.get(i).contains("cursecdn.com")) {
-                    System.out.println(chURLNames.get(i) + " : " + "N/A");
                     Load.add(-1);
                 }
             }
@@ -224,9 +223,6 @@ public class CreeperHost extends Thread {
         }
 
         Message.add("CreeperRepo: " + test + Colors.NORMAL + " Average Load " + (int) calculateAverage(Load) + "% | ");
-        System.out.println(chRepos);
-        System.out.println(Status);
-        System.out.println(Load);
 
         for (int x = 0; x < chRepos.size(); x++) {
             Message.add(chRepos.get(x) + ": " + Status.get(x) + Colors.NORMAL + " " + (Load.get(x) == -1 ? "N/A" : Load.get(x)) + "% | ");

@@ -34,13 +34,19 @@ public class Log extends Command {
 
         String message = "";
         String temp = "";
+
         String Raw = args[1];
         String webpage = "";
-        String Description = "";
-        String CausedBy = "";
-        String Stacktrace = "";
+
+        Boolean Optifine = false;
+        String Description;
+        String CausedBy;
+        String Stacktrace;
 
         for (String word : event.getMessage().split(" ")) {
+            if (word.matches("(https?://)?(www\\.)?(paste.feed-the-beast)\\.([A-Za-z]{2,4}|[A-Za-z]{2}\\.[A-Za-z]{2})/.*")) {
+                Raw = "http://paste.feed-the-beast.com/view/raw/" + args[1].replaceAll(".*(?:view/)", "");
+            }
             if (word.matches("(https?://)?(www\\.)?(pastebin)\\.([A-Za-z]{2,4}|[A-Za-z]{2}\\.[A-Za-z]{2})/.*")) {
                 Raw = "http://pastebin.com/raw.php?i=" + args[1].replaceAll(".*(?:bin..om/)", "");
             }
@@ -61,14 +67,14 @@ public class Log extends Command {
             }
         }
 
-        if (!Main.cmd.exists()) {
-            Main.cmd.getParentFile().mkdirs();
-            Main.cmd.createNewFile();
-            Utils.Parser(Main.cmd);
+        if (!Main.parser.exists()) {
+            Main.parser.getParentFile().mkdirs();
+            Main.parser.createNewFile();
+            Utils.Parser(Main.parser);
         }
         String tmp;
         try {
-            String test = JsonUtils.getStringFromFile(Main.cmd.toString());
+            String test = JsonUtils.getStringFromFile(Main.parser.toString());
             JsonObject jsonObj = JsonUtils.getJsonObject(test);
             URL url;
             url = new URL(Raw);
@@ -103,14 +109,18 @@ public class Log extends Command {
                         info.add(temp);
                     }
                 } else if (tmp.contains("Is Modded: ")) {
-                    temp = Colors.BOLD + "Client Brand: " + Colors.NORMAL + tmp.replaceAll("^.*?(?=[A-Z][a-z])", "").replaceAll("\\\\[.*?\\\\]", "").replaceAll(".*(?:Is Modded: Definitely; Client brand changed to )", "");
+                    temp = Colors.BOLD + "Client Brand: " + Colors.NORMAL + tmp.replaceAll("^.*?(?=[A-Z][a-z])", "").replaceAll("\\\\[.*?\\\\]", "").replaceAll(".*(?:Is Modded: Definitely; Client brand changed to )|.*(?:Is Modded: Definitely; Server brand changed to )", "");
                     if (!info.contains(temp) && jsonObj.get("Modded").getAsBoolean()) {
                         info.add(temp);
                     }
-                } else if (tmp.contains("Feed The Beast Mod Pack")) {
+                } else if (tmp.contains("Feed The Beast Mod Pack") || tmp.contains("Optifine OptiFine_")) {
+                    System.out.println(tmp);
                     temp = Colors.BOLD + "Mods: " + Colors.NORMAL + tmp.replaceAll("^.*?(?=[A-Z][a-z])", "").replaceAll("\\\\[.*?\\\\]", "").replaceAll(".*(?:, )|mods active", "");
                     if (!info.contains(temp) && jsonObj.get("Modded").getAsBoolean()) {
                         info.add(temp);
+                    }
+                    if (tmp.contains("Optifine")) {
+                        Optifine = true;
                     }
                 } else if (tmp.contains("Operating System: ") || tmp.contains("OS: ")) {
                     temp = Colors.BOLD + "OS: " + Colors.NORMAL + tmp.replaceAll("^.*?(?=[A-Z][a-z])", "").replaceAll("\\\\[.*?\\\\]", "").replaceAll(".*(?:Operating System: )|.*(?:OS: )", "").replaceAll("x86|x64|32-bit|64-bit", "");
@@ -128,9 +138,11 @@ public class Log extends Command {
                     String harhar = readString(url.openStream()).replaceAll("\\n|\\r|\\t", " ");
                     Stacktrace = Colors.BOLD + "Stacktrace: " + Colors.NORMAL + harhar.replaceAll("^.*?(?=[A-Z][a-z])", "").replaceAll("\\\\[.*?\\\\]", "").replaceAll(".*(?:Stacktrace:)|\\)   at.*", "").replaceAll("   ", "").replaceAll("\\)  at.*", "") + ")";
                 }
+
                 webpage += tmp;
             }
 
+            info.add(Colors.BOLD + "Using Optifine: " + Colors.NORMAL + String.valueOf(Optifine));
             for (String anInfo : info) {
                 Message.add(anInfo);
             }

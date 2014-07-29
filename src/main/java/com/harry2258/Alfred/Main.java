@@ -34,7 +34,7 @@ public class Main {
     public static HashMap<Channel, Channel> relay = new HashMap<>();
     public static HashMap<String, String> URL = new HashMap<>();
     public static PropertiesConfiguration customcmd;
-    public static File cmd = new File(System.getProperty("user.dir") + "/parser.json");
+    public static File parser = new File(System.getProperty("user.dir") + "/parser.json");
     public static File globalperm = new File(System.getProperty("user.dir") + "/global.json");
     public static File edgesjsonfile = new File(System.getProperty("user.dir") + "/edges.json");
     public static List<String> users = new ArrayList<>();
@@ -63,10 +63,10 @@ public class Main {
             }
 
             //creates Parse.Json for Log command
-            if (!cmd.exists()) {
-                cmd.getParentFile().mkdirs();
-                cmd.createNewFile();
-                Utils.Parser(cmd);
+            if (!parser.exists()) {
+                parser.getParentFile().mkdirs();
+                parser.createNewFile();
+                Utils.Parser(parser);
             }
 
             //Creates Global Everyone permission

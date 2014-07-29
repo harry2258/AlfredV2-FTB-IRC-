@@ -3,11 +3,8 @@ package com.harry2258.Alfred.commands;
 import com.harry2258.Alfred.api.Command;
 import com.harry2258.Alfred.api.Config;
 import com.harry2258.Alfred.api.PermissionManager;
+import com.harry2258.Alfred.api.Utils;
 import org.pircbotx.hooks.events.MessageEvent;
-
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.net.URL;
 
 /**
  * Created by Hardik on 1/14/14.
@@ -34,11 +31,7 @@ public class Lmgtfy extends Command {
         String y = "http://lmgtfy.com/?q=" + message;
         String x = y.replaceAll(" ", "+");
         try {
-            URL wiki;
-            wiki = new URL("http://is.gd/create.php?format=simple&url=" + x);
-            BufferedReader br = new BufferedReader(new InputStreamReader(wiki.openStream()));
-            finalurl = br.readLine();
-            br.close();
+            finalurl = Utils.shortenUrl(x);
         } catch (Exception e2) {
             e2.printStackTrace();
         }

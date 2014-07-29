@@ -138,32 +138,32 @@ public class Utils {
     }
 
     public static String checkMojangServers() {
-        String returns = null;
+        String returns = "";
         try {
-            URL url;
-            url = new URL("https://status.mojang.com/check");
+            URL url = new URL("https://status.mojang.com/check");
             BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream()));
             String result;
             while ((result = reader.readLine()) != null) {
-                String a = result.replace("red", Colors.RED + "✘" + Colors.NORMAL).replace("green", Colors.DARK_GREEN + "✓" + Colors.NORMAL).replace("[", "").replace("]", "");
-                String b = a.replace("{", "").replace("}", "").replace(":", ": ").replace("\"", "").replaceAll(",", " | ");
-                returns = b.replace("session.minecraft.net", "Legacy Session").replace("account.mojang.com", "Account").replace("auth.mojang.com", "Auth").replace("skins.minecraft.net", "Skins").replace("authserver.mojang.com", "Auth Server").replace("sessionserver.mojang.com", "Session Server").replaceAll("api.mojang.com", "API Server").replaceAll("textures.minecraft.net", "Texture").replace("minecraft.net", "Minecraft");
+                String a = result.replace("red", Colors.RED + "✘" + Colors.NORMAL).replace("green", Colors.DARK_GREEN + "✓" + Colors.NORMAL).replace("yellow", Colors.YELLOW + "Problems" + Colors.NORMAL).replace("[", "").replace("]", "").replace("{", "").replace("}", "").replace(":", ": ").replace("\"", "").replace("session:", "Legacy Session").replace("server", " Server");
+                String[] c = a.replaceAll(".minecraft.net", "").replaceAll(".mojang.com|.net", "").split(",");
+                for (String tmp : c) {
+                    returns += Character.toUpperCase(tmp.charAt(0)) + tmp.substring(1).toLowerCase() + " | ";
+                }
             }
             reader.close();
         } catch (IOException e) {
             if (e.getMessage().contains("503")) {
                 System.out.println("The minecraft status server is temporarily unavailable, please try again later");
             }
-
-            String result;
             try {
                 URL xpaw = new URL("http://xpaw.ru/mcstatus/status.json");
                 URLConnection u = xpaw.openConnection();
-
                 u.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/537.17 (KHTML, like Gecko) Chrome/24.0.1312.57 Safari/537.17");
+
                 BufferedReader first = new BufferedReader(new InputStreamReader(u.getInputStream()));
-                result = first.readLine();
+                String result = first.readLine();
                 String json1 = result.replaceAll("\n", " ");
+
                 JsonObject report = JsonUtils.getJsonObject(json1).getAsJsonObject("report");
                 returns = ("Session: " + report.getAsJsonObject("session").get("title").getAsString() +
                         " | Login: " + report.getAsJsonObject("login").get("title").getAsString() +

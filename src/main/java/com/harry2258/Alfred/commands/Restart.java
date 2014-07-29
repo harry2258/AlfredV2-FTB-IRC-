@@ -1,17 +1,9 @@
 package com.harry2258.Alfred.commands;
 
-import com.harry2258.Alfred.Main;
-import com.harry2258.Alfred.Misc.Reddit;
-import com.harry2258.Alfred.Misc.Twitter;
 import com.harry2258.Alfred.api.Command;
 import com.harry2258.Alfred.api.Config;
 import com.harry2258.Alfred.api.PermissionManager;
-import com.harry2258.Alfred.runnables.ChatSocketHandler;
-import com.harry2258.Alfred.runnables.ChatSocketListener;
 import org.pircbotx.hooks.events.MessageEvent;
-
-import java.io.File;
-import java.util.ArrayList;
 //import org.tanukisoftware.wrapper.WrapperManager;
 
 /**

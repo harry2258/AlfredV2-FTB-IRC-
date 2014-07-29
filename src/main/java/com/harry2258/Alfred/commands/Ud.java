@@ -65,21 +65,16 @@ public class Ud extends Command {
                 event.getChannel().send().message("Could not get #" + id + " definition for the word '" + Word + "'");
                 return true;
             }
-            String info;
-            String Example;
+            String info = definition;
+            String Example = example;
             if (definition.length() > 200) {
                 int maxLengthDef = (definition.length() < 220) ? definition.length() : 220;
                 info = definition.substring(0, maxLengthDef) + "...";
-            } else {
-                info = definition;
             }
 
             if (example.length() > 200) {
                 int maxLengthEx = (example.length() < 200) ? example.length() : 200;
                 Example = example.substring(0, maxLengthEx) + "...";
-                System.out.println(Example);
-            } else {
-                Example = example;
             }
 
             event.getChannel().send().message(Colors.BOLD + "Def: " + Colors.NORMAL + info + " | " + Colors.BOLD + "Ex: " + Colors.NORMAL + Example + " [ " + permalink + " ]");

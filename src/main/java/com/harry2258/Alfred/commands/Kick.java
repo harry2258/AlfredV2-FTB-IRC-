@@ -13,13 +13,12 @@ public class Kick extends Command {
     private PermissionManager manager;
 
     public Kick() {
-        super("Kick", "Remove a user from a channel", "kick #channel user (reason) or kick user (reason)");
+        super("Kick", "Remove a user from a channel", "kick [#channel] [user] (reason) or kick [user] (reason)");
     }
 
     @Override
     public boolean execute(MessageEvent event) {
         String[] args = event.getMessage().split(" ");
-        User sender = event.getUser();
         if (args.length == 3) {
             Channel chan = event.getBot().getUserChannelDao().getChannel(args[1]);
             User target = event.getBot().getUserChannelDao().getUser(args[2]);

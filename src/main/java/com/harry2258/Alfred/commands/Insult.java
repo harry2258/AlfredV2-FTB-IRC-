@@ -38,34 +38,39 @@ public class Insult extends Command {
         }
 
         if (args.length >= 2) {
-            String channel = args[1];
+            String channel;
             if (args[1].startsWith("#")) {
                 channel = args[1];
-            } else {
-                channel = "#" + args[1];
-            }
-            Channel chan = event.getBot().getUserChannelDao().getChannel(channel);
-            String user = "";
+                Channel chan = event.getBot().getUserChannelDao().getChannel(channel);
+                String user = "";
 
-            if (args.length == 3) {
-                if (args[1].contains("batman") || args[1].equalsIgnoreCase("alfred") || args[1].contains("progwml6")) {
-                    user = event.getUser().getNick();
-                } else {
-                    user = args[2] + ", ";
+                if (args.length == 3) {
+                    if (args[2].contains("batman") || args[2].equalsIgnoreCase("alfred") || args[2].contains("progwml6")) {
+                        user = event.getUser().getNick();
+                    } else {
+                        user = args[2] + ", ";
+                    }
+                }
+
+                while (insult1.isEmpty()) {
+                    wait();
+                }
+                try {
+                    sendInsult(event, user + insult1);
+                    return true;
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }
 
-            while (insult1.isEmpty()) {
-                wait();
+            StringBuilder builder = new StringBuilder();
+            for (int i = 1; i < args.length; i++) {
+                builder.append(args[i]).append(" ");
             }
-            try {
-                sendInsult(event, user + insult1);
-                return true;
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
+            event.getChannel().send().message(builder.toString().trim() + ": " + insult1);
+            return true;
         }
+
         event.getChannel().send().message(insult1);
         return true;
     }

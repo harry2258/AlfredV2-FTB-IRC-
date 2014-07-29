@@ -176,7 +176,7 @@ public class Error extends Command {
         String errors = "";
         ArrayList<String> Diag = new ArrayList<>();
         ArrayList<String> Sugg = new ArrayList<>();
-        Connection conn = null;
+        Connection conn;
         try {
 
             conn = getConnection();
