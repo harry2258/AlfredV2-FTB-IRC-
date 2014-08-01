@@ -95,7 +95,7 @@ public class Main {
             builder.setEncoding(Charset.isSupported("UTF-8") ? Charset.forName("UTF-8") : Charset.defaultCharset());
             builder.setNickservPassword(config.getBotPassword());
             builder.setAutoReconnect(config.isAutoReconnectServer());
-            builder.setVersion("2.2.7");
+            builder.setVersion("2.2.8");
             builder.setServer(config.getServerHostame(), Integer.parseInt(config.getServerPort()), config.getServerPassword());
 
             //Gotta listen to 'em
@@ -108,6 +108,7 @@ public class Main {
             builder.getListenerManager().addListener(new ActionEvent(config, manager));
             builder.getListenerManager().addListener(new KickEvent(config, manager));
             builder.getListenerManager().addListener(new Disconnect(config, manager));
+            builder.getListenerManager().addListener(new PrivateMessageEvent(config, manager));
 
             System.out.println("------Permissions------");
             for (String channel : config.getChannels()) {

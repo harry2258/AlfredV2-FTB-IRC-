@@ -144,7 +144,7 @@ public class Utils {
             BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream()));
             String result;
             while ((result = reader.readLine()) != null) {
-                String a = result.replace("red", Colors.RED + "✘" + Colors.NORMAL).replace("green", Colors.DARK_GREEN + "✓" + Colors.NORMAL).replace("yellow", Colors.YELLOW + "Problems" + Colors.NORMAL).replace("[", "").replace("]", "").replace("{", "").replace("}", "").replace(":", ": ").replace("\"", "").replace("session:", "Legacy Session").replace("server", " Server");
+                String a = result.replace("red", Colors.RED + "✘" + Colors.NORMAL).replace("green", Colors.DARK_GREEN + "✓" + Colors.NORMAL).replace("yellow", Colors.YELLOW + "~" + Colors.NORMAL).replace("[", "").replace("]", "").replace("{", "").replace("}", "").replace(":", ": ").replace("\"", "").replace("session.", "Legacy Session.").replace("server", " Server");
                 String[] c = a.replaceAll(".minecraft.net", "").replaceAll(".mojang.com|.net", "").split(",");
                 for (String tmp : c) {
                     returns += Character.toUpperCase(tmp.charAt(0)) + tmp.substring(1).toLowerCase() + " | ";
@@ -326,7 +326,7 @@ public class Utils {
                 bans = Colors.BOLD + user + Colors.NORMAL + " has a total of " + Colors.BOLD + i + Colors.NORMAL + " bans!";
             }
         } catch (Exception x) {
-            System.out.println(x);
+            x.printStackTrace();
             bans = "Please make sure you spelled the Minecraft name right! ";
         }
         return bans;

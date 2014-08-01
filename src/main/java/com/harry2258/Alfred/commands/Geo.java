@@ -88,7 +88,6 @@ public class Geo extends Command {
                 return false;
             }
         }
-
         if (event.getChannel().getUsers().toString().contains(args[1])) {
             User u = event.getBot().getUserChannelDao().getUser(args[1]);
             String user = "";
@@ -101,19 +100,19 @@ public class Geo extends Command {
                 ip = test.getHostname();
             } catch (InterruptedException ex) {
                 Logger.getLogger(com.harry2258.Alfred.listeners.MessageEvent.class.getName()).log(Level.SEVERE, null, ex);
-
             }
         } else {
             ip = args[1];
         }
 
         String geo = "http://freegeoip.net/json/" + ip;
-        String tmp = "";
+        String jsonstring = "";
         try {
             URL url;
             url = new URL(geo);
             BufferedReader re = new BufferedReader(new InputStreamReader(url.openStream()));
-            String jsonstring = re.readLine();
+            jsonstring = re.readLine();
+            System.out.println(re.readLine());
             JSONObject jsonObj = new JSONObject(jsonstring);
             info.add(Colors.BOLD + "State: " + Colors.NORMAL + jsonObj.getString("region_name"));
             info.add(Colors.BOLD + "Country: " + Colors.NORMAL + jsonObj.getString("country_name"));
@@ -130,7 +129,7 @@ public class Geo extends Command {
             event.getChannel().send().message(message);
         } catch (Exception e) {
             e.printStackTrace();
-            if (e.getMessage().contains("400")) {
+            if (jsonstring.contains("Not Found")) {
                 event.getChannel().send().message("IPV6 aren't supported yet!");
             }
             return false;

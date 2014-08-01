@@ -24,7 +24,6 @@ public class PartEvent extends ListenerAdapter {
 
         if (Main.Login.containsKey(event.getUser().getNick())) {
             Main.Login.remove(event.getUser().getNick());
-            System.out.println(event.getUser().getNick() + " was removed from the HashMap");
         }
 
         if (Main.relay.containsKey(event.getChannel())) {
@@ -37,7 +36,6 @@ public class PartEvent extends ListenerAdapter {
 
         if (Main.Login.containsKey(event.getUser().getNick())) {
             Main.Login.remove(event.getUser().getNick());
-            System.out.println(event.getUser().getNick() + " was removed from the HashMap");
         }
     }
 

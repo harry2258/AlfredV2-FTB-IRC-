@@ -193,7 +193,7 @@ public class CreeperHost extends Thread {
                             re.close();
                             urlConn.disconnect();
                             Load.add(x);
-                            System.out.println(chURLNames.get(i) + " : " + x);
+                            System.out.println(chURLNames.get(i) + ": " + x);
                         } catch (Exception ex) {
                             ex.printStackTrace();
                             Load.add(0);
@@ -228,14 +228,13 @@ public class CreeperHost extends Thread {
             Message.add(chRepos.get(x) + ": " + Status.get(x) + Colors.NORMAL + " " + (Load.get(x) == -1 ? "N/A" : Load.get(x)) + "% | ");
         }
         for (String s : Message) {
-            sendMessage += s + "\t";
+            sendMessage += s;
         }
 
         event.getChannel().send().message(sendMessage);
         final long endTime = System.currentTimeMillis();
         Double time = (double) (endTime - startTime) / 1000;
         event.getUser().send().notice("Took me " + time + " seconds");
-
     }
 
     private double calculateAverage(List<Integer> marks) {

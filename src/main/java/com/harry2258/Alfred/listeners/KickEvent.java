@@ -25,7 +25,6 @@ public class KickEvent extends ListenerAdapter {
 
         if (Main.Login.containsKey(event.getRecipient().getNick())) {
             Main.Login.remove(event.getRecipient().getNick());
-            System.out.println(event.getRecipient().getNick() + " was removed from the HashMap");
         }
 
         if (Main.relay.containsKey(event.getChannel())) {

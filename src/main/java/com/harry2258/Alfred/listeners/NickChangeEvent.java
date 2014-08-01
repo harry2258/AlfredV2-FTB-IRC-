@@ -33,18 +33,6 @@ public class NickChangeEvent extends ListenerAdapter {
         String oldNick = event.getOldNick();
         String newNick = event.getNewNick();
 
-        /*
-        if (oldN.exists()) {
-            path = System.getProperty("user.dir") + "/Reminders/" + oldNick + ".txt";
-        } else {
-            File newN = new File(System.getProperty("user.dir") + "/Reminders/" + newNick + ".txt");
-            if (newN.exists()) {
-                path = System.getProperty("user.dir") + "/Reminders/" + newNick + ".txt";
-            }
-
-        }
-        */
-
         String user = getAccount(event.getUser(), event);
 
         File reminder = new File(System.getProperty("user.dir") + "/Reminders/" + user + ".txt");
@@ -62,8 +50,6 @@ public class NickChangeEvent extends ListenerAdapter {
 
         Main.Login.remove(oldNick);
         Main.Login.put(newNick, user);
-
-        System.out.println("Removed " + oldNick + " from HashMap and Added " + newNick);
 
     }
 

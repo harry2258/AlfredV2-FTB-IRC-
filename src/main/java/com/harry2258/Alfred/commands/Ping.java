@@ -28,10 +28,8 @@ public class Ping extends Command {
             String[] args = event.getMessage().split(" ");
             if (args.length == 2) {
                 String host = args[1].replaceAll("http://|https://|www.", "");
-                int port = Integer.valueOf("80");
-
                 Long start = System.currentTimeMillis();
-                Socket s = new Socket(InetAddress.getByName(host), port);
+                Socket s = new Socket(InetAddress.getByName(host), 80);
                 s.close();
                 time = System.currentTimeMillis() - start;
                 returns = args[1] + " response time: " + time + " miliseconds";
