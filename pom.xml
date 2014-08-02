@@ -119,6 +119,7 @@
                             <sealed>true</sealed>
                         </manifestEntries>
                     </archive>
+                    <finalName>AlfredV2</finalName>
                 </configuration>
             </plugin>
             <plugin>
