@@ -5,12 +5,23 @@ import bsh.Interpreter;
 import com.harry2258.Alfred.Main;
 import com.harry2258.Alfred.api.*;
 import com.harry2258.Alfred.commands.Ignore;
+import org.pircbotx.Channel;
 import org.pircbotx.Colors;
 import org.pircbotx.PircBotX;
 import org.pircbotx.hooks.ListenerAdapter;
 
 import java.io.*;
 import java.util.Date;
+import com.google.common.eventbus.Subscribe;
+import org.pircbotx.hooks.events.ActionEvent;
+import org.pircbotx.hooks.events.KickEvent;
+
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
 
 import static com.harry2258.Alfred.api.CommandRegistry.commands;
 
@@ -213,6 +224,107 @@ public class MessageEvent extends ListenerAdapter {
                 }
             }
         }
+        /*
+        if (event.getMessage().matches("^(s|tr)/([^/\\\\]*(?:\\\\.)?)+/(.*)(/[gi]*)?$")) {
+            if (manager.hasPermission("command.regex", event.getUser(), event.getChannel(),event)) {
+                debugEx = "";
+                List<Match> match = Util.getAllMatches("^(s|tr)/((?:[^/\\\\]*(?:\\\\.)?)+)/((?:[^/]*(?:\\\\/)*)*)(?:/([gi]*))?$", event.getMessage());
+                Match m = match.get(0);
+                String type = m.getGroups()[0];
+                String regex = m.getGroups()[1].replace("\\/", "/");
+                String replacement = m.getGroups()[2].replace("\\/", "/");
+                String flags = m.getGroups()[3];
+                debugEx += String.format("Regex: '%s'\nReplacement: '%s'\nFlags: '%s'\nMode: '%s'", regex, replacement, flags, type);
+                if (flags == null)
+                    flags = "";
+                String result = null;
+                if (type.equals("s")) {
+                    regex = "(?:" + regex + ")";
+                    if (flags.contains("i"))
+                        regex = "(?i)" + regex;
+                    Pattern pattern1 = null;
+                    Pattern pattern2 = null;
+                    try {
+                        pattern1 = Pattern.compile("^.*" + regex + ".*$");
+                        pattern2 = Pattern.compile(regex);
+
+                        PlaybackHandler h = PlaybackRegistry.getHandler(event.getChannel());
+                        Iterator<Message> it = h.getMessageIterator(event.getChannel(), -1);
+                        while (it.hasNext()) {
+                            Message msg_ = it.next();
+                            debugEx += "\n" + msg_.toString();
+                            if (msg_.isIgnored() || (!(msg_ instanceof TextMessage))) continue;
+                            TextMessage msg = (TextMessage) msg_;
+                            String mmsg = msg.getMessage();
+                            if (mmsg.equals(event.getMessage()) || mmsg.matches("^s/([^/\\\\]*(?:\\\\.)?)+/(.*)(/[gi]*)?$")) continue;
+                            Matcher matcher1 = pattern1.matcher(mmsg);
+                            Matcher matcher2 = pattern2.matcher(mmsg);
+                            //matcher.useAnchoringBounds(false);
+                            if (matcher1.matches()) {
+                                if (flags.contains("g"))
+                                    result = matcher2.replaceAll(replacement);//msg.getMessage().replaceAll(regex, replacement);
+                                else
+                                    result = matcher2.replaceFirst(replacement);
+                                TextMessage msg2 = msg.clone();
+                                msg2.setMessage(result);
+                                h.appendMessage(event.getChannel(), msg2);
+                                String res = msg2.formatLine();
+                                access.getBot().sendMessage(event.getChannel(), res);
+                                debugEx += String.format(" => %s\n\nResult: '%s'", result, res);
+                                break;
+                            }
+                        }
+                        if (result == null)
+                            access.getBot().sendNotice(event.getUser(), "No match found");
+
+                    } catch (PatternSyntaxException e) {
+                        access.getBot().sendNotice(event.getUser(), "Invalid regex: " + e.getMessage().split("\n")[0]);
+                    }
+                } else {
+                    try {
+                        TransliterationRegex pattern = new TransliterationRegex(regex, replacement);
+                        PlaybackHandler h = PlaybackRegistry.getHandler(event.getChannel());
+                        Iterator<Message> it = h.getMessageIterator(event.getChannel(), -1);
+                        while (it.hasNext()) {
+                            Message msg_ = it.next();
+                            debugEx += "\n" + msg_.toString();
+                            if (msg_.isIgnored() || (!(msg_ instanceof TextMessage))) continue;
+                            TextMessage msg = (TextMessage) msg_;
+                            String mmsg = msg.getMessage();
+                            if (mmsg.equals(event.getMessage()) || mmsg.matches("^s/([^/\\\\]*(?:\\\\.)?)+/(.*)(/[gi]*)?$")) continue;
+
+                            String res = pattern.applyTo(mmsg);
+                            if (!res.equals(mmsg)) {
+                                TextMessage newOne = msg.clone();
+                                newOne.setMessage(res);
+                                h.appendMessage(event.getChannel(), newOne);
+                                String result_data = newOne.formatLine();
+                                event.getChannel().send().notice( result_data);
+                                debugEx += String.format(" => %s\n\nResult: '%s'", res, result_data);
+                                break;
+                            }
+
+                        }
+                    } catch (Exception e) {
+                        event.getUser().send().notice("Invalid regex: " + e.getMessage().split("\n")[0]);
+                    }
+
+                }
+                /*try {
+                    String name = "regex_" + System.currentTimeMillis() + ".dmp";
+                    File f = new File(name);
+                    BufferedWriter w = new BufferedWriter(new FileWriter(f));
+                    w.write(debugEx);
+                    debugEx = null;
+                    w.flush();
+                    w.close();
+                    access.getLogger().debug("Dumped regex details as %s", f.getAbsolutePath());
+                } catch (IOException e) {
+                    access.getLogger().error("", e);
+                }
+            }
+        }
+        */
 
         if (event.getMessage().equalsIgnoreCase("Im better than alfred") || event.getMessage().equalsIgnoreCase("I'm better than alfred")) {
             event.getChannel().send().message(eventuser + ", It's good to dream big");

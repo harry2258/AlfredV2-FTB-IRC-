@@ -53,6 +53,5 @@ dependencies {
     compile 'com.google.guava:guava:16.0'
     compile 'commons-io:commons-io:2.4'
 
-
     compile 'junit:junit:3.8.1'
 }

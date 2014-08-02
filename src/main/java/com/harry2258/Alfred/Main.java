@@ -1,5 +1,6 @@
 package com.harry2258.Alfred;
 
+import com.harry2258.Alfred.Misc.ChatterBot;
 import com.harry2258.Alfred.Misc.Reddit;
 import com.harry2258.Alfred.Misc.Twitter;
 import com.harry2258.Alfred.Misc.Update;
@@ -129,6 +130,7 @@ public class Main {
             PircBotX bot = new PircBotX(builder.buildConfiguration());
             System.out.println("Starting bot...");
             version = bot.getConfiguration().getVersion();
+            new Thread(new ChatterBot(bot)).start();
             if (config.isEnableChatSocket()) {
                 new Thread(new ChatSocketListener(bot, config.getChatSocketPort())).start();
             }
