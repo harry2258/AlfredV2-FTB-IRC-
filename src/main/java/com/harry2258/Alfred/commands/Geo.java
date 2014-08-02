@@ -31,7 +31,7 @@ public class Geo extends Command {
         ArrayList<String> info = new ArrayList<>();
         ArrayList<String> Message = new ArrayList<>();
         String message = "";
-        String ip = "";
+        String ip = args[1];
 
         if (event.getChannel().isChannelPrivate() || event.getChannel().isSecret() || event.getChannel().isInviteOnly()) {
             event.getChannel().send().message("No no no! Not in here!");
@@ -48,11 +48,14 @@ public class Geo extends Command {
                 try {
                     test = waitForQueue.waitFor(WhoisEvent.class);
                     waitForQueue.close();
-                    ip = test.getHostname();
+                    ip = java.net.InetAddress.getByName(test.getHostname()).getHostAddress();
                 } catch (InterruptedException ex) {
                     Logger.getLogger(com.harry2258.Alfred.listeners.MessageEvent.class.getName()).log(Level.SEVERE, null, ex);
 
                 }
+            }
+            else {
+                ip = java.net.InetAddress.getByName(args[2]).getHostAddress();
             }
 
             String geo = "http://freegeoip.net/json/" + ip;
@@ -63,7 +66,6 @@ public class Geo extends Command {
                 BufferedReader re = new BufferedReader(new InputStreamReader(url.openStream()));
                 String jsonstring = re.readLine();
                 JsonObject jsonObj = JsonUtils.getJsonObject(jsonstring);
-                System.out.println(jsonObj.toString());
                 info.add(Colors.BOLD + "City: " + Colors.NORMAL + jsonObj.get("city").getAsString());
                 info.add(Colors.BOLD + "Zip: " + Colors.NORMAL + jsonObj.get("zipcode").getAsString());
                 info.add(Colors.BOLD + "State: " + Colors.NORMAL + jsonObj.get("region_name").getAsString());
@@ -97,12 +99,12 @@ public class Geo extends Command {
             try {
                 test = waitForQueue.waitFor(WhoisEvent.class);
                 waitForQueue.close();
-                ip = test.getHostname();
+                ip = java.net.InetAddress.getByName(test.getHostname()).getHostAddress();
             } catch (InterruptedException ex) {
                 Logger.getLogger(com.harry2258.Alfred.listeners.MessageEvent.class.getName()).log(Level.SEVERE, null, ex);
             }
         } else {
-            ip = args[1];
+            ip = java.net.InetAddress.getByName(args[1]).getHostAddress();
         }
 
         String geo = "http://freegeoip.net/json/" + ip;
@@ -112,7 +114,6 @@ public class Geo extends Command {
             url = new URL(geo);
             BufferedReader re = new BufferedReader(new InputStreamReader(url.openStream()));
             jsonstring = re.readLine();
-            System.out.println(re.readLine());
             JSONObject jsonObj = new JSONObject(jsonstring);
             info.add(Colors.BOLD + "State: " + Colors.NORMAL + jsonObj.getString("region_name"));
             info.add(Colors.BOLD + "Country: " + Colors.NORMAL + jsonObj.getString("country_name"));

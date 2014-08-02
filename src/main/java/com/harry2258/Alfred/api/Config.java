@@ -44,6 +44,7 @@ public class Config {
     private String DBuser;
     private String DBpass;
     private String updatechan;
+    private String Weather;
     private List<String> channels;
     private List<String> loggedChannels;
     private String permissionDenied;
@@ -103,6 +104,7 @@ public class Config {
             this.DBUserName(properties.getProperty("Username"));
             this.DBPassName(properties.getProperty("Password"));
             this.DB(properties.getProperty("Database"));
+            this.WeatherAPI(properties.getProperty("Weather-API-Key"));
 
         } catch (IOException ex) {
             Logger.getLogger(Config.class.getName()).log(Level.SEVERE, null, ex);
@@ -431,29 +433,6 @@ public class Config {
         this.RedditEnabled = Redditenabled;
     }
 
-    public boolean isAdmin(String username, String hostmask) {
-        List<String> admins = Arrays.asList(properties.getProperty("bot-ops").split(" "));
-        boolean hostmatch = false;
-        boolean nickmatch = false;
-        String nick;
-        String hostname;
-        for (String host : admins) {
-            nick = host.split("\\@")[0];
-            hostname = host.split("\\@")[1];
-            Pattern p = Pattern.compile(hostname.replaceAll("\\.", "\\\\.").replaceAll("\\*", ".*"));
-            Matcher m = p.matcher(hostmask);
-            if (m.find()) {
-                hostmatch = true;
-            }
-            p = Pattern.compile(nick.replaceAll("\\*", ".*"));
-            m = p.matcher(nick);
-            if (m.find()) {
-                nickmatch = true;
-            }
-        }
-        return nickmatch && hostmatch;
-    }
-
     public String Database() {
         return DBtable;
     }
@@ -508,5 +487,13 @@ public class Config {
 
     private void setUpdateInterval(int updateInterval) {
         UpdateInterval = updateInterval;
+    }
+
+    private void WeatherAPI(String Key) {
+        this.Weather = Key;
+    }
+
+    public String WeatherKey() {
+        return Weather;
     }
 }
