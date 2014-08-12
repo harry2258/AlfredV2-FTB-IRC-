@@ -5,7 +5,7 @@ before_install:
 notifications:
  irc:
   channels:
-   - "irc.esper.net#batman"
+   - "irc.esper.net#batbot"
   template:
-   - "%{repository}#%{build_number} (%{branch} - %{commit} : %{author}): %{message}"
-   - "Build details : %{build_url} | %{result}%"
+   - "%{repository}# - %{build_number} (%{branch} - %{commit} : %{author}): %{message}"
+   - "Build details : %{build_url}"
