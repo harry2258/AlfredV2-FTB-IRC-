@@ -18,7 +18,6 @@ public class Diagnosis extends Command {
     public boolean execute(MessageEvent event) throws Exception {
 
         String[] args = event.getMessage().split(" ");
-
         StringBuilder br = new StringBuilder();
 
         for (int i = 1; i < args.length; i++) {

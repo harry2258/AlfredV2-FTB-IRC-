@@ -8,7 +8,6 @@ import com.harry2258.Alfred.api.*;
 import com.harry2258.Alfred.json.Perms;
 import com.harry2258.Alfred.listeners.*;
 import com.harry2258.Alfred.runnables.ChatSocketListener;
-import org.apache.commons.configuration.PropertiesConfiguration;
 import org.pircbotx.Channel;
 import org.pircbotx.Configuration;
 import org.pircbotx.PircBotX;
@@ -17,6 +16,10 @@ import org.slf4j.impl.SimpleLogger;
 
 import java.io.File;
 import java.nio.charset.Charset;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -34,12 +37,13 @@ public class Main {
     public static Map<String, String> Login = new HashMap<>();
     public static HashMap<Channel, Channel> relay = new HashMap<>();
     public static HashMap<String, String> URL = new HashMap<>();
-    public static PropertiesConfiguration customcmd;
     public static File parser = new File(System.getProperty("user.dir") + "/parser.json");
     public static File globalperm = new File(System.getProperty("user.dir") + "/global.json");
     public static File edgesjsonfile = new File(System.getProperty("user.dir") + "/edges.json");
     public static List<String> users = new ArrayList<>();
     public static String version = "";
+    private static boolean Database = false;
+    public static Connection database;
 
     public static void main(String[] args) {
 
@@ -54,7 +58,18 @@ public class Main {
             final Config config = new Config();
             PermissionManager manager = new PermissionManager(config);
             System.out.println("Loading and registering commands");
-            config.load();
+
+            try {
+                if (!config.UseDatabase()) {
+                    config.load();
+                } else {
+                    database = DriverManager.getConnection("jdbc:mysql://" + config.DatabaseHost() + "/" + config.Database(), config.DatabaseUser(), config.DatabasePass());
+                    config.loadDatabase(database);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                System.exit(0);
+            }
 
             //Creates Exec.json
             if (!jsonFilePath.exists()) {
@@ -112,18 +127,30 @@ public class Main {
             builder.getListenerManager().addListener(new PrivateMessageEvent(config, manager));
 
             System.out.println("------Permissions------");
-            for (String channel : config.getChannels()) {
-                File file = new File(System.getProperty("user.dir") + "/Perms/" + channel.toLowerCase() + "/" + "perms.json");
-                String Jsonfile = System.getProperty("user.dir") + "/Perms/" + channel.toLowerCase() + "/" + "perms.json";
-                if (!file.exists()) {
-                    System.out.println("Creating perms.json for " + channel);
-                    JsonUtils.createJsonStructure(file);
+            if (!config.UseDatabase()) {
+                for (String channel : config.getChannels()) {
+                    File file = new File(System.getProperty("user.dir") + "/Perms/" + channel.toLowerCase() + "/" + "perms.json");
+                    String Jsonfile = System.getProperty("user.dir") + "/Perms/" + channel.toLowerCase() + "/" + "perms.json";
+                    if (!file.exists()) {
+                        System.out.println("Creating perms.json for " + channel);
+                        JsonUtils.createJsonStructure(file);
+                    }
+                    String perms = JsonUtils.getStringFromFile(Jsonfile);
+                    Perms p = JsonUtils.getPermsFromString(perms);
+                    map.put(channel.toLowerCase(), p);
+                    System.out.println("Loaded perms for " + channel);
+                    builder.addAutoJoinChannel(channel);
                 }
-                String perms = JsonUtils.getStringFromFile(Jsonfile);
-                Perms p = JsonUtils.getPermsFromString(perms);
-                map.put(channel.toLowerCase(), p);
-                System.out.println("Loaded perms for " + channel);
-                builder.addAutoJoinChannel(channel);
+            } else {
+                try {
+                    PreparedStatement stmt = database.prepareStatement("SELECT Channel  FROM `Rejoin_Channels`");
+                    ResultSet rs = stmt.executeQuery();
+                    while (rs.next()) {
+                        builder.addAutoJoinChannel(rs.getString("Channel"));
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
 
             System.out.println("-----------------------");

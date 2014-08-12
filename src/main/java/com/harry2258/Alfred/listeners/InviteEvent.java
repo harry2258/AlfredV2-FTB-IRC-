@@ -1,8 +1,12 @@
 package com.harry2258.Alfred.listeners;
 
+import com.harry2258.Alfred.Database.Create;
+import com.harry2258.Alfred.Main;
 import com.harry2258.Alfred.api.Config;
 import com.harry2258.Alfred.api.PermissionManager;
 import org.pircbotx.hooks.ListenerAdapter;
+
+import java.sql.SQLException;
 
 public class InviteEvent extends ListenerAdapter {
 
@@ -19,6 +23,11 @@ public class InviteEvent extends ListenerAdapter {
         if (config.isAutoAcceptInvite()) {
             event.getBot().sendRaw().rawLineNow("PRIVMSG #batbot :Invited to " + event.getChannel() + " by " + event.getUser());
             event.getBot().sendIRC().joinChannel(event.getChannel());
+            try {
+                Create.AddChannel(event.getChannel(), Main.database);
+            } catch (SQLException s) {
+                s.printStackTrace();
+            }
         }
     }
 }

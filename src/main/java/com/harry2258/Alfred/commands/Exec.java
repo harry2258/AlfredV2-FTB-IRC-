@@ -69,7 +69,8 @@ public class Exec extends Command {
                     }
                 }
             } else {
-                event.getChannel().send().message("system shell & file property access is prohibited!");
+                event.getUser().send().notice("You have to be in the group 'Exec' to use this command!");
+                return false;
             }
         } catch (Exception ex) {
             Logger.getLogger(Exec.class.getName()).log(Level.SEVERE, null, ex);

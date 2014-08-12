@@ -4,16 +4,22 @@
  */
 package com.harry2258.Alfred.api;
 
+import com.harry2258.Alfred.Database.Create;
 import com.harry2258.Alfred.Main;
+import com.sun.org.apache.xpath.internal.operations.Bool;
+import sun.nio.ch.Net;
 
 import java.io.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 //TODO LOMBOKIZE!!!
 public class Config {
@@ -29,6 +35,8 @@ public class Config {
     private boolean TwitterEnabled;
     private boolean RedditEnabled;
     private boolean updater;
+    public boolean useDatabase;
+    public boolean updateDatabase;
     private String trigger;
     private String serverHostame;
     private String serverPassword;
@@ -48,15 +56,16 @@ public class Config {
     private List<String> channels;
     private List<String> loggedChannels;
     private String permissionDenied;
-    private Properties properties;
     private int chatSocketPort;
     private int UpdateInterval;
 
 
     public void load() {
         try {
-            properties = new Properties();
+            Properties properties = new Properties();
+            /*
             File config = new File("bot.properties");
+
             if (!config.exists()) {
                 System.out.println("[!!] No configuration file found! generating a new one! [!!]");
                 BufferedReader s = new BufferedReader(new InputStreamReader(Main.class.getResourceAsStream("/bot.properties")));
@@ -71,6 +80,7 @@ public class Config {
                 out.close();
                 System.out.println("[!!] Done! [!!]");
             }
+            */
 
             properties.load(new FileInputStream("bot.properties"));
             this.setBotNickname(properties.getProperty("bot-nickname"));
@@ -92,7 +102,7 @@ public class Config {
             this.setChannels(Arrays.asList(properties.getProperty("channels").split(" ")));
             this.setLoggedChannels(Arrays.asList(properties.getProperty("channels-log").split(" ")));
             this.setUseSSL(Boolean.parseBoolean(properties.getProperty("use-ssl")));
-            this.setVerifySSL(Boolean.parseBoolean(properties.getProperty("verfy-ssl")));
+            this.setVerifySSL(Boolean.parseBoolean(properties.getProperty("verify-ssl")));
             this.setServerHostame(properties.getProperty("server-hostname"));
             this.setServerPort(properties.getProperty("server-port"));
             this.setServerPassword(properties.getProperty("server-password"));
@@ -108,6 +118,184 @@ public class Config {
 
         } catch (IOException ex) {
             Logger.getLogger(Config.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public boolean UseDatabase() {
+        try {
+            Properties properties = new Properties();
+            File config = new File("bot.properties");
+            if (!config.exists()) {
+                System.out.println("[!!] No configuration file found! generating a new one! [!!]");
+                BufferedReader s = new BufferedReader(new InputStreamReader(Main.class.getResourceAsStream("/bot.properties")));
+                String tmp = "";
+                config.createNewFile();
+                BufferedWriter out = new BufferedWriter(new FileWriter(config));
+                while ((tmp = s.readLine()) != null) {
+                    out.write(tmp);
+                    out.flush();
+                    out.newLine();
+                }
+                out.close();
+                System.out.println("[!!] Done! [!!]");
+            }
+            properties.load(new FileInputStream("bot.properties"));
+            usingDatabase(Boolean.valueOf(properties.getProperty("Use-Database")));
+            System.out.println("Using Database: " + useDatabase);
+
+            if (useDatabase) {
+                this.DBHostName(properties.getProperty("Host"));
+                this.DBUserName(properties.getProperty("Username"));
+                this.DBPassName(properties.getProperty("Password"));
+                this.DB(properties.getProperty("Database"));
+
+                if (Boolean.valueOf(properties.getProperty("Update-Database"))) {
+                    updateDatabase = true;
+                    properties.setProperty("Update-Database", "false");
+                    properties.store(new FileOutputStream("bot.properties"), null);
+                }
+            }
+
+            System.out.println("Update Database: " + updateDatabase);
+            return useDatabase;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public void loadDatabase(Connection conn) {
+
+        try {
+            conn.prepareStatement("CREATE TABLE IF NOT EXISTS Channel_Permissions ( Channel VARCHAR(255) NOT NULL PRIMARY KEY, Admins VARCHAR(255), Mods VARCHAR(255), ModPerms VARCHAR(255), Everyone VARCHAR(255), URL VARCHAR(30) ) ").execute();
+            conn.prepareStatement("CREATE TABLE IF NOT EXISTS Rejoin_Channels (Channel VARCHAR(255) NOT NULL PRIMARY KEY)").execute();
+            conn.prepareStatement("CREATE TABLE IF NOT EXISTS Bot (`Nick` VARCHAR(255) NOT NULL PRIMARY KEY, `Password` VARCHAR(255), `Username` VARCHAR(255), `Ident` VARCHAR(255), `Bot_Trigger` VARCHAR(255), `Reconnect` VARCHAR(5), `Accept_Invite` VARCHAR(5), `Rejoin_Channels` VARCHAR(5), `CTCP_Finger_Reply` VARCHAR(255), `CTCP_Version_Reply` VARCHAR(225))").execute();
+            conn.prepareStatement("CREATE TABLE IF NOT EXISTS Network_Settings (Server_Host VARCHAR(255) NOT NULL PRIMARY KEY, Server_Port VARCHAR(255), Server_Password VARCHAR(255), Use_SSL VARCHAR(5), Permissions_Denied VARCHAR(255), Verify_SSL VARCHAR(5), Enable_Chat_Socket VARCHAR(5), Chat_Socket_Port INTEGER)").execute();
+            conn.prepareStatement("CREATE TABLE IF NOT EXISTS Misc (Bot VARCHAR(255) NOT NULL PRIMARY KEY, Twitter VARCHAR(5), Reddit VARCHAR(5), Check_Update VARCHAR(5), Update_Channel VARCHAR(255), Update_Interval INTEGER, Weather_API_KEY VARCHAR(255))").execute();
+        } catch (SQLException s) {
+            s.printStackTrace();
+        }
+
+        try {
+            if (updateDatabase) {
+                UpdateDatabase(conn);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        try {
+            //Bot Settings
+            PreparedStatement stmt = conn.prepareStatement("SELECT *  FROM `bot`");
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                this.setBotNickname(rs.getString("Nick"));
+                this.setBotPassword(rs.getString("Password"));
+                this.setBotUsername(rs.getString("Username"));
+                this.setBotIdent(rs.getString("Ident"));
+                this.setTrigger(rs.getString("Bot_Trigger"));
+                this.setAutoReconnectServer(Boolean.parseBoolean(rs.getString("Reconnect")));
+                this.setAutoAcceptInvite(Boolean.parseBoolean(rs.getString("Accept_Invite")));
+                this.setAutoRejoinChannel(Boolean.parseBoolean(rs.getString("Rejoin_Channels")));
+                this.setCtcpFinger(rs.getString("CTCP_Finger_Reply"));
+                this.setCtcpVersion(rs.getString("CTCP_Version_Reply"));
+            }
+            rs.close();
+            stmt.close();
+
+            //Netowork Settings
+            PreparedStatement stmt1 = conn.prepareStatement("SELECT * FROM `Network_Settings`");
+            ResultSet rs1 = stmt1.executeQuery();
+            while (rs1.next()) {
+                this.setServerHostame(rs1.getString("Server_Host"));
+                this.setServerPassword(rs1.getString("Server_Password"));
+                this.setServerPort(rs1.getString("Server_Port"));
+                this.setUseSSL(Boolean.parseBoolean(rs1.getString("Use_SSL")));
+                this.setVerifySSL(Boolean.parseBoolean(rs1.getString("Verify_SSL")));
+                this.setEnableChatSocket(Boolean.parseBoolean(rs1.getString("Enable_Chat_Socket")));
+                this.setChatSocketPort(rs1.getInt("Chat_Socket_port"));
+                this.setPermissionDenied(rs1.getString("Permissions_Denied"));
+            }
+            rs1.close();
+            stmt1.close();
+
+            //Misc. Settings
+            PreparedStatement stmt2 = conn.prepareStatement("SELECT * FROM `Misc`");
+            ResultSet rs2 = stmt2.executeQuery();
+            while (rs2.next()) {
+                this.setTwitterEnabled(Boolean.parseBoolean(rs2.getString("Twitter")));
+                this.setRedditEnabled(Boolean.parseBoolean(rs2.getString("Reddit")));
+                this.setUpdateChan(rs2.getString("Update_Channel"));
+                this.setUpdater(Boolean.parseBoolean(rs2.getString("Check_Update")));
+                this.setUpdateInterval(rs2.getInt("Update_Interval"));
+                this.WeatherAPI(rs2.getString("Weather_API_KEY"));
+            }
+            rs2.close();
+            stmt2.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void UpdateDatabase(Connection conn) {
+        try {
+            Properties properties = new Properties();
+            try {
+                properties.load(new FileInputStream("bot.properties"));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+
+            conn.prepareStatement("TRUNCATE bot").execute();
+            conn.prepareStatement("TRUNCATE Network_Settings").execute();
+            conn.prepareStatement("TRUNCATE Misc").execute();
+
+            String bot = String.format("INSERT INTO `bot` (`Nick`, `Password`, `Username`, `Ident`, `Bot_Trigger`, `Reconnect`, `Accept_Invite`, `Rejoin_Channels`, `CTCP_Finger_Reply`, `CTCP_Version_Reply`) VALUES ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s')",
+                    properties.getProperty("bot-nickname"),
+                    properties.getProperty("bot-password"),
+                    properties.getProperty("bot-username"),
+                    properties.getProperty("bot-ident"),
+                    properties.getProperty("bot-trigger"),
+                    properties.getProperty("auto-reconnect"),
+                    properties.getProperty("auto-accept-invite"),
+                    properties.getProperty("auto-rejoin"),
+                    properties.getProperty("ctcp-finger-reply"),
+                    properties.getProperty("ctcp-version-reply"));
+            String Network = String.format("INSERT INTO Network_Settings (`Server_Host`, `Server_Port`, `Server_Password`, `Use_SSL`, `Permissions_Denied`, `Verify_SSL`, `Enable_Chat_Socket`, `Chat_Socket_Port`) VALUES ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s')",
+                    properties.getProperty("server-hostname"),
+                    properties.getProperty("server-port"),
+                    properties.getProperty("server-password"),
+                    properties.getProperty("use-ssl"),
+                    properties.getProperty("permission-denied").replaceAll("'","''").replaceAll("`","``"),
+                    properties.getProperty("verify-ssl"),
+                    properties.getProperty("enable-chat-socket"),
+                    properties.getProperty("chat-socket-port"));
+            String Misc = String.format("INSERT INTO Misc (`Bot`, `Twitter`, `Reddit`, `Check_Update`, `Update_Channel`, `Update_Interval`, `Weather_API_KEY`) VALUES ('%s', '%s', '%s', '%s', '%s', '%s', '%s')",
+                    properties.getProperty("bot-nickname"),
+                    properties.getProperty("Twitter"),
+                    properties.getProperty("Reddit"),
+                    properties.getProperty("check-update"),
+                    properties.getProperty("update-channel"),
+                    properties.getProperty("update-interval"),
+                    properties.getProperty("Weather-API-Key"));
+
+            System.out.println(Network);
+            System.out.println(Misc);
+
+            conn.prepareStatement(bot).execute();
+            conn.prepareStatement(Network).execute();
+            conn.prepareStatement(Misc).execute();
+
+            for (String channel : Arrays.asList(properties.getProperty("channels").split(" "))) {
+                    if (Create.AddChannel(channel, conn)) System.out.println("Created Perms for " + channel);
+                    else System.out.println("Could not create permissions for " + channel);
+            }
+
+
+        } catch (SQLException e) {
+            Logger.getLogger(Config.class.getName()).log(Level.SEVERE, null, e);
         }
     }
 
@@ -495,5 +683,9 @@ public class Config {
 
     public String WeatherKey() {
         return Weather;
+    }
+
+    public void usingDatabase(Boolean use) {
+        this.useDatabase = use;
     }
 }

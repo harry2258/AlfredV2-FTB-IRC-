@@ -51,9 +51,6 @@ public class Login extends Command {
     public static String Group(String user, String channel) throws Exception {
         String group = "None :<";
         try {
-            String Jsonfile = System.getProperty("user.dir") + "/perms/" + channel + "/" + "perms.json";
-            String perms = JsonUtils.getStringFromFile(Jsonfile);
-            JsonObject jsonObj = JsonUtils.getJsonObject(perms);
             Perms perm = Main.map.get(channel);
 
             if (perm.getPermission().getMods().contains(user)) {

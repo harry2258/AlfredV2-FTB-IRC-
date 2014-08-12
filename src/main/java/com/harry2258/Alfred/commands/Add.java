@@ -97,7 +97,7 @@ public class Add extends Command {
                         if (!jsonObj.getAsJsonObject("Perms").get("ModPerms").toString().contains(command)) {
                             temp = jsonObj.getAsJsonObject("Perms").get("ModPerms").toString();
                             String[] tempArray = (temp.replaceAll("[\\[\\]\"]", "") + "," + command + "").split(",");
-                            jsonObj.getAsJsonObject("Perms").add("ModsPerms", Json(tempArray));
+                            jsonObj.getAsJsonObject("Perms").add("ModPerms", Json(tempArray));
                             JsonUtils.writeJsonFile(file, jsonObj.toString());
                             event.getUser().send().notice("Moderators are now able to use the command '" + args[2] + "'");
                             String perms = JsonUtils.getStringFromFile(Jsonfile);

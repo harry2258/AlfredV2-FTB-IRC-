@@ -1,10 +1,14 @@
 package com.harry2258.Alfred.commands;
 
+import com.harry2258.Alfred.Database.Create;
+import com.harry2258.Alfred.Main;
 import com.harry2258.Alfred.api.Command;
 import com.harry2258.Alfred.api.Config;
 import com.harry2258.Alfred.api.PermissionManager;
 import org.pircbotx.Channel;
 import org.pircbotx.hooks.events.MessageEvent;
+
+import java.sql.DriverManager;
 
 public class Join extends Command {
 
@@ -30,6 +34,11 @@ public class Join extends Command {
                 event.getBot().sendRaw().rawLineNow("KNOCK " + target.getName() + " :Asked to join this channel by user " + event.getUser().getNick() + " in channel " + event.getChannel().getName());
             }
             event.getBot().sendIRC().joinChannel(target.getName());
+            try {
+                Create.AddChannel(target.getName(), Main.database);
+            }catch (Exception e) {
+                e.printStackTrace();
+            }
             return true;
         }
         return false;

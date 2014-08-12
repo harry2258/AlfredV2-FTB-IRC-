@@ -1,6 +1,7 @@
 package com.harry2258.Alfred.Misc;
 
 import com.google.code.chatterbotapi.*;
+
 import com.harry2258.Alfred.commands.Chat;
 import org.pircbotx.PircBotX;
 

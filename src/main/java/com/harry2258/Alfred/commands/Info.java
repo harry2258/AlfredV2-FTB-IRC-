@@ -1,5 +1,6 @@
 package com.harry2258.Alfred.commands;
 
+import com.harry2258.Alfred.Database.Create;
 import com.harry2258.Alfred.Main;
 import com.harry2258.Alfred.api.Command;
 import com.harry2258.Alfred.api.Config;
@@ -11,6 +12,10 @@ import org.pircbotx.Colors;
 import org.pircbotx.hooks.events.MessageEvent;
 
 import java.io.File;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.util.ArrayList;
 
 /**
  * Created by Hardik on 1/8/14.
@@ -59,6 +64,18 @@ public class Info extends Command {
 
         String exe = JsonUtils.getStringFromFile(System.getProperty("user.dir") + "/exec.json");
         Permission exec = JsonUtils.getPermsFromString(exe).getPermission();
+
+        if (args.length == 2 && args[1].equalsIgnoreCase("rejoin")) {
+            Connection conn = Create.getConnection(config, manager);
+            PreparedStatement stmt = conn.prepareStatement("SELECT Channel  FROM `rejoinchannels`");
+            ResultSet rs = stmt.executeQuery();
+            ArrayList<String> channels = new ArrayList<>();
+            while (rs.next()) {
+                channels.add(rs.getString("Channel"));
+            }
+            event.getChannel().send().message("Channels to join when restarting: " + channels.toString());
+            return true;
+        }
 
         if (args.length == 2 && args[1].equalsIgnoreCase("full") | args[1].equalsIgnoreCase("all")) {
             int NumberofCommand = 0;

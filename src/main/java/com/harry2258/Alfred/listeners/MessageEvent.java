@@ -5,23 +5,12 @@ import bsh.Interpreter;
 import com.harry2258.Alfred.Main;
 import com.harry2258.Alfred.api.*;
 import com.harry2258.Alfred.commands.Ignore;
-import org.pircbotx.Channel;
 import org.pircbotx.Colors;
 import org.pircbotx.PircBotX;
 import org.pircbotx.hooks.ListenerAdapter;
 
 import java.io.*;
 import java.util.Date;
-import com.google.common.eventbus.Subscribe;
-import org.pircbotx.hooks.events.ActionEvent;
-import org.pircbotx.hooks.events.KickEvent;
-
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import java.util.regex.PatternSyntaxException;
 
 import static com.harry2258.Alfred.api.CommandRegistry.commands;
 
@@ -104,26 +93,27 @@ public class MessageEvent extends ListenerAdapter {
                 try {
                     String commandname = event.getMessage().split(" ")[0].substring(1).toLowerCase();
                     File commandfile = new File("commands/" + event.getChannel().getName() + "/" + commandname + ".cmd");
-                    String mod = "command.custom";
-                    if (commandfile.exists() || new File("commands/" + event.getChannel().getName() + "/" + commandname.toLowerCase() + ".cmd").exists() && manager.hasPermission(mod, event.getUser(), event.getChannel(), event)) {
-                        BufferedReader in = new BufferedReader(new FileReader(commandfile));
-                        String tmp;
-                        if (args.length == 2) {
-                            while ((tmp = in.readLine()) != null) {
-                                String temps = tmp.replaceAll("color.red", Colors.RED).replaceAll("color.green", Colors.GREEN).replaceAll("color.bold", Colors.BOLD).replaceAll("color.normal", Colors.NORMAL).replaceAll("color.darkgreen", Colors.DARK_GREEN).replaceAll("color.purple", Colors.PURPLE).replaceAll("color.darkblue", Colors.DARK_BLUE).replaceAll("color.blue", Colors.BLUE);
-                                //.replaceAll("%user%", user);
-                                event.getChannel().send().message(args[1] + ", " + temps);
-                            }
-                            in.close();
-                            return;
+                    if (manager.hasPermission("command.custom", event.getUser(), event.getChannel(), event)) {
+                        if (commandfile.exists() || new File("commands/" + event.getChannel().getName() + "/" + commandname.toLowerCase() + ".cmd").exists()) {
+                            BufferedReader in = new BufferedReader(new FileReader(commandfile));
+                            String tmp;
+                            if (args.length == 2) {
+                                while ((tmp = in.readLine()) != null) {
+                                    String temps = tmp.replaceAll("color.red", Colors.RED).replaceAll("color.green", Colors.GREEN).replaceAll("color.bold", Colors.BOLD).replaceAll("color.normal", Colors.NORMAL).replaceAll("color.darkgreen", Colors.DARK_GREEN).replaceAll("color.purple", Colors.PURPLE).replaceAll("color.darkblue", Colors.DARK_BLUE).replaceAll("color.blue", Colors.BLUE);
+                                    //.replaceAll("%user%", user);
+                                    event.getChannel().send().message(args[1] + ", " + temps);
+                                }
+                                in.close();
+                                return;
 
-                        } else {
-                            while ((tmp = in.readLine()) != null) {
-                                String temps = tmp.replaceAll("color.red", Colors.RED).replaceAll("color.green", Colors.GREEN).replaceAll("color.bold", Colors.BOLD).replaceAll("color.normal", Colors.NORMAL).replaceAll("color.darkgreen", Colors.DARK_GREEN).replaceAll("color.purple", Colors.PURPLE).replaceAll("color.darkblue", Colors.DARK_BLUE).replaceAll("color.blue", Colors.BLUE);
-                                event.getChannel().send().message(temps);
+                            } else {
+                                while ((tmp = in.readLine()) != null) {
+                                    String temps = tmp.replaceAll("color.red", Colors.RED).replaceAll("color.green", Colors.GREEN).replaceAll("color.bold", Colors.BOLD).replaceAll("color.normal", Colors.NORMAL).replaceAll("color.darkgreen", Colors.DARK_GREEN).replaceAll("color.purple", Colors.PURPLE).replaceAll("color.darkblue", Colors.DARK_BLUE).replaceAll("color.blue", Colors.BLUE);
+                                    event.getChannel().send().message(temps);
+                                }
+                                in.close();
+                                return;
                             }
-                            in.close();
-                            return;
                         }
                     }
 
@@ -141,7 +131,6 @@ public class MessageEvent extends ListenerAdapter {
 
                     if (exist && manager.hasPermission(permission, event.getUser(), event.getChannel(), event)) {
                         try {
-
                             interpreter.set("event", event);
                             interpreter.set("bot", event.getBot());
                             interpreter.set("chan", event.getChannel());

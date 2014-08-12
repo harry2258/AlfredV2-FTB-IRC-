@@ -19,7 +19,6 @@ public class Error extends Command {
     public static HashMap<String, String> Diagnosis = new HashMap<>();
     public static HashMap<String, String> Errors = new HashMap<>();
     public static HashMap<String, String> Suggestion = new HashMap<>();
-    ArrayList<String> errorlist = new ArrayList<>();
 
     public Error() {
 
@@ -117,8 +116,12 @@ public class Error extends Command {
 
     public void createTables() throws SQLException {
         Connection conn = getConnection();
-        conn.prepareStatement("CREATE TABLE IF NOT EXISTS Problems ( ID INT NOT NULL AUTO_INCREMENT PRIMARY KEY, Diagnosis VARCHAR(255), Suggestion VARCHAR(255) ) ").execute();
-        conn.prepareStatement("CREATE TABLE IF NOT EXISTS ProblemErrors ( ID INT NOT NULL AUTO_INCREMENT PRIMARY KEY, ProblemID integer, Error VARCHAR(255) )").execute();
+        try {
+            conn.prepareStatement("CREATE TABLE IF NOT EXISTS Problems ( ID INT NOT NULL AUTO_INCREMENT PRIMARY KEY, Diagnosis VARCHAR(255), Suggestion VARCHAR(255) ) ").execute();
+            conn.prepareStatement("CREATE TABLE IF NOT EXISTS ProblemErrors ( ID INT NOT NULL AUTO_INCREMENT PRIMARY KEY, ProblemID integer, Error VARCHAR(255) )").execute();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         conn.close();
     }
 
@@ -185,9 +188,6 @@ public class Error extends Command {
             stmt.setString(1, pasteContent);
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
-                System.out.println("Errors: " + rs.getString("Errors"));
-                System.out.println("Diagnosis: " + rs.getString("Diagnosis"));
-                System.out.println("Suggestion: " + rs.getString("Suggestion"));
                 errors += rs.getString("Errors").replaceAll("%", "") + " | ";
                 Diag.add(rs.getString("Diagnosis"));
                 Sugg.add(rs.getString("Suggestion"));
@@ -195,7 +195,6 @@ public class Error extends Command {
             rs.close();
             stmt.close();
             if (!errors.isEmpty() || !Diag.isEmpty() || !Sugg.isEmpty()) {
-                event.getChannel().send().message(Colors.BOLD + "Errors: " + Colors.NORMAL + errors);
                 for (int i = 0; i < Diag.size(); i++) {
                     //event.getChannel().send().message(Colors.BOLD + "Diagnosis: " + Colors.NORMAL + Diag.get(i));
                     event.getChannel().send().message(Colors.BOLD + "Suggestion: " + Colors.NORMAL + Sugg.get(i));

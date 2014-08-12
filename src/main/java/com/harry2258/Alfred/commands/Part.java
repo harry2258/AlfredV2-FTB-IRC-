@@ -1,5 +1,6 @@
 package com.harry2258.Alfred.commands;
 
+import com.harry2258.Alfred.Database.Create;
 import com.harry2258.Alfred.api.Command;
 import com.harry2258.Alfred.api.Config;
 import com.harry2258.Alfred.api.PermissionManager;
@@ -18,19 +19,25 @@ public class Part extends Command {
     public boolean execute(MessageEvent event) {
         String[] args = event.getMessage().split(" ");
         if (PermissionManager.hasExec(event.getUser(), event)) {
-            if (args.length == 2) {
-                Channel target = event.getBot().getUserChannelDao().getChannel(args[1]);
-                event.getBot().getUserChannelDao().getAllChannels();
-                if (event.getBot().getUserChannelDao().getAllChannels().contains(target)) {
-                    target.send().part();
-                    return true;
+            try {
+                if (args.length == 2) {
+                    Channel target = event.getBot().getUserChannelDao().getChannel(args[1]);
+                    event.getBot().getUserChannelDao().getAllChannels();
+                    if (event.getBot().getUserChannelDao().getAllChannels().contains(target)) {
+                        target.send().part();
+                        Create.RemoveChannel(target.getName(), config, manager);
+                        return true;
+                    } else {
+                        event.getUser().send().notice("I'm not in the channel " + args[1] + "!");
+                        return true;
+                    }
                 } else {
-                    event.getUser().send().notice("I'm not in the channel " + args[1] + "!");
+                    event.getChannel().send().part();
+                    Create.RemoveChannel(event.getChannel().getName(), config, manager);
                     return true;
                 }
-            } else {
-                event.getChannel().send().part();
-                return true;
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
         return false;
