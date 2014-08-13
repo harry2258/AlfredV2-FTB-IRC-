@@ -111,7 +111,7 @@ public class Main {
             builder.setEncoding(Charset.isSupported("UTF-8") ? Charset.forName("UTF-8") : Charset.defaultCharset());
             builder.setNickservPassword(config.getBotPassword());
             builder.setAutoReconnect(config.isAutoReconnectServer());
-            builder.setVersion("2.2.8");
+            builder.setVersion("2.3.0");
             builder.setServer(config.getServerHostame(), Integer.parseInt(config.getServerPort()), config.getServerPassword());
 
             //Gotta listen to 'em
