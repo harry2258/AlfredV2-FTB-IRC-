@@ -38,6 +38,8 @@ public class Login extends Command {
             }
         }
 
+
+
         if (Main.Login.containsKey(event.getUser().getNick())) {
             event.getUser().send().notice("You are already logged in! If you want to update login, use \"" + config.getTrigger() + "login again\"");
             return true;
@@ -50,27 +52,27 @@ public class Login extends Command {
 
     public static String Group(String user, String channel) throws Exception {
         String group = "None :<";
+
         try {
             Perms perm = Main.map.get(channel);
 
-            if (perm.getPermission().getMods().contains(user)) {
+            if (perm.getPermission().getMods().contains(user))
                 group = "Moderator";
-            }
 
-            if (perm.getPermission().getAdmins().contains(user)) {
+            if (perm.getPermission().getAdmins().contains(user))
                 group = "Admin";
-            }
 
             String Exec = JsonUtils.getStringFromFile(Main.jsonFilePath.toString());
             JsonObject exec = JsonUtils.getJsonObject(Exec);
             for (String users : exec.getAsJsonObject("Perms").get("Exec").toString().replaceAll("[\\[\\]\"]", "").split(",")) {
-                if (users.equalsIgnoreCase(user)) {
+                if (users.equalsIgnoreCase(user))
                     return "Exec";
-                }
             }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
+
         return group;
     }
 

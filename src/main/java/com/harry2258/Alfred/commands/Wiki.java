@@ -9,6 +9,7 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
+import java.net.URLEncoder;
 
 /**
  * Created by Hardik on 1/17/14.
@@ -39,7 +40,8 @@ public class Wiki extends Command {
         if (args[1].equalsIgnoreCase("bc")) {
             test = "Buildcraft";
         }
-        String message = test.replaceAll("User talk", "User_talk").replaceAll(" ", "%20").replace("'", "%E2%80%99");
+        //String message = test.replaceAll("User talk", "User_talk").replaceAll(" ", "%20").replace("'", "%E2%80%99");
+        String message = URLEncoder.encode(test, "UTF-8").replaceAll("\\+","_");
 
 
         for (int i = 1; i < args.length; i++) {
@@ -63,7 +65,6 @@ public class Wiki extends Command {
                     exist = false;
                 }
             }
-            System.out.println(exist);
             if (exist) {
                 String temp = ("http://wiki.feed-the-beast.com/api.php?format=xml&action=query&titles=" + message + "&prop=revisions&rvprop=content&format=json").replaceAll(" ", "%20");
                 URL u = new URL(temp);
@@ -93,7 +94,7 @@ public class Wiki extends Command {
                 String APItest = jsonObj.getAsJsonObject("query").getAsJsonObject("pages").getAsJsonObject(id).getAsJsonArray("revisions").get(0).getAsJsonObject().get("*").toString();
                 String df = APItest.replaceAll("\\{\\{[^}]+\\}\\}|\\[\\[Category:[^\\]]+\\]\\]|\\[\\[|\\]\\]|^\\s+|\\s+$|<[^>]+>|\\\\n", "").trim().replaceAll("\\r?\\n.*", "").replaceAll("\\S+\\|(\\S+)", "$1");
                 String fd;
-                fd = df.replaceAll("'''", Colors.BOLD).replaceAll("''", Colors.UNDERLINE);
+                fd = df.replaceAll("'''", Colors.BOLD).replaceAll("''", Colors.UNDERLINE).replaceAll("\"","");
                 int maxLength = (fd.length() < 220) ? fd.length() : 220;
                 info = fd.substring(0, maxLength);
                 String x = ("http://wiki.feed-the-beast.com/" + message).replaceAll(" ", "_");

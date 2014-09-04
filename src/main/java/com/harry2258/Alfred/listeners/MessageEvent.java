@@ -32,7 +32,6 @@ public class MessageEvent extends ListenerAdapter {
         Date date = new Date();
         final String eventuser = event.getUser().getNick();
         String Ruser;
-
         if (!Main.Login.containsKey(eventuser)) {
             if (event.getUser().isVerified()) {
                 String account = Utils.getAccount(event.getUser(), event);
@@ -121,6 +120,7 @@ public class MessageEvent extends ListenerAdapter {
                     String permission = "command." + classname.toLowerCase();
                     String name = "";
                     Boolean exist = false;
+
                     if (new File("plugins/" + classname + ".bsh").exists()) {
                         name = classname;
                         exist = true;
@@ -143,7 +143,6 @@ public class MessageEvent extends ListenerAdapter {
                         }
                         return;
                     }
-
 
                     if (event.getUser().isVerified()) {
                         if (commands.containsKey(classname)) {

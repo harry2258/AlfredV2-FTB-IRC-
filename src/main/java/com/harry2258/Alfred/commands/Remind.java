@@ -32,10 +32,8 @@ public class Remind extends Command {
         if (args.length >= 3) {
             String newuser = null;
             if (event.getChannel().getUsers().contains(args[1])) {
-                System.out.println("Got login name of " + args[1] + "!");
                 newuser = Utils.getAccount(event.getBot().getUserChannelDao().getUser(args[1]), event);
             } else {
-                System.out.println("User not found in channel!");
                 newuser = args[1];
             }
 

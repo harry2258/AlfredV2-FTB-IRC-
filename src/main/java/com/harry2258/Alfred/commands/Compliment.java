@@ -30,7 +30,8 @@ public class Compliment extends Command {
         last = compliment;
         String[] args = event.getMessage().split(" ");
         if (args.length == 2) {
-            event.getChannel().send().message(args[1] + ", " + compliment);
+            System.out.println(args[1]);
+            event.getChannel().send().message(args[1].trim() + ", " + compliment);
             return true;
         }
         if (args.length >= 2) {
@@ -44,7 +45,7 @@ public class Compliment extends Command {
             Channel chan = event.getBot().getUserChannelDao().getChannel(channel);
             String user = "";
             if (args.length == 3) {
-                user = args[2] + ", ";
+                user = args[2].trim() + ", ";
             }
 
             try {

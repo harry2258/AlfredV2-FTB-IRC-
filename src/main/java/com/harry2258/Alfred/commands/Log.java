@@ -186,8 +186,6 @@ public class Log extends Command {
             */
             Error.getProblems(webpage, event);
             return true;
-            //} catch (JSONException e1) {
-            //    event.getChannel().send().message("OH NO! The parser.json is corrupted, Please delete it and retry.");
         } catch (Exception e) {
             e.printStackTrace();
         }

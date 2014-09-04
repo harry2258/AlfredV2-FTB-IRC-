@@ -249,6 +249,7 @@ public class CreeperHost extends Thread {
             }
             return sum.doubleValue() / (marks.size() - bad);
         } else return 0.0;
+
     }
 
     public static String getRepoURL(String fullURL) {

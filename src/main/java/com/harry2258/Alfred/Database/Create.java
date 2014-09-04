@@ -1,7 +1,10 @@
 package com.harry2258.Alfred.Database;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.harry2258.Alfred.api.Config;
 import com.harry2258.Alfred.api.PermissionManager;
+import com.harry2258.Alfred.commands.Add;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -27,14 +30,23 @@ public class Create {
             e.printStackTrace();
             return false;
         }
+
         return true;
     }
 
     public static boolean AddChannel(String Channel, Connection conn) throws SQLException {
+        String Admins = Add.Json(("Gaz492,Viper-7").split(",")).toString();
+        String Mods = Add.Json(("niel,tterrag").split(",")).toString();
+        String Modperms = Add.Json(("command.custom,command.google").split(",")).toString();
+        String Everyone = Add.Json(("command.mcstatus,command.chstatus").split(",")).toString();
+
         try {
-            //Connection conn = getConnection(config, manager);
-            PreparedStatement stmt = conn.prepareStatement("INSERT IGNORE INTO `Channel_Permissions` (`Channel`, `Admins`, `Mods`, `ModPerms`, `Everyone`, `URL`) VALUES (?, 'Gaz492,Viper-7', 'niel,tterrag', 'command.custom,command.google', 'command.mcstatus,command.chstatus', 'none')");
+            PreparedStatement stmt = conn.prepareStatement("INSERT IGNORE INTO `Channel_Permissions` (`Channel`, `Admins`, `Mods`, `ModPerms`, `Everyone`, `URL`) VALUES (?, ?, ?, ?, ?, 'none')");
             stmt.setString(1, Channel);
+            stmt.setString(2, Admins);
+            stmt.setString(3, Mods);
+            stmt.setString(4, Modperms);
+            stmt.setString(5, Everyone);
             stmt.execute();
             stmt.close();
 

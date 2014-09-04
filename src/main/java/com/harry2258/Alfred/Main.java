@@ -32,21 +32,26 @@ import static com.harry2258.Alfred.api.JsonUtils.writeJsonFile;
 public class Main {
     public static long startup = 0;
     public static PircBotX bot;
-    public static File jsonFilePath = new File(System.getProperty("user.dir") + "/exec.json");
+
     public static Map<String, Perms> map = new HashMap<>();
     public static Map<String, String> Login = new HashMap<>();
+
     public static HashMap<Channel, Channel> relay = new HashMap<>();
     public static HashMap<String, String> URL = new HashMap<>();
+
+    public static File jsonFilePath = new File(System.getProperty("user.dir") + "/exec.json");
     public static File parser = new File(System.getProperty("user.dir") + "/parser.json");
     public static File globalperm = new File(System.getProperty("user.dir") + "/global.json");
     public static File edgesjsonfile = new File(System.getProperty("user.dir") + "/edges.json");
+
     public static List<String> users = new ArrayList<>();
     public static String version = "";
-    private static boolean Database = false;
+
     public static Connection database;
 
-    public static void main(String[] args) {
 
+    public static void main(String[] args) {
+        startup = System.currentTimeMillis();
         System.setProperty(SimpleLogger.SHOW_DATE_TIME_KEY, "true");
         System.setProperty(SimpleLogger.DATE_TIME_FORMAT_KEY, "[MM/dd HH:mm:ss]");
         System.setProperty(SimpleLogger.SHOW_THREAD_NAME_KEY, "false");
@@ -54,7 +59,6 @@ public class Main {
         System.setProperty(SimpleLogger.SHOW_LOG_NAME_KEY, "false");
         System.out.println("Starting");
         try {
-            startup = System.currentTimeMillis();
             final Config config = new Config();
             PermissionManager manager = new PermissionManager(config);
             System.out.println("Loading and registering commands");
@@ -128,9 +132,10 @@ public class Main {
 
             System.out.println("------Permissions------");
             if (!config.UseDatabase()) {
+                
                 for (String channel : config.getChannels()) {
-                    File file = new File(System.getProperty("user.dir") + "/Perms/" + channel.toLowerCase() + "/" + "perms.json");
-                    String Jsonfile = System.getProperty("user.dir") + "/Perms/" + channel.toLowerCase() + "/" + "perms.json";
+                    File file = new File(System.getProperty("user.dir") + "/perms/" + channel.toLowerCase() + "/" + "perms.json");
+                    String Jsonfile = System.getProperty("user.dir") + "/perms/" + channel.toLowerCase() + "/" + "perms.json";
                     if (!file.exists()) {
                         System.out.println("Creating perms.json for " + channel);
                         JsonUtils.createJsonStructure(file);
@@ -145,9 +150,17 @@ public class Main {
                 try {
                     PreparedStatement stmt = database.prepareStatement("SELECT Channel  FROM `Rejoin_Channels`");
                     ResultSet rs = stmt.executeQuery();
+
                     while (rs.next()) {
                         builder.addAutoJoinChannel(rs.getString("Channel"));
                     }
+
+                    stmt = database.prepareStatement("SELECT * FROM `channel_permissions`");
+                    rs = stmt.executeQuery();
+                    while (rs.next()) {
+                        URL.put(rs.getString("Channel"), rs.getString("URL"));
+                    }
+
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

@@ -468,10 +468,19 @@ public class Utils {
             long diffMinutes = diff / (60 * 1000) % 60;
             long diffHours = diff / (60 * 60 * 1000) % 24;
             long diffDays = diff / (24 * 60 * 60 * 1000);
-            dif = diffDays + "d" + diffHours + "h" + diffMinutes + "m" + diffSeconds + "s";
+            dif = diffDays + " d" + diffHours + " h" + diffMinutes + " m" + diffSeconds + " s";
         } catch (Exception e) {
             e.printStackTrace();
         }
         return dif;
+    }
+
+    public static String getUptime() {
+        Long time = System.currentTimeMillis() - Main.startup;
+        int seconds = (int) (time / 1000) % 60;
+        int minutes = (int) (time / (60000)) % 60;
+        int hours = (int) (time / (3600000)) % 24;
+        int days = (int) (time / 86400000);
+        return String.format("%d Days %d Hours %d Minutes and %d seconds", days, hours, minutes, seconds);
     }
 }

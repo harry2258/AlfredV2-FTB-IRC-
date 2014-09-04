@@ -55,6 +55,7 @@ public class Exec extends Command {
                             interpreter.set("bot", event.getBot());
                             interpreter.set("chan", event.getChannel());
                             interpreter.set("user", event.getUser());
+                            interpreter.set("config", config);
                             for (int i = 1; i < args.length; i++) {
                                 sb.append(args[i]).append(" ");
                             }
@@ -68,6 +69,7 @@ public class Exec extends Command {
                         }
                     }
                 }
+
             } else {
                 event.getUser().send().notice("You have to be in the group 'Exec' to use this command!");
                 return false;

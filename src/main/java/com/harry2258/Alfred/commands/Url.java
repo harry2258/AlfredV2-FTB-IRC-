@@ -34,27 +34,25 @@ public class Url extends Command {
             String state = args[1];
 
             if (state.equalsIgnoreCase("youtube") || state.equalsIgnoreCase("yt")) {
-                if (!config.useDatabase)
                 Main.URL.put(event.getChannel().getName(), "YouTube");
-                else Main.database.prepareStatement("UPDATE `channel_permissions` SET `URL` = 'yt' WHERE `Channel` = '" + event.getChannel().getName().toLowerCase()+ "';").execute();
-                event.getUser().send().notice("Added " + event.getChannel().getName() + " to YouTube URLs only scanning!");
+                if (!config.useDatabase)
+                    Main.database.prepareStatement("UPDATE `channel_permissions` SET `URL` = 'yt' WHERE `Channel` = '" + event.getChannel().getName().toLowerCase()+ "';").execute();
+                    event.getUser().send().notice("Added " + event.getChannel().getName() + " to YouTube URLs only scanning!");
                 return true;
             }
 
             if (state.equalsIgnoreCase("all") || state.equalsIgnoreCase("on") || state.equalsIgnoreCase("true") || state.equalsIgnoreCase("yes")) {
-                if (!config.useDatabase)
                 Main.URL.put(event.getChannel().getName(), "All");
-                else
-                Main.database.prepareStatement("UPDATE `channel_permissions` SET `URL` = 'all' WHERE `Channel` = '" + event.getChannel().getName().toLowerCase()+ "';").execute();
+                if (!config.useDatabase)
+                    Main.database.prepareStatement("UPDATE `channel_permissions` SET `URL` = 'all' WHERE `Channel` = '" + event.getChannel().getName().toLowerCase()+ "';").execute();
                 event.getUser().send().notice("Added " + event.getChannel().getName() + " to URL scanning!");
                 return true;
             }
 
             if (state.equalsIgnoreCase("none") || state.equalsIgnoreCase("off") || state.equalsIgnoreCase("false") || state.equalsIgnoreCase("no")) {
-                if (!config.useDatabase)
                 Main.URL.remove(event.getChannel().getName());
-                else
-                Main.database.prepareStatement("UPDATE `channel_permissions` SET `URL` = 'none' WHERE `Channel` = '" + event.getChannel().getName().toLowerCase()+ "';").execute();
+                if (!config.useDatabase)
+                    Main.database.prepareStatement("UPDATE `channel_permissions` SET `URL` = 'none' WHERE `Channel` = '" + event.getChannel().getName().toLowerCase()+ "';").execute();
                 event.getUser().send().notice("Removed " + event.getChannel().getName() + " from URL scanning!");
                 return true;
             }

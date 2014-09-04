@@ -1,10 +1,12 @@
 package com.harry2258.Alfred.commands;
 
 import com.harry2258.Alfred.Database.Create;
+import com.harry2258.Alfred.Main;
 import com.harry2258.Alfred.api.Command;
 import com.harry2258.Alfred.api.Config;
 import com.harry2258.Alfred.api.PermissionManager;
 import com.harry2258.Alfred.api.Utils;
+import com.harry2258.Alfred.json.Perms;
 import org.pircbotx.hooks.events.MessageEvent;
 
 import java.net.InetAddress;

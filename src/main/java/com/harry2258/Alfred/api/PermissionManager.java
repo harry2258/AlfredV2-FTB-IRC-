@@ -11,6 +11,7 @@ import com.harry2258.Alfred.json.Permission;
 import com.harry2258.Alfred.json.Perms;
 import org.pircbotx.Channel;
 import org.pircbotx.User;
+import org.pircbotx.hooks.events.MessageEvent;
 
 import java.io.File;
 import java.util.Properties;
@@ -22,7 +23,7 @@ public class PermissionManager {
     public PermissionManager(Config conf) {
     }
 
-    public boolean hasPermission(String permission, User user, Channel channel, org.pircbotx.hooks.events.MessageEvent event) throws Exception {
+    public boolean hasPermission(String permission, User user, Channel channel, MessageEvent event) throws Exception {
         try {
             File file = new File(System.getProperty("user.dir") + "/perms/" + channel.getName().toLowerCase() + "/" + "perms.json");
             if (!file.exists()) {
@@ -68,11 +69,11 @@ public class PermissionManager {
         return false;
     }
 
-    public static boolean hasExec(User user, org.pircbotx.hooks.events.MessageEvent event) {
+    public static boolean hasExec(User user, MessageEvent event) {
         try {
             String Exec = JsonUtils.getStringFromFile(Main.jsonFilePath.toString());
             JsonObject exec = JsonUtils.getJsonObject(Exec);
-            String account = Utils.getAccount(user, event);
+            String account = Main.Login.get(event.getUser().getNick());
             for (String users : exec.getAsJsonObject("Perms").get("Exec").toString().replaceAll("[\\[\\]\"]", "").split(",")) {
                 if (users.equalsIgnoreCase(account) && user.isVerified()) {
                     return true;
@@ -84,7 +85,7 @@ public class PermissionManager {
         return false;
     }
 
-    public static boolean hasAdmin(User user, org.pircbotx.hooks.events.MessageEvent event) throws Exception {
+    public static boolean hasAdmin(User user, MessageEvent event) throws Exception {
 
         String sender = Main.Login.get(user.getNick());
         Perms perm = Main.map.get(event.getChannel().getName());
@@ -100,7 +101,7 @@ public class PermissionManager {
         return this;
     }
 
-    public static boolean hasMod(User user, org.pircbotx.hooks.events.MessageEvent event) throws Exception {
+    public static boolean hasMod(User user, MessageEvent event) throws Exception {
         String sender = Main.Login.get(user.getNick());
         Perms perm = Main.map.get(event.getChannel().getName());
         for (String users : perm.getPermission().getMods()) {

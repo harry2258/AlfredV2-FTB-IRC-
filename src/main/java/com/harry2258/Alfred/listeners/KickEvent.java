@@ -3,6 +3,7 @@ package com.harry2258.Alfred.listeners;
 import com.harry2258.Alfred.Main;
 import com.harry2258.Alfred.api.Config;
 import com.harry2258.Alfred.api.PermissionManager;
+import com.harry2258.Alfred.api.Utils;
 import org.pircbotx.hooks.ListenerAdapter;
 
 /**
@@ -30,5 +31,8 @@ public class KickEvent extends ListenerAdapter {
         if (Main.relay.containsKey(event.getChannel())) {
             Main.relay.get(event.getChannel()).send().message("[" + event.getChannel().getName() + "] " + event.getRecipient().getNick() + " was kicked from the channel by " + event.getUser().getNick());
         }
+
+        if (event.getRecipient().getNick().contains("batman") && event.getUser().getNick().contains("Matakor"))
+            event.getChannel().send().message("Matakor, " + Utils.getInsult());
     }
 }
