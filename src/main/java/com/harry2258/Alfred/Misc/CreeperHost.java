@@ -223,17 +223,17 @@ public class CreeperHost extends Thread {
         }
 
         Message.add("CreeperRepo: " + test + Colors.NORMAL + " Average Load " + (int) calculateAverage(Load) + "% | ");
-        String ColorLoad;
+        String ColorLoad = "-";
         //(Load.get(x) == -1 ? "N/A" : Load.get(x))
         for (int x = 0; x < chRepos.size(); x++) {
             if (Load.get(x) == -1) {
-              ColorsLoad = "N/A";
+              ColorLoad = "N/A";
             } else if (Load.get(x) < 33) {
-                ColorLoad = Colors.GREEN + Load.get(x) + Colors.Normal;
+                ColorLoad = Colors.GREEN + Load.get(x) + Colors.NORMAL;
             } else if (Load.get(x) >= 33 && Load.get(x) < 66) {
-                 ColorLoad = Colors.YELLOW + Load.get(x) + Colors.Normal;
+                 ColorLoad = Colors.YELLOW + Load.get(x) + Colors.NORMAL;
             } else if (Load.get(x) >= 66) {
-                 ColorLoad = Colors.RED + Load.get(x) + Colors.Normal;
+                 ColorLoad = Colors.RED + Load.get(x) + Colors.NORMAL;
             }
             Message.add(chRepos.get(x) + ": " + Status.get(x) + Colors.NORMAL + " " + ColorLoad + "% | ");
         }
