@@ -227,7 +227,7 @@ public class CreeperHost extends Thread {
         //(Load.get(x) == -1 ? "N/A" : Load.get(x))
         for (int x = 0; x < chRepos.size(); x++) {
             if (Load.get(x) = -1) {
-              ColorsLoad = "N/A"  
+              ColorsLoad = "N/A";
             } else if (Load.get(x) < 33) {
                 ColorLoad = Colors.GREEN + Load.get(x) + Colors.Normal;
             } else if (Load.get(x) => 33 && Load.get(x) <= 66) {
