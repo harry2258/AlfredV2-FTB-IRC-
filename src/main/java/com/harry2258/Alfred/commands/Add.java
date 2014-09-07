@@ -85,7 +85,7 @@ public class Add extends Command {
 
             if (type.equalsIgnoreCase("modperms")) {
                 if (args.length == 3) {
-                    if (commands.containsKey(Character.toUpperCase(args[2].charAt(0)) + event.getMessage().split(" ")[2].substring(1).toLowerCase()) || new File("plugins/" + Character.toUpperCase(args[2].charAt(0)) + event.getMessage().split(" ")[2].substring(1).toLowerCase() + ".bsh").exists()) {
+                    if (commands.containsKey(Character.toUpperCase(args[2].charAt(0)) + event.getMessage().split(" ")[2].substring(1).toLowerCase()) || new File("plugins/" + Character.toUpperCase(args[2].charAt(0)) + event.getMessage().split(" ")[2].substring(1).toLowerCase() + ".bsh").exists() || args[2].equalsIgnoreCase("custom") || args[2].equalsIgnoreCase("custom.command")) {
                         try {
                             String check = args[2];
                             String command = null;
@@ -162,7 +162,7 @@ public class Add extends Command {
 
             if (type.equalsIgnoreCase("everyone")) {
                 if (args.length == 3) {
-                    if (commands.containsKey(Character.toUpperCase(args[2].charAt(0)) + event.getMessage().split(" ")[2].substring(1).toLowerCase()) || new File("plugins/" + Character.toUpperCase(args[2].charAt(0)) + event.getMessage().split(" ")[2].substring(1).toLowerCase() + ".bsh").exists()) {
+                    if (commands.containsKey(Character.toUpperCase(args[2].charAt(0)) + event.getMessage().split(" ")[2].substring(1).toLowerCase()) || new File("plugins/" + Character.toUpperCase(args[2].charAt(0)) + event.getMessage().split(" ")[2].substring(1).toLowerCase() + ".bsh").exists() || args[2].equalsIgnoreCase("custom") || args[2].equalsIgnoreCase("custom.command")) {
                         try {
                             String check = args[2];
                             String command = null;
