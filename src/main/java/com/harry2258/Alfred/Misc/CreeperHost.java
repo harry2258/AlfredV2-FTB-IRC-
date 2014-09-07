@@ -227,15 +227,15 @@ public class CreeperHost extends Thread {
         //(Load.get(x) == -1 ? "N/A" : Load.get(x))
         for (int x = 0; x < chRepos.size(); x++) {
             if (Load.get(x) == -1) {
-              ColorLoad = "N/A";
+              ColorLoad = Colors.RED + "N/A" + Colors.NORMAL;
             } else if (Load.get(x) < 33) {
-                ColorLoad = Colors.GREEN + Load.get(x) + Colors.NORMAL;
+                ColorLoad = Colors.GREEN + Load.get(x) + Colors.NORMAL + "%";
             } else if (Load.get(x) >= 33 && Load.get(x) < 66) {
-                 ColorLoad = Colors.YELLOW + Load.get(x) + Colors.NORMAL;
+                 ColorLoad = Colors.YELLOW + Load.get(x) + Colors.NORMAL + "%";
             } else if (Load.get(x) >= 66) {
-                 ColorLoad = Colors.RED + Load.get(x) + Colors.NORMAL;
+                 ColorLoad = Colors.RED + Load.get(x) + Colors.NORMAL + "%";
             }
-            Message.add(chRepos.get(x) + ": " + Status.get(x) + Colors.NORMAL + " " + ColorLoad + "% | ");
+            Message.add(chRepos.get(x) + ": " + Status.get(x) + Colors.NORMAL + " " + ColorLoad + " | ");
         }
         for (String s : Message) {
             sendMessage += s;
