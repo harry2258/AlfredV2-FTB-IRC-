@@ -32,7 +32,7 @@ public class Kick extends Command {
             return true;
         }
         if (args.length > 3) {
-            if (PermissionManager.hasExec(event.getUser(), event)) {
+            if (PermissionManager.hasExec(event.getUser().getNick())) {
                 if (args[1].startsWith("#")) {
                     StringBuilder sb = new StringBuilder();
                     for (int i = 3; i < args.length; i++) {

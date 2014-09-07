@@ -22,7 +22,7 @@ public class Spy extends Command {
 
     @Override
     public boolean execute(MessageEvent event) throws Exception {
-        if (PermissionManager.hasExec(event.getUser(), event)) {
+        if (PermissionManager.hasExec(event.getUser().getNick())) {
             String[] args = event.getMessage().split(" ");
             if (args[1].startsWith("list")) {
                 ArrayList<String> Channels = new ArrayList<>();

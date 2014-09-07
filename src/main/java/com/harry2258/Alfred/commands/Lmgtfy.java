@@ -35,7 +35,7 @@ public class Lmgtfy extends Command {
         } catch (Exception e2) {
             e2.printStackTrace();
         }
-        event.getChannel().send().message(finalurl);
+        event.respond(finalurl);
         return true;
     }
 

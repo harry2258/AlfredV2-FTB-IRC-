@@ -6,22 +6,24 @@ import com.harry2258.Alfred.api.PermissionManager;
 import com.harry2258.Alfred.api.Utils;
 import org.pircbotx.hooks.events.MessageEvent;
 
-
-public class Test extends Command {
+/**
+ * Created by Hardik at 5:22 PM on 9/6/2014.
+ */
+public class Drama extends Command {
     private Config config;
     private PermissionManager manager;
 
-    public Test() {
-        super("Test", "This is a test command", "Test!");
+    public Drama() {
+        super("Drama", "Minecraft Drama is the best kind of drama!", "Drama");
     }
-
 
     @Override
     public boolean execute(MessageEvent event) throws Exception {
-        event.getChannel().send().message("Test!");
-        event.getChannel().send().message(event.getUser().getUserLevels(event.getChannel()).toString());
-        event.getChannel().send().message(("Logged in as: " + Utils.getAccount(event.getUser(), event)));
-
+        try {
+            event.getChannel().send().message(Utils.getDrama());
+        } catch (Exception e) {
+            return false;
+        }
         return true;
     }
 
@@ -34,5 +36,4 @@ public class Test extends Command {
     public void setManager(PermissionManager manager) {
         this.manager = manager;
     }
-
 }

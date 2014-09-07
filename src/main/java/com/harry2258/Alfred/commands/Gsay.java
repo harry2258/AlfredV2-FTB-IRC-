@@ -19,7 +19,7 @@ public class Gsay extends Command {
 
     @Override
     public boolean execute(MessageEvent event) throws Exception {
-        if (PermissionManager.hasExec(event.getUser(), event)) {
+        if (PermissionManager.hasExec(event.getUser().getNick())) {
             String[] args = event.getMessage().split(" ");
             StringBuilder sb = new StringBuilder();
             for (int i = 2; i < args.length; i++) {

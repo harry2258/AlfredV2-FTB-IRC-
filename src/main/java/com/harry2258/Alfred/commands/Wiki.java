@@ -32,7 +32,7 @@ public class Wiki extends Command {
             return true;
         }
         for (int i = 1; i < args.length; i++) {
-            sb.append(args[i]).append(" ");
+            sb.append(Character.toUpperCase(args[i].charAt(0))).append(args[i].substring(1).toLowerCase()).append(" ");
         }
 
         String test = sb.toString().trim();
@@ -41,12 +41,8 @@ public class Wiki extends Command {
             test = "Buildcraft";
         }
         //String message = test.replaceAll("User talk", "User_talk").replaceAll(" ", "%20").replace("'", "%E2%80%99");
-        String message = URLEncoder.encode(test, "UTF-8").replaceAll("\\+","_");
+        String message = URLEncoder.encode(test, "UTF-8").replaceAll("\\+", "_");
 
-
-        for (int i = 1; i < args.length; i++) {
-            sb.append(args[i]).append(" ");
-        }
 
         String name;
         String info;
@@ -94,7 +90,7 @@ public class Wiki extends Command {
                 String APItest = jsonObj.getAsJsonObject("query").getAsJsonObject("pages").getAsJsonObject(id).getAsJsonArray("revisions").get(0).getAsJsonObject().get("*").toString();
                 String df = APItest.replaceAll("\\{\\{[^}]+\\}\\}|\\[\\[Category:[^\\]]+\\]\\]|\\[\\[|\\]\\]|^\\s+|\\s+$|<[^>]+>|\\\\n", "").trim().replaceAll("\\r?\\n.*", "").replaceAll("\\S+\\|(\\S+)", "$1");
                 String fd;
-                fd = df.replaceAll("'''", Colors.BOLD).replaceAll("''", Colors.UNDERLINE).replaceAll("\"","");
+                fd = df.replaceAll("'''", Colors.BOLD).replaceAll("''", Colors.UNDERLINE).replaceAll("\"", "");
                 int maxLength = (fd.length() < 220) ? fd.length() : 220;
                 info = fd.substring(0, maxLength);
                 String x = ("http://wiki.feed-the-beast.com/" + message).replaceAll(" ", "_");

@@ -9,11 +9,12 @@ import org.pircbotx.hooks.events.MessageEvent;
 /**
  * Created by Hardik at 10:32 PM on 8/1/2014.
  */
-public class Chat extends Command{
+public class Chat extends Command {
     private Config config;
     private PermissionManager manager;
     public static final Object monitor = new Object();
     public static boolean monitorState = false;
+
     public Chat() {
         super("Chat", "Bored? Chat with Alfred!", "Chat [Text]");
     }
@@ -29,9 +30,8 @@ public class Chat extends Command{
         String UserAnswer = sb.toString().trim();
         ChatterBot.s = UserAnswer;
         ChatterBot.UserAnswered = true;
-
         waitForThread();
-        if (LastBotAnswer.equalsIgnoreCase(ChatterBot.s)){
+        if (LastBotAnswer.equalsIgnoreCase(ChatterBot.s)) {
             System.out.println("Same answer as last time. Getting new answer!");
             ChatterBot.s = UserAnswer;
             ChatterBot.UserAnswered = true;
@@ -58,7 +58,9 @@ public class Chat extends Command{
             synchronized (monitor) {
                 try {
                     monitor.wait(); // wait until notified
-                } catch (Exception e) {e.printStackTrace();}
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         }
     }

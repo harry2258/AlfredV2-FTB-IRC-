@@ -20,6 +20,9 @@ public class ActionEvent extends ListenerAdapter {
     }
 
     public void onAction(org.pircbotx.hooks.events.ActionEvent event) throws Exception {
+        if (PrivateMessageEvent.waiting) {
+            return;
+        }
         if (Main.relay.containsKey(event.getChannel())) {
             Main.relay.get(event.getChannel()).send().message("[" + event.getChannel().getName() + "] " + event.getUser().getNick() + " " + event.getAction());
         }

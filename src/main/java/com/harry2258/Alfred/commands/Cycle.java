@@ -22,7 +22,7 @@ public class Cycle extends Command {
             event.getBot().sendIRC().joinChannel(event.getChannel().getName());
             return true;
         }
-        if (PermissionManager.hasExec(event.getUser(), event)) {
+        if (PermissionManager.hasExec(event.getUser().getNick())) {
             if (args.length == 2) {
                 if (args[1].equalsIgnoreCase("all")) {
                     for (Channel chan : event.getBot().getUserBot().getChannels()) {

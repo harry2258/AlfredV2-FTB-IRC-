@@ -39,7 +39,6 @@ public class Login extends Command {
         }
 
 
-
         if (Main.Login.containsKey(event.getUser().getNick())) {
             event.getUser().send().notice("You are already logged in! If you want to update login, use \"" + config.getTrigger() + "login again\"");
             return true;

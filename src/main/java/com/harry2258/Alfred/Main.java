@@ -132,7 +132,7 @@ public class Main {
 
             System.out.println("------Permissions------");
             if (!config.UseDatabase()) {
-                
+
                 for (String channel : config.getChannels()) {
                     File file = new File(System.getProperty("user.dir") + "/perms/" + channel.toLowerCase() + "/" + "perms.json");
                     String Jsonfile = System.getProperty("user.dir") + "/perms/" + channel.toLowerCase() + "/" + "perms.json";

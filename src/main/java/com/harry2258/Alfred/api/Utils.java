@@ -109,29 +109,35 @@ public class Utils {
                 user = e.text();
             }
         }
-        for (Element e : doc.select("span")) {
+        for (Element e : doc.select("div")) {
             if (e.attr("class").equalsIgnoreCase("watch-view-count")) {
                 views = e.text().replace(" views", "");
-            }
-            if (e.attr("class").equalsIgnoreCase("likes-count")) {
-                likes = e.text();
-            }
-            if (e.attr("class").equalsIgnoreCase("dislikes-count")) {
-                dislikes = e.text();
-            }
-            if (e.attr("class").equalsIgnoreCase("watch-title  yt-uix-expander-head") || e.attr("class").equalsIgnoreCase("watch-title long-title yt-uix-expander-head")) {
-                title = e.text();
             }
             if (e.attr("class").equalsIgnoreCase("yt-uix-expander yt-uix-button-panel")) {
                 System.out.println(e.getElementsContainingOwnText("Uploaded on "));
                 //publishdate = e.text();
             }
+
+            if (e.attr("id").equalsIgnoreCase("watch7-headline")) {
+                title = e.text();
+            }
         }
+
         for (Element e : doc.select("p")) {
             if (e.attr("id").equalsIgnoreCase("watch-uploader-info")) {
                 publishdate = e.text().replace("Uploaded on ", "");
             }
         }
+
+        for (Element e : doc.select("button")) {
+            if (e.attr("id").equalsIgnoreCase("watch-like")) {
+                likes = e.text();
+            }
+            if (e.attr("id").equals("watch-dislike")) {
+                dislikes = e.text();
+            }
+        }
+
         info = title + "  [" + Colors.DARK_GREEN + views + Colors.NORMAL + "]  [" + Colors.DARK_GREEN + "+" + likes + Colors.NORMAL + "]  [" + Colors.RED + "-" + dislikes + Colors.NORMAL + "]  [" + Colors.MAGENTA + user + Colors.NORMAL + " - " + Colors.PURPLE + publishdate + Colors.NORMAL + "]";
         //System.out.println(info);
         return info;
@@ -290,6 +296,7 @@ public class Utils {
             Logger.getLogger(MessageEvent.class.getName()).log(Level.SEVERE, null, ex);
             event.getUser().send().notice("Please enter a valid username!");
         }
+        waitForQueue.close();
 
         return user;
     }
@@ -364,6 +371,17 @@ public class Utils {
             e.printStackTrace();
         }
         return compliment;
+    }
+
+    public static String getDrama() {
+        String drama = null;
+        try {
+            Document doc = Jsoup.connect("http://asie.pl/drama.php?plain").get();
+            drama = doc.body().text();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return drama;
     }
 
 
@@ -483,4 +501,16 @@ public class Utils {
         int days = (int) (time / 86400000);
         return String.format("%d Days %d Hours %d Minutes and %d seconds", days, hours, minutes, seconds);
     }
+
+    public static boolean ValidIP(String IP) {
+        String IPADDRESS_PATTERN =
+                "^([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\." +
+                        "([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\." +
+                        "([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\." +
+                        "([01]?\\d\\d?|2[0-4]\\d|25[0-5])$";
+        Pattern ip = Pattern.compile(IPADDRESS_PATTERN);
+        Matcher match = ip.matcher(IP);
+        return match.find();
+    }
+
 }

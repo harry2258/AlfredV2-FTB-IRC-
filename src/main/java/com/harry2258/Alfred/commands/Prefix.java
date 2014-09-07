@@ -19,13 +19,13 @@ public class Prefix extends Command {
 
     @Override
     public boolean execute(MessageEvent event) throws Exception {
-        if (PermissionManager.hasExec(event.getUser(), event)) {
+        if (PermissionManager.hasExec(event.getUser().getNick())) {
             try {
                 String[] args = event.getMessage().split(" ");
                 if (args.length == 2 && args[1].length() == 1) {
                     String oldtrigger = config.getTrigger();
                     config.setTrigger(args[1]);
-                    Main.database.prepareStatement("UPDATE `bot` SET `Bot_Trigger` = '"+ config.getTrigger() + "' WHERE `bot`.`Nick` = '" + event.getBot().getUserBot().getNick() + "';").execute();
+                    Main.database.prepareStatement("UPDATE `bot` SET `Bot_Trigger` = '" + config.getTrigger() + "' WHERE `bot`.`Nick` = '" + event.getBot().getUserBot().getNick() + "';").execute();
                     event.getUser().send().notice("Bot prefix was set to " + config.getTrigger() + " from " + oldtrigger);
                     return true;
                 } else {

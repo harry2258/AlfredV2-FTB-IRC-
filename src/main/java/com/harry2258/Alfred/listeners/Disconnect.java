@@ -27,6 +27,9 @@ public class Disconnect extends ListenerAdapter {
     }
 
     public void onDisconnect(DisconnectEvent event) throws IOException, IrcException {
+        if (PrivateMessageEvent.waiting) {
+            return;
+        }
         if (!event.getBot().getConfiguration().isAutoReconnect()) {
             event.getBot().stopBotReconnect();
         }

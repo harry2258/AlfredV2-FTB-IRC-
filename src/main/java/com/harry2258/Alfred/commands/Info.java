@@ -1,6 +1,5 @@
 package com.harry2258.Alfred.commands;
 
-import com.harry2258.Alfred.Database.Create;
 import com.harry2258.Alfred.Main;
 import com.harry2258.Alfred.api.Command;
 import com.harry2258.Alfred.api.Config;
@@ -12,7 +11,6 @@ import org.pircbotx.Colors;
 import org.pircbotx.hooks.events.MessageEvent;
 
 import java.io.File;
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
@@ -126,7 +124,6 @@ public class Info extends Command {
                 } catch (Exception url) {
                     url.printStackTrace();
                 }
-
 
 
                 event.getUser().send().notice("Executive Users: " + JsonUtils.prettyPrint(exec.getExec()));  //Global Exec!!

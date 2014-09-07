@@ -1,7 +1,5 @@
 package com.harry2258.Alfred.Database;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
 import com.harry2258.Alfred.api.Config;
 import com.harry2258.Alfred.api.PermissionManager;
 import com.harry2258.Alfred.commands.Add;

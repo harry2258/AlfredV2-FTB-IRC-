@@ -20,13 +20,18 @@ public class InviteEvent extends ListenerAdapter {
 
     @Override
     public void onInvite(org.pircbotx.hooks.events.InviteEvent event) {
+        if (PrivateMessageEvent.waiting) {
+            return;
+        }
         if (config.isAutoAcceptInvite()) {
             event.getBot().sendRaw().rawLineNow("PRIVMSG #batbot :Invited to " + event.getChannel() + " by " + event.getUser());
             event.getBot().sendIRC().joinChannel(event.getChannel());
-            try {
-                Create.AddChannel(event.getChannel(), Main.database);
-            } catch (SQLException s) {
-                s.printStackTrace();
+            if (config.useDatabase) {
+                try {
+                    Create.AddChannel(event.getChannel(), Main.database);
+                } catch (SQLException s) {
+                    s.printStackTrace();
+                }
             }
         }
     }

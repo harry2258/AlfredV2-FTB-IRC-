@@ -9,7 +9,6 @@ import org.pircbotx.PircBotX;
 import java.net.ServerSocket;
 
 public class ChatSocketListener extends Thread {
-    private ServerSocket server;
     private int port;
     private PircBotX bot;
 
@@ -23,7 +22,7 @@ public class ChatSocketListener extends Thread {
 
     public void run() {
         try {
-            this.server = new ServerSocket(port);
+            ServerSocket server = new ServerSocket(port);
             System.out.println("Accepting connections!");
             while (isRunning) {
                 new Thread(new ChatSocketHandler(server.accept(), bot)).start();

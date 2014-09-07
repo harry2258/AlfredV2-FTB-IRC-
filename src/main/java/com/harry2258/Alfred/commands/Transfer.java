@@ -10,8 +10,6 @@ import com.harry2258.Alfred.json.Perms;
 import org.pircbotx.hooks.events.MessageEvent;
 
 import java.io.File;
-import java.sql.Connection;
-import java.sql.DriverManager;
 
 /**
  * Created by Hardik at 11:56 AM on 8/7/2014.

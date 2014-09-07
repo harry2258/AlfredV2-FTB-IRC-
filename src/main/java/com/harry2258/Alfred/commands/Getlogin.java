@@ -26,7 +26,7 @@ public class Getlogin extends Command {
 
     @Override
     public boolean execute(MessageEvent event) throws Exception {
-        if (PermissionManager.hasExec(event.getUser(), event)) {
+        if (PermissionManager.hasExec(event.getUser().getNick())) {
             int i = 0;
             final long startTime = System.currentTimeMillis();
             for (User u : event.getChannel().getUsers()) {

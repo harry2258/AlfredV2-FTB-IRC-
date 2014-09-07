@@ -18,7 +18,7 @@ public class Raw extends Command {
 
     @Override
     public boolean execute(MessageEvent event) throws Exception {
-        if (PermissionManager.hasExec(event.getUser(), event)) {
+        if (PermissionManager.hasExec(event.getUser().getNick())) {
             StringBuilder sb = new StringBuilder();
             String[] args = event.getMessage().split(" ");
             for (int i = 1; i < args.length; i++) {

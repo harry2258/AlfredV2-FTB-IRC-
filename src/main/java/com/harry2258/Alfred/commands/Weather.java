@@ -20,6 +20,7 @@ public class Weather extends Command {
     public Weather() {
         super("Weather", "Gets the Weather for the city", "Weather [City name], (State)");
     }
+
     private Config config;
     private PermissionManager manager;
 
@@ -36,30 +37,30 @@ public class Weather extends Command {
                 BufferedReader re = new BufferedReader(new InputStreamReader(url.openStream()));
                 String jsonstring = re.readLine();
                 JsonObject jsonObj = JsonUtils.getJsonObject(jsonstring);
-                City = "/" +jsonObj.get("city").getAsString();
-                State = "/" +jsonObj.get("region_code").getAsString();
+                City = "/" + jsonObj.get("city").getAsString();
+                State = "/" + jsonObj.get("region_code").getAsString();
             }
             if (args.length > 1) {
                 StringBuilder sb = new StringBuilder();
                 for (int i = 1; i < args.length; i++) {
                     sb.append(args[i]).append(" ");
                 }
-                City = "/" + sb.toString().replace(",","");
+                City = "/" + sb.toString().replace(",", "");
             }
             if (event.getMessage().contains(",")) {
                 StringBuilder sb = new StringBuilder();
                 for (int i = 1; i < args.length; i++) {
                     sb.append(args[i]).append(" ");
                 }
-                City =  "/" + sb.toString().replaceAll("(?:,).*","").trim();
+                City = "/" + sb.toString().replaceAll("(?:,).*", "").trim();
                 State = "/" + event.getMessage().replaceAll(".*(?:, )", "");
             }
-            URL url = new URL(("http://api.wunderground.com/api/" + config.WeatherKey() +"/conditions/q" + State + City + ".json").replaceAll(" ","_"));
+            URL url = new URL(("http://api.wunderground.com/api/" + config.WeatherKey() + "/conditions/q" + State + City + ".json").replaceAll(" ", "_"));
             System.out.println(url.toString());
             BufferedReader br = new BufferedReader(new InputStreamReader(url.openStream()));
             String jsonstring = "";
             String tmp;
-            while ((tmp = br.readLine()) != null){
+            while ((tmp = br.readLine()) != null) {
                 jsonstring += tmp;
             }
             JsonObject jsonObj = JsonUtils.getJsonObject(jsonstring.replaceAll("\n", "")).getAsJsonObject("current_observation");
@@ -70,7 +71,7 @@ public class Weather extends Command {
             String Wind = jsonObj.get("wind_string").getAsString() + " " + jsonObj.get("wind_gust_mph").getAsString() + " MPH ";
             String Humidity = jsonObj.get("relative_humidity").getAsString();
 
-            event.getChannel().send().message(city + ", " + state + ": " + Weather + " | " + Temp + " | "  + Colors.BOLD + "Humidity" + Colors.NORMAL + ": " + Humidity + " | " +  Colors.BOLD + "Winds" + Colors.NORMAL + " " + Wind);
+            event.getChannel().send().message(city + ", " + state + ": " + Weather + " | " + Temp + " | " + Colors.BOLD + "Humidity" + Colors.NORMAL + ": " + Humidity + " | " + Colors.BOLD + "Winds" + Colors.NORMAL + " " + Wind);
         } catch (Exception e) {
             e.printStackTrace();
             return false;

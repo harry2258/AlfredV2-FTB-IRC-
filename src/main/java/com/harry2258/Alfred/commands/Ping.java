@@ -3,6 +3,7 @@ package com.harry2258.Alfred.commands;
 import com.harry2258.Alfred.api.Command;
 import com.harry2258.Alfred.api.Config;
 import com.harry2258.Alfred.api.PermissionManager;
+import com.harry2258.Alfred.api.Utils;
 import org.pircbotx.hooks.events.MessageEvent;
 
 import java.net.InetAddress;
@@ -28,9 +29,17 @@ public class Ping extends Command {
             String[] args = event.getMessage().split(" ");
             if (args.length == 2) {
                 String host = args[1].replaceAll("http://|https://|www.", "");
+                String url;
                 Long start = System.currentTimeMillis();
-                Socket s = new Socket(InetAddress.getByName(host), 80);
-                s.close();
+
+                if (Utils.ValidIP(host)) {
+                    Socket s = new Socket(host, 80);
+                    s.close();
+                } else {
+                    Socket s = new Socket(InetAddress.getByName(host), 80);
+                    s.close();
+                }
+
                 time = System.currentTimeMillis() - start;
                 returns = args[1] + " response time: " + time + " miliseconds";
                 event.getChannel().send().message(returns);
@@ -40,8 +49,14 @@ public class Ping extends Command {
             String host = args[1];
             int port = Integer.valueOf(args[2]);
             Long start = System.currentTimeMillis();
-            Socket s = new Socket(InetAddress.getByName(host), port);
-            s.close();
+
+            if (Utils.ValidIP(host)) {
+                Socket s = new Socket(host, port);
+                s.close();
+            } else {
+                Socket s = new Socket(InetAddress.getByName(host), port);
+                s.close();
+            }
             time = System.currentTimeMillis() - start;
             returns = "Response time: " + time + " miliseconds";
 

@@ -25,12 +25,13 @@ public class PermissionManager {
 
     public boolean hasPermission(String permission, User user, Channel channel, MessageEvent event) throws Exception {
         try {
+            String Nick = user.getNick();
             File file = new File(System.getProperty("user.dir") + "/perms/" + channel.getName().toLowerCase() + "/" + "perms.json");
             if (!file.exists()) {
                 JsonUtils.createJsonStructure(file);
             }
 
-            if (!Main.Login.containsKey(user.getNick())) {
+            if (!Main.Login.containsKey(Nick)) {
                 return false;
             }
 
@@ -56,12 +57,12 @@ public class PermissionManager {
             }
 
             if (p.getModPerms().contains(permission)) {
-                if (hasAdmin(user, event) || hasMod(user, event) && user.isVerified()) {
+                if (hasAdmin(Nick, event) || hasMod(Nick, event)) {
                     return true;
                 }
             }
 
-            return hasAdmin(user, event) || hasExec(user, event);
+            return hasAdmin(Nick, event) || hasExec(Nick);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -69,13 +70,13 @@ public class PermissionManager {
         return false;
     }
 
-    public static boolean hasExec(User user, MessageEvent event) {
+    public static boolean hasExec(String Nick) {
         try {
             String Exec = JsonUtils.getStringFromFile(Main.jsonFilePath.toString());
             JsonObject exec = JsonUtils.getJsonObject(Exec);
-            String account = Main.Login.get(event.getUser().getNick());
+            String account = Main.Login.get(Nick);
             for (String users : exec.getAsJsonObject("Perms").get("Exec").toString().replaceAll("[\\[\\]\"]", "").split(",")) {
-                if (users.equalsIgnoreCase(account) && user.isVerified()) {
+                if (users.equalsIgnoreCase(account)) {
                     return true;
                 }
             }
@@ -85,12 +86,12 @@ public class PermissionManager {
         return false;
     }
 
-    public static boolean hasAdmin(User user, MessageEvent event) throws Exception {
+    public static boolean hasAdmin(String Nick, MessageEvent event) throws Exception {
 
-        String sender = Main.Login.get(user.getNick());
-        Perms perm = Main.map.get(event.getChannel().getName());
+        String sender = Main.Login.get(Nick);
+        Perms perm = Main.map.get(event.getChannel().getName().toLowerCase());
         for (String users : perm.getPermission().getAdmins()) {
-            if (users.equalsIgnoreCase(sender) && user.isVerified()) {
+            if (users.equalsIgnoreCase(sender)) {
                 return true;
             }
         }
@@ -101,11 +102,11 @@ public class PermissionManager {
         return this;
     }
 
-    public static boolean hasMod(User user, MessageEvent event) throws Exception {
-        String sender = Main.Login.get(user.getNick());
-        Perms perm = Main.map.get(event.getChannel().getName());
+    public static boolean hasMod(String Nick, MessageEvent event) throws Exception {
+        String sender = Main.Login.get(Nick);
+        Perms perm = Main.map.get(event.getChannel().getName().toLowerCase());
         for (String users : perm.getPermission().getMods()) {
-            if (users.equalsIgnoreCase(sender) && user.isVerified()) {
+            if (users.equalsIgnoreCase(sender)) {
                 return true;
             }
         }

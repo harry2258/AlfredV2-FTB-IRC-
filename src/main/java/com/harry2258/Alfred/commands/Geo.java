@@ -1,10 +1,7 @@
 package com.harry2258.Alfred.commands;
 
 import com.google.gson.JsonObject;
-import com.harry2258.Alfred.api.Command;
-import com.harry2258.Alfred.api.Config;
-import com.harry2258.Alfred.api.JsonUtils;
-import com.harry2258.Alfred.api.PermissionManager;
+import com.harry2258.Alfred.api.*;
 import org.pircbotx.Colors;
 import org.pircbotx.User;
 import org.pircbotx.hooks.WaitForQueue;
@@ -38,7 +35,7 @@ public class Geo extends Command {
             return true;
         }
 
-        if (args.length == 3 && PermissionManager.hasExec(event.getUser(), event) && args[1].equals("exec")) {
+        if (args.length == 3 && PermissionManager.hasExec(event.getUser().getNick()) && args[1].equals("exec")) {
             if (event.getChannel().getUsers().toString().contains(args[2])) {
                 User u = event.getBot().getUserChannelDao().getUser(args[2]);
                 String user = "";
@@ -48,14 +45,19 @@ public class Geo extends Command {
                 try {
                     test = waitForQueue.waitFor(WhoisEvent.class);
                     waitForQueue.close();
-                    ip = java.net.InetAddress.getByName(test.getHostname()).getHostAddress();
+                    if (Utils.ValidIP(test.getHostname()))
+                        ip = test.getHostname();
+                    else
+                        ip = java.net.InetAddress.getByName(test.getHostname()).getHostAddress();
                 } catch (InterruptedException ex) {
                     Logger.getLogger(com.harry2258.Alfred.listeners.MessageEvent.class.getName()).log(Level.SEVERE, null, ex);
 
                 }
-            }
-            else {
-                ip = java.net.InetAddress.getByName(args[2]).getHostAddress();
+            } else {
+                if (Utils.ValidIP(args[2]))
+                    ip = args[2];
+                else
+                    ip = java.net.InetAddress.getByName(args[2]).getHostAddress();
             }
 
             String geo = "http://freegeoip.net/json/" + ip;
@@ -99,12 +101,18 @@ public class Geo extends Command {
             try {
                 test = waitForQueue.waitFor(WhoisEvent.class);
                 waitForQueue.close();
-                ip = java.net.InetAddress.getByName(test.getHostname()).getHostAddress();
+                if (Utils.ValidIP(test.getHostname()))
+                    ip = test.getHostname();
+                else
+                    ip = java.net.InetAddress.getByName(test.getHostname()).getHostAddress();
             } catch (InterruptedException ex) {
                 Logger.getLogger(com.harry2258.Alfred.listeners.MessageEvent.class.getName()).log(Level.SEVERE, null, ex);
             }
         } else {
-            ip = java.net.InetAddress.getByName(args[1]).getHostAddress();
+            if (Utils.ValidIP(args[2]))
+                ip = args[2];
+            else
+                ip = java.net.InetAddress.getByName(args[2]).getHostAddress();
         }
 
         String geo = "http://freegeoip.net/json/" + ip;

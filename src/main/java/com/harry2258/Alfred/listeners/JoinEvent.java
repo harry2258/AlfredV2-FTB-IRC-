@@ -75,6 +75,7 @@ public class JoinEvent extends ListenerAdapter {
         } catch (InterruptedException ex) {
             Logger.getLogger(com.harry2258.Alfred.listeners.MessageEvent.class.getName()).log(Level.SEVERE, null, ex);
         }
+        waitForQueue.close();
         return user;
     }
 }

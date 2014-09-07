@@ -7,6 +7,8 @@ import com.harry2258.Alfred.api.Utils;
 import org.pircbotx.Channel;
 import org.pircbotx.hooks.events.MessageEvent;
 
+import java.util.Calendar;
+
 /**
  * Created by Hardik on 1/14/14.
  */
@@ -31,6 +33,15 @@ public class Insult extends Command {
         if (args.length == 2) {
             if (args[1].contains("batman") || args[1].equalsIgnoreCase("alfred") || args[1].contains("progwml6")) {
                 event.getChannel().send().message(event.getUser().getNick() + ", " + insult1);
+            } else if (args[1].equalsIgnoreCase("matakor")) {
+                Calendar c = Calendar.getInstance();
+                c.setTime(c.getTime());
+                int dayOfWeek = c.get(Calendar.DAY_OF_WEEK);
+                if (dayOfWeek == 1) {
+                    event.getChannel().send().message(args[1] + ", " + insult1);
+                } else {
+                    event.getChannel().send().message("You only have " + (7 - dayOfWeek) + " more days to go!");
+                }
             } else {
                 event.getChannel().send().message(args[1] + ", " + insult1);
             }

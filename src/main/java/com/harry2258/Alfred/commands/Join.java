@@ -4,11 +4,13 @@ import com.harry2258.Alfred.Database.Create;
 import com.harry2258.Alfred.Main;
 import com.harry2258.Alfred.api.Command;
 import com.harry2258.Alfred.api.Config;
+import com.harry2258.Alfred.api.JsonUtils;
 import com.harry2258.Alfred.api.PermissionManager;
+import com.harry2258.Alfred.json.Perms;
 import org.pircbotx.Channel;
 import org.pircbotx.hooks.events.MessageEvent;
 
-import java.sql.DriverManager;
+import java.io.File;
 
 public class Join extends Command {
 
@@ -21,7 +23,7 @@ public class Join extends Command {
 
     @Override
     public boolean execute(MessageEvent event) throws Exception {
-        if (PermissionManager.hasExec(event.getUser(), event)) {
+        if (PermissionManager.hasExec(event.getUser().getNick())) {
             String[] args = event.getMessage().split(" ");
             Channel target = event.getBot().getUserChannelDao().getChannel(args[1]);
 
@@ -34,10 +36,24 @@ public class Join extends Command {
                 event.getBot().sendRaw().rawLineNow("KNOCK " + target.getName() + " :Asked to join this channel by user " + event.getUser().getNick() + " in channel " + event.getChannel().getName());
             }
             event.getBot().sendIRC().joinChannel(target.getName());
-            try {
-                Create.AddChannel(target.getName(), Main.database);
-            }catch (Exception e) {
-                e.printStackTrace();
+            if (config.useDatabase) {
+                try {
+                    Create.AddChannel(target.getName(), Main.database);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            } else {
+                String channel = target.getName();
+                File file = new File(System.getProperty("user.dir") + "/perms/" + channel.toLowerCase() + "/" + "perms.json");
+                String Jsonfile = System.getProperty("user.dir") + "/perms/" + channel.toLowerCase() + "/" + "perms.json";
+                if (!file.exists()) {
+                    System.out.println("Creating perms.json for " + channel);
+                    JsonUtils.createJsonStructure(file);
+                }
+                String perms = JsonUtils.getStringFromFile(Jsonfile);
+                Perms p = JsonUtils.getPermsFromString(perms);
+                Main.map.put(channel.toLowerCase(), p);
+                System.out.println("Loaded perms for " + channel);
             }
             return true;
         }

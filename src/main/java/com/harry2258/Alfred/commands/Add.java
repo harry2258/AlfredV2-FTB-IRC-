@@ -36,7 +36,7 @@ public class Add extends Command {
     public boolean execute(MessageEvent event) throws Exception {
         String[] args = event.getMessage().split(" ");
         String type = args[1];
-        if (config.useDatabase) {
+        if (!config.useDatabase) {
             File file = new File(System.getProperty("user.dir") + "/perms/" + event.getChannel().getName().toLowerCase() + "/" + "perms.json");
             if (!file.exists()) {
                 JsonUtils.createJsonStructure(file);
@@ -200,7 +200,7 @@ public class Add extends Command {
             }
 
             if (type.equalsIgnoreCase("global")) {
-                if (PermissionManager.hasExec(event.getUser(), event)) {
+                if (PermissionManager.hasExec(event.getUser().getNick())) {
                     if (args.length == 3) {
                         if (commands.containsKey(Character.toUpperCase(args[2].charAt(0)) + event.getMessage().split(" ")[2].substring(1).toLowerCase()) || new File("plugins/" + Character.toUpperCase(args[2].charAt(0)) + event.getMessage().split(" ")[2].substring(1).toLowerCase() + ".bsh").exists()) {
                             try {

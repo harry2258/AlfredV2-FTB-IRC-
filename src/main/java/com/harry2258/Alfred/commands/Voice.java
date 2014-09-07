@@ -17,7 +17,7 @@ public class Voice extends Command {
     @Override
     public boolean execute(MessageEvent event) {
         String[] args = event.getMessage().split(" ");
-        if (PermissionManager.hasExec(event.getUser(), event)) {
+        if (PermissionManager.hasExec(event.getUser().getNick())) {
             if (args.length == 2) {
                 event.getChannel().send().voice(event.getBot().getUserChannelDao().getUser(args[1]));
                 return true;

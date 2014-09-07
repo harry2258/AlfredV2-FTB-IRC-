@@ -38,9 +38,9 @@ public class Ignore extends Command {
             }
 
             String user = Utils.getAccount(event.getBot().getUserChannelDao().getUser(args[1]), event);
-            if (!PermissionManager.hasExec(target, event)) {
+            if (!PermissionManager.hasExec(target.getNick())) {
 
-                if (!PermissionManager.hasAdmin(target, event)) {
+                if (!PermissionManager.hasAdmin(target.getNick(), event)) {
 
                     if (!target.isIrcop()) {
 
@@ -57,7 +57,7 @@ public class Ignore extends Command {
                         return true;
                     }
 
-                } else if (PermissionManager.hasExec(event.getUser(), event)) {
+                } else if (PermissionManager.hasExec(event.getUser().getNick())) {
 
                     if (!ignored.contains(user)) {
                         ignored.add(user);

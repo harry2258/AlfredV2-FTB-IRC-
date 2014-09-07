@@ -20,7 +20,7 @@ public class Devoice extends Command {
     @Override
     public boolean execute(MessageEvent event) throws Exception {
         String[] args = event.getMessage().split(" ");
-        if (PermissionManager.hasExec(event.getUser(), event)) {
+        if (PermissionManager.hasExec(event.getUser().getNick())) {
             if (args.length == 2) {
                 event.getChannel().send().deVoice(event.getBot().getUserChannelDao().getUser(args[1]));
                 event.getChannel().send().message("You didn't see that coming, did you now " + args[1]);

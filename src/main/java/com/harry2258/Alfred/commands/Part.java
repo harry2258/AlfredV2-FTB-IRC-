@@ -18,14 +18,15 @@ public class Part extends Command {
     @Override
     public boolean execute(MessageEvent event) {
         String[] args = event.getMessage().split(" ");
-        if (PermissionManager.hasExec(event.getUser(), event)) {
+        if (PermissionManager.hasExec(event.getUser().getNick())) {
             try {
                 if (args.length == 2) {
                     Channel target = event.getBot().getUserChannelDao().getChannel(args[1]);
                     event.getBot().getUserChannelDao().getAllChannels();
                     if (event.getBot().getUserChannelDao().getAllChannels().contains(target)) {
                         target.send().part();
-                        Create.RemoveChannel(target.getName(), config, manager);
+                        if (config.useDatabase)
+                            Create.RemoveChannel(target.getName(), config, manager);
                         return true;
                     } else {
                         event.getUser().send().notice("I'm not in the channel " + args[1] + "!");
@@ -33,7 +34,8 @@ public class Part extends Command {
                     }
                 } else {
                     event.getChannel().send().part();
-                    Create.RemoveChannel(event.getChannel().getName(), config, manager);
+                    if (config.useDatabase)
+                        Create.RemoveChannel(event.getChannel().getName(), config, manager);
                     return true;
                 }
             } catch (Exception e) {

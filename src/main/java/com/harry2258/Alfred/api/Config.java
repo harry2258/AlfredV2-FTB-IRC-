@@ -6,15 +6,12 @@ package com.harry2258.Alfred.api;
 
 import com.harry2258.Alfred.Database.Create;
 import com.harry2258.Alfred.Main;
-import com.sun.org.apache.xpath.internal.operations.Bool;
-import sun.nio.ch.Net;
 
 import java.io.*;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
@@ -266,7 +263,7 @@ public class Config {
                     properties.getProperty("server-port"),
                     properties.getProperty("server-password"),
                     properties.getProperty("use-ssl"),
-                    properties.getProperty("permission-denied").replaceAll("'","''").replaceAll("`","``"),
+                    properties.getProperty("permission-denied").replaceAll("'", "''").replaceAll("`", "``"),
                     properties.getProperty("verify-ssl"),
                     properties.getProperty("enable-chat-socket"),
                     properties.getProperty("chat-socket-port"));
@@ -284,8 +281,8 @@ public class Config {
             conn.prepareStatement(Misc).execute();
 
             for (String channel : Arrays.asList(properties.getProperty("channels").split(" "))) {
-                    if (Create.AddChannel(channel, conn)) System.out.println("Created Perms for " + channel);
-                    else System.out.println("Could not create permissions for " + channel);
+                if (Create.AddChannel(channel, conn)) System.out.println("Created Perms for " + channel);
+                else System.out.println("Could not create permissions for " + channel);
             }
 
 
