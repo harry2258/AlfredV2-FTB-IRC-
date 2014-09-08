@@ -44,13 +44,6 @@ public class PrivateMessageEvent extends ListenerAdapter {
                     System.out.println("Paused debug!");
                     org.pircbotx.hooks.events.PrivateMessageEvent currentEvent = null;
                     try {
-                        /*
-                        message.waitFor(MessageEvent.class);
-                        invite.waitFor(InviteEvent.class);
-                        disconnect.waitFor(DisconnectEvent.class);
-                        kick.waitFor(KickEvent.class);
-                        */
-
                         currentEvent = Private.waitFor(org.pircbotx.hooks.events.PrivateMessageEvent.class);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
