@@ -34,7 +34,7 @@ public class Info extends Command {
         String filename = "";
         String URL = "None";
 
-        if (config.useDatabase) {
+        if (!config.useDatabase) {
             if (Main.URL.containsKey(event.getChannel().getName())) {
                 URL = Main.URL.get(event.getChannel().getName());
             }
@@ -94,48 +94,49 @@ public class Info extends Command {
                 event.getUser().send().notice("You own this town!");
             }
             return true;
-        }
-        try {
+        } else {
+            try {
 
-            if (args.length == 2 && args[1].equalsIgnoreCase("rejoin")) {
-                PreparedStatement stmt = Main.database.prepareStatement("SELECT Channel  FROM `rejoinchannels`");
-                ResultSet rs = stmt.executeQuery();
-                ArrayList<String> channels = new ArrayList<>();
-                while (rs.next()) {
-                    channels.add(rs.getString("Channel"));
-                }
-                event.getChannel().send().message("Channels to join when restarting: " + channels.toString());
-                return true;
-            }
-
-            if (args.length == 2 && args[1].equalsIgnoreCase("full") | args[1].equalsIgnoreCase("all")) {
-                String exe = JsonUtils.getStringFromFile(System.getProperty("user.dir") + "/exec.json");
-                Permission exec = JsonUtils.getPermsFromString(exe).getPermission();
-
-                int NumberofCommand = 0;
-                if (new File("commands/" + event.getChannel().getName() + "/").exists()) {
-                    NumberofCommand = new File("commands/" + event.getChannel().getName() + "/").listFiles().length;
-                }
-
-                try {
-                    PreparedStatement stmt = Main.database.prepareStatement("SELECT `URL` FROM `channel_permissions` WHERE `Channel` = '" + event.getChannel().getName() + "'");
+                if (args.length == 2 && args[1].equalsIgnoreCase("rejoin")) {
+                    PreparedStatement stmt = Main.database.prepareStatement("SELECT Channel  FROM `rejoinchannels`");
                     ResultSet rs = stmt.executeQuery();
-                    URL = rs.getString("URL");
-                } catch (Exception url) {
-                    url.printStackTrace();
+                    ArrayList<String> channels = new ArrayList<>();
+                    while (rs.next()) {
+                        channels.add(rs.getString("Channel"));
+                    }
+                    event.getChannel().send().message("Channels to join when restarting: " + channels.toString());
+                    return true;
                 }
 
+                if (args.length == 2 && args[1].equalsIgnoreCase("full") | args[1].equalsIgnoreCase("all")) {
+                    String exe = JsonUtils.getStringFromFile(System.getProperty("user.dir") + "/exec.json");
+                    Permission exec = JsonUtils.getPermsFromString(exe).getPermission();
 
-                event.getUser().send().notice("Executive Users: " + JsonUtils.prettyPrint(exec.getExec()));  //Global Exec!!
-                event.getUser().send().notice("Number of custom command: " + NumberofCommand + ". For a full list, type " + config.getTrigger() + "info commands");
-                event.getUser().send().notice("URL scanning: " + URL);
+                    int NumberofCommand = 0;
+                    if (new File("commands/" + event.getChannel().getName() + "/").exists()) {
+                        NumberofCommand = new File("commands/" + event.getChannel().getName() + "/").listFiles().length;
+                    }
+
+                    try {
+                        PreparedStatement stmt = Main.database.prepareStatement("SELECT `URL` FROM `channel_permissions` WHERE `Channel` = '" + event.getChannel().getName() + "'");
+                        ResultSet rs = stmt.executeQuery();
+                        URL = rs.getString("URL");
+                    } catch (Exception url) {
+                        url.printStackTrace();
+                    }
+
+
+                    event.getUser().send().notice("Executive Users: " + JsonUtils.prettyPrint(exec.getExec()));  //Global Exec!!
+                    event.getUser().send().notice("Number of custom command: " + NumberofCommand + ". For a full list, type " + config.getTrigger() + "info commands");
+                    event.getUser().send().notice("URL scanning: " + URL);
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                return false;
             }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
+            return true;
         }
-        return true;
     }
 
     @Override

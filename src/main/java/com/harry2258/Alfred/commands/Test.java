@@ -18,6 +18,7 @@ public class Test extends Command {
 
     @Override
     public boolean execute(MessageEvent event) throws Exception {
+
         event.getChannel().send().message("Test!");
         event.getChannel().send().message(event.getUser().getUserLevels(event.getChannel()).toString());
         event.getChannel().send().message(("Logged in as: " + Utils.getAccount(event.getUser(), event)));

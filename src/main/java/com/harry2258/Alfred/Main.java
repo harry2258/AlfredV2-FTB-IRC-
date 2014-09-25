@@ -116,6 +116,7 @@ public class Main {
             builder.setNickservPassword(config.getBotPassword());
             builder.setAutoReconnect(config.isAutoReconnectServer());
             builder.setVersion("2.3.0");
+            builder.setMessageDelay(500);
             builder.setServer(config.getServerHostame(), Integer.parseInt(config.getServerPort()), config.getServerPassword());
 
             //Gotta listen to 'em

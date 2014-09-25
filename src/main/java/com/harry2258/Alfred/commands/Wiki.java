@@ -31,8 +31,10 @@ public class Wiki extends Command {
             event.getChannel().send().message("Official FTB Wiki: http://wiki.feed-the-beast.com");
             return true;
         }
+
         for (int i = 1; i < args.length; i++) {
-            sb.append(Character.toUpperCase(args[i].charAt(0))).append(args[i].substring(1).toLowerCase()).append(" ");
+            //sb.append(Character.toUpperCase(args[i].charAt(0))).append(args[i].substring(1).toLowerCase()).append(" ");
+            sb.append(args[i]).append(" ");
         }
 
         String test = sb.toString().trim();

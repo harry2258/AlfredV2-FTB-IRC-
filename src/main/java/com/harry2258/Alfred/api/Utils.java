@@ -407,7 +407,7 @@ public class Utils {
 
     public static void Geveryone(File file) {
         try {
-            BufferedReader s = new BufferedReader(new InputStreamReader(Main.class.getResourceAsStream("/global.json")));
+            BufferedReader s = new BufferedReader(new InputStreamReader(Main.class.getResourceAsStream("/Newglobal.json")));
             String tmp = "";
             file.createNewFile();
             BufferedWriter out = new BufferedWriter(new FileWriter(file));
@@ -424,7 +424,7 @@ public class Utils {
 
     public static void edges(File file) {
         try {
-            BufferedReader s = new BufferedReader(new InputStreamReader(Main.class.getResourceAsStream("/edges.json")));
+            BufferedReader s = new BufferedReader(new InputStreamReader(Main.class.getResourceAsStream("/Newedges.json")));
             String tmp = "";
             file.createNewFile();
             BufferedWriter out = new BufferedWriter(new FileWriter(file));

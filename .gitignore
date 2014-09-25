@@ -23,10 +23,6 @@ commands/#batbot/
 commands/#batman
 commands/#FTB-wiki/
 commands/#randomcraft/
-exec.json
-parser.json
-Twitter/
-global.json
 lib/twitter4j-core-3.0.0.jar
 lib/
 plugins/
@@ -39,3 +35,7 @@ AlfredV2.eml
 .classpath
 .project
 AlfredV2.jar
+out/
+global.json
+exec.json
+parser.json
