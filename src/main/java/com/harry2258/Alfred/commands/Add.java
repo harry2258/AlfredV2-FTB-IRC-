@@ -246,7 +246,7 @@ public class Add extends Command {
             String channel;
             String temp;
             try {
-                PreparedStatement stmt1 = Main.database.prepareStatement("SELECT Channel, Permission FROM `channel_permissions` WHERE Channel = '" + event.getChannel().getName() + "';");
+                PreparedStatement stmt1 = Main.database.prepareStatement("SELECT Channel, Permission FROM `Channel_Permissions` WHERE Channel = '" + event.getChannel().getName() + "';");
                 ResultSet rs1 = stmt1.executeQuery();
                 rs1.next();
                 strFileJson = rs1.getString("Permission");
@@ -278,7 +278,7 @@ public class Add extends Command {
                             temp = jsonObj.getAsJsonObject("Perms").get("Mods").toString();
                             String[] tempArray = (temp.replaceAll("[\\[\\]\"]", "") + "," + newuser + "").split(",");
                             jsonObj.getAsJsonObject("Perms").add("Mods", Json(tempArray));
-                            PreparedStatement stmt1 = Main.database.prepareStatement("UPDATE `channel_permissions` SET `Permission` = '"+ jsonObj.toString() +"' WHERE `Channel` = '" + channel + "';");
+                            PreparedStatement stmt1 = Main.database.prepareStatement("UPDATE `Channel_Permissions` SET `Permission` = '"+ jsonObj.toString() +"' WHERE `Channel` = '" + channel + "';");
                             stmt1.execute();
                             event.getUser().send().notice(newuser + " is now an Moderator for channel " + event.getChannel().getName());
                             Perms p = JsonUtils.getPermsFromString(jsonObj.toString());
@@ -317,7 +317,7 @@ public class Add extends Command {
                                 temp = jsonObj.getAsJsonObject("Perms").get("ModPerms").toString();
                                 String[] tempArray = (temp.replaceAll("[\\[\\]\"]", "") + "," + command + "").split(",");
                                 jsonObj.getAsJsonObject("Perms").add("ModPerms", Json(tempArray));
-                                PreparedStatement stmt1 = Main.database.prepareStatement("UPDATE `channel_permissions` SET `Permission` = '"+ jsonObj.toString() +"' WHERE `Channel` = '" + channel + "';");
+                                PreparedStatement stmt1 = Main.database.prepareStatement("UPDATE `Channel_Permissions` SET `Permission` = '"+ jsonObj.toString() +"' WHERE `Channel` = '" + channel + "';");
                                 stmt1.execute();
                                 event.getUser().send().notice("Moderators are now able to use the command '" + args[2] + "'");
                                 String perms = JsonUtils.getStringFromFile(jsonObj.toString());
@@ -359,7 +359,7 @@ public class Add extends Command {
                             temp = jsonObj.getAsJsonObject("Perms").get("Admins").toString();
                             String[] tempArray = (temp.replaceAll("[\\[\\]\"]", "") + "," + newuser + "").split(",");
                             jsonObj.getAsJsonObject("Perms").add("Admins", Json(tempArray));
-                            PreparedStatement stmt1 = Main.database.prepareStatement("UPDATE `channel_permissions` SET `Permission` = '"+ jsonObj.toString() +"' WHERE `Channel` = '" + channel + "';");
+                            PreparedStatement stmt1 = Main.database.prepareStatement("UPDATE `Channel_Permissions` SET `Permission` = '"+ jsonObj.toString() +"' WHERE `Channel` = '" + channel + "';");
                             stmt1.execute();
                             event.getUser().send().notice(newuser + " is now an Admin for channel " + event.getChannel().getName());
                             Perms p = JsonUtils.getPermsFromString(jsonObj.toString());
@@ -398,7 +398,7 @@ public class Add extends Command {
                                 temp = jsonObj.getAsJsonObject("Perms").get("Everyone").toString();
                                 String[] tempArray = (temp.replaceAll("[\\[\\]\"]", "") + "," + command + "").split(",");
                                 jsonObj.getAsJsonObject("Perms").add("Everyone", Json(tempArray));
-                                PreparedStatement stmt1 = Main.database.prepareStatement("UPDATE `channel_permissions` SET `Permission` = '"+ jsonObj.toString() +"' WHERE `Channel` = '" + channel + "';");
+                                PreparedStatement stmt1 = Main.database.prepareStatement("UPDATE `Channel_Permissions` SET `Permission` = '"+ jsonObj.toString() +"' WHERE `Channel` = '" + channel + "';");
                                 stmt1.execute();
                                 event.getUser().send().notice("Everyone is now able to use the command '" + args[2] + "'");
                                 String perms = JsonUtils.getStringFromFile(jsonObj.toString());

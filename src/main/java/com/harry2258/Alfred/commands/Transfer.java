@@ -26,6 +26,9 @@ public class Transfer extends Command {
 
     @Override
     public boolean execute(MessageEvent event) throws Exception {
+        if (event.getMessage().split(" ").length == 2 && event.getMessage().split(" ")[1].equalsIgnoreCase("nuke")) {
+            Main.database.prepareStatement("TRUNCATE Channel_Permissions").execute();
+        }
         File all = new File("perms/");
         for (final File file : all.listFiles()) {
             try {
@@ -40,9 +43,9 @@ public class Transfer extends Command {
                         String Admins = p.getAdmins().toString().replaceAll("\\]|\\[", "");
                         String Everyone = p.getEveryone().toString().replaceAll("\\]|\\[", "");
                         String ModPerms = p.getModPerms().toString().replaceAll("\\]|\\[", "");
-                        Main.database.prepareStatement("INSERT IGNORE INTO `channel_permissions` (`Channel`, `Admins`, `Mods`, `ModPerms`, `Everyone`, `URL`) VALUES ( '" + file.getName() + "', '" + Admins + "', '" + Mods + "', '" + ModPerms + "', '" + Everyone + "', 'none')").execute();
+                        Main.database.prepareStatement("INSERT IGNORE INTO `Channel_Permissions` (`Channel`, `Admins`, `Mods`, `ModPerms`, `Everyone`, `URL`) VALUES ( '" + file.getName() + "', '" + Admins + "', '" + Mods + "', '" + ModPerms + "', '" + Everyone + "', 'none')").execute();
                     */
-                        PreparedStatement stmt = Main.database.prepareStatement("INSERT IGNORE INTO `channel_permissions` (`Channel`, `Permission`, `URL`) VALUES (?, ?, 'none')");
+                        PreparedStatement stmt = Main.database.prepareStatement("INSERT IGNORE INTO `Channel_Permissions` (`Channel`, `Permission`, `URL`) VALUES (?, ?, 'none')");
                         stmt.setString(1, file.getName());
                         stmt.setString(2, JsonUtils.getStringFromFile(tmp.getPath()));
                         stmt.execute();

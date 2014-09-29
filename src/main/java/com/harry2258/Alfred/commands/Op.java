@@ -19,7 +19,7 @@ public class Op extends Command {
     public boolean execute(MessageEvent event) throws Exception {
         String[] args = event.getMessage().split(" ");
         if (PermissionManager.hasExec(event.getUser().getNick())) {
-            if (event.getChannel().getOps().contains(event.getUser())) {
+            if (event.getChannel().getOps().contains(event.getUser()) || PermissionManager.hasExec(event.getUser().getNick())) {
                 if (args.length == 2) {
                     User u = event.getBot().getUserChannelDao().getUser(args[1]);
                     event.getChannel().send().op(u);

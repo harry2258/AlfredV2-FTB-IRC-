@@ -97,7 +97,7 @@ public class Info extends Command {
         } else {
             try {
                 if (args.length == 2 && args[1].equalsIgnoreCase("rejoin")) {
-                    PreparedStatement stmt = Main.database.prepareStatement("SELECT Channel  FROM `rejoin_channels`");
+                    PreparedStatement stmt = Main.database.prepareStatement("SELECT Channel  FROM `Rejoin_Channels`");
                     ResultSet rs = stmt.executeQuery();
                     ArrayList<String> channels = new ArrayList<>();
                     while (rs.next()) {
@@ -117,7 +117,7 @@ public class Info extends Command {
                     }
 
                     try {
-                        PreparedStatement stmt = Main.database.prepareStatement("SELECT `URL` FROM `channel_permissions` WHERE `Channel` = '" + event.getChannel().getName() + "'");
+                        PreparedStatement stmt = Main.database.prepareStatement("SELECT `URL` FROM `Channel_Permissions` WHERE `Channel` = '" + event.getChannel().getName() + "'");
                         ResultSet rs = stmt.executeQuery();
                         rs.next();
                         URL = rs.getString("URL");

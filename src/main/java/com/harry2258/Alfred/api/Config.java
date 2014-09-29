@@ -184,7 +184,7 @@ public class Config {
 
         try {
             //Bot Settings
-            PreparedStatement stmt = conn.prepareStatement("SELECT *  FROM `bot`");
+            PreparedStatement stmt = conn.prepareStatement("SELECT *  FROM `Bot`");
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
                 this.setBotNickname(rs.getString("Nick"));
@@ -246,11 +246,11 @@ public class Config {
             }
 
 
-            conn.prepareStatement("TRUNCATE bot").execute();
+            conn.prepareStatement("TRUNCATE Bot").execute();
             conn.prepareStatement("TRUNCATE Network_Settings").execute();
             conn.prepareStatement("TRUNCATE Misc").execute();
 
-            String bot = String.format("INSERT INTO `bot` (`Nick`, `Password`, `Username`, `Ident`, `Bot_Trigger`, `Reconnect`, `Accept_Invite`, `Rejoin_Channels`, `CTCP_Finger_Reply`, `CTCP_Version_Reply`) VALUES ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s')",
+            String bot = String.format("INSERT INTO `Bot` (`Nick`, `Password`, `Username`, `Ident`, `Bot_Trigger`, `Reconnect`, `Accept_Invite`, `Rejoin_Channels`, `CTCP_Finger_Reply`, `CTCP_Version_Reply`) VALUES ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s')",
                     properties.getProperty("bot-nickname"),
                     properties.getProperty("bot-password"),
                     properties.getProperty("bot-username"),

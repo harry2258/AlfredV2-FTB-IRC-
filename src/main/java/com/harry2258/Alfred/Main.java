@@ -159,13 +159,13 @@ public class Main {
                         else System.out.println("Could not create permissions for " + rs.getString("Channel"));
                     }
 
-                    stmt = database.prepareStatement("SELECT * FROM `channel_permissions`");
+                    stmt = database.prepareStatement("SELECT * FROM `Channel_Permissions`");
                     rs = stmt.executeQuery();
                     while (rs.next()) {
                         URL.put(rs.getString("Channel"), rs.getString("URL"));
                     }
 
-                    PreparedStatement stmt3 = database.prepareStatement("SELECT a.Channel, a.Permission, a.URL FROM `channel_permissions` a, `rejoin_channels` b WHERE a.Channel = b.Channel;");
+                    PreparedStatement stmt3 = database.prepareStatement("SELECT a.Channel, a.Permission, a.URL FROM `Channel_Permissions` a, `Rejoin_Channels` b WHERE a.Channel = b.Channel;");
                     ResultSet rs3 = stmt3.executeQuery();
                     while (rs3.next()) {
                         String channel = rs3.getString("Channel");
