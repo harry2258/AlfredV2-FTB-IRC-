@@ -103,7 +103,7 @@ public class Info extends Command {
                     while (rs.next()) {
                         channels.add(rs.getString("Channel"));
                     }
-                    event.getChannel().send().message("Channels to join when restarting: " + channels.toString());
+                    event.getUser().send().message("Channels to join when restarting: " + channels.toString());
                     return true;
                 }
 
