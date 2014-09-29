@@ -33,18 +33,17 @@ public class Create {
     }
 
     public static boolean AddChannel(String Channel, Connection conn) throws SQLException {
-        String Admins = Add.Json(("Gaz492,Viper-7").split(",")).toString();
+        String Permissions = "{\"Perms\":{\"Mods\":[\"niel\"], \"ModPerms\": [\"command.custom\", \"command.google\", \"command.info\"], \"Admins\":[\"Alfred\"], \"Everyone\": [\"command.mcstatus\", \"command.chstatus\"]}}";
+        /*
         String Mods = Add.Json(("niel,tterrag").split(",")).toString();
         String Modperms = Add.Json(("command.custom,command.google").split(",")).toString();
         String Everyone = Add.Json(("command.mcstatus,command.chstatus").split(",")).toString();
+        */
 
         try {
-            PreparedStatement stmt = conn.prepareStatement("INSERT IGNORE INTO `Channel_Permissions` (`Channel`, `Admins`, `Mods`, `ModPerms`, `Everyone`, `URL`) VALUES (?, ?, ?, ?, ?, 'none')");
+            PreparedStatement stmt = conn.prepareStatement("INSERT IGNORE INTO `Channel_Permissions` (`Channel`, `Permission`, `URL`) VALUES (?, ?, 'none')");
             stmt.setString(1, Channel);
-            stmt.setString(2, Admins);
-            stmt.setString(3, Mods);
-            stmt.setString(4, Modperms);
-            stmt.setString(5, Everyone);
+            stmt.setString(2, Permissions);
             stmt.execute();
             stmt.close();
 

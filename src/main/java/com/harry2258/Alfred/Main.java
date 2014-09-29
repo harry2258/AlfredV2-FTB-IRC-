@@ -1,5 +1,6 @@
 package com.harry2258.Alfred;
 
+import com.harry2258.Alfred.Database.Create;
 import com.harry2258.Alfred.Misc.ChatterBot;
 import com.harry2258.Alfred.Misc.Reddit;
 import com.harry2258.Alfred.Misc.Twitter;
@@ -115,7 +116,7 @@ public class Main {
             builder.setEncoding(Charset.isSupported("UTF-8") ? Charset.forName("UTF-8") : Charset.defaultCharset());
             builder.setNickservPassword(config.getBotPassword());
             builder.setAutoReconnect(config.isAutoReconnectServer());
-            builder.setVersion("2.3.0");
+            builder.setVersion("2.4.0");
             builder.setMessageDelay(500);
             builder.setServer(config.getServerHostame(), Integer.parseInt(config.getServerPort()), config.getServerPassword());
 
@@ -154,12 +155,24 @@ public class Main {
 
                     while (rs.next()) {
                         builder.addAutoJoinChannel(rs.getString("Channel"));
+                        if (Create.AddChannel(rs.getString("Channel"), database)) System.out.println("Created Perms for " + rs.getString("Channel"));
+                        else System.out.println("Could not create permissions for " + rs.getString("Channel"));
                     }
 
                     stmt = database.prepareStatement("SELECT * FROM `channel_permissions`");
                     rs = stmt.executeQuery();
                     while (rs.next()) {
                         URL.put(rs.getString("Channel"), rs.getString("URL"));
+                    }
+
+                    PreparedStatement stmt3 = database.prepareStatement("SELECT a.Channel, a.Permission, a.URL FROM `channel_permissions` a, `rejoin_channels` b WHERE a.Channel = b.Channel;");
+                    ResultSet rs3 = stmt3.executeQuery();
+                    while (rs3.next()) {
+                        String channel = rs3.getString("Channel");
+                        Main.URL.put(channel, rs3.getString("URL"));
+                        Perms p = JsonUtils.getPermsFromString(rs3.getString("Permission"));
+                        Main.map.put(channel.toLowerCase(), p);
+                        System.out.println("Loaded setting for channel: " + channel);
                     }
 
                 } catch (Exception e) {

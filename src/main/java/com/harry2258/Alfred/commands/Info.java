@@ -96,9 +96,8 @@ public class Info extends Command {
             return true;
         } else {
             try {
-
                 if (args.length == 2 && args[1].equalsIgnoreCase("rejoin")) {
-                    PreparedStatement stmt = Main.database.prepareStatement("SELECT Channel  FROM `rejoinchannels`");
+                    PreparedStatement stmt = Main.database.prepareStatement("SELECT Channel  FROM `rejoin_channels`");
                     ResultSet rs = stmt.executeQuery();
                     ArrayList<String> channels = new ArrayList<>();
                     while (rs.next()) {
@@ -120,12 +119,19 @@ public class Info extends Command {
                     try {
                         PreparedStatement stmt = Main.database.prepareStatement("SELECT `URL` FROM `channel_permissions` WHERE `Channel` = '" + event.getChannel().getName() + "'");
                         ResultSet rs = stmt.executeQuery();
+                        rs.next();
                         URL = rs.getString("URL");
                     } catch (Exception url) {
                         url.printStackTrace();
                     }
 
+                    Perms perms = Main.map.get(event.getChannel().getName());
+                    Permission p = perms.getPermission();
 
+                    event.getUser().send().notice("Permission everyone has: " + JsonUtils.prettyPrint(p.getEveryone()).replaceAll("command.", "")); //Everyone Perms
+                    event.getUser().send().notice("Mod Permissions: " + JsonUtils.prettyPrint(p.getModPerms()).replaceAll("command.", "")); //Mod Permissions
+                    event.getUser().send().notice("Moderators: " + JsonUtils.prettyPrint(p.getMods())); //Mod List
+                    event.getUser().send().notice("Admins: " + JsonUtils.prettyPrint(p.getAdmins())); //Admin List
                     event.getUser().send().notice("Executive Users: " + JsonUtils.prettyPrint(exec.getExec()));  //Global Exec!!
                     event.getUser().send().notice("Number of custom command: " + NumberofCommand + ". For a full list, type " + config.getTrigger() + "info commands");
                     event.getUser().send().notice("URL scanning: " + URL);

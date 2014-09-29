@@ -6,6 +6,7 @@ package com.harry2258.Alfred.api;
 
 import com.harry2258.Alfred.Database.Create;
 import com.harry2258.Alfred.Main;
+import com.harry2258.Alfred.json.Perms;
 
 import java.io.*;
 import java.sql.Connection;
@@ -162,7 +163,8 @@ public class Config {
     public void loadDatabase(Connection conn) {
 
         try {
-            conn.prepareStatement("CREATE TABLE IF NOT EXISTS Channel_Permissions ( Channel VARCHAR(255) NOT NULL PRIMARY KEY, Admins VARCHAR(2000), Mods VARCHAR(2000), ModPerms VARCHAR(5000), Everyone VARCHAR(5000), URL VARCHAR(30) )").execute();
+            //conn.prepareStatement("CREATE TABLE IF NOT EXISTS Channel_Permissions ( Channel VARCHAR(255) NOT NULL PRIMARY KEY, Admins VARCHAR(2000), Mods VARCHAR(2000), ModPerms VARCHAR(5000), Everyone VARCHAR(5000), URL VARCHAR(30) )").execute();
+            conn.prepareStatement("CREATE TABLE IF NOT EXISTS Channel_Permissions (Channel VARCHAR(255) NOT NULL PRIMARY KEY, Permission LONGTEXT, URL VARCHAR(4))").execute();
             conn.prepareStatement("CREATE TABLE IF NOT EXISTS Rejoin_Channels (Channel VARCHAR(255) NOT NULL PRIMARY KEY)").execute();
             conn.prepareStatement("CREATE TABLE IF NOT EXISTS Bot (`Nick` VARCHAR(255) NOT NULL PRIMARY KEY, `Password` VARCHAR(255), `Username` VARCHAR(255), `Ident` VARCHAR(255), `Bot_Trigger` VARCHAR(255), `Reconnect` VARCHAR(5), `Accept_Invite` VARCHAR(5), `Rejoin_Channels` VARCHAR(5), `CTCP_Finger_Reply` VARCHAR(1000), `CTCP_Version_Reply` VARCHAR(1000))").execute();
             conn.prepareStatement("CREATE TABLE IF NOT EXISTS Network_Settings (Server_Host VARCHAR(255) NOT NULL PRIMARY KEY, Server_Port VARCHAR(255), Server_Password VARCHAR(255), Use_SSL VARCHAR(5), Permissions_Denied VARCHAR(5000), Verify_SSL VARCHAR(5), Enable_Chat_Socket VARCHAR(5), Chat_Socket_Port INTEGER)").execute();
@@ -228,6 +230,7 @@ public class Config {
             }
             rs2.close();
             stmt2.close();
+
         } catch (SQLException e) {
             e.printStackTrace();
         }

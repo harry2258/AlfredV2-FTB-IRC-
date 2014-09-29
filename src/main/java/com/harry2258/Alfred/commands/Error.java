@@ -1,5 +1,6 @@
 package com.harry2258.Alfred.commands;
 
+import com.harry2258.Alfred.Main;
 import com.harry2258.Alfred.api.Command;
 import com.harry2258.Alfred.api.Config;
 import com.harry2258.Alfred.api.PermissionManager;
@@ -182,7 +183,7 @@ public class Error extends Command {
         Connection conn;
         try {
 
-            conn = getConnection();
+            conn = Main.database;
 
             PreparedStatement stmt = conn.prepareStatement("SELECT Problems.ID as ID, Diagnosis, Suggestion, CONCAT('%', GROUP_CONCAT(Error, '%')) as Errors FROM Problems, ProblemErrors WHERE Problems.ID = ProblemErrors.ProblemID GROUP BY ID, Diagnosis, Suggestion HAVING ? LIKE Errors");
             stmt.setString(1, pasteContent);

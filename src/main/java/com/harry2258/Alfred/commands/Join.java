@@ -38,7 +38,7 @@ public class Join extends Command {
             event.getBot().sendIRC().joinChannel(target.getName());
             if (config.useDatabase) {
                 try {
-                    Create.AddChannel(target.getName(), Main.database);
+                    Create.AddChannel(target.getName().toLowerCase(), Main.database);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

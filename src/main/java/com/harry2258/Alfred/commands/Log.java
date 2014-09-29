@@ -104,7 +104,7 @@ public class Log extends Command {
                         info.add(temp);
                     }
                 } else if (tmp.contains("Java Version: ") && tmp.contains("LaunchFrame.main")) {
-                    temp = Colors.BOLD + "Java Version: " + Colors.NORMAL + tmp.replaceAll(".*(?:Java Version:)|(?:sorted as: ).*", "");
+                    temp = Colors.BOLD + "Java Version: " + Colors.NORMAL + tmp.replaceAll(".*(?:Java version:)|(?:sorted as: ).*", "");
                     if (!info.contains(temp) && jsonObj.get("JavaVersion").getAsBoolean()) {
                         info.add(temp);
                     }
