@@ -8,7 +8,7 @@ import org.pircbotx.hooks.events.MessageEvent;
 /**
  * Created by Hardik at 12:46 AM on 9/29/2014.
  */
-public class Identify extends Command{
+public class Identify extends Command {
 
     private Config config;
     private PermissionManager manager;
@@ -20,7 +20,7 @@ public class Identify extends Command{
     @Override
     public boolean execute(MessageEvent event) throws Exception {
         try {
-            event.getBot().sendRaw().rawLineNow("NICKSERV IDENTIFY "  + config.getBotIdent() + " " + config.getBotPassword());
+            event.getBot().sendRaw().rawLineNow("NICKSERV IDENTIFY " + config.getBotIdent() + " " + config.getBotPassword());
         } catch (Exception e) {
             e.printStackTrace();
             return false;

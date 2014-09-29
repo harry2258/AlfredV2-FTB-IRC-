@@ -155,8 +155,7 @@ public class Main {
 
                     while (rs.next()) {
                         builder.addAutoJoinChannel(rs.getString("Channel"));
-                        if (Create.AddChannel(rs.getString("Channel"), database)) System.out.println("Created Perms for " + rs.getString("Channel"));
-                        else System.out.println("Could not create permissions for " + rs.getString("Channel"));
+                        if (!Create.AddChannel(rs.getString("Channel"), database)) System.out.println("Could not create permissions for " + rs.getString("Channel"));
                     }
 
                     stmt = database.prepareStatement("SELECT * FROM `Channel_Permissions`");

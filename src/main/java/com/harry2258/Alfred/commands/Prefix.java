@@ -26,7 +26,7 @@ public class Prefix extends Command {
                     String oldtrigger = config.getTrigger();
                     config.setTrigger(args[1]);
                     if (config.useDatabase)
-                    Main.database.prepareStatement("UPDATE `Bot` SET `Bot_Trigger` = '" + config.getTrigger() + "' WHERE `Bot`.`Nick` = '" + event.getBot().getUserBot().getNick() + "';").execute();
+                        Main.database.prepareStatement("UPDATE `Bot` SET `Bot_Trigger` = '" + config.getTrigger() + "' WHERE `Bot`.`Nick` = '" + event.getBot().getUserBot().getNick() + "';").execute();
                     event.getUser().send().notice("Bot prefix was set to " + config.getTrigger() + " from " + oldtrigger);
                     return true;
                 } else {

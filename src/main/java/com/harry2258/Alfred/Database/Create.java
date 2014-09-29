@@ -2,7 +2,6 @@ package com.harry2258.Alfred.Database;
 
 import com.harry2258.Alfred.api.Config;
 import com.harry2258.Alfred.api.PermissionManager;
-import com.harry2258.Alfred.commands.Add;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -33,7 +32,7 @@ public class Create {
     }
 
     public static boolean AddChannel(String Channel, Connection conn) throws SQLException {
-        String Permissions = "{\"Perms\":{\"Mods\":[\"niel\"], \"ModPerms\": [\"command.custom\", \"command.google\", \"command.info\"], \"Admins\":[\"Alfred\"], \"Everyone\": [\"command.mcstatus\", \"command.chstatus\"]}}";
+        String Permissions = "{\"Perms\":{\"Mods\":[\"niel\"], \"ModPerms\": [\"command.custom\", \"command.info\"], \"Admins\":[\"Gaz492\"], \"Everyone\": [\"command.mcstatus\", \"command.chstatus\"]}}";
         /*
         String Mods = Add.Json(("niel,tterrag").split(",")).toString();
         String Modperms = Add.Json(("command.custom,command.google").split(",")).toString();

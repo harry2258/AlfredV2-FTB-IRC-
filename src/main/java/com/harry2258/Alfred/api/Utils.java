@@ -10,6 +10,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
 import com.harry2258.Alfred.Main;
+import com.harry2258.Alfred.json.Perms;
 import com.harry2258.Alfred.listeners.MessageEvent;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringEscapeUtils;
@@ -30,6 +31,8 @@ import org.scribe.model.Verb;
 import java.io.*;
 import java.lang.reflect.Type;
 import java.net.*;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -511,6 +514,28 @@ public class Utils {
         Pattern ip = Pattern.compile(IPADDRESS_PATTERN);
         Matcher match = ip.matcher(IP);
         return match.find();
+    }
+
+    public static boolean ReloadDatabase() {
+        try {
+            PreparedStatement stmt3 = Main.database.prepareStatement("SELECT a.Channel, a.Permission, a.URL FROM `Channel_Permissions` a, `Rejoin_Channels` b WHERE a.Channel = b.Channel;");
+            ResultSet rs3 = stmt3.executeQuery();
+            while (rs3.next()) {
+                String channel = rs3.getString("Channel");
+                if (!JsonUtils.isJSONObject(rs3.getString("Permission"))) {
+                    System.out.println("Invalid Json string for channel: " + channel);
+                    return false;
+                }
+                Main.URL.put(channel, rs3.getString("URL"));
+                Perms p = JsonUtils.getPermsFromString(rs3.getString("Permission"));
+                Main.map.put(channel.toLowerCase(), p);
+                System.out.println("Loaded setting for channel: " + channel);
+            }
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 
 }

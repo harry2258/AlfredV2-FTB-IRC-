@@ -9,6 +9,8 @@ import com.harry2258.Alfred.json.Perms;
 import org.pircbotx.hooks.events.MessageEvent;
 
 import java.io.File;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 
 /**
  * Created by Hardik on 1/15/14.
@@ -23,18 +25,36 @@ public class Reload extends Command {
 
     @Override
     public boolean execute(MessageEvent event) throws Exception {
-        Main.map.remove(event.getChannel().getName().toLowerCase());
-        File file = new File(System.getProperty("user.dir") + "/perms/" + event.getChannel().getName().toLowerCase() + "/" + "perms.json");
-        if (!file.exists()) {
-            System.out.println("Creating perms.json for " + event.getChannel());
-            JsonUtils.createJsonStructure(file);
-        }
-        String perms = JsonUtils.getStringFromFile(file.toString());
-        Perms p = JsonUtils.getPermsFromString(perms);
-        Main.map.put(event.getChannel().getName(), p);
+        if (!config.useDatabase) {
+            Main.map.remove(event.getChannel().getName().toLowerCase());
+            File file = new File(System.getProperty("user.dir") + "/perms/" + event.getChannel().getName().toLowerCase() + "/" + "perms.json");
+            if (!file.exists()) {
+                System.out.println("Creating perms.json for " + event.getChannel());
+                JsonUtils.createJsonStructure(file);
+            }
+            String perms = JsonUtils.getStringFromFile(file.toString());
+            Perms p = JsonUtils.getPermsFromString(perms);
+            Main.map.put(event.getChannel().getName(), p);
 
-        event.getUser().send().notice("Permissions were reloaded for " + event.getChannel().getName().toLowerCase() + "!");
-        return true;
+            event.getUser().send().notice("Permissions were reloaded for " + event.getChannel().getName().toLowerCase() + "!");
+            return true;
+        } else {
+            try {
+                PreparedStatement stmt3 = Main.database.prepareStatement("SELECT a.Channel, a.Permission, a.URL FROM `Channel_Permissions` a, `Rejoin_Channels` b WHERE a.Channel = b.Channel;");
+                ResultSet rs3 = stmt3.executeQuery();
+                while (rs3.next()) {
+                    String channel = rs3.getString("Channel");
+                    Main.URL.put(channel, rs3.getString("URL"));
+                    Perms p = JsonUtils.getPermsFromString(rs3.getString("Permission"));
+                    Main.map.put(channel.toLowerCase(), p);
+                    System.out.println("Loaded setting for channel: " + channel);
+                }
+                return true;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return false;
     }
 
     @Override

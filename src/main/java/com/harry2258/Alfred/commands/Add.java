@@ -250,7 +250,6 @@ public class Add extends Command {
                 ResultSet rs1 = stmt1.executeQuery();
                 rs1.next();
                 strFileJson = rs1.getString("Permission");
-                System.out.println(strFileJson);
                 channel = rs1.getString("Channel");
             } catch (Exception e) {
                 e.printStackTrace();
@@ -273,12 +272,16 @@ public class Add extends Command {
                             return false;
                         }
 
+                        if (!Main.Login.containsKey(newUser.getNick())) {
+                            Main.Login.put(newUser.getNick(), newuser);
+                        }
+
                         JsonObject jsonObj = JsonUtils.getJsonObject(strFileJson);
                         if (!isAdded(newUser, event.getChannel().getName(), args)) {
                             temp = jsonObj.getAsJsonObject("Perms").get("Mods").toString();
                             String[] tempArray = (temp.replaceAll("[\\[\\]\"]", "") + "," + newuser + "").split(",");
                             jsonObj.getAsJsonObject("Perms").add("Mods", Json(tempArray));
-                            PreparedStatement stmt1 = Main.database.prepareStatement("UPDATE `Channel_Permissions` SET `Permission` = '"+ jsonObj.toString() +"' WHERE `Channel` = '" + channel + "';");
+                            PreparedStatement stmt1 = Main.database.prepareStatement("UPDATE `Channel_Permissions` SET `Permission` = '" + jsonObj.toString() + "' WHERE `Channel` = '" + channel + "';");
                             stmt1.execute();
                             event.getUser().send().notice(newuser + " is now an Moderator for channel " + event.getChannel().getName());
                             Perms p = JsonUtils.getPermsFromString(jsonObj.toString());
@@ -317,7 +320,7 @@ public class Add extends Command {
                                 temp = jsonObj.getAsJsonObject("Perms").get("ModPerms").toString();
                                 String[] tempArray = (temp.replaceAll("[\\[\\]\"]", "") + "," + command + "").split(",");
                                 jsonObj.getAsJsonObject("Perms").add("ModPerms", Json(tempArray));
-                                PreparedStatement stmt1 = Main.database.prepareStatement("UPDATE `Channel_Permissions` SET `Permission` = '"+ jsonObj.toString() +"' WHERE `Channel` = '" + channel + "';");
+                                PreparedStatement stmt1 = Main.database.prepareStatement("UPDATE `Channel_Permissions` SET `Permission` = '" + jsonObj.toString() + "' WHERE `Channel` = '" + channel + "';");
                                 stmt1.execute();
                                 event.getUser().send().notice("Moderators are now able to use the command '" + args[2] + "'");
                                 String perms = JsonUtils.getStringFromFile(jsonObj.toString());
@@ -349,17 +352,23 @@ public class Add extends Command {
 
                         User newUser = event.getBot().getUserChannelDao().getUser(args[2]);
                         String newuser = Utils.getAccount(event.getBot().getUserChannelDao().getUser(args[2]), event);
+
                         if (newuser.isEmpty()) {
                             System.out.println("Could not get User info!");
                             return false;
                         }
 
+                        if (!Main.Login.containsKey(newUser.getNick())) {
+                            Main.Login.put(newUser.getNick(), newuser);
+                        }
+                        
                         JsonObject jsonObj = JsonUtils.getJsonObject(strFileJson);
+                        System.out.println(isAdded(newUser, event.getChannel().getName(), args));
                         if (!isAdded(newUser, event.getChannel().getName(), args)) {
                             temp = jsonObj.getAsJsonObject("Perms").get("Admins").toString();
                             String[] tempArray = (temp.replaceAll("[\\[\\]\"]", "") + "," + newuser + "").split(",");
                             jsonObj.getAsJsonObject("Perms").add("Admins", Json(tempArray));
-                            PreparedStatement stmt1 = Main.database.prepareStatement("UPDATE `Channel_Permissions` SET `Permission` = '"+ jsonObj.toString() +"' WHERE `Channel` = '" + channel + "';");
+                            PreparedStatement stmt1 = Main.database.prepareStatement("UPDATE `Channel_Permissions` SET `Permission` = '" + jsonObj.toString() + "' WHERE `Channel` = '" + channel + "';");
                             stmt1.execute();
                             event.getUser().send().notice(newuser + " is now an Admin for channel " + event.getChannel().getName());
                             Perms p = JsonUtils.getPermsFromString(jsonObj.toString());
@@ -398,7 +407,7 @@ public class Add extends Command {
                                 temp = jsonObj.getAsJsonObject("Perms").get("Everyone").toString();
                                 String[] tempArray = (temp.replaceAll("[\\[\\]\"]", "") + "," + command + "").split(",");
                                 jsonObj.getAsJsonObject("Perms").add("Everyone", Json(tempArray));
-                                PreparedStatement stmt1 = Main.database.prepareStatement("UPDATE `Channel_Permissions` SET `Permission` = '"+ jsonObj.toString() +"' WHERE `Channel` = '" + channel + "';");
+                                PreparedStatement stmt1 = Main.database.prepareStatement("UPDATE `Channel_Permissions` SET `Permission` = '" + jsonObj.toString() + "' WHERE `Channel` = '" + channel + "';");
                                 stmt1.execute();
                                 event.getUser().send().notice("Everyone is now able to use the command '" + args[2] + "'");
                                 String perms = JsonUtils.getStringFromFile(jsonObj.toString());
@@ -446,7 +455,7 @@ public class Add extends Command {
     public static boolean isAdded(User user, String channel, String[] type) throws Exception {
         String sender = Main.Login.get(user.getNick());
         Perms perm = Main.map.get(channel);
-
+        if (sender == null) return true;
         if (type[1].equalsIgnoreCase("mod")) {
             for (String users : perm.getPermission().getMods()) {
                 if (users.equalsIgnoreCase(sender)) {
@@ -454,6 +463,8 @@ public class Add extends Command {
                 }
             }
         } else if (type[1].equalsIgnoreCase("admin")) {
+            System.out.println(sender);
+            System.out.println(perm.getPermission().getAdmins());
             for (String users : perm.getPermission().getAdmins()) {
                 if (users.equalsIgnoreCase(sender)) {
                     return true;

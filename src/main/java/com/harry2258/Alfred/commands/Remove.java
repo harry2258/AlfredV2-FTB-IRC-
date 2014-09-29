@@ -262,7 +262,7 @@ public class Remove extends Command {
                             temp.remove(mod);
                             p.setMods(temp);
                             perm.setPermission(p);
-                            PreparedStatement stmt1 = Main.database.prepareStatement("UPDATE `Channel_Permissions` SET `Permission` = '"+ JsonUtils.GSON.toJson(perm) +"' WHERE `Channel` = '" + channel + "';");
+                            PreparedStatement stmt1 = Main.database.prepareStatement("UPDATE `Channel_Permissions` SET `Permission` = '" + JsonUtils.GSON.toJson(perm) + "' WHERE `Channel` = '" + channel + "';");
                             stmt1.execute();
                             event.getUser().send().notice(args[2] + " is no longer a Moderator for channel " + event.getChannel().getName());
                             Main.map.put(event.getChannel().getName(), perm);
@@ -297,7 +297,7 @@ public class Remove extends Command {
                             temp.remove(command);
                             p.setModPerms(temp);
                             perm.setPermission(p);
-                            PreparedStatement stmt1 = Main.database.prepareStatement("UPDATE `Channel_Permissions` SET `Permission` = '"+ JsonUtils.GSON.toJson(perm) +"' WHERE `Channel` = '" + channel + "';");
+                            PreparedStatement stmt1 = Main.database.prepareStatement("UPDATE `Channel_Permissions` SET `Permission` = '" + JsonUtils.GSON.toJson(perm) + "' WHERE `Channel` = '" + channel + "';");
                             stmt1.execute();
                             event.getUser().send().notice("Moderators can no longer use the command '" + args[2] + "'");
                             Main.map.put(event.getChannel().getName(), perm);
@@ -331,7 +331,7 @@ public class Remove extends Command {
                             temp.remove(mod);
                             p.setAdmins(temp);
                             perm.setPermission(p);
-                            PreparedStatement stmt1 = Main.database.prepareStatement("UPDATE `Channel_Permissions` SET `Permission` = '"+ JsonUtils.GSON.toJson(perm) +"' WHERE `Channel` = '" + channel + "';");
+                            PreparedStatement stmt1 = Main.database.prepareStatement("UPDATE `Channel_Permissions` SET `Permission` = '" + JsonUtils.GSON.toJson(perm) + "' WHERE `Channel` = '" + channel + "';");
                             stmt1.execute();
                             event.getUser().send().notice(args[2] + " is no longer an Admin for channel " + event.getChannel().getName());
                             Main.map.put(event.getChannel().getName(), perm);
@@ -366,7 +366,7 @@ public class Remove extends Command {
                             temp.remove(command);
                             p.setEveryone(temp);
                             perm.setPermission(p);
-                            PreparedStatement stmt1 = Main.database.prepareStatement("UPDATE `Channel_Permissions` SET `Permission` = '"+ JsonUtils.GSON.toJson(perm) +"' WHERE `Channel` = '" + channel + "';");
+                            PreparedStatement stmt1 = Main.database.prepareStatement("UPDATE `Channel_Permissions` SET `Permission` = '" + JsonUtils.GSON.toJson(perm) + "' WHERE `Channel` = '" + channel + "';");
                             stmt1.execute();
                             event.getUser().send().notice("Regular users can no longer use the command '" + args[2] + "'");
                             Main.map.put(event.getChannel().getName(), perm);

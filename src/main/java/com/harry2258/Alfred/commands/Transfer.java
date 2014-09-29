@@ -1,12 +1,7 @@
 package com.harry2258.Alfred.commands;
 
 import com.harry2258.Alfred.Main;
-import com.harry2258.Alfred.api.Command;
-import com.harry2258.Alfred.api.Config;
-import com.harry2258.Alfred.api.JsonUtils;
-import com.harry2258.Alfred.api.PermissionManager;
-import com.harry2258.Alfred.json.Permission;
-import com.harry2258.Alfred.json.Perms;
+import com.harry2258.Alfred.api.*;
 import org.pircbotx.hooks.events.MessageEvent;
 
 import java.io.File;
@@ -56,8 +51,13 @@ public class Transfer extends Command {
                 e.printStackTrace();
             }
         }
-        event.getUser().send().message("Done transferring permissions to database!");
-        return true;
+
+        if (Utils.ReloadDatabase()) {
+            event.getUser().send().message("Done transferring permissions to database!");
+            return true;
+        } else {
+            return false;
+        }
     }
 
     @Override
