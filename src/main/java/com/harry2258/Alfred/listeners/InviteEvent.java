@@ -24,7 +24,7 @@ public class InviteEvent extends ListenerAdapter {
             return;
         }
         if (config.isAutoAcceptInvite()) {
-            String level = event.getBot().getUserChannelDao().getChannel("#batbot").getUserLevels(event.getBot().getUserChannelDao().getUser(event.getUser())).toString().replaceAll("]|\\[","");
+            String level = event.getBot().getUserChannelDao().getChannel("#batbot").getUserLevels(event.getBot().getUserChannelDao().getUser(event.getUser())).toString().replaceAll("]|\\[", "");
             if (level.equalsIgnoreCase("op") || level.equalsIgnoreCase("voice")) {
                 event.getBot().sendRaw().rawLineNow("PRIVMSG #batbot :Invited to " + event.getChannel() + " by " + event.getUser());
                 event.getBot().sendIRC().joinChannel(event.getChannel());

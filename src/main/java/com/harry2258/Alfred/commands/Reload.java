@@ -49,6 +49,16 @@ public class Reload extends Command {
                     Main.map.put(channel.toLowerCase(), p);
                     System.out.println("Loaded setting for channel: " + channel);
                 }
+
+                stmt3 = Main.database.prepareStatement("SELECT * FROM `Ignored_Users`");
+                rs3 = stmt3.executeQuery();
+
+                while (rs3.next()) {
+                    Ignore.ignored.add(rs3.getString("User"));
+                }
+
+
+                event.getChannel().send().message("Reloaded settings for currently connected channel.");
                 return true;
             } catch (Exception e) {
                 e.printStackTrace();

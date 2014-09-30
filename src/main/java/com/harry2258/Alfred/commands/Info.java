@@ -107,6 +107,22 @@ public class Info extends Command {
                     return true;
                 }
 
+                if (args.length == 2 && args[1].equalsIgnoreCase("ignored")) {
+                    ArrayList<String> IgnoredUsers = new ArrayList<>();
+                    PreparedStatement stmt3 = Main.database.prepareStatement("SELECT * FROM `Ignored_Users`");
+                    ResultSet rs3 = stmt3.executeQuery();
+                    while (rs3.next()) {
+                        rs3.getString("User");
+                        try {
+                            IgnoredUsers.add(rs3.getString("User"));
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            return false;
+                        }
+                    }
+                    event.getUser().send().notice("Ignored Users: " + JsonUtils.prettyPrint(IgnoredUsers));
+                }
+
                 if (args.length == 2 && args[1].equalsIgnoreCase("full") | args[1].equalsIgnoreCase("all")) {
                     String exe = JsonUtils.getStringFromFile(System.getProperty("user.dir") + "/exec.json");
                     Permission exec = JsonUtils.getPermsFromString(exe).getPermission();

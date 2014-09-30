@@ -21,7 +21,9 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -45,7 +47,6 @@ public class Main {
     public static File globalperm = new File(System.getProperty("user.dir") + "/global.json");
     public static File edgesjsonfile = new File(System.getProperty("user.dir") + "/edges.json");
 
-    public static List<String> users = new ArrayList<>();
     public static String version = "";
 
     public static Connection database;
@@ -155,7 +156,8 @@ public class Main {
 
                     while (rs.next()) {
                         builder.addAutoJoinChannel(rs.getString("Channel"));
-                        if (!Create.AddChannel(rs.getString("Channel"), database)) System.out.println("Could not create permissions for " + rs.getString("Channel"));
+                        if (!Create.AddChannel(rs.getString("Channel"), database))
+                            System.out.println("Could not create permissions for " + rs.getString("Channel"));
                     }
 
                     stmt = database.prepareStatement("SELECT * FROM `Channel_Permissions`");

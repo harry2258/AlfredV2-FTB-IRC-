@@ -21,43 +21,36 @@ public class Transfer extends Command {
 
     @Override
     public boolean execute(MessageEvent event) throws Exception {
-        if (event.getMessage().split(" ").length == 2 && event.getMessage().split(" ")[1].equalsIgnoreCase("nuke")) {
-            Main.database.prepareStatement("TRUNCATE Channel_Permissions").execute();
-        }
-        File all = new File("perms/");
-        for (final File file : all.listFiles()) {
-            try {
-                if (file.isDirectory()) {
-                    System.out.println("MOVING PERMISSIONS FOR CHANNEL: " + file.getName());
-                    for (File tmp : file.listFiles()) {
-                    /*
-                        String perms = JsonUtils.getStringFromFile(tmp.getPath());
-                        Perms P = JsonUtils.getPermsFromString(perms);
-                        Permission p = P.getPermission();
-                        String Mods = p.getMods().toString().replaceAll("\\]|\\[", "");
-                        String Admins = p.getAdmins().toString().replaceAll("\\]|\\[", "");
-                        String Everyone = p.getEveryone().toString().replaceAll("\\]|\\[", "");
-                        String ModPerms = p.getModPerms().toString().replaceAll("\\]|\\[", "");
-                        Main.database.prepareStatement("INSERT IGNORE INTO `Channel_Permissions` (`Channel`, `Admins`, `Mods`, `ModPerms`, `Everyone`, `URL`) VALUES ( '" + file.getName() + "', '" + Admins + "', '" + Mods + "', '" + ModPerms + "', '" + Everyone + "', 'none')").execute();
-                    */
-                        PreparedStatement stmt = Main.database.prepareStatement("INSERT IGNORE INTO `Channel_Permissions` (`Channel`, `Permission`, `URL`) VALUES (?, ?, 'none')");
-                        stmt.setString(1, file.getName());
-                        stmt.setString(2, JsonUtils.getStringFromFile(tmp.getPath()));
-                        stmt.execute();
-                    }
-                    //event.getChannel().send().message("Added permissions to database for channel " + file.getName());
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
+        if (config.useDatabase) {
+            if (event.getMessage().split(" ").length == 2 && event.getMessage().split(" ")[1].equalsIgnoreCase("nuke")) {
+                Main.database.prepareStatement("TRUNCATE Channel_Permissions").execute();
             }
-        }
+            File all = new File("perms/");
+            for (final File file : all.listFiles()) {
+                try {
+                    if (file.isDirectory()) {
+                        System.out.println("MOVING PERMISSIONS FOR CHANNEL: " + file.getName());
+                        for (File tmp : file.listFiles()) {
+                            PreparedStatement stmt = Main.database.prepareStatement("INSERT IGNORE INTO `Channel_Permissions` (`Channel`, `Permission`, `URL`) VALUES (?, ?, 'none')");
+                            stmt.setString(1, file.getName());
+                            stmt.setString(2, JsonUtils.getStringFromFile(tmp.getPath()));
+                            stmt.execute();
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
 
-        if (Utils.ReloadDatabase()) {
-            event.getUser().send().message("Done transferring permissions to database!");
-            return true;
-        } else {
-            return false;
-        }
+            if (Utils.ReloadDatabase()) {
+                event.getUser().send().message("Done transferring permissions to database!");
+                return true;
+            } else {
+                return false;
+            }
+        } else
+            event.getChannel().send().message("This command is used to transfer permissions to database. You are not using a Database to store information.");
+        return true;
     }
 
     @Override

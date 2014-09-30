@@ -226,46 +226,5 @@ public class MessageEvent extends ListenerAdapter {
             event.getChannel().send().message(eventuser + ", It's good to dream big");
         }
 
-        //Copy from old Alphabot :3
-        /*
-        new Thread(new Runnable(){
-            @Override
-            public void run(){
-                //System.out.println("entered run");
-                try{
-                    if(!Main.users.contains(eventuser)){
-                        if(Main.violation.containsKey(eventuser)){
-                            Main.violation.put(eventuser, (Integer) Main.violation.get(eventuser) + 1);
-                        }else{
-                            Main.violation.put(eventuser, 0);
-                        }
-                        Main.users.add(eventuser);
-                        System.out.println("Added to list.");
-                        Thread.sleep(1000);
-                        System.out.println("Removed from list.");
-                        Main.users.remove(eventuser);
-                    }else{
-                        if((Integer) Main.violation.get(eventuser) > 3){
-                            event.getChannel().send().kick(event.getUser(), "Calm your tits bro");
-                            Main.violation.put(eventuser, 0);
-                            return;
-                        }
-                        System.out.println("User already in list. muting");
-                        event.getUser().send().mode("+q");
-                        Main.users.remove(eventuser);
-                        System.out.println("muted.");
-                        event.getUser().send().notice("You've been muted temporarily for spam.");
-
-                        Thread.sleep(1000 * 10);
-                        System.out.println("unmuted");
-                        event.getUser().send().mode("-q");
-                    }
-                }catch(Exception e){
-                    e.printStackTrace();
-                }
-            }
-        }).start();
-        */
-
     }
 }

@@ -229,13 +229,13 @@ public class CreeperHost extends Thread {
             //Yay for colors! I think. Prog don't remove the colors -.-
 
             if (Load.get(x) == -1) {
-              ColorLoad = "N/A";
+                ColorLoad = "N/A";
             } else if (Load.get(x) < 33) {
                 ColorLoad = Colors.DARK_GREEN + Load.get(x) + "%" + Colors.NORMAL;
             } else if (Load.get(x) >= 33 && Load.get(x) < 66) {
-                 ColorLoad = Colors.YELLOW + Load.get(x) + "%" + Colors.NORMAL;
+                ColorLoad = Colors.YELLOW + Load.get(x) + "%" + Colors.NORMAL;
             } else if (Load.get(x) >= 66) {
-                 ColorLoad = Colors.RED + Load.get(x) + "%" + Colors.NORMAL;
+                ColorLoad = Colors.RED + Load.get(x) + "%" + Colors.NORMAL;
             }
 
             Message.add(chRepos.get(x) + ": " + Status.get(x) + Colors.NORMAL + " " + ColorLoad + " | ");
