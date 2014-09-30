@@ -29,11 +29,10 @@ public class Add extends Command {
     private PermissionManager manager;
 
     public Add() {
-        super("Add", "Adds the Permission/User to the list", "There a 4 groups to add people/permissions to. Everyone: If the user is logged in, they can use permission listed in here. Modperms: If the user ia a Mod, they can use permission listed in here. Mod: Add an user to Mod list to allows them to use Modperms. Admin: Have access to almost all commands, except few critical ones. | add [mod] [batman]");
+        super("Add", "Adds the Permission/User to the list", "Add [Group] [User/Permission]");
     }
 
     //TODO FIX THIS SHIT!
-    //TODO DONE! AND DON'T TELL ME WHAT TO DO M8!!11!1
     @Override
     public boolean execute(MessageEvent event) throws Exception {
         String[] args = event.getMessage().split(" ");
@@ -323,8 +322,7 @@ public class Add extends Command {
                                 PreparedStatement stmt1 = Main.database.prepareStatement("UPDATE `Channel_Permissions` SET `Permission` = '" + jsonObj.toString() + "' WHERE `Channel` = '" + channel + "';");
                                 stmt1.execute();
                                 event.getUser().send().notice("Moderators are now able to use the command '" + args[2] + "'");
-                                String perms = JsonUtils.getStringFromFile(jsonObj.toString());
-                                Perms p = JsonUtils.getPermsFromString(perms);
+                                Perms p = JsonUtils.getPermsFromString(jsonObj.toString());
                                 Main.map.put(event.getChannel().getName(), p);
                                 event.getUser().send().notice("Reloaded Permissions");
                                 return true;
@@ -361,7 +359,7 @@ public class Add extends Command {
                         if (!Main.Login.containsKey(newUser.getNick())) {
                             Main.Login.put(newUser.getNick(), newuser);
                         }
-                        
+
                         JsonObject jsonObj = JsonUtils.getJsonObject(strFileJson);
                         System.out.println(isAdded(newUser, event.getChannel().getName(), args));
                         if (!isAdded(newUser, event.getChannel().getName(), args)) {
@@ -395,7 +393,7 @@ public class Add extends Command {
                     if (commands.containsKey(Character.toUpperCase(args[2].charAt(0)) + event.getMessage().split(" ")[2].substring(1).toLowerCase()) || new File("plugins/" + Character.toUpperCase(args[2].charAt(0)) + event.getMessage().split(" ")[2].substring(1).toLowerCase() + ".bsh").exists() || args[2].equalsIgnoreCase("custom") || args[2].equalsIgnoreCase("custom.command")) {
                         try {
                             String check = args[2];
-                            String command = null;
+                            String command;
                             if (!check.contains("command.")) {
                                 command = "command." + check;
                             } else {
@@ -410,8 +408,7 @@ public class Add extends Command {
                                 PreparedStatement stmt1 = Main.database.prepareStatement("UPDATE `Channel_Permissions` SET `Permission` = '" + jsonObj.toString() + "' WHERE `Channel` = '" + channel + "';");
                                 stmt1.execute();
                                 event.getUser().send().notice("Everyone is now able to use the command '" + args[2] + "'");
-                                String perms = JsonUtils.getStringFromFile(jsonObj.toString());
-                                Perms p = JsonUtils.getPermsFromString(perms);
+                                Perms p = JsonUtils.getPermsFromString(jsonObj.toString());
                                 Main.map.put(event.getChannel().getName(), p);
                                 event.getUser().send().notice("Reloaded Permissions");
                                 return true;
