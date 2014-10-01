@@ -41,11 +41,12 @@ public class Error extends Command {
         try {
             Class.forName("com.mysql.jdbc.Driver");
             if (args.length == 2 && args[1].equalsIgnoreCase("test")) {
-                event.getUser().send().notice("Trying to connect to database!");
+                event.getUser().send().notice("Trying to connect to database.");
                 if (getConnection().isValid(5000)) {
+                    Main.database = DriverManager.getConnection("jdbc:mysql://" + config.DatabaseHost() + "/" + config.Database(), config.DatabaseUser(), config.DatabasePass());
                     event.getChannel().send().message("Connection to database was successful!");
                 } else {
-                    event.getChannel().send().message("Could not connect to the database, Please check your bot.properties files.");
+                    event.getChannel().send().message("Could not connect to the database, Please recheck your configuration.");
                 }
                 return true;
             }

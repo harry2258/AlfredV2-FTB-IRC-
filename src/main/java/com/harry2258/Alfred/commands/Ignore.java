@@ -10,10 +10,12 @@ import com.harry2258.Alfred.api.Command;
 import com.harry2258.Alfred.api.Config;
 import com.harry2258.Alfred.api.PermissionManager;
 import com.harry2258.Alfred.api.Utils;
+import com.harry2258.Alfred.json.Permission;
 import org.pircbotx.User;
 import org.pircbotx.hooks.events.MessageEvent;
 
 import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,6 +33,16 @@ public class Ignore extends Command {
     @Override
     public boolean execute(MessageEvent event) {
         String[] args = event.getMessage().split(" ");
+        if (args.length == 3 && PermissionManager.hasExec(event.getUser().getNick()) && args[1].equals("Nuke") && (args[2].equalsIgnoreCase("DB") || args[2].equalsIgnoreCase("database"))) {
+            try {
+                Main.database.prepareStatement("DROP TABLE `Ignored_Users`").execute();
+                Main.database.prepareStatement("CREATE TABLE IF NOT EXISTS Ignored_Users (`User` VARCHAR(255) NOT NULL PRIMARY KEY, `Ignored_By` VARCHAR(255), `User_Nick` VARCHAR(255), `Date` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP)").execute();
+            } catch (SQLException e) {
+                e.printStackTrace();
+                return false;
+            }
+            return true;
+        }
         if (args.length == 2) {
 
             User target;
