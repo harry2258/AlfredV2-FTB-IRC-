@@ -169,7 +169,7 @@ public class Config {
             conn.prepareStatement("CREATE TABLE IF NOT EXISTS Bot (`Nick` VARCHAR(255) NOT NULL PRIMARY KEY, `Password` VARCHAR(255), `Username` VARCHAR(255), `Ident` VARCHAR(255), `Bot_Trigger` VARCHAR(255), `Reconnect` VARCHAR(5), `Accept_Invite` VARCHAR(5), `Rejoin_Channels` VARCHAR(5), `CTCP_Finger_Reply` VARCHAR(1000), `CTCP_Version_Reply` VARCHAR(1000))").execute();
             conn.prepareStatement("CREATE TABLE IF NOT EXISTS Network_Settings (Server_Host VARCHAR(255) NOT NULL PRIMARY KEY, Server_Port VARCHAR(255), Server_Password VARCHAR(255), Use_SSL VARCHAR(5), Permissions_Denied VARCHAR(5000), Verify_SSL VARCHAR(5), Enable_Chat_Socket VARCHAR(5), Chat_Socket_Port INTEGER)").execute();
             conn.prepareStatement("CREATE TABLE IF NOT EXISTS Misc (Bot VARCHAR(255) NOT NULL PRIMARY KEY, Twitter VARCHAR(5), Reddit VARCHAR(5), Check_Update VARCHAR(5), Update_Channel VARCHAR(255), Update_Interval INTEGER, Weather_API_KEY VARCHAR(255))").execute();
-            conn.prepareStatement("CREATE TABLE IF NOT EXISTS Ignored_Users (`User` VARCHAR(255) NOT NULL PRIMARY KEY)").execute();
+            conn.prepareStatement("CREATE TABLE IF NOT EXISTS Ignored_Users (`User` VARCHAR(255) NOT NULL PRIMARY KEY, `Ignored_By` VARCHAR(255), `User_Nick` VARCHAR(255), `Date` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP)").execute();
         } catch (SQLException s) {
             s.printStackTrace();
         }

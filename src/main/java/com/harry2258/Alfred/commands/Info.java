@@ -1,13 +1,11 @@
 package com.harry2258.Alfred.commands;
 
 import com.harry2258.Alfred.Main;
-import com.harry2258.Alfred.api.Command;
-import com.harry2258.Alfred.api.Config;
-import com.harry2258.Alfred.api.JsonUtils;
-import com.harry2258.Alfred.api.PermissionManager;
+import com.harry2258.Alfred.api.*;
 import com.harry2258.Alfred.json.Permission;
 import com.harry2258.Alfred.json.Perms;
 import org.pircbotx.Colors;
+import org.pircbotx.User;
 import org.pircbotx.hooks.events.MessageEvent;
 
 import java.io.File;
@@ -108,6 +106,18 @@ public class Info extends Command {
                 }
 
                 if (args.length == 2 && args[1].equalsIgnoreCase("ignored")) {
+                    int i = 0;
+                    PreparedStatement stmt3 = Main.database.prepareStatement("SELECT * FROM `Ignored_Users`");
+                    ResultSet rs3 = stmt3.executeQuery();
+                    while (rs3.next()) {
+                        i = i + 1;
+                    }
+                    event.getUser().send().notice(String.valueOf(i) + " users are ignored by the bot. ");
+                    if (i > 0)
+                        event.getUser().send().notice("Type \"" + config.getTrigger() + "info ignored list \" for a full list!");
+                }
+
+                if (args.length == 3 && args[2].equalsIgnoreCase("list")) {
                     ArrayList<String> IgnoredUsers = new ArrayList<>();
                     PreparedStatement stmt3 = Main.database.prepareStatement("SELECT * FROM `Ignored_Users`");
                     ResultSet rs3 = stmt3.executeQuery();
@@ -121,6 +131,27 @@ public class Info extends Command {
                         }
                     }
                     event.getUser().send().notice("Ignored Users: " + JsonUtils.prettyPrint(IgnoredUsers));
+                    return true;
+                }
+                if (args.length == 4 && args[2].equalsIgnoreCase("user")) {
+                    String info;
+                    String account = "";
+                    try {
+                        User ignored =  event.getBot().getUserChannelDao().getUser(args[3]);
+                        if (event.getChannel().getUsers().contains(ignored)) { account = Utils.getAccount(ignored, event);}
+                        PreparedStatement stmt = Main.database.prepareStatement("SELECT * FROM `Ignored_Users` WHERE User_Nick = ? OR User = ?");
+                        stmt.setString(1, args[3]);
+                        stmt.setString(2, account);
+                        ResultSet rs = stmt.executeQuery();
+                        while (rs.next()) {
+                            info = "User " + args[3] + " was ignored by " + rs.getString("Ignored_By") + " on " + rs.getDate("Date") + " at " + rs.getTime("Date") + " UTC";
+                            event.getChannel().send().message(info);
+                        }
+                        return true;
+                    } catch (Exception user) {
+                        user.printStackTrace();
+                        return false;
+                    }
                 }
 
                 if (args.length == 2 && args[1].equalsIgnoreCase("full") | args[1].equalsIgnoreCase("all")) {

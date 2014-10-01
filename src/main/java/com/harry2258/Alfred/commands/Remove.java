@@ -24,8 +24,7 @@ public class Remove extends Command {
     private PermissionManager manager;
 
     public Remove() {
-        super("Remove", "Removes the Permission/User from the list", "remove [" + Colors.DARK_BLUE + "Permission" + Colors.NORMAL + "/" + Colors.DARK_GREEN + "User" + Colors.NORMAL + "] ["
-                + Colors.DARK_BLUE + "Permission" + Colors.NORMAL + "/" + Colors.DARK_GREEN + "User" + Colors.NORMAL + "]");
+        super("Remove", "Removes the Permission/User from the list", "remove [Group] [User/Permission]");
     }
 
     @Override
