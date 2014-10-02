@@ -200,7 +200,7 @@ public class Utils {
     }
 
     public static String checkServerStatus(InetAddress i, int port) {
-        String returns = "Error.";
+        String returns;
         try {
             //wow...i never actually used the port argument?
             Socket s = new Socket(i, port);
@@ -528,6 +528,7 @@ public class Utils {
                 }
                 Main.URL.put(channel, rs3.getString("URL"));
                 Perms p = JsonUtils.getPermsFromString(rs3.getString("Permission"));
+                Main.map.remove(channel.toLowerCase());
                 Main.map.put(channel.toLowerCase(), p);
                 System.out.println("Loaded setting for channel: " + channel);
             }

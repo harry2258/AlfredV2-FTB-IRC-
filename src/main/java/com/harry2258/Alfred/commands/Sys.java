@@ -49,27 +49,6 @@ public class Sys extends Command {
             event.getChannel().send().message(Colors.DARK_GREEN + "System uptime" + Colors.NORMAL + ": " + time);
 
         } else if (os.contains("mac") || os.contains("nix") || os.contains("nux") || os.contains("aix")) {
-            /*
-            Process uptimeProc = Runtime.getRuntime().exec("uptime");
-            BufferedReader in = new BufferedReader(new InputStreamReader(uptimeProc.getInputStream()));
-            String line = in.readLine();
-            String time = "";
-            if (line != null) {
-                Pattern parse = Pattern.compile("((\\d+) days,)? (\\d+):(\\d+)");
-                Matcher matcher = parse.matcher(line);
-                if (matcher.find()) {
-                    System.out.println(matcher.toString());
-                    String _days = matcher.group(2);
-                    String _hours = matcher.group(3);
-                    String _minutes = matcher.group(4);
-                    int days = _days != null ? Integer.parseInt(_days) : 0;
-                    int hours = _hours != null ? Integer.parseInt(_hours) : 0;
-                    int minutes = _minutes != null ? Integer.parseInt(_minutes) : 0;
-                    //uptime = (minutes * 60000) + (hours * 60000 * 60) + (days * 6000 * 60 * 24);
-                    time = String.format("%d Days, %d Hours, %d Min", days, hours, minutes);
-                }
-            }
-            */
             int unixTime = Integer.valueOf(new Scanner(new FileInputStream("/proc/uptime")).next().replaceAll("\\.[0-9]+", ""));
             int day = (int) TimeUnit.SECONDS.toDays(unixTime);
             long hours = TimeUnit.SECONDS.toHours(unixTime) - (day * 24);

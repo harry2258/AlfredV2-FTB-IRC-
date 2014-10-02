@@ -46,6 +46,7 @@ public class Reload extends Command {
                     String channel = rs3.getString("Channel");
                     Main.URL.put(channel, rs3.getString("URL"));
                     Perms p = JsonUtils.getPermsFromString(rs3.getString("Permission"));
+                    Main.map.remove(channel.toLowerCase());
                     Main.map.put(channel.toLowerCase(), p);
                     System.out.println("Loaded setting for channel: " + channel);
                 }
@@ -56,7 +57,6 @@ public class Reload extends Command {
                 while (rs3.next()) {
                     Ignore.ignored.add(rs3.getString("User"));
                 }
-
 
                 event.getChannel().send().message("Reloaded settings for currently connected channel.");
                 return true;
