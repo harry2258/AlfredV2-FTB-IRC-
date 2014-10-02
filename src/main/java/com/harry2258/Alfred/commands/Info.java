@@ -137,8 +137,10 @@ public class Info extends Command {
                     String info;
                     String account = "";
                     try {
-                        User ignored =  event.getBot().getUserChannelDao().getUser(args[3]);
-                        if (event.getChannel().getUsers().contains(ignored)) { account = Utils.getAccount(ignored, event);}
+                        User ignored = event.getBot().getUserChannelDao().getUser(args[3]);
+                        if (event.getChannel().getUsers().contains(ignored)) {
+                            account = Utils.getAccount(ignored, event);
+                        }
                         PreparedStatement stmt = Main.database.prepareStatement("SELECT * FROM `Ignored_Users` WHERE User_Nick = ? OR User = ?");
                         stmt.setString(1, args[3]);
                         stmt.setString(2, account);
