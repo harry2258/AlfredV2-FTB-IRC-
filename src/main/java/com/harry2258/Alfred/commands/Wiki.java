@@ -10,6 +10,8 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created by Hardik on 1/17/14.
@@ -27,6 +29,11 @@ public class Wiki extends Command {
     public boolean execute(MessageEvent event) throws Exception {
         StringBuilder sb = new StringBuilder();
         String[] args = event.getMessage().split(" ");
+
+        String pattern ="(\\{\\{L\\|)(.*?)(\\}\\})";
+        Pattern p = Pattern.compile(pattern);
+        Matcher m;
+
         if (args.length == 1) {
             event.getChannel().send().message("Official FTB Wiki: http://wiki.feed-the-beast.com");
             return true;
@@ -65,6 +72,7 @@ public class Wiki extends Command {
             }
             if (exist) {
                 String temp = ("http://wiki.feed-the-beast.com/api.php?format=xml&action=query&titles=" + message + "&prop=revisions&rvprop=content&format=json").replaceAll(" ", "%20");
+                System.out.println(temp);
                 URL u = new URL(temp);
                 URLConnection c = u.openConnection();
                 BufferedReader in = new BufferedReader(new InputStreamReader(c.getInputStream()));
@@ -72,7 +80,6 @@ public class Wiki extends Command {
 
                 if (xy.contains("#REDIRECT")) {
                     String redirect = xy.replaceAll("\\{\\{[^}]+\\}\\}|\\[\\[Category:[^\\]]+\\]\\]|.*\\[\\[|\\]\\].*|^\\s+|\\s+$|<[^>]+>", "");
-                    name = redirect;
                     String newtemp = ("http://wiki.feed-the-beast.com/api.php?format=xml&action=query&titles=" + redirect + "&prop=revisions&rvprop=content&format=json").replaceAll(" ", "%20");
                     URL url = new URL(newtemp);
                     URLConnection x = url.openConnection();
@@ -90,7 +97,23 @@ public class Wiki extends Command {
                 }
 
                 String APItest = jsonObj.getAsJsonObject("query").getAsJsonObject("pages").getAsJsonObject(id).getAsJsonArray("revisions").get(0).getAsJsonObject().get("*").toString();
-                String df = APItest.replaceAll("\\{\\{[^}]+\\}\\}|\\[\\[Category:[^\\]]+\\]\\]|\\[\\[|\\]\\]|^\\s+|\\s+$|<[^>]+>|\\\\n", "").trim().replaceAll("\\r?\\n.*", "").replaceAll("\\S+\\|(\\S+)", "$1").replaceAll(".*(?:}})", "");
+
+                m = p.matcher(APItest);
+                StringBuffer buffer = new StringBuffer();
+                String GroupName = null;
+                while (m.find()) {
+                    GroupName = m.group(2);
+                    m.appendReplacement(buffer,"&&&" + GroupName + "&&&");
+                }
+
+                m.appendTail(buffer);
+                String working = buffer.toString();
+
+                String df = working.replaceAll("\\{\\{[^}]+\\}\\}|\\[\\[Category:[^\\]]+\\]\\]|\\[\\[|\\]\\]|^\\s+|\\s+$|<[^>]+>|\\\\n", "").trim()
+                        .replaceAll("\\r?\\n.*|(?:==.*?==).*", "")
+                        .replaceAll("\\S+\\|(\\S+)", "$1")
+                        .replaceAll(".*(?:}})", "").replaceAll("&&&","");
+
                 String fd;
                 fd = df.replaceAll("'''", Colors.BOLD).replaceAll("''", Colors.UNDERLINE).replaceAll("\"", "").replaceAll("===", Colors.BOLD + " ").replaceAll("==", Colors.BOLD + " ");
                 int maxLength = (fd.length() < 220) ? fd.length() : 220;
@@ -106,8 +129,8 @@ public class Wiki extends Command {
                 event.getChannel().send().message(info + "... [ " + URL + " ]");
                 return true;
             }
-        } catch (Exception p) {
-            p.printStackTrace();
+        } catch (Exception x) {
+            x.printStackTrace();
         }
 
         //---------------------------------------------------------------------------
@@ -154,8 +177,25 @@ public class Wiki extends Command {
                 return true;
             }
 
+            try {
+                name = json.getAsJsonObject("query").getAsJsonArray("search").get(0).getAsJsonObject().get("title").toString().replaceAll("\"","");
+                URL newTitle = new URL("http://wiki.feed-the-beast.com/api.php?format=xml&action=query&titles=" + name + "&prop=revisions&rvprop=content&format=json");
+                URLConnection x = newTitle.openConnection();
+                BufferedReader br = new BufferedReader(new InputStreamReader(x.getInputStream()));
+                xy = br.readLine();
+                jsonObj = JsonUtils.getJsonObject(xy.replaceAll("\n", " "));
+                id = (xy.replaceAll("\n", " ")).replaceAll("[{\"/>}{\\\\']", "").replaceAll(".*(?:pages:)|(?::pageid.*)", "");
+            } catch (Exception e) {
+                e.printStackTrace();
+                return false;
+            }
+
             String APItest = jsonObj.getAsJsonObject("query").getAsJsonObject("pages").getAsJsonObject(id).getAsJsonArray("revisions").get(0).getAsJsonObject().get("*").toString();
-            String df = APItest.replaceAll("\\{\\{[^}]+\\}\\}|\\[\\[Category:[^\\]]+\\]\\]|\\[\\[|\\]\\]|^\\s+|\\s+$|<[^>]+>|\\\\n", "").trim().replaceAll("\\r?\\n.*", "").replaceAll("\\S+\\|(\\S+)", "$1").replaceAll(".*(?:}})", "");
+            //String df = APItest.replaceAll("\\{\\{[^}]+\\}\\}|\\[\\[Category:[^\\]]+\\]\\]|\\[\\[|\\]\\]|^\\s+|\\s+$|<[^>]+>|\\\\n", "").trim().replaceAll("\\r?\\n.*", "").replaceAll("\\S+\\|(\\S+)", "$1").replaceAll(".*(?:}})", "");
+            String df = APItest.replaceAll("\\{\\{[^}]+\\}\\}|\\[\\[Category:[^\\]]+\\]\\]|\\[\\[|\\]\\]|^\\s+|\\s+$|<[^>]+>|\\\\n", "").trim()
+                    .replaceAll("\\r?\\n.*|(?:==.*?==).*", "")
+                    .replaceAll("\\S+\\|(\\S+)", "$1")
+                    .replaceAll(".*(?:}})", "");
             String tempname = jsonObj.getAsJsonObject("query").getAsJsonObject("pages").getAsJsonObject(id).get("title").toString();
             String fd;
             fd = df.replaceAll("'''", Colors.BOLD).replaceAll("''", Colors.UNDERLINE).replaceAll("===", Colors.BOLD + " ").replaceAll("==", Colors.BOLD + " ");
