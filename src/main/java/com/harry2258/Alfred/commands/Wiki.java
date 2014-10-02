@@ -30,7 +30,7 @@ public class Wiki extends Command {
         StringBuilder sb = new StringBuilder();
         String[] args = event.getMessage().split(" ");
 
-        String pattern ="(\\{\\{L\\|)(.*?)(\\}\\})";
+        String pattern = "(\\{\\{L\\|)(.*?)(\\}\\})";
         Pattern p = Pattern.compile(pattern);
         Matcher m;
 
@@ -65,14 +65,15 @@ public class Wiki extends Command {
             URLConnection y = z.openConnection();
             BufferedReader first = new BufferedReader(new InputStreamReader(y.getInputStream()));
             String tmp;
+
             while ((tmp = first.readLine()) != null) {
                 if (tmp.contains("There is currently no text in this page")) {
                     exist = false;
                 }
             }
+
             if (exist) {
                 String temp = ("http://wiki.feed-the-beast.com/api.php?format=xml&action=query&titles=" + message + "&prop=revisions&rvprop=content&format=json").replaceAll(" ", "%20");
-                System.out.println(temp);
                 URL u = new URL(temp);
                 URLConnection c = u.openConnection();
                 BufferedReader in = new BufferedReader(new InputStreamReader(c.getInputStream()));
@@ -100,10 +101,10 @@ public class Wiki extends Command {
 
                 m = p.matcher(APItest);
                 StringBuffer buffer = new StringBuffer();
-                String GroupName = null;
+                String GroupName;
                 while (m.find()) {
                     GroupName = m.group(2);
-                    m.appendReplacement(buffer,"&&&" + GroupName + "&&&");
+                    m.appendReplacement(buffer, "&&&" + GroupName + "&&&");
                 }
 
                 m.appendTail(buffer);
@@ -112,7 +113,7 @@ public class Wiki extends Command {
                 String df = working.replaceAll("\\{\\{[^}]+\\}\\}|\\[\\[Category:[^\\]]+\\]\\]|\\[\\[|\\]\\]|^\\s+|\\s+$|<[^>]+>|\\\\n", "").trim()
                         .replaceAll("\\r?\\n.*|(?:==.*?==).*", "")
                         .replaceAll("\\S+\\|(\\S+)", "$1")
-                        .replaceAll(".*(?:}})", "").replaceAll("&&&","");
+                        .replaceAll(".*(?:}})", "").replaceAll("&&&", "");
 
                 String fd;
                 fd = df.replaceAll("'''", Colors.BOLD).replaceAll("''", Colors.UNDERLINE).replaceAll("\"", "").replaceAll("===", Colors.BOLD + " ").replaceAll("==", Colors.BOLD + " ");
@@ -156,8 +157,6 @@ public class Wiki extends Command {
             BufferedReader in = new BufferedReader(new InputStreamReader(c.getInputStream()));
             xy = in.readLine();
 
-            //\{\{[^}]+\}\}|\[\[Category:[^\]]+\]\]|.*\[\[|\]\].*|^\s+|\s+$|<[^>]+>
-
             if (xy.contains("#REDIRECT")) {
                 String redirect = xy.replaceAll("\\{\\{[^}]+\\}\\}|\\[\\[Category:[^\\]]+\\]\\]|.*\\[\\[|\\]\\].*|^\\s+|\\s+$|<[^>]+>", "");
                 name = redirect;
@@ -169,7 +168,6 @@ public class Wiki extends Command {
             }
 
             String json1 = xy.replaceAll("\n", " ");
-            id = json1.replaceAll("[{\"/>}{\\\\']", "").replaceAll(".*(?:pages:)|(?::pageid.*)", "");
             JsonObject jsonObj = JsonUtils.getJsonObject(json1);
 
             if (jsonObj.getAsJsonObject("query").get("pages").toString().contains("Vanilla|type=")) {
@@ -178,7 +176,7 @@ public class Wiki extends Command {
             }
 
             try {
-                name = json.getAsJsonObject("query").getAsJsonArray("search").get(0).getAsJsonObject().get("title").toString().replaceAll("\"","");
+                name = json.getAsJsonObject("query").getAsJsonArray("search").get(0).getAsJsonObject().get("title").toString().replaceAll("\"", "");
                 URL newTitle = new URL("http://wiki.feed-the-beast.com/api.php?format=xml&action=query&titles=" + name + "&prop=revisions&rvprop=content&format=json");
                 URLConnection x = newTitle.openConnection();
                 BufferedReader br = new BufferedReader(new InputStreamReader(x.getInputStream()));
@@ -191,12 +189,24 @@ public class Wiki extends Command {
             }
 
             String APItest = jsonObj.getAsJsonObject("query").getAsJsonObject("pages").getAsJsonObject(id).getAsJsonArray("revisions").get(0).getAsJsonObject().get("*").toString();
-            //String df = APItest.replaceAll("\\{\\{[^}]+\\}\\}|\\[\\[Category:[^\\]]+\\]\\]|\\[\\[|\\]\\]|^\\s+|\\s+$|<[^>]+>|\\\\n", "").trim().replaceAll("\\r?\\n.*", "").replaceAll("\\S+\\|(\\S+)", "$1").replaceAll(".*(?:}})", "");
-            String df = APItest.replaceAll("\\{\\{[^}]+\\}\\}|\\[\\[Category:[^\\]]+\\]\\]|\\[\\[|\\]\\]|^\\s+|\\s+$|<[^>]+>|\\\\n", "").trim()
+
+            m = p.matcher(APItest);
+            StringBuffer buffer = new StringBuffer();
+            String GroupName;
+
+            while (m.find()) {
+                GroupName = m.group(2);
+                m.appendReplacement(buffer, "&&&" + GroupName + "&&&");
+            }
+
+            m.appendTail(buffer);
+            String working = buffer.toString();
+
+            String df = working.replaceAll("\\{\\{[^}]+\\}\\}|\\[\\[Category:[^\\]]+\\]\\]|\\[\\[|\\]\\]|^\\s+|\\s+$|<[^>]+>|\\\\n", "").trim()
                     .replaceAll("\\r?\\n.*|(?:==.*?==).*", "")
                     .replaceAll("\\S+\\|(\\S+)", "$1")
-                    .replaceAll(".*(?:}})", "");
-            String tempname = jsonObj.getAsJsonObject("query").getAsJsonObject("pages").getAsJsonObject(id).get("title").toString();
+                    .replaceAll(".*(?:}})", "").replaceAll("&&&", "");
+
             String fd;
             fd = df.replaceAll("'''", Colors.BOLD).replaceAll("''", Colors.UNDERLINE).replaceAll("===", Colors.BOLD + " ").replaceAll("==", Colors.BOLD + " ");
             int maxLength = (fd.length() < 220) ? fd.length() : 220;
@@ -222,21 +232,23 @@ public class Wiki extends Command {
             String search = xx.readLine();
             JsonObject json = JsonUtils.getJsonObject(search);
             searchJson = json.getAsJsonObject("query").getAsJsonArray("search").get(0).getAsJsonObject().get("title").toString();
+
             if (searchJson.contains("Getting Started")) {
                 searchJson = json.getAsJsonObject("query").getAsJsonArray("search").get(1).getAsJsonObject().get("title").toString();
             }
+
             if (json.getAsJsonObject("query").getAsJsonArray("search").get(0).getAsJsonObject().get("snippet").toString().contains("#REDIRECT")) {
                 name = (json.getAsJsonObject("query").getAsJsonArray("search").get(0).getAsJsonObject().get("snippet").toString()).replaceAll("\\{\\{[^}]+\\}\\}|\\[\\[Category:[^\\]]+\\]\\]|\\[\\[|\\]\\]|^\\s+|\\s+$|<[^>]+>", "").trim().replaceAll("\\r?\\n.*", "").replaceAll("\\S+\\|(\\S+)", "$1").replaceAll("#REDIRECT ", "").replace("/ko", "").replaceAll("/ru", "").replaceAll("/fr", "").replaceAll("/zh", "").replaceAll("/pl", "");
             } else {
                 name = (searchJson).replace("/ko", "").replaceAll("/ru", "").replaceAll("/fr", "").replaceAll("/zh", "").replaceAll("/pl", "");
             }
+
             String temp = ("http://ftbwiki.org/api.php?format=xml&action=query&titles=" + name + "&prop=revisions&rvprop=content&format=json").replaceAll(" ", "%20");
             URL u = new URL(temp);
             URLConnection c = u.openConnection();
             BufferedReader in = new BufferedReader(new InputStreamReader(c.getInputStream()));
             xy = in.readLine();
 
-            //\{\{[^}]+\}\}|\[\[Category:[^\]]+\]\]|.*\[\[|\]\].*|^\s+|\s+$|<[^>]+>
 
             if (xy.contains("#REDIRECT")) {
                 String redirect = xy.replaceAll("\\{\\{[^}]+\\}\\}|\\[\\[Category:[^\\]]+\\]\\]|.*\\[\\[|\\]\\].*|^\\s+|\\s+$|<[^>]+>", "");
