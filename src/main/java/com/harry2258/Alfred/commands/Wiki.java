@@ -22,7 +22,7 @@ public class Wiki extends Command {
     private PermissionManager manager;
 
     public Wiki() {
-        super("Wiki", "Wiki FTB stuff", "Wiki [Query]");
+        super("Wiki", "Wiki Minecraft stuff!", "Wiki [Query]");
     }
 
     @Override
@@ -31,8 +31,12 @@ public class Wiki extends Command {
         String[] args = event.getMessage().split(" ");
 
         String pattern = "(\\{\\{L\\|)(.*?)(\\}\\})";
+        String pattern2 = "(\\[\\[#.*?\\|)(.*?)(]])";
+
         Pattern p = Pattern.compile(pattern);
+        Pattern p2 = Pattern.compile(pattern2);
         Matcher m;
+
 
         if (args.length == 1) {
             event.getChannel().send().message("Official FTB Wiki: http://wiki.feed-the-beast.com");
@@ -60,6 +64,75 @@ public class Wiki extends Command {
         String id = "0";
 
         boolean exist = true;
+        try {
+            URL vanilla = new URL("http://minecraft.gamepedia.com/api.php?format=xml&action=query&titles=" + message +"&prop=revisions&rvprop=content&format=json");
+            URLConnection c = vanilla.openConnection();
+            c.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/537.17 (KHTML, like Gecko) Chrome/24.0.1312.57 Safari/537.17");
+            BufferedReader in = new BufferedReader(new InputStreamReader(c.getInputStream()));
+            xy = in.readLine();
+
+            if (xy.contains("#REDIRECT")) {
+                String redirect = xy.replaceAll("\\{\\{[^}]+\\}\\}|\\[\\[Category:[^\\]]+\\]\\]|.*\\[\\[|\\]\\].*|^\\s+|\\s+$|<[^>]+>", "");
+                String newtemp = ("http://minecraft.gamepedia.com/api.php?format=xml&action=query&titles=" + redirect + "&prop=revisions&rvprop=content&format=json").replaceAll(" ", "%20");
+                URL url = new URL(newtemp);
+                URLConnection x = url.openConnection();
+                x.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/537.17 (KHTML, like Gecko) Chrome/24.0.1312.57 Safari/537.17");
+                BufferedReader br = new BufferedReader(new InputStreamReader(x.getInputStream()));
+                xy = br.readLine();
+            }
+
+            String json1 = xy.replaceAll("\n", " ");
+            id = json1.replaceAll("[{\"/>}{\\\\']", "").replaceAll(".*(?:pages:)|(?::pageid.*)", "");
+            JsonObject jsonObj = JsonUtils.getJsonObject(json1);
+
+            String APItest = jsonObj.getAsJsonObject("query").getAsJsonObject("pages").getAsJsonObject(id).getAsJsonArray("revisions").get(0).getAsJsonObject().get("*").toString();
+
+            m = p.matcher(APItest);
+            StringBuffer buffer = new StringBuffer();
+            String GroupName;
+            while (m.find()) {
+                GroupName = m.group(2);
+                m.appendReplacement(buffer, "&&&" + GroupName + "&&&");
+            }
+            m.appendTail(buffer);
+
+            m = p2.matcher(buffer.toString());
+            StringBuffer buffer2 = new StringBuffer();
+
+            while (m.find()) {
+                GroupName = m.group(2);
+                m.appendReplacement(buffer2, "&&&" + GroupName + "&&&");
+            }
+
+            m.appendTail(buffer2);
+            String working = buffer2.toString();
+
+            String df = working.replaceAll("\\{\\{[^}]+\\}\\}|\\[\\[Category:[^\\]]+\\]\\]|\\[\\[|\\]\\]|^\\s+|\\s+$|<[^>]+>|\\\\n", "").trim()
+                    .replaceAll("\\r?\\n.*|(?:==.*?==).*", "")
+                    .replaceAll("\\S+\\|(\\S+)", "$1")
+                    .replaceAll(".*(?:}})", "").replaceAll("&&&", "");
+
+            String fd = df.replaceAll("'''", Colors.BOLD).replaceAll("''", Colors.UNDERLINE).replaceAll("\"", "").replaceAll("===", Colors.BOLD + " ").replaceAll("==", Colors.BOLD + " ");
+            info = fd;
+            if (fd.length() > 220) {
+                int maxLength = (fd.length() < 220) ? fd.length() : 220;
+                info = fd.substring(0, maxLength) + "..";
+            }
+
+            String x = ("http://minecraft.gamepedia.com/" + URLEncoder.encode(message.replaceAll(" ", "_"), "UTF-8"));
+            String URL;
+            if (x.length() > 50) {
+                URL = Utils.shortenUrl(x);
+            } else {
+                URL = x;
+            }
+
+            event.getChannel().send().message(info + " [ " + URL + " ]");
+            return true;
+        } catch (Exception derp) {
+            derp.printStackTrace();
+        }
+
         try {
             URL z = new URL("http://wiki.feed-the-beast.com/" + message);
             URLConnection y = z.openConnection();
@@ -107,19 +180,29 @@ public class Wiki extends Command {
                     m.appendReplacement(buffer, "&&&" + GroupName + "&&&");
                 }
 
-                m.appendTail(buffer);
-                String working = buffer.toString();
+                m = p2.matcher(buffer.toString());
+                StringBuffer buffer2 = new StringBuffer();
+
+                while (m.find()) {
+                    GroupName = m.group(2);
+                    m.appendReplacement(buffer2, "&&&" + GroupName + "&&&");
+                }
+
+                m.appendTail(buffer2);
+                String working = buffer2.toString();
 
                 String df = working.replaceAll("\\{\\{[^}]+\\}\\}|\\[\\[Category:[^\\]]+\\]\\]|\\[\\[|\\]\\]|^\\s+|\\s+$|<[^>]+>|\\\\n", "").trim()
                         .replaceAll("\\r?\\n.*|(?:==.*?==).*", "")
                         .replaceAll("\\S+\\|(\\S+)", "$1")
                         .replaceAll(".*(?:}})", "").replaceAll("&&&", "");
 
-                String fd;
-                fd = df.replaceAll("'''", Colors.BOLD).replaceAll("''", Colors.UNDERLINE).replaceAll("\"", "").replaceAll("===", Colors.BOLD + " ").replaceAll("==", Colors.BOLD + " ");
+                String fd = df.replaceAll("'''", Colors.BOLD).replaceAll("''", Colors.UNDERLINE).replaceAll("\"", "").replaceAll("===", Colors.BOLD + " ").replaceAll("==", Colors.BOLD + " ");
+                info = fd;
+                if (fd.length() > 220) {
                 int maxLength = (fd.length() < 220) ? fd.length() : 220;
-                info = fd.substring(0, maxLength);
-                String x = ("http://wiki.feed-the-beast.com/" + message).replaceAll(" ", "_");
+                info = fd.substring(0, maxLength) + "..";
+                }
+                String x = ("http://wiki.feed-the-beast.com/" + URLEncoder.encode(message.replaceAll(" ", "_"), "UTF-8"));
                 String URL;
                 if (x.length() > 50) {
                     URL = Utils.shortenUrl(x);
@@ -127,7 +210,7 @@ public class Wiki extends Command {
                     URL = x;
                 }
 
-                event.getChannel().send().message(info + "... [ " + URL + " ]");
+                event.getChannel().send().message(info + " [ " + URL + " ]");
                 return true;
             }
         } catch (Exception x) {
@@ -199,19 +282,30 @@ public class Wiki extends Command {
                 m.appendReplacement(buffer, "&&&" + GroupName + "&&&");
             }
 
-            m.appendTail(buffer);
-            String working = buffer.toString();
+            m = p2.matcher(buffer.toString());
+            StringBuffer buffer2 = new StringBuffer();
+
+            while (m.find()) {
+                GroupName = m.group(2);
+                m.appendReplacement(buffer2, "&&&" + GroupName + "&&&");
+            }
+
+            m.appendTail(buffer2);
+            String working = buffer2.toString();
 
             String df = working.replaceAll("\\{\\{[^}]+\\}\\}|\\[\\[Category:[^\\]]+\\]\\]|\\[\\[|\\]\\]|^\\s+|\\s+$|<[^>]+>|\\\\n", "").trim()
                     .replaceAll("\\r?\\n.*|(?:==.*?==).*", "")
                     .replaceAll("\\S+\\|(\\S+)", "$1")
                     .replaceAll(".*(?:}})", "").replaceAll("&&&", "");
 
-            String fd;
-            fd = df.replaceAll("'''", Colors.BOLD).replaceAll("''", Colors.UNDERLINE).replaceAll("===", Colors.BOLD + " ").replaceAll("==", Colors.BOLD + " ");
-            int maxLength = (fd.length() < 220) ? fd.length() : 220;
-            info = fd.substring(0, maxLength);
-            String x = ("http://wiki.feed-the-beast.com/" + name).replaceAll(" ", "_");
+            String fd = df.replaceAll("'''", Colors.BOLD).replaceAll("''", Colors.UNDERLINE).replaceAll("\"", "").replaceAll("===", Colors.BOLD + " ").replaceAll("==", Colors.BOLD + " ");
+            info = fd;
+            if (fd.length() > 220) {
+                int maxLength = (fd.length() < 220) ? fd.length() : 220;
+                info = fd.substring(0, maxLength) + "..";
+            }
+
+            String x = ("http://wiki.feed-the-beast.com/" + URLEncoder.encode(name.replaceAll(" ", "_"), "UTF-8"));
             String URL;
             if (x.length() > 50) {
                 URL = Utils.shortenUrl(x);
@@ -219,7 +313,7 @@ public class Wiki extends Command {
                 URL = x;
             }
 
-            event.getChannel().send().message(info + "... [ " + URL + " ]");
+            event.getChannel().send().message(info + " [ " + URL + " ]");
             return true;
         } catch (Exception e) {
             e.printStackTrace();
@@ -270,17 +364,45 @@ public class Wiki extends Command {
             }
 
             String APItest = jsonObj.getAsJsonObject("query").getAsJsonObject("pages").getAsJsonObject(id).getAsJsonArray("revisions").get(0).getAsJsonObject().get("*").toString();
-            String df = APItest.replaceAll("\\{\\{[^}]+\\}\\}|\\[\\[Category:[^\\]]+\\]\\]|\\[\\[|\\]\\]|^\\s+|\\s+$|<[^>]+>|\\\\n", "").trim().replaceAll("\\r?\\n.*", "").replaceAll("\\S+\\|(\\S+)", "$1");
-            String fd;
-            fd = df.replaceAll("'''", Colors.BOLD).replaceAll("''", Colors.UNDERLINE);
-            int maxLength = (fd.length() < 220) ? fd.length() : 220;
-            info = fd.substring(0, maxLength);
+
+            m = p.matcher(APItest);
+            StringBuffer buffer = new StringBuffer();
+            String GroupName;
+
+            while (m.find()) {
+                GroupName = m.group(2);
+                m.appendReplacement(buffer, "&&&" + GroupName + "&&&");
+            }
+
+            m = p2.matcher(buffer.toString());
+            StringBuffer buffer2 = new StringBuffer();
+
+            while (m.find()) {
+                GroupName = m.group(2);
+                m.appendReplacement(buffer2, "&&&" + GroupName + "&&&");
+            }
+
+            m.appendTail(buffer2);
+            String working = buffer2.toString();
+
+            String df = working.replaceAll("\\{\\{[^}]+\\}\\}|\\[\\[Category:[^\\]]+\\]\\]|\\[\\[|\\]\\]|^\\s+|\\s+$|<[^>]+>|\\\\n", "").trim()
+                    .replaceAll("\\r?\\n.*|(?:==.*?==).*", "")
+                    .replaceAll("\\S+\\|(\\S+)", "$1")
+                    .replaceAll(".*(?:}})", "").replaceAll("&&&", "");
+
+            String fd = df.replaceAll("'''", Colors.BOLD).replaceAll("''", Colors.UNDERLINE).replaceAll("\"", "").replaceAll("===", Colors.BOLD + " ").replaceAll("==", Colors.BOLD + " ");
+            info = fd;
+            if (fd.length() > 220) {
+                int maxLength = (fd.length() < 220) ? fd.length() : 220;
+                info = fd.substring(0, maxLength) + "..";
+            }
+
         } catch (Exception x) {
             event.getChannel().send().message("http://youtu.be/gvdf5n-zI14  |  Please check your spelling!  | The item/block you are looking could not be found on official FTB and ftbwiki.org");
             return true;
         }
 
-        String x = ("http://ftbwiki.org/" + name).replaceAll(" ", "_");
+        String x = ("http://ftbwiki.org/" + URLEncoder.encode(name.replaceAll(" ", "_"), "UTF-8"));
         String URL;
         if (x.length() > 50) {
             URL = Utils.shortenUrl(x);
@@ -288,7 +410,7 @@ public class Wiki extends Command {
             URL = x;
         }
 
-        event.getChannel().send().message(info + "... [ " + URL + " ]");
+        event.getChannel().send().message(info + " [ " + URL + " ]");
 
         return true;
     }
