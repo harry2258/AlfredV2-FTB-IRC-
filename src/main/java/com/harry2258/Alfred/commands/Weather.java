@@ -40,6 +40,7 @@ public class Weather extends Command {
                 City = "/" + jsonObj.get("city").getAsString();
                 State = "/" + jsonObj.get("region_code").getAsString();
             }
+
             if (args.length > 1) {
                 StringBuilder sb = new StringBuilder();
                 for (int i = 1; i < args.length; i++) {
@@ -47,6 +48,7 @@ public class Weather extends Command {
                 }
                 City = "/" + sb.toString().replace(",", "");
             }
+
             if (event.getMessage().contains(",")) {
                 StringBuilder sb = new StringBuilder();
                 for (int i = 1; i < args.length; i++) {
@@ -56,12 +58,22 @@ public class Weather extends Command {
                 State = "/" + event.getMessage().replaceAll(".*(?:, )", "");
             }
             URL url = new URL(("http://api.wunderground.com/api/" + config.WeatherKey() + "/conditions/q" + State + City + ".json").replaceAll(" ", "_"));
-            System.out.println(url.toString());
             BufferedReader br = new BufferedReader(new InputStreamReader(url.openStream()));
             String jsonstring = "";
             String tmp;
             while ((tmp = br.readLine()) != null) {
                 jsonstring += tmp;
+            }
+            System.out.println(jsonstring.replaceAll("\n",""));
+            if (jsonstring.contains(", \"results\": [")) {
+                JsonObject jsonObj = JsonUtils.getJsonObject(jsonstring.replaceAll("\n", ""));
+                String CityID = jsonObj.getAsJsonObject("response").getAsJsonArray("results").get(0).getAsJsonObject().get("l").toString();
+                url = new URL(("http://api.wunderground.com/api/" + config.WeatherKey() + "/conditions" + CityID + ".json").replaceAll(" ", "_").replaceAll("\"",""));
+                br = new BufferedReader(new InputStreamReader(url.openStream()));
+                jsonstring = "";
+                while ((tmp = br.readLine()) != null) {
+                    jsonstring += tmp;
+                }
             }
             JsonObject jsonObj = JsonUtils.getJsonObject(jsonstring.replaceAll("\n", "")).getAsJsonObject("current_observation");
             String city = jsonObj.getAsJsonObject("display_location").get("city").getAsString();
