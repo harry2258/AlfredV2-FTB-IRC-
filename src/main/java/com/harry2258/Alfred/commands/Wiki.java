@@ -121,7 +121,7 @@ public class Wiki extends Command {
             info = fd;
             if (fd.length() > 220) {
                 int maxLength = (fd.length() < 220) ? fd.length() : 220;
-                info = fd.substring(0, maxLength) + "..";
+                info = fd.substring(0, maxLength) + "...";
             }
 
             String x = ("http://minecraft.gamepedia.com/" + URLEncoder.encode(message.replaceAll(" ", "_"), "UTF-8"));
@@ -213,7 +213,7 @@ public class Wiki extends Command {
                 info = fd;
                 if (fd.length() > 220) {
                 int maxLength = (fd.length() < 220) ? fd.length() : 220;
-                info = fd.substring(0, maxLength) + "..";
+                info = fd.substring(0, maxLength) + "...";
                 }
                 String x = ("http://wiki.feed-the-beast.com/" + URLEncoder.encode(message.replaceAll(" ", "_"), "UTF-8"));
                 String URL;
@@ -323,7 +323,7 @@ public class Wiki extends Command {
             info = fd;
             if (fd.length() > 220) {
                 int maxLength = (fd.length() < 220) ? fd.length() : 220;
-                info = fd.substring(0, maxLength) + "..";
+                info = fd.substring(0, maxLength) + "...";
             }
 
             String x = ("http://wiki.feed-the-beast.com/" + URLEncoder.encode(name.replaceAll(" ", "_"), "UTF-8"));
@@ -342,9 +342,10 @@ public class Wiki extends Command {
 
         try {
             URL read;
-            read = new URL("http://ftbwiki.org/api.php?format=json&action=query&list=search&srsearch=" + message + "&srwhat=title");
+            read = new URL("http://ftbwiki.org/api.php?format=json&action=query&list=search&srsearch=" + URLEncoder.encode(sb.toString().trim(), "UTF-8") + "&srwhat=title");
             BufferedReader xx = new BufferedReader(new InputStreamReader(read.openStream()));
             String search = xx.readLine();
+            System.out.println(search);
             JsonObject json = JsonUtils.getJsonObject(search);
             searchJson = json.getAsJsonObject("query").getAsJsonArray("search").get(0).getAsJsonObject().get("title").toString();
 
@@ -358,7 +359,7 @@ public class Wiki extends Command {
                 name = (searchJson).replace("/ko", "").replaceAll("/ru", "").replaceAll("/fr", "").replaceAll("/zh", "").replaceAll("/pl", "");
             }
 
-            String temp = ("http://ftbwiki.org/api.php?format=xml&action=query&titles=" + name + "&prop=revisions&rvprop=content&format=json").replaceAll(" ", "%20");
+            String temp = ("http://ftbwiki.org/api.php?format=xml&action=query&titles=" + name + "&prop=revisions&rvprop=content&format=json").replaceAll(" ", "%20").replaceAll("\"","");
             URL u = new URL(temp);
             URLConnection c = u.openConnection();
             BufferedReader in = new BufferedReader(new InputStreamReader(c.getInputStream()));
@@ -422,10 +423,11 @@ public class Wiki extends Command {
             info = fd;
             if (fd.length() > 220) {
                 int maxLength = (fd.length() < 220) ? fd.length() : 220;
-                info = fd.substring(0, maxLength) + "..";
+                info = fd.substring(0, maxLength) + "...";
             }
 
         } catch (Exception x) {
+            x.printStackTrace();
             event.getChannel().send().message("http://youtu.be/gvdf5n-zI14  |  Please check your spelling!  | The item/block you are looking could not be found on official FTB and ftbwiki.org");
             return true;
         }
