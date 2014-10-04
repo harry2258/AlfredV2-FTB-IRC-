@@ -432,7 +432,7 @@ public class Wiki extends Command {
             return true;
         }
 
-        String x = ("http://ftbwiki.org/" + URLEncoder.encode(name.replaceAll(" ", "_"), "UTF-8"));
+        String x = ("http://ftbwiki.org/" + URLEncoder.encode(name.replaceAll(" ", "_").replaceAll("\'",""), "UTF-8"));
         String URL;
         if (x.length() > 50) {
             URL = Utils.shortenUrl(x);
