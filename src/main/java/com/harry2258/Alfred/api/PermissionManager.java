@@ -14,7 +14,9 @@ import org.pircbotx.User;
 import org.pircbotx.hooks.events.MessageEvent;
 
 import java.io.File;
+import java.util.HashSet;
 import java.util.Properties;
+import java.util.Set;
 
 public class PermissionManager {
 
@@ -90,12 +92,8 @@ public class PermissionManager {
 
         String sender = Main.Login.get(Nick);
         Perms perm = Main.map.get(event.getChannel().getName().toLowerCase());
-        for (String users : perm.getPermission().getAdmins()) {
-            if (users.equalsIgnoreCase(sender)) {
-                return true;
-            }
-        }
-        return false;
+        Set<String> set = new HashSet<String>(perm.getPermission().getAdmins());
+        return set.contains(sender);
     }
 
     public PermissionManager getPermissionsManager() {
@@ -105,11 +103,7 @@ public class PermissionManager {
     public static boolean hasMod(String Nick, MessageEvent event) throws Exception {
         String sender = Main.Login.get(Nick);
         Perms perm = Main.map.get(event.getChannel().getName().toLowerCase());
-        for (String users : perm.getPermission().getMods()) {
-            if (users.equalsIgnoreCase(sender)) {
-                return true;
-            }
-        }
-        return false;
+        Set<String> set = new HashSet<String>(perm.getPermission().getModPerms());
+        return set.contains(sender);
     }
 }

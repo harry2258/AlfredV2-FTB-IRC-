@@ -52,7 +52,12 @@ public class Wiki extends Command {
         if (args[1].equalsIgnoreCase("bc")) {
             test = "Buildcraft";
         }
-        String message = URLEncoder.encode(test, "UTF-8").replaceAll("\\+", "_");
+        String message;
+        if (test.contains("User:")) {
+            message = test;
+        } else {
+            message = URLEncoder.encode(test, "UTF-8").replaceAll("\\+", "_");
+        }
 
 
         String name;
@@ -215,7 +220,14 @@ public class Wiki extends Command {
                 int maxLength = (fd.length() < 220) ? fd.length() : 220;
                 info = fd.substring(0, maxLength) + "...";
                 }
-                String x = ("http://wiki.feed-the-beast.com/" + URLEncoder.encode(message.replaceAll(" ", "_"), "UTF-8"));
+
+                String x;
+                if (message.contains("User:")) {
+                    x = "http://wiki.feed-the-beast.com/" + message;
+                } else {
+                    x = "http://wiki.feed-the-beast.com/" + URLEncoder.encode(message.replaceAll(" ", "_"), "UTF-8");
+                }
+                System.out.println(x);
                 String URL;
                 if (x.length() > 50) {
                     URL = Utils.shortenUrl(x);
@@ -326,7 +338,12 @@ public class Wiki extends Command {
                 info = fd.substring(0, maxLength) + "...";
             }
 
-            String x = ("http://wiki.feed-the-beast.com/" + URLEncoder.encode(name.replaceAll(" ", "_"), "UTF-8"));
+            String x;
+            if (message.contains("User:")) {
+                x = "http://wiki.feed-the-beast.com/" + name;
+            } else {
+                x = "http://wiki.feed-the-beast.com/" + URLEncoder.encode(name.replaceAll(" ", "_"), "UTF-8");
+            }
             String URL;
             if (x.length() > 50) {
                 URL = Utils.shortenUrl(x);
@@ -432,7 +449,13 @@ public class Wiki extends Command {
             return true;
         }
 
-        String x = ("http://ftbwiki.org/" + URLEncoder.encode(name.replaceAll(" ", "_").replaceAll("\"",""), "UTF-8"));
+        String x;
+        if (message.contains("User:")) {
+            x = "http://ftbwiki.org/" + name;
+        } else {
+            x = "http://ftbwiki.org/" + URLEncoder.encode(name.replaceAll(" ", "_").replaceAll("\"",""), "UTF-8");
+        }
+
         String URL;
         if (x.length() > 50) {
             URL = Utils.shortenUrl(x);
