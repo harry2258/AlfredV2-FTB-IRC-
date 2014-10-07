@@ -406,7 +406,6 @@ public class Utils {
             obj.addProperty("Information", true);
             obj.addProperty("Stacktrace", true);
             JsonUtils.writeJsonFile(file, obj.toString());
-            System.out.println(obj.toString());
         } catch (Exception e) {
             e.printStackTrace();
         }

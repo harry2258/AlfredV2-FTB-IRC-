@@ -39,9 +39,6 @@ public class Log extends Command {
         String webpage = "";
 
         Boolean Optifine = false;
-        String Description;
-        String CausedBy;
-        String Stacktrace;
 
         for (String word : event.getMessage().split(" ")) {
             if (word.matches("(https?://)?(www\\.)?(paste.feed-the-beast)\\.([A-Za-z]{2,4}|[A-Za-z]{2}\\.[A-Za-z]{2})/.*")) {
@@ -72,6 +69,7 @@ public class Log extends Command {
             Main.parser.createNewFile();
             Utils.Parser(Main.parser);
         }
+
         String tmp;
         try {
             String test = JsonUtils.getStringFromFile(Main.parser.toString());
@@ -79,6 +77,9 @@ public class Log extends Command {
             URL url;
             url = new URL(Raw);
             BufferedReader br = new BufferedReader(new InputStreamReader(url.openStream()));
+            if (br.readLine().contains("Technic Launcher Error Report")) {
+
+            }
             while ((tmp = br.readLine()) != null) {
                 if (tmp.contains("This paste has been removed!")) {
                     event.getChannel().send().message("The paste cannot be found!");
@@ -103,7 +104,7 @@ public class Log extends Command {
                     if (!info.contains(temp) && jsonObj.get("MCVersion").getAsBoolean()) {
                         info.add(temp);
                     }
-                    //.*(?:Java version:)|(?:sorted as: ).*
+
                 } else if (tmp.contains("Java version:")) {
                     temp = Colors.BOLD + "Java Version: " + Colors.NORMAL + tmp.replaceAll(".*(?:Java version: )", "");
                     if (!info.contains(temp) && jsonObj.get("JavaVersion").getAsBoolean()) {
@@ -128,22 +129,12 @@ public class Log extends Command {
                     if (!info.contains(temp) && jsonObj.get("OSName").getAsBoolean()) {
                         info.add(temp);
                     }
-                } else if (tmp.contains("Caused by") || tmp.contains("java.lang.NoClassDefFoundError")) {
-                    System.out.println(tmp);
-                    CausedBy = Colors.BOLD + "Caused by: " + Colors.NORMAL + tmp.replaceAll(".*(?:Caused by: )", "").replaceAll("^.*?(?=[A-Z][a-z])", "").replaceAll("\\\\[.*?\\\\]", "");
-                } else if (tmp.contains("Description: ")) {
-                    String harhar = readString(url.openStream()).replaceAll("\\n|\\r|\\t", " ");
-                    CausedBy = Colors.BOLD + "Error: " + Colors.NORMAL + harhar.replaceAll(".*(?:" + tmp + ")|at.*", "").replaceAll("^.*?(?=[A-Z][a-z])", "").replaceAll("\\\\[.*?\\\\]", "").trim();
-                    Description = Colors.BOLD + "Description: " + Colors.NORMAL + tmp.replaceAll(".*(?:Description: )", "").replaceAll("^.*?(?=[A-Z][a-z])", "").replaceAll("\\\\[.*?\\\\]", "");
-                } else if (tmp.contains("Stacktrace:")) {
-                    String harhar = readString(url.openStream()).replaceAll("\\n|\\r|\\t", " ");
-                    Stacktrace = Colors.BOLD + "Stacktrace: " + Colors.NORMAL + harhar.replaceAll("^.*?(?=[A-Z][a-z])", "").replaceAll("\\\\[.*?\\\\]", "").replaceAll(".*(?:Stacktrace:)|\\)   at.*", "").replaceAll("   ", "").replaceAll("\\)  at.*", "") + ")";
                 }
-
                 webpage += tmp;
             }
 
             info.add(Colors.BOLD + "Using Optifine: " + Colors.NORMAL + String.valueOf(Optifine));
+
             for (String anInfo : info) {
                 Message.add(anInfo);
             }
@@ -160,31 +151,8 @@ public class Log extends Command {
             } else {
                 event.getChannel().send().message(message);
             }
-            /*
-            if (!Description.isEmpty() && Description.length() < 500) {
-                if (jsonObj.getBoolean("Information")) {
-                    event.getChannel().send().message(Description);
-                } else {
-                    event.getUser().send().message(Description);
-                }
-            }
 
-            if (!CausedBy.isEmpty() && CausedBy.length() < 500) {
-                if (jsonObj.getBoolean("Information")) {
-                    event.getChannel().send().message(CausedBy);
-                } else {
-                    event.getUser().send().message(CausedBy);
-                }
-            }
 
-            if (!Stacktrace.isEmpty() && Stacktrace.length() < 500) {
-                if (jsonObj.getBoolean("Stacktrace")) {
-                    event.getChannel().send().message(Stacktrace);
-                } else {
-                    event.getUser().send().message(Stacktrace);
-                }
-            }
-            */
             Error.getProblems(webpage, event);
             return true;
         } catch (Exception e) {
@@ -197,6 +165,13 @@ public class Log extends Command {
         Scanner scanner = new Scanner(stream).useDelimiter("\\A");
         return scanner.hasNext() ? scanner.next() : "";
     }
+
+    private static String TechnicLauncher(BufferedReader br) {
+        String info = null;
+
+        return info;
+    }
+
 
     @Override
     public void setConfig(Config config) {
