@@ -140,7 +140,8 @@ public class Wiki extends Command {
             event.getChannel().send().message(info + " [ " + URL + " ]");
             return true;
         } catch (Exception derp) {
-            derp.printStackTrace();
+            //derp.printStackTrace();
+            System.out.println("Could not find " + message + " on Gamepedia");
         }
 
         try {
@@ -227,7 +228,6 @@ public class Wiki extends Command {
                 } else {
                     x = "http://wiki.feed-the-beast.com/" + URLEncoder.encode(message.replaceAll(" ", "_"), "UTF-8");
                 }
-                System.out.println(x);
                 String URL;
                 if (x.length() > 50) {
                     URL = Utils.shortenUrl(x);
@@ -239,7 +239,8 @@ public class Wiki extends Command {
                 return true;
             }
         } catch (Exception x) {
-            x.printStackTrace();
+            //x.printStackTrace();
+            System.out.println("[Try 1] Could not find " + message + " on Official FTB Wiki");
         }
 
         //---------------------------------------------------------------------------
@@ -286,7 +287,6 @@ public class Wiki extends Command {
             try {
                 name = json.getAsJsonObject("query").getAsJsonArray("search").get(0).getAsJsonObject().get("title").toString().replaceAll("\"", "");
                 URL newTitle = new URL("http://wiki.feed-the-beast.com/api.php?format=xml&action=query&titles=" + name + "&prop=revisions&rvprop=content&format=json");
-                System.out.println("http://wiki.feed-the-beast.com/api.php?format=xml&action=query&titles=" + name + "&prop=revisions&rvprop=content&format=json");
                 URLConnection x = newTitle.openConnection();
                 BufferedReader br = new BufferedReader(new InputStreamReader(x.getInputStream()));
                 xy = br.readLine();
@@ -354,7 +354,8 @@ public class Wiki extends Command {
             event.getChannel().send().message(info + " [ " + URL + " ]");
             return true;
         } catch (Exception e) {
-            e.printStackTrace();
+            //e.printStackTrace();
+            System.out.println("[Try 2] Could not find " + message + " on Official FTB Wiki");
         }
 
         try {
@@ -362,7 +363,6 @@ public class Wiki extends Command {
             read = new URL("http://ftbwiki.org/api.php?format=json&action=query&list=search&srsearch=" + URLEncoder.encode(sb.toString().trim(), "UTF-8") + "&srwhat=title");
             BufferedReader xx = new BufferedReader(new InputStreamReader(read.openStream()));
             String search = xx.readLine();
-            System.out.println(search);
             JsonObject json = JsonUtils.getJsonObject(search);
             searchJson = json.getAsJsonObject("query").getAsJsonArray("search").get(0).getAsJsonObject().get("title").toString();
 
@@ -371,8 +371,16 @@ public class Wiki extends Command {
             }
 
             if (json.getAsJsonObject("query").getAsJsonArray("search").get(0).getAsJsonObject().get("snippet").toString().contains("#REDIRECT")) {
-                name = (json.getAsJsonObject("query").getAsJsonArray("search").get(0).getAsJsonObject().get("snippet").toString()).replaceAll("\\{\\{[^}]+\\}\\}|\\[\\[Category:[^\\]]+\\]\\]|\\[\\[|\\]\\]|^\\s+|\\s+$|<[^>]+>", "").trim().replaceAll("\\r?\\n.*", "").replaceAll("\\S+\\|(\\S+)", "$1").replaceAll("#REDIRECT ", "").replace("/ko", "").replaceAll("/ru", "").replaceAll("/fr", "").replaceAll("/zh", "").replaceAll("/pl", "");
-            } else {
+                name = json.getAsJsonObject("query").getAsJsonArray("search").get(0).getAsJsonObject().get("snippet").toString()
+                        .replaceAll("(.*?\\[\\[)|(<.*?>)|(\\]\\].*)","").trim()
+                        .replaceAll("\\r?\\n.*", "")
+                        .replaceAll("\\S+\\|(\\S+)", "$1")
+                        .replaceAll("/ko", "")
+                        .replaceAll("/ru", "")
+                        .replaceAll("/fr", "")
+                        .replaceAll("/zh", "")
+                        .replaceAll("/pl", "");
+                } else {
                 name = (searchJson).replace("/ko", "").replaceAll("/ru", "").replaceAll("/fr", "").replaceAll("/zh", "").replaceAll("/pl", "");
             }
 
@@ -381,17 +389,6 @@ public class Wiki extends Command {
             URLConnection c = u.openConnection();
             BufferedReader in = new BufferedReader(new InputStreamReader(c.getInputStream()));
             xy = in.readLine();
-
-
-            if (xy.contains("#REDIRECT")) {
-                String redirect = xy.replaceAll("\\{\\{[^}]+\\}\\}|\\[\\[Category:[^\\]]+\\]\\]|.*\\[\\[|\\]\\].*|^\\s+|\\s+$|<[^>]+>", "");
-                name = redirect;
-                String newtemp = ("http://ftbwiki.org//api.php?format=xml&action=query&titles=" + redirect + "&prop=revisions&rvprop=content&format=json").replaceAll(" ", "%20");
-                URL url = new URL(newtemp);
-                URLConnection x = url.openConnection();
-                BufferedReader br = new BufferedReader(new InputStreamReader(x.getInputStream()));
-                xy = br.readLine();
-            }
 
             String json1 = xy.replaceAll("\n", " ");
             id = json1.replaceAll("[{\"/>}{\\\\']", "").replaceAll(".*(?:pages:)|(?::pageid.*)", "");
@@ -444,8 +441,9 @@ public class Wiki extends Command {
             }
 
         } catch (Exception x) {
-            x.printStackTrace();
-            event.getChannel().send().message("http://youtu.be/gvdf5n-zI14  |  Please check your spelling!  | The item/block you are looking could not be found on official FTB and ftbwiki.org");
+            //x.printStackTrace();
+            System.out.println("Could not find " + message + " on ftbwiki.org");
+            event.getChannel().send().message("http://youtu.be/gvdf5n-zI14  |  Please check your spelling!  | The item/block was not found on The Minecraft Wiki, The Official FTB, and ftbwiki.org");
             return true;
         }
 

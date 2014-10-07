@@ -12,7 +12,6 @@ import twitter4j.JSONObject;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -25,9 +24,7 @@ public class Geo extends Command {
     @Override
     public boolean execute(MessageEvent event) throws Exception {
         String[] args = event.getMessage().split(" ");
-        ArrayList<String> info = new ArrayList<>();
-        ArrayList<String> Message = new ArrayList<>();
-        String message = "";
+        String info = "";
         String ip = args[1];
 
         if (event.getChannel().isChannelPrivate() || event.getChannel().isSecret() || event.getChannel().isInviteOnly()) {
@@ -38,10 +35,9 @@ public class Geo extends Command {
         if (args.length == 3 && PermissionManager.hasExec(event.getUser().getNick()) && args[1].equals("exec")) {
             if (event.getChannel().getUsers().toString().contains(args[2])) {
                 User u = event.getBot().getUserChannelDao().getUser(args[2]);
-                String user = "";
                 event.getBot().sendRaw().rawLineNow("WHOIS " + u.getNick());
                 WaitForQueue waitForQueue = new WaitForQueue(event.getBot());
-                WhoisEvent test = null;
+                WhoisEvent test;
                 try {
                     test = waitForQueue.waitFor(WhoisEvent.class);
                     waitForQueue.close();
@@ -61,28 +57,19 @@ public class Geo extends Command {
             }
 
             String geo = "http://freegeoip.net/json/" + ip;
-            String tmp = "";
             try {
                 URL url;
                 url = new URL(geo);
                 BufferedReader re = new BufferedReader(new InputStreamReader(url.openStream()));
                 String jsonstring = re.readLine();
                 JsonObject jsonObj = JsonUtils.getJsonObject(jsonstring);
-                info.add(Colors.BOLD + "City: " + Colors.NORMAL + jsonObj.get("city").getAsString());
-                info.add(Colors.BOLD + "Zip: " + Colors.NORMAL + jsonObj.get("zipcode").getAsString());
-                info.add(Colors.BOLD + "State: " + Colors.NORMAL + jsonObj.get("region_name").getAsString());
-                info.add(Colors.BOLD + "Country: " + Colors.NORMAL + jsonObj.get("country_name").getAsString());
-                info.add(Colors.BOLD + "Coords: " + Colors.NORMAL + jsonObj.get("latitude").getAsString() + " " + jsonObj.get("longitude").getAsString());
+                info += Colors.BOLD + "City: " + Colors.NORMAL + jsonObj.get("city").getAsString() + " | \t";
+                info += Colors.BOLD + "Zip: " + Colors.NORMAL + jsonObj.get("zipcode").getAsString() + " | \t";
+                info += Colors.BOLD + "State: " + Colors.NORMAL + jsonObj.get("region_name").getAsString() + " | \t";
+                info += Colors.BOLD + "Country: " + Colors.NORMAL + jsonObj.get("country_name").getAsString() + " | \t";
+                info += Colors.BOLD + "Coords: " + Colors.NORMAL + jsonObj.get("latitude").getAsString() + " " + jsonObj.get("longitude").getAsString();
 
-                for (String anInfo : info) {
-                    Message.add(anInfo);
-                }
-
-                for (String s : Message) {
-                    message += s + " | \t";
-                }
-
-                event.getUser().send().message(message);
+                event.getUser().send().message(info);
                 return true;
             } catch (Exception e) {
                 e.printStackTrace();
@@ -94,10 +81,9 @@ public class Geo extends Command {
         }
         if (event.getChannel().getUsers().toString().contains(args[1])) {
             User u = event.getBot().getUserChannelDao().getUser(args[1]);
-            String user = "";
             event.getBot().sendRaw().rawLineNow("WHOIS " + u.getNick());
             WaitForQueue waitForQueue = new WaitForQueue(event.getBot());
-            WhoisEvent test = null;
+            WhoisEvent test;
             try {
                 test = waitForQueue.waitFor(WhoisEvent.class);
                 waitForQueue.close();
@@ -123,19 +109,11 @@ public class Geo extends Command {
             BufferedReader re = new BufferedReader(new InputStreamReader(url.openStream()));
             jsonstring = re.readLine();
             JSONObject jsonObj = new JSONObject(jsonstring);
-            info.add(Colors.BOLD + "State: " + Colors.NORMAL + jsonObj.getString("region_name"));
-            info.add(Colors.BOLD + "Country: " + Colors.NORMAL + jsonObj.getString("country_name"));
-            info.add(Colors.BOLD + "Coords: " + Colors.NORMAL + jsonObj.getString("latitude").replaceAll("(?:\\.).*", "") + " " + jsonObj.getString("longitude").replaceAll("(?:\\.).*", ""));
+            info += Colors.BOLD + "State: " + Colors.NORMAL + jsonObj.getString("region_name") + " | \t";
+            info += Colors.BOLD + "Country: " + Colors.NORMAL + jsonObj.getString("country_name") + " | \t";
+            info += Colors.BOLD + "Coords: " + Colors.NORMAL + jsonObj.getString("latitude").replaceAll("(?:\\.).*", "") + " " + jsonObj.getString("longitude").replaceAll("(?:\\.).*", "");
 
-            for (String anInfo : info) {
-                Message.add(anInfo);
-            }
-
-            for (String s : Message) {
-                message += s + " | \t";
-            }
-
-            event.getChannel().send().message(message);
+            event.getChannel().send().message(info);
         } catch (Exception e) {
             e.printStackTrace();
             if (jsonstring.contains("Not Found")) {

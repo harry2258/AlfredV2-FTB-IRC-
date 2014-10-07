@@ -31,6 +31,7 @@ import org.scribe.model.Verb;
 import java.io.*;
 import java.lang.reflect.Type;
 import java.net.*;
+import java.security.Timestamp;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.text.DateFormat;
@@ -39,6 +40,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Map;
 import java.util.Random;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
@@ -204,6 +207,7 @@ public class Utils {
         try {
             //wow...i never actually used the port argument?
             Socket s = new Socket(i, port);
+            s.setSoTimeout((int) TimeUnit.SECONDS.toMillis(10));
             DataInputStream SS_BF = new DataInputStream(s.getInputStream());
             DataOutputStream d = new DataOutputStream(s.getOutputStream());
             d.write(new byte[]
