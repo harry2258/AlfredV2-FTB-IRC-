@@ -101,7 +101,7 @@ public class Info extends Command {
                     while (rs.next()) {
                         channels.add(rs.getString("Channel"));
                     }
-                    event.getUser().send().message("Channels to join when restarting: " + channels.toString());
+                    event.getUser().send().notice("Channels to join when restarting: " + channels.toString());
                     return true;
                 }
 
@@ -109,8 +109,10 @@ public class Info extends Command {
                     int i = 0;
                     PreparedStatement stmt3 = Main.database.prepareStatement("SELECT * FROM `Ignored_Users`");
                     ResultSet rs3 = stmt3.executeQuery();
-                    while (rs3.next()) {
-                        i = i + 1;
+                    if (rs3.next()) {
+                        while (rs3.next()) {
+                            i = i + 1;
+                        }
                     }
                     event.getUser().send().notice(String.valueOf(i) + " users are ignored by the bot. ");
                     if (i > 0)
@@ -121,13 +123,15 @@ public class Info extends Command {
                     ArrayList<String> IgnoredUsers = new ArrayList<>();
                     PreparedStatement stmt3 = Main.database.prepareStatement("SELECT * FROM `Ignored_Users`");
                     ResultSet rs3 = stmt3.executeQuery();
-                    while (rs3.next()) {
-                        rs3.getString("User");
-                        try {
-                            IgnoredUsers.add(rs3.getString("User"));
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                            return false;
+                    if (rs3.next()) {
+                        while (rs3.next()) {
+                            rs3.getString("User");
+                            try {
+                                IgnoredUsers.add(rs3.getString("User"));
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                                return false;
+                            }
                         }
                     }
                     event.getUser().send().notice("Ignored Users: " + JsonUtils.prettyPrint(IgnoredUsers));

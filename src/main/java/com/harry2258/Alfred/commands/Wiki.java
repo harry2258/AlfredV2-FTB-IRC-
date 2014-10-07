@@ -248,6 +248,7 @@ public class Wiki extends Command {
         try {
             URL read;
             read = new URL("http://wiki.feed-the-beast.com/api.php?format=json&action=query&list=search&srsearch=" + message + "&srwhat=title");
+            read.openConnection().setReadTimeout(10000);
             BufferedReader xx = new BufferedReader(new InputStreamReader(read.openStream()));
             String search = xx.readLine();
             JsonObject json = JsonUtils.getJsonObject(search);
@@ -271,6 +272,7 @@ public class Wiki extends Command {
                 name = redirect;
                 String newtemp = ("http://wiki.feed-the-beast.com/api.php?format=xml&action=query&titles=" + redirect + "&prop=revisions&rvprop=content&format=json").replaceAll(" ", "%20");
                 URL url = new URL(newtemp);
+                url.openConnection().setReadTimeout(10000);
                 URLConnection x = url.openConnection();
                 BufferedReader br = new BufferedReader(new InputStreamReader(x.getInputStream()));
                 xy = br.readLine();
@@ -287,6 +289,7 @@ public class Wiki extends Command {
             try {
                 name = json.getAsJsonObject("query").getAsJsonArray("search").get(0).getAsJsonObject().get("title").toString().replaceAll("\"", "");
                 URL newTitle = new URL("http://wiki.feed-the-beast.com/api.php?format=xml&action=query&titles=" + name + "&prop=revisions&rvprop=content&format=json");
+                newTitle.openConnection().setReadTimeout(10000);
                 URLConnection x = newTitle.openConnection();
                 BufferedReader br = new BufferedReader(new InputStreamReader(x.getInputStream()));
                 xy = br.readLine();
@@ -361,6 +364,7 @@ public class Wiki extends Command {
         try {
             URL read;
             read = new URL("http://ftbwiki.org/api.php?format=json&action=query&list=search&srsearch=" + URLEncoder.encode(sb.toString().trim(), "UTF-8") + "&srwhat=title");
+            read.openConnection().setReadTimeout(10000);
             BufferedReader xx = new BufferedReader(new InputStreamReader(read.openStream()));
             String search = xx.readLine();
             JsonObject json = JsonUtils.getJsonObject(search);
@@ -386,6 +390,7 @@ public class Wiki extends Command {
 
             String temp = ("http://ftbwiki.org/api.php?format=xml&action=query&titles=" + name + "&prop=revisions&rvprop=content&format=json").replaceAll(" ", "%20").replaceAll("\"","");
             URL u = new URL(temp);
+            u.openConnection().setReadTimeout(10000);
             URLConnection c = u.openConnection();
             BufferedReader in = new BufferedReader(new InputStreamReader(c.getInputStream()));
             xy = in.readLine();
