@@ -26,9 +26,7 @@ public class KickEvent extends ListenerAdapter {
             event.getBot().sendIRC().joinChannel(event.getChannel().getName());
         }
 
-        if (Main.Login.containsKey(event.getRecipient().getNick())) {
-            Main.Login.remove(event.getRecipient().getNick());
-        }
+        if (Main.NotLoggedIn.contains(event.getUser().getNick())) Main.NotLoggedIn.remove(event.getUser().getNick());
 
         if (Main.relay.containsKey(event.getChannel())) {
             Main.relay.get(event.getChannel()).send().message("[" + event.getChannel().getName() + "] " + event.getRecipient().getNick() + " was kicked from the channel by " + event.getUser().getNick());

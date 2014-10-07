@@ -74,7 +74,7 @@ public class Kill extends Command {
                     };
 
                     Future<?> f = service.submit(r);
-                    f.get(10, TimeUnit.SECONDS);     // attempt the task for two minutes
+                    f.get(10, TimeUnit.SECONDS);
 
                 } catch (Exception e) {
                     e.printStackTrace();

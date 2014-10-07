@@ -30,20 +30,39 @@ public class MessageEvent extends ListenerAdapter {
         if (PrivateMessageEvent.waiting) {
             return;
         }
+
+        if (event.getMessage().startsWith(config.getTrigger() + "login")) {
+            Command command = CommandRegistry.getCommand("Login");
+            command.setConfig(config);
+            if (!command.execute(event)) {
+                event.respond(Colors.RED + "An error occurred! " + Colors.NORMAL + command.getHelp());
+                return;
+            }
+            return;
+        }
+
+        if (Main.NotLoggedIn.contains(event.getUser().getNick())) {
+            if (event.getMessage().startsWith(config.getTrigger())){
+                event.getUser().send().notice("You need to be logged in with NickServ to use the bot!");
+            }
+            return;
+        }
+
         String trigger = config.getTrigger();
         String[] args = event.getMessage().split(" ");
         Date date = new Date();
-        String message = event.getMessage();
         final String eventuser = event.getUser().getNick();
         String Ruser;
         boolean contains = true;
 
-        if (!Main.Login.containsKey(eventuser)) {
+        if (!Main.Login.containsKey(eventuser) && !Main.NotLoggedIn.contains(eventuser)) {
             contains = false;
             if (event.getUser().isVerified()) {
                 String account = Utils.getAccount(event.getUser(), event);
                 Main.Login.put(eventuser, account);
                 contains = true;
+            } else {
+                Main.NotLoggedIn.add(eventuser);
             }
         }
 
@@ -83,16 +102,6 @@ public class MessageEvent extends ListenerAdapter {
 
             Boolean hasPerms = manager.hasPermission(permission, event.getUser(), event.getChannel(), event);
             Boolean verified = event.getUser().isVerified();
-
-            if (message.equalsIgnoreCase(config.getTrigger() + "login")) {
-                Command command = CommandRegistry.getCommand("Login");
-                command.setConfig(config);
-                if (!command.execute(event)) {
-                    event.respond(Colors.RED + "An error occurred! " + Colors.NORMAL + command.getHelp());
-                    return;
-                }
-                return;
-            }
 
             if (!Main.Login.containsKey(eventuser)) {
                 event.getUser().send().notice("You need to be logged in with NickServ to use the bot!");

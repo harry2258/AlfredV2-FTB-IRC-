@@ -45,6 +45,7 @@ public class Login extends Command {
         }
         String account = Utils.getAccount(event.getUser(), event);
         Main.Login.put(event.getUser().getNick(), account);
+        Main.NotLoggedIn.remove(event.getUser().getNick());
         event.getUser().send().notice("You are now Logged in!");
         return true;
     }

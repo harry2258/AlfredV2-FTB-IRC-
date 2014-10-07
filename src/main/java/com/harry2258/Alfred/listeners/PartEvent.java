@@ -30,6 +30,7 @@ public class PartEvent extends ListenerAdapter {
             Main.relay.get(event.getChannel()).send().message("[" + event.getChannel().getName() + "] " + event.getUser().getNick() + " left the channel.");
         }
 
+        if (Main.NotLoggedIn.contains(event.getUser().getNick())) Main.NotLoggedIn.remove(event.getUser().getNick());
     }
 
     public void onQuit(QuitEvent event) throws Exception {
@@ -37,6 +38,8 @@ public class PartEvent extends ListenerAdapter {
         if (Main.Login.containsKey(event.getUser().getNick())) {
             Main.Login.remove(event.getUser().getNick());
         }
+
+        if (Main.NotLoggedIn.contains(event.getUser().getNick())) Main.NotLoggedIn.remove(event.getUser().getNick());
     }
 
 }

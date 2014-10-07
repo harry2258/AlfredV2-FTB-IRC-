@@ -36,6 +36,8 @@ public class JoinEvent extends ListenerAdapter {
                 String user = getAccount(event.getUser(), event);
                 Main.Login.put(event.getUser().getNick(), user);
             }
+        } else {
+            Main.NotLoggedIn.add(event.getUser().getNick());
         }
 
         String path;

@@ -22,6 +22,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
@@ -41,6 +42,7 @@ public class Main {
 
     public static HashMap<Channel, Channel> relay = new HashMap<>();
     public static HashMap<String, String> URL = new HashMap<>();
+    public static Set<String> NotLoggedIn = new HashSet<>();
 
     public static File jsonFilePath = new File(System.getProperty("user.dir") + "/exec.json");
     public static File parser = new File(System.getProperty("user.dir") + "/parser.json");
