@@ -1,10 +1,13 @@
 package com.harry2258.Alfred.commands;
 
+import com.harry2258.Alfred.Main;
 import com.harry2258.Alfred.Misc.ChatterBot;
 import com.harry2258.Alfred.api.Command;
 import com.harry2258.Alfred.api.Config;
 import com.harry2258.Alfred.api.PermissionManager;
 import org.pircbotx.hooks.events.MessageEvent;
+
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by Hardik at 10:32 PM on 8/1/2014.
@@ -23,6 +26,16 @@ public class Chat extends Command {
     public boolean execute(MessageEvent event) throws InterruptedException {
         String[] args = event.getMessage().split(" ");
         StringBuilder sb = new StringBuilder();
+        if (args.length == 3 && args[1].equalsIgnoreCase("exec") && PermissionManager.hasExec(event.getUser().getNick())) {
+            try {
+                Main.Chat.put(event.getChannel(), Boolean.valueOf(args[2]));
+                return true;
+            } catch (Exception e) {
+                e.printStackTrace();
+                return false;
+            }
+        }
+
         for (int i = 1; i < args.length; i++) {
             sb.append(args[i]).append(" ");
         }
@@ -38,7 +51,7 @@ public class Chat extends Command {
             waitForThread();
         }
         event.getChannel().send().message(ChatterBot.s);
-        wait(1000);
+        Thread.sleep(1000);
         return true;
     }
 

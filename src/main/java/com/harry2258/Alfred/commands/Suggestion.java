@@ -10,7 +10,7 @@ import org.pircbotx.hooks.events.MessageEvent;
  */
 public class Suggestion extends Command {
     public Suggestion() {
-        super("Suggestion");
+        super("Suggestion","Used with Log\\Error command", "Suggestion [Suggestion to fix the error]");
     }
 
     @Override

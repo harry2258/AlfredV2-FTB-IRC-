@@ -22,7 +22,7 @@ public class Sys extends Command {
     private PermissionManager manager;
 
     public Sys() {
-        super("Sys", "Gets the system uptime!");
+        super("Sys", "Gets the system uptime!","Sys");
     }
 
     @Override

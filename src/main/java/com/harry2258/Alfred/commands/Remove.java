@@ -68,7 +68,7 @@ public class Remove extends Command {
                                 perm.setPermission(p);
                                 JsonUtils.writeJsonFile(file, perm);
                                 event.getUser().send().notice(args[2] + " is no longer a Moderator for channel " + event.getChannel().getName());
-                                Main.map.put(event.getChannel().getName(), perm);
+                                Main.map.put(event.getChannel().getName().toLowerCase(), perm);
                                 event.getUser().send().notice("Reloaded Permissions");
                                 if (inChan) {
                                     event.getBot().getUserChannelDao().getUser(args[2]).send()
@@ -103,7 +103,7 @@ public class Remove extends Command {
                                 perm.setPermission(p);
                                 JsonUtils.writeJsonFile(file, perm);
                                 event.getUser().send().notice("Moderators can no longer use the command '" + args[2] + "'");
-                                Main.map.put(event.getChannel().getName(), perm);
+                                Main.map.put(event.getChannel().getName().toLowerCase(), perm);
                                 event.getUser().send().notice("Reloaded Permissions");
                                 return true;
                             } else {
@@ -137,7 +137,7 @@ public class Remove extends Command {
                                 perm.setPermission(p);
                                 JsonUtils.writeJsonFile(file, perm);
                                 event.getUser().send().notice(args[2] + " is no longer an Admin for channel " + event.getChannel().getName());
-                                Main.map.put(event.getChannel().getName(), perm);
+                                Main.map.put(event.getChannel().getName().toLowerCase(), perm);
                                 event.getUser().send().notice("Reloaded Permissions");
                                 if (inChan) {
                                     event.getBot().getUserChannelDao().getUser(args[2]).send()
@@ -172,7 +172,7 @@ public class Remove extends Command {
                                 perm.setPermission(p);
                                 JsonUtils.writeJsonFile(file, perm);
                                 event.getUser().send().notice("Regular users can no longer use the command '" + args[2] + "'");
-                                Main.map.put(event.getChannel().getName(), perm);
+                                Main.map.put(event.getChannel().getName().toLowerCase(), perm);
                                 event.getUser().send().notice("Reloaded Permissions");
                                 return true;
                             } else {
@@ -264,7 +264,7 @@ public class Remove extends Command {
                             PreparedStatement stmt1 = Main.database.prepareStatement("UPDATE `Channel_Permissions` SET `Permission` = '" + JsonUtils.GSON.toJson(perm) + "' WHERE `Channel` = '" + channel + "';");
                             stmt1.execute();
                             event.getUser().send().notice(args[2] + " is no longer a Moderator for channel " + event.getChannel().getName());
-                            Main.map.put(event.getChannel().getName(), perm);
+                            Main.map.put(event.getChannel().getName().toLowerCase(), perm);
                             event.getUser().send().notice("Reloaded Permissions");
                             if (inChan) {
                                 event.getBot().getUserChannelDao().getUser(args[2]).send()
@@ -299,7 +299,7 @@ public class Remove extends Command {
                             PreparedStatement stmt1 = Main.database.prepareStatement("UPDATE `Channel_Permissions` SET `Permission` = '" + JsonUtils.GSON.toJson(perm) + "' WHERE `Channel` = '" + channel + "';");
                             stmt1.execute();
                             event.getUser().send().notice("Moderators can no longer use the command '" + args[2] + "'");
-                            Main.map.put(event.getChannel().getName(), perm);
+                            Main.map.put(event.getChannel().getName().toLowerCase(), perm);
                             event.getUser().send().notice("Reloaded Permissions");
                             return true;
                         } else {
@@ -333,7 +333,7 @@ public class Remove extends Command {
                             PreparedStatement stmt1 = Main.database.prepareStatement("UPDATE `Channel_Permissions` SET `Permission` = '" + JsonUtils.GSON.toJson(perm) + "' WHERE `Channel` = '" + channel + "';");
                             stmt1.execute();
                             event.getUser().send().notice(args[2] + " is no longer an Admin for channel " + event.getChannel().getName());
-                            Main.map.put(event.getChannel().getName(), perm);
+                            Main.map.put(event.getChannel().getName().toLowerCase(), perm);
                             event.getUser().send().notice("Reloaded Permissions");
                             if (inChan) {
                                 event.getBot().getUserChannelDao().getUser(args[2]).send()
@@ -368,7 +368,7 @@ public class Remove extends Command {
                             PreparedStatement stmt1 = Main.database.prepareStatement("UPDATE `Channel_Permissions` SET `Permission` = '" + JsonUtils.GSON.toJson(perm) + "' WHERE `Channel` = '" + channel + "';");
                             stmt1.execute();
                             event.getUser().send().notice("Regular users can no longer use the command '" + args[2] + "'");
-                            Main.map.put(event.getChannel().getName(), perm);
+                            Main.map.put(event.getChannel().getName().toLowerCase(), perm);
                             event.getUser().send().notice("Reloaded Permissions");
                             return true;
                         } else {

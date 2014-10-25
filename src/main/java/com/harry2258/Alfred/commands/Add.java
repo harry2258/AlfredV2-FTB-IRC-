@@ -68,7 +68,7 @@ public class Add extends Command {
                             event.getUser().send().notice(newuser + " is now a Moderator for channel " + event.getChannel().getName());
                             String perms = JsonUtils.getStringFromFile(Jsonfile);
                             Perms p = JsonUtils.getPermsFromString(perms);
-                            Main.map.put(event.getChannel().getName(), p);
+                            Main.map.put(event.getChannel().getName().toLowerCase(), p);
                             event.getUser().send().notice("Reloaded Permissions");
                             event.getBot().getUserChannelDao().getUser(args[2]).send().notice("You are now a " + Colors.BOLD + "MODERATOR" + Colors.NORMAL + " for channel " + event.getChannel().getName());
                             return true;
@@ -106,7 +106,7 @@ public class Add extends Command {
                                 event.getUser().send().notice("Moderators are now able to use the command '" + args[2] + "'");
                                 String perms = JsonUtils.getStringFromFile(Jsonfile);
                                 Perms p = JsonUtils.getPermsFromString(perms);
-                                Main.map.put(event.getChannel().getName(), p);
+                                Main.map.put(event.getChannel().getName().toLowerCase(), p);
                                 event.getUser().send().notice("Reloaded Permissions");
                                 return true;
                             } else {
@@ -145,7 +145,7 @@ public class Add extends Command {
                             event.getUser().send().notice(newuser + " is now an Admin for channel " + event.getChannel().getName());
                             String perms = JsonUtils.getStringFromFile(Jsonfile);
                             Perms p = JsonUtils.getPermsFromString(perms);
-                            Main.map.put(event.getChannel().getName(), p);
+                            Main.map.put(event.getChannel().getName().toLowerCase(), p);
                             event.getUser().send().notice("Reloaded Permissions");
                             event.getBot().getUserChannelDao().getUser(args[2]).send().notice("You are now an " + Colors.BOLD + "ADMIN" + Colors.NORMAL + " for channel " + event.getChannel().getName());
                             return true;
@@ -183,7 +183,7 @@ public class Add extends Command {
                                 event.getUser().send().notice("Everyone is now able to use the command '" + args[2] + "'");
                                 String perms = JsonUtils.getStringFromFile(Jsonfile);
                                 Perms p = JsonUtils.getPermsFromString(perms);
-                                Main.map.put(event.getChannel().getName(), p);
+                                Main.map.put(event.getChannel().getName().toLowerCase(), p);
                                 event.getUser().send().notice("Reloaded Permissions");
                                 return true;
                             } else {
@@ -284,7 +284,7 @@ public class Add extends Command {
                             stmt1.execute();
                             event.getUser().send().notice(newuser + " is now an Moderator for channel " + event.getChannel().getName());
                             Perms p = JsonUtils.getPermsFromString(jsonObj.toString());
-                            Main.map.put(event.getChannel().getName(), p);
+                            Main.map.put(event.getChannel().getName().toLowerCase(), p);
                             event.getUser().send().notice("Reloaded Permissions");
                             event.getBot().getUserChannelDao().getUser(args[2]).send().notice("You are now an " + Colors.BOLD + "MODERATOR" + Colors.NORMAL + " for channel " + event.getChannel().getName());
                             return true;
@@ -323,7 +323,7 @@ public class Add extends Command {
                                 stmt1.execute();
                                 event.getUser().send().notice("Moderators are now able to use the command '" + args[2] + "'");
                                 Perms p = JsonUtils.getPermsFromString(jsonObj.toString());
-                                Main.map.put(event.getChannel().getName(), p);
+                                Main.map.put(event.getChannel().getName().toLowerCase(), p);
                                 event.getUser().send().notice("Reloaded Permissions");
                                 return true;
                             } else {
@@ -370,7 +370,7 @@ public class Add extends Command {
                             stmt1.execute();
                             event.getUser().send().notice(newuser + " is now an Admin for channel " + event.getChannel().getName());
                             Perms p = JsonUtils.getPermsFromString(jsonObj.toString());
-                            Main.map.put(event.getChannel().getName(), p);
+                            Main.map.put(event.getChannel().getName().toLowerCase(), p);
                             event.getUser().send().notice("Reloaded Permissions");
                             event.getBot().getUserChannelDao().getUser(args[2]).send().notice("You are now an " + Colors.BOLD + "ADMIN" + Colors.NORMAL + " for channel " + event.getChannel().getName());
                             return true;
@@ -408,8 +408,12 @@ public class Add extends Command {
                                 PreparedStatement stmt1 = Main.database.prepareStatement("UPDATE `Channel_Permissions` SET `Permission` = '" + jsonObj.toString() + "' WHERE `Channel` = '" + channel + "';");
                                 stmt1.execute();
                                 event.getUser().send().notice("Everyone is now able to use the command '" + args[2] + "'");
+                                System.out.println(jsonObj.toString());
                                 Perms p = JsonUtils.getPermsFromString(jsonObj.toString());
-                                Main.map.put(event.getChannel().getName(), p);
+                                System.out.println(p);
+                                Main.map.put(event.getChannel().getName().toLowerCase(), p);
+                                System.out.println(Main.map.get(event.getChannel().getName()) + "\n" + Main.map.get("#gazserver"));
+
                                 event.getUser().send().notice("Reloaded Permissions");
                                 return true;
                             } else {
@@ -417,7 +421,7 @@ public class Add extends Command {
                                 return true;
                             }
                         } catch (Exception ex) {
-                            System.out.println(ex);
+                            ex.printStackTrace();
                         }
                     } else {
                         event.getChannel().send().message("There is no command by that name!");
@@ -432,10 +436,15 @@ public class Add extends Command {
 
     public static JsonElement Json(String[] list) {
         final JsonArray Array = new JsonArray();
-        for (final String tmp : list) {
-            final JsonPrimitive JsonList = new JsonPrimitive(tmp);
-            Array.add(JsonList);
+        try {
+            for (final String tmp : list) {
+                final JsonPrimitive JsonList = new JsonPrimitive(tmp);
+                Array.add(JsonList);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+        System.out.println(Array);
         return Array;
     }
 

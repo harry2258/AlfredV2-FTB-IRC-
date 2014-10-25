@@ -11,6 +11,8 @@ import org.pircbotx.hooks.ListenerAdapter;
 
 import java.io.*;
 import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import static com.harry2258.Alfred.api.CommandRegistry.commands;
 
@@ -19,6 +21,7 @@ public class MessageEvent extends ListenerAdapter {
     private Config config;
     private PermissionManager manager;
     static Interpreter interpreter = new Interpreter();
+    public static boolean waiting = false;
 
     public MessageEvent(Config conf, PermissionManager man) {
         this.config = conf;
@@ -27,12 +30,32 @@ public class MessageEvent extends ListenerAdapter {
 
     @Override
     public void onMessage(final org.pircbotx.hooks.events.MessageEvent event) throws Exception {
-        if (PrivateMessageEvent.waiting) {
+        if (PrivateMessageEvent.waiting || waiting) {
+            return;
+        }
+
+        if (Main.Chat.containsKey(event.getChannel()) && Main.Chat.get(event.getChannel())) {
+            Command command = CommandRegistry.getCommand("Chat");
+            command.setConfig(config);
+            if (!command.execute(event)) {
+                event.respond(Colors.RED + "An error occurred! " + Colors.NORMAL + command.getHelp());
+                return;
+            }
             return;
         }
 
         if (event.getMessage().startsWith(config.getTrigger() + "login")) {
             Command command = CommandRegistry.getCommand("Login");
+            command.setConfig(config);
+            if (!command.execute(event)) {
+                event.respond(Colors.RED + "An error occurred! " + Colors.NORMAL + command.getHelp());
+                return;
+            }
+            return;
+        }
+
+        if (event.getMessage().startsWith(config.getTrigger() + "flush")) {
+            Command command = CommandRegistry.getCommand("Flush");
             command.setConfig(config);
             if (!command.execute(event)) {
                 event.respond(Colors.RED + "An error occurred! " + Colors.NORMAL + command.getHelp());
@@ -47,7 +70,6 @@ public class MessageEvent extends ListenerAdapter {
             }
             return;
         }
-
         String trigger = config.getTrigger();
         String[] args = event.getMessage().split(" ");
         Date date = new Date();
@@ -81,10 +103,21 @@ public class MessageEvent extends ListenerAdapter {
         } else {
             Ruser = eventuser;
         }
+        //String login = System.getProperty("user.dir") + "/Reminders/" + Ruser + ".txt";
+        File reminder = null;
 
-        String login = System.getProperty("user.dir") + "/Reminders/" + Ruser + ".txt";
-        File reminder = new File(login);
-        if (reminder.exists()) {
+        if (new File(System.getProperty("user.dir") + "/Reminders/" + Ruser + ".txt").exists()) {
+            reminder = new File(System.getProperty("user.dir") + "/Reminders/" + Ruser + ".txt");
+            BufferedReader in = new BufferedReader(new FileReader(reminder));
+            String tmp;
+            event.getUser().send().notice("=========Reminders=========");
+            while ((tmp = in.readLine()) != null) {
+                event.getUser().send().notice(tmp);
+            }
+            in.close();
+            reminder.delete();
+        } else if (new File(System.getProperty("user.dir") + "/Reminders/" + eventuser + ".txt").exists()) {
+            reminder = new File(System.getProperty("user.dir") + "/Reminders/" + eventuser + ".txt");
             BufferedReader in = new BufferedReader(new FileReader(reminder));
             String tmp;
             event.getUser().send().notice("=========Reminders=========");
@@ -141,6 +174,7 @@ public class MessageEvent extends ListenerAdapter {
                         }
                     }
                 }
+                if (!Main.database.isValid(5000)) {Main.database = com.harry2258.Alfred.Database.Utils.getConnection(config);}
 
                 String name = "";
                 Boolean exist = false;
@@ -191,8 +225,6 @@ public class MessageEvent extends ListenerAdapter {
                         } else {
                             event.getUser().send().notice(config.getPermissionDenied().replaceAll("%USERNAME%", eventuser));
                         }
-
-
                     } else {
                         event.getUser().send().notice("There is no command by that name!");
                     }
@@ -203,8 +235,9 @@ public class MessageEvent extends ListenerAdapter {
                 /*
                  * Unknown command
                  * >implying i give a fuck
-                 * Logger.getLogger(MessageEvent.class.getName()).log(Level.SEVERE, null, e);
+                 *
                  */
+                Logger.getLogger(MessageEvent.class.getName()).log(Level.SEVERE, null, e);
 
             }
         }

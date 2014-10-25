@@ -20,7 +20,7 @@ import java.util.List;
 public class Tweet extends Command {
 
     public Tweet() {
-        super("Tweet", "Gets the latest tweets from the users!");
+        super("Tweet", "Gets the latest tweets from the users!","Tweet (Tweet number)[@Name]");
     }
 
     @Override

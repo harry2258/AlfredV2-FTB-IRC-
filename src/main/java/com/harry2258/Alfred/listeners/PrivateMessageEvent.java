@@ -41,7 +41,6 @@ public class PrivateMessageEvent extends ListenerAdapter {
                 event.getUser().send().message("Type \"Unpause\" to resume the bot.");
 
                 while (true) {
-                    System.out.println("Paused debug!");
                     org.pircbotx.hooks.events.PrivateMessageEvent currentEvent = null;
                     try {
                         currentEvent = Private.waitFor(org.pircbotx.hooks.events.PrivateMessageEvent.class);

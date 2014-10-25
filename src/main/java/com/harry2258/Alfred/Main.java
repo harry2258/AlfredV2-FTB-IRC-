@@ -9,6 +9,7 @@ import com.harry2258.Alfred.api.*;
 import com.harry2258.Alfred.json.Perms;
 import com.harry2258.Alfred.listeners.*;
 import com.harry2258.Alfred.runnables.ChatSocketListener;
+//import com.harry2258.Alfred.runnables.WebServ;
 import org.pircbotx.Channel;
 import org.pircbotx.Configuration;
 import org.pircbotx.PircBotX;
@@ -39,10 +40,11 @@ public class Main {
 
     public static Map<String, Perms> map = new HashMap<>();
     public static Map<String, String> Login = new HashMap<>();
+    public static Set<String> NotLoggedIn = new HashSet<>();
 
     public static HashMap<Channel, Channel> relay = new HashMap<>();
     public static HashMap<String, String> URL = new HashMap<>();
-    public static Set<String> NotLoggedIn = new HashSet<>();
+    public static HashMap<Channel, Boolean> Chat = new HashMap<>();
 
     public static File jsonFilePath = new File(System.getProperty("user.dir") + "/exec.json");
     public static File parser = new File(System.getProperty("user.dir") + "/parser.json");
@@ -58,9 +60,9 @@ public class Main {
         startup = System.currentTimeMillis();
         System.setProperty(SimpleLogger.SHOW_DATE_TIME_KEY, "true");
         System.setProperty(SimpleLogger.DATE_TIME_FORMAT_KEY, "[MM/dd HH:mm:ss]");
-        System.setProperty(SimpleLogger.SHOW_THREAD_NAME_KEY, "false");
+        System.setProperty(SimpleLogger.SHOW_THREAD_NAME_KEY, "true");
         System.setProperty(SimpleLogger.LEVEL_IN_BRACKETS_KEY, "true");
-        System.setProperty(SimpleLogger.SHOW_LOG_NAME_KEY, "false");
+        System.setProperty(SimpleLogger.SHOW_LOG_NAME_KEY, "true");
         System.out.println("Starting");
         try {
             final Config config = new Config();
@@ -129,11 +131,12 @@ public class Main {
             builder.getListenerManager().addListener(new JoinEvent(config, manager));
             builder.getListenerManager().addListener(new BanEvent(config, manager));
             builder.getListenerManager().addListener(new NickChangeEvent(config, manager));
-            builder.getListenerManager().addListener(new PartEvent(config, manager));
             builder.getListenerManager().addListener(new ActionEvent(config, manager));
+            builder.getListenerManager().addListener(new PartEvent(config, manager));
             builder.getListenerManager().addListener(new KickEvent(config, manager));
             builder.getListenerManager().addListener(new Disconnect(config, manager));
             builder.getListenerManager().addListener(new PrivateMessageEvent(config, manager));
+
 
             System.out.println("------Permissions------");
             if (!config.UseDatabase()) {
@@ -200,6 +203,8 @@ public class Main {
             if (config.UpdaterChecker()) {
                 new Thread(new Update(bot, config)).start();
             }
+
+            //new Thread(new WebServ()).start();
             bot.startBot();
         } catch (Exception ex) {
             ex.printStackTrace();

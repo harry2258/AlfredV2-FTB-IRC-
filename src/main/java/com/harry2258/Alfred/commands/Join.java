@@ -11,6 +11,8 @@ import org.pircbotx.Channel;
 import org.pircbotx.hooks.events.MessageEvent;
 
 import java.io.File;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 
 public class Join extends Command {
 
@@ -39,6 +41,13 @@ public class Join extends Command {
             if (config.useDatabase) {
                 try {
                     Create.AddChannel(target.getName().toLowerCase(), Main.database);
+                    PreparedStatement stmt = Main.database.prepareStatement("SELECT Permission FROM `Channel_Permissions` WHERE Channel = ?");
+                    stmt.setString(1, target.getName());
+                    ResultSet rs = stmt.executeQuery();
+                    rs.next();
+                    Perms p = JsonUtils.getPermsFromString(rs.getString("Permission"));
+                    Main.map.put(target.getName().toLowerCase(), p);
+                    System.out.println("Loaded perms for " + target.getName());
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

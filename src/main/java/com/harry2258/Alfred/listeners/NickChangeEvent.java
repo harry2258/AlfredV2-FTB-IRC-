@@ -50,6 +50,7 @@ public class NickChangeEvent extends ListenerAdapter {
 
         Main.Login.remove(oldNick);
         Main.Login.put(newNick, user);
+        Main.NotLoggedIn.remove(oldNick);
 
     }
 

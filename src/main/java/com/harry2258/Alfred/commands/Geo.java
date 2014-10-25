@@ -18,7 +18,7 @@ import java.util.logging.Logger;
 public class Geo extends Command {
 
     public Geo() {
-        super("Geo", "Geolocate an IP address!");
+        super("Geo", "Geolocate an IP address!", "Geo [IP/User]");
     }
 
     @Override

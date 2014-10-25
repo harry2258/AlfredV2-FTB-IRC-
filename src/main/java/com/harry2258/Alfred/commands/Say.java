@@ -10,7 +10,7 @@ public class Say extends Command {
     private Config config;
 
     public Say() {
-        super("Say", "Send a message to the current channel");
+        super("Say", "Have the bot say a message to the current channel :D", "Say [Words/Joke/Insult/witty comments]");
     }
 
     @Override

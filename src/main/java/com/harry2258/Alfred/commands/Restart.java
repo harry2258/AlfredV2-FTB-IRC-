@@ -14,7 +14,7 @@ public class Restart extends Command {
     private PermissionManager manager;
 
     public Restart() {
-        super("Restart", "Restarts the bot!");
+        super("Restart", "[WIP] Restarts the bot!", "Restart");
     }
 
     @Override

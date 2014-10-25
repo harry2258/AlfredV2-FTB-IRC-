@@ -7,6 +7,7 @@ package com.harry2258.Alfred.api;
 
 import com.google.gson.JsonObject;
 import com.harry2258.Alfred.Main;
+import com.harry2258.Alfred.commands.Sys;
 import com.harry2258.Alfred.json.Permission;
 import com.harry2258.Alfred.json.Perms;
 import org.pircbotx.Channel;
@@ -92,7 +93,7 @@ public class PermissionManager {
 
         String sender = Main.Login.get(Nick);
         Perms perm = Main.map.get(event.getChannel().getName().toLowerCase());
-        Set<String> set = new HashSet<String>(perm.getPermission().getAdmins());
+        Set<String> set = new HashSet<>(perm.getPermission().getAdmins());
         return set.contains(sender);
     }
 
@@ -103,7 +104,7 @@ public class PermissionManager {
     public static boolean hasMod(String Nick, MessageEvent event) throws Exception {
         String sender = Main.Login.get(Nick);
         Perms perm = Main.map.get(event.getChannel().getName().toLowerCase());
-        Set<String> set = new HashSet<String>(perm.getPermission().getModPerms());
+        Set<String> set = new HashSet<>(perm.getPermission().getMods());
         return set.contains(sender);
     }
 }

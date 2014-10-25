@@ -122,7 +122,7 @@ public class Reddit extends Thread {
                 Thread.sleep(60000);
             } catch (Exception e) {
                 e.printStackTrace();
-                bot.getUserChannelDao().getUser("batman").send().message(e.toString());
+                bot.getUserChannelDao().getUser("batman").send().message("[Reddit] " + e.toString());
 
             }
         }

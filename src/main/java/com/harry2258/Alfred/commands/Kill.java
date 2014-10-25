@@ -7,6 +7,7 @@ import com.harry2258.Alfred.api.Config;
 import com.harry2258.Alfred.api.PermissionManager;
 import com.harry2258.Alfred.runnables.ChatSocketListener;
 import org.pircbotx.Colors;
+import org.pircbotx.PircBotX;
 import org.pircbotx.hooks.WaitForQueue;
 import org.pircbotx.hooks.events.MessageEvent;
 
@@ -40,9 +41,8 @@ public class Kill extends Command {
                         @Override
                         public void run() {
                             while (true) {
-                                Long start = System.currentTimeMillis();
                                 MessageEvent currentEvent = null;
-
+                                com.harry2258.Alfred.listeners.MessageEvent.waiting = true;
                                 try {
                                     currentEvent = queue.waitFor(MessageEvent.class);
                                 } catch (InterruptedException e) {
@@ -65,31 +65,37 @@ public class Kill extends Command {
                                         if (config.UpdaterChecker()) {
                                             com.harry2258.Alfred.Misc.Update.kill();
                                         }
+
                                         System.out.println("Shutting down");
                                         System.exit(1);
                                     }
                                 }
                             }
                         }
+
                     };
 
-                    Future<?> f = service.submit(r);
-                    f.get(10, TimeUnit.SECONDS);
+                    if (!com.harry2258.Alfred.listeners.MessageEvent.waiting) {
+                        Future<?> f = service.submit(r);
+                        f.get(10, TimeUnit.SECONDS);
+                    }
 
                 } catch (Exception e) {
                     e.printStackTrace();
+                    return true;
                 }
-
                 service.shutdown();
                 queue.close();
+                com.harry2258.Alfred.listeners.MessageEvent.waiting = false;
                 event.respond("Bot shutdown aborted!");
                 return true;
             }
-            event.respond("You need to be Exec to kill the bot!");
+            event.respond("You need to be an Exec. user to be able to kill the bot!");
         } catch (Exception ex) {
             Logger.getLogger(Kill.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
         }
-        return false;
+        return true;
     }
 
     @Override

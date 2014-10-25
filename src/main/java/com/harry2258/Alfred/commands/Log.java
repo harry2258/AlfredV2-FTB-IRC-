@@ -77,83 +77,84 @@ public class Log extends Command {
             URL url;
             url = new URL(Raw);
             BufferedReader br = new BufferedReader(new InputStreamReader(url.openStream()));
+
             if (br.readLine().contains("Technic Launcher Error Report")) {
+                System.out.println("Technic Log");
+            }else {
+                while ((tmp = br.readLine()) != null) {
+                    if (tmp.contains("This paste has been removed!")) {
+                        event.getChannel().send().message("The paste cannot be found!");
+                        return true;
+                    } else if (tmp.contains("FTBLaunch starting up")) {
+                        temp = Colors.BOLD + "Launcher: " + Colors.NORMAL + tmp.replaceAll(".*(?:version )|\\)", "");
+                        if (!info.contains(temp)) {
+                            info.add(temp);
+                        }
+                    } else if (tmp.contains("Server brand: ")) {
+                        temp = Colors.BOLD + "Server Brand: " + Colors.NORMAL + tmp.replaceAll("^.*?(?=[A-Z][a-z])", "").replaceAll("\\\\[.*?\\\\]", "").replace("Server brand: ", "");
+                        if (!info.contains(temp) && jsonObj.get("ServerBrand").getAsBoolean()) {
+                            info.add(temp);
+                        }
+                    } else if (tmp.contains("Server type: ")) {
+                        temp = Colors.BOLD + "Server type: " + Colors.NORMAL + tmp.replaceAll("^.*?(?=[A-Z][a-z])", "").replaceAll("\\\\[.*?\\\\]", "").replace("Server type: ", "");
+                        if (!info.contains(temp) && jsonObj.get("ServerType").getAsBoolean()) {
+                            info.add(temp);
+                        }
+                    } else if (tmp.contains("Minecraft Version:")) {
+                        temp = Colors.BOLD + "Minecraft Version: " + Colors.NORMAL + tmp.replaceAll("^.*?(?=[A-Z][a-z])", "").replaceAll("\\\\[.*?\\\\]", "").replaceAll(".*(?:Minecraft Version: )", "");
+                        if (!info.contains(temp) && jsonObj.get("MCVersion").getAsBoolean()) {
+                            info.add(temp);
+                        }
 
-            }
-            while ((tmp = br.readLine()) != null) {
-                if (tmp.contains("This paste has been removed!")) {
-                    event.getChannel().send().message("The paste cannot be found!");
-                    return true;
-                } else if (tmp.contains("FTBLaunch starting up")) {
-                    temp = Colors.BOLD + "Launcher: " + Colors.NORMAL + tmp.replaceAll(".*(?:version )|\\)", "");
-                    if (!info.contains(temp)) {
-                        info.add(temp);
+                    } else if (tmp.contains("Java version:")) {
+                        temp = Colors.BOLD + "Java Version: " + Colors.NORMAL + tmp.replaceAll(".*(?:Java version: )", "");
+                        if (!info.contains(temp) && jsonObj.get("JavaVersion").getAsBoolean()) {
+                            info.add(temp);
+                        }
+                    } else if (tmp.contains("Is Modded: ")) {
+                        temp = Colors.BOLD + "Client Brand: " + Colors.NORMAL + tmp.replaceAll("^.*?(?=[A-Z][a-z])", "").replaceAll("\\\\[.*?\\\\]", "").replaceAll(".*(?:Is Modded: Definitely; Client brand changed to )|.*(?:Is Modded: Definitely; Server brand changed to )", "");
+                        if (!info.contains(temp) && jsonObj.get("Modded").getAsBoolean()) {
+                            info.add(temp);
+                        }
+                    } else if (tmp.contains("Feed The Beast Mod Pack") || tmp.contains("Optifine OptiFine_")) {
+                        System.out.println(tmp);
+                        temp = Colors.BOLD + "Mods: " + Colors.NORMAL + tmp.replaceAll("^.*?(?=[A-Z][a-z])", "").replaceAll("\\\\[.*?\\\\]", "").replaceAll(".*(?:, )|mods active", "");
+                        if (!info.contains(temp) && jsonObj.get("Modded").getAsBoolean()) {
+                            info.add(temp);
+                        }
+                        if (tmp.contains("Optifine")) {
+                            Optifine = true;
+                        }
+                    } else if (tmp.contains("Operating System: ") || tmp.contains("OS: ")) {
+                        temp = Colors.BOLD + "OS: " + Colors.NORMAL + tmp.replaceAll("^.*?(?=[A-Z][a-z])", "").replaceAll("\\\\[.*?\\\\]", "").replaceAll(".*(?:Operating System: )|.*(?:OS: )", "").replaceAll("x86|x64|32-bit|64-bit", "");
+                        if (!info.contains(temp) && jsonObj.get("OSName").getAsBoolean()) {
+                            info.add(temp);
+                        }
                     }
-                } else if (tmp.contains("Server brand: ")) {
-                    temp = Colors.BOLD + "Server Brand: " + Colors.NORMAL + tmp.replaceAll("^.*?(?=[A-Z][a-z])", "").replaceAll("\\\\[.*?\\\\]", "").replace("Server brand: ", "");
-                    if (!info.contains(temp) && jsonObj.get("ServerBrand").getAsBoolean()) {
-                        info.add(temp);
-                    }
-                } else if (tmp.contains("Server type: ")) {
-                    temp = Colors.BOLD + "Server type: " + Colors.NORMAL + tmp.replaceAll("^.*?(?=[A-Z][a-z])", "").replaceAll("\\\\[.*?\\\\]", "").replace("Server type: ", "");
-                    if (!info.contains(temp) && jsonObj.get("ServerType").getAsBoolean()) {
-                        info.add(temp);
-                    }
-                } else if (tmp.contains("Minecraft Version:")) {
-                    temp = Colors.BOLD + "Minecraft Version: " + Colors.NORMAL + tmp.replaceAll("^.*?(?=[A-Z][a-z])", "").replaceAll("\\\\[.*?\\\\]", "").replaceAll(".*(?:Minecraft Version: )", "");
-                    if (!info.contains(temp) && jsonObj.get("MCVersion").getAsBoolean()) {
-                        info.add(temp);
-                    }
-
-                } else if (tmp.contains("Java version:")) {
-                    temp = Colors.BOLD + "Java Version: " + Colors.NORMAL + tmp.replaceAll(".*(?:Java version: )", "");
-                    if (!info.contains(temp) && jsonObj.get("JavaVersion").getAsBoolean()) {
-                        info.add(temp);
-                    }
-                } else if (tmp.contains("Is Modded: ")) {
-                    temp = Colors.BOLD + "Client Brand: " + Colors.NORMAL + tmp.replaceAll("^.*?(?=[A-Z][a-z])", "").replaceAll("\\\\[.*?\\\\]", "").replaceAll(".*(?:Is Modded: Definitely; Client brand changed to )|.*(?:Is Modded: Definitely; Server brand changed to )", "");
-                    if (!info.contains(temp) && jsonObj.get("Modded").getAsBoolean()) {
-                        info.add(temp);
-                    }
-                } else if (tmp.contains("Feed The Beast Mod Pack") || tmp.contains("Optifine OptiFine_")) {
-                    System.out.println(tmp);
-                    temp = Colors.BOLD + "Mods: " + Colors.NORMAL + tmp.replaceAll("^.*?(?=[A-Z][a-z])", "").replaceAll("\\\\[.*?\\\\]", "").replaceAll(".*(?:, )|mods active", "");
-                    if (!info.contains(temp) && jsonObj.get("Modded").getAsBoolean()) {
-                        info.add(temp);
-                    }
-                    if (tmp.contains("Optifine")) {
-                        Optifine = true;
-                    }
-                } else if (tmp.contains("Operating System: ") || tmp.contains("OS: ")) {
-                    temp = Colors.BOLD + "OS: " + Colors.NORMAL + tmp.replaceAll("^.*?(?=[A-Z][a-z])", "").replaceAll("\\\\[.*?\\\\]", "").replaceAll(".*(?:Operating System: )|.*(?:OS: )", "").replaceAll("x86|x64|32-bit|64-bit", "");
-                    if (!info.contains(temp) && jsonObj.get("OSName").getAsBoolean()) {
-                        info.add(temp);
-                    }
+                    //webpage += tmp;
                 }
-                webpage += tmp;
+
+                info.add(Colors.BOLD + "Using Optifine: " + Colors.NORMAL + String.valueOf(Optifine));
+
+                for (String anInfo : info) {
+                    Message.add(anInfo);
+                }
+
+                for (String s : Message) {
+                    message += s + " | \t";
+                }
+
+                if (message.length() > 500) {
+                    event.getChannel().send().message("The log was too big and was not sent! Please retry again or disable some features in parser.json");
+                    return false;
+                } else if (message.isEmpty()) {
+                    event.getChannel().send().message("Could not get any information from that log!");
+                } else {
+                    event.getChannel().send().message(message);
+                }
             }
 
-            info.add(Colors.BOLD + "Using Optifine: " + Colors.NORMAL + String.valueOf(Optifine));
-
-            for (String anInfo : info) {
-                Message.add(anInfo);
-            }
-
-            for (String s : Message) {
-                message += s + " | \t";
-            }
-
-            if (message.length() > 500) {
-                event.getChannel().send().message("The log was too big and was not sent! Please retry again or disable some features in parser.json");
-                return false;
-            } else if (message.isEmpty()) {
-                event.getChannel().send().message("Could not get any information from that log!");
-            } else {
-                event.getChannel().send().message(message);
-            }
-
-
-            Error.getProblems(webpage, event);
+            //Error.getProblems(webpage, event);
             return true;
         } catch (Exception e) {
             e.printStackTrace();

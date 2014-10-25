@@ -11,7 +11,7 @@ import org.pircbotx.hooks.events.MessageEvent;
 public class Diagnosis extends Command {
 
     public Diagnosis() {
-        super("Diagnosis");
+        super("Diagnosis", "Used with Logs\\Error command","Diagnosis [Diagnosis]");
     }
 
     @Override

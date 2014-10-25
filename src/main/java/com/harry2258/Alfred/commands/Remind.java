@@ -4,6 +4,7 @@ import com.harry2258.Alfred.api.Command;
 import com.harry2258.Alfred.api.Config;
 import com.harry2258.Alfred.api.PermissionManager;
 import com.harry2258.Alfred.api.Utils;
+import org.pircbotx.User;
 import org.pircbotx.hooks.events.MessageEvent;
 
 import java.io.BufferedWriter;
@@ -11,6 +12,8 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.PrintWriter;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Created by Hardik on 1/14/14.
@@ -29,9 +32,10 @@ public class Remind extends Command {
     @Override
     public boolean execute(MessageEvent event) throws Exception {
         String[] args = event.getMessage().split(" ");
+        Set<User> user = new HashSet<>(event.getChannel().getUsers());
         if (args.length >= 3) {
-            String newuser = null;
-            if (event.getChannel().getUsers().contains(args[1])) {
+            String newuser;
+            if (user.contains(args[1])) {
                 newuser = Utils.getAccount(event.getBot().getUserChannelDao().getUser(args[1]), event);
             } else {
                 newuser = args[1];

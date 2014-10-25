@@ -11,7 +11,7 @@ import org.pircbotx.hooks.events.MessageEvent;
  */
 public class Cycle extends Command {
     public Cycle() {
-        super("Cycle", "Part and rejoin the channel");
+        super("Cycle", "Part and rejoin the channel", "Cycle [#channel]");
     }
 
     @Override

@@ -14,7 +14,7 @@ public class Identify extends Command {
     private PermissionManager manager;
 
     public Identify() {
-        super("Identify", "Have the bot identify itself with NickServ!");
+        super("Identify", "Have the bot identify itself with NickServ!", "Identify");
     }
 
     @Override

@@ -383,8 +383,8 @@ public class Utils {
     public static String getDrama() {
         String drama = null;
         try {
-            Document doc = Jsoup.connect("http://asie.pl/drama.php?plain").get();
-            drama = doc.body().text();
+            Document doc = Jsoup.connect("http://asie.pl/drama.php?2").get();
+            drama = doc.body().getElementsByTag("h1").text();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -492,7 +492,7 @@ public class Utils {
             long diffMinutes = diff / (60 * 1000) % 60;
             long diffHours = diff / (60 * 60 * 1000) % 24;
             long diffDays = diff / (24 * 60 * 60 * 1000);
-            dif = diffDays + " d" + diffHours + " h" + diffMinutes + " m" + diffSeconds + " s";
+            dif = diffDays + "d " + diffHours + " h" + diffMinutes + "m " + diffSeconds + "s ";
         } catch (Exception e) {
             e.printStackTrace();
         }

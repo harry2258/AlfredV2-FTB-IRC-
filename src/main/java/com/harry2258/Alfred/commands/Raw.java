@@ -13,7 +13,7 @@ public class Raw extends Command {
     private PermissionManager manager;
 
     public Raw() {
-        super("Raw", "Send a RAW line!");
+        super("Raw", "Send a RAW line!", "Raw [Raw IRC line]");
     }
 
     @Override

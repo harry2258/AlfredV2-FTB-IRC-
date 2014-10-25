@@ -20,7 +20,7 @@ public class Reload extends Command {
     private PermissionManager manager;
 
     public Reload() {
-        super("Reload", "Reload all channel permissions!");
+        super("Reload", "Reload all channel permissions!", "Reload [Channel]");
     }
 
     @Override

@@ -19,7 +19,7 @@ public class Update extends Command {
     private PermissionManager manager;
 
     public Update() {
-        super("Update", "Check for new updates!");
+        super("Update", "Check for new updates!","Update");
     }
 
     @Override

@@ -14,7 +14,7 @@ public class Login extends Command {
     private PermissionManager manager;
 
     public Login() {
-        super("Login", "Log into the bot!");
+        super("Login", "Log into the bot!", "Login (again/info)");
     }
 
     @Override
@@ -23,8 +23,8 @@ public class Login extends Command {
         if (args.length == 2) {
             if (args[1].equalsIgnoreCase("again")) {
                 event.getUser().send().notice("Removing old login!");
-                Main.Login.remove(Main.Login.get(event.getUser().getNick()));
                 Main.Login.remove(event.getUser().getNick());
+                Main.NotLoggedIn.remove(event.getUser().getNick());
                 event.getUser().send().notice("Logging in...");
                 String account = Utils.getAccount(event.getUser(), event);
                 Main.Login.put(event.getUser().getNick(), account);
@@ -39,7 +39,7 @@ public class Login extends Command {
         }
 
 
-        if (Main.Login.containsKey(event.getUser().getNick())) {
+        if (Main.Login.containsKey(event.getUser().getNick()) && !Main.NotLoggedIn.contains(event.getUser().getNick())) {
             event.getUser().send().notice("You are already logged in! If you want to update login, use \"" + config.getTrigger() + "login again\"");
             return true;
         }

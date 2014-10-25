@@ -20,7 +20,7 @@ public class Unignore extends Command {
     private PermissionManager manager;
 
     public Unignore() {
-        super("Ignore", "Any commands from that user will be ignore!");
+        super("Unignore", "Remove the user from the Ignore list", "Unignore [user]");
     }
 
     @Override

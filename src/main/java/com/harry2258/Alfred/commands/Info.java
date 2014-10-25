@@ -118,7 +118,6 @@ public class Info extends Command {
                     if (i > 0)
                         event.getUser().send().notice("Type \"" + config.getTrigger() + "info ignored list \" for a full list!");
                 }
-
                 if (args.length == 3 && args[2].equalsIgnoreCase("list")) {
                     ArrayList<String> IgnoredUsers = new ArrayList<>();
                     PreparedStatement stmt3 = Main.database.prepareStatement("SELECT * FROM `Ignored_Users`");
