@@ -23,8 +23,8 @@ public class Ping extends Command {
 
     @Override
     public boolean execute(MessageEvent event) throws Exception {
-        String returns = "";
-        Long time = Long.valueOf("0");
+        String returns;
+        Long time;
         try {
             String[] args = event.getMessage().split(" ");
             if (args.length == 2) {

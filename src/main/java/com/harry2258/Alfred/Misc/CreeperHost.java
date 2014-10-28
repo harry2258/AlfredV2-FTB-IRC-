@@ -1,20 +1,24 @@
 package com.harry2258.Alfred.Misc;
 
+import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.harry2258.Alfred.api.JsonUtils;
 import com.harry2258.Alfred.api.Utils;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 import org.pircbotx.Colors;
 import org.pircbotx.hooks.events.MessageEvent;
 
 import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.InetAddress;
-import java.net.Socket;
-import java.net.URL;
+import java.net.*;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by Hardik at 11:24 PM on 2/4/14.
@@ -31,7 +35,7 @@ public class CreeperHost extends Thread {
     private static String edges = "new";
 
     public void run() {
-        ArrayList<String> chRepos = new ArrayList<>();
+        ArrayList chRepos = new ArrayList<>();
         ArrayList<String> chURLs = new ArrayList<>();
         ArrayList<String> chURLNames = new ArrayList<>();
         ArrayList<Boolean> tests = new ArrayList<>();
@@ -46,6 +50,18 @@ public class CreeperHost extends Thread {
         final long startTime = System.currentTimeMillis();
 
         try {
+            Document doc = Jsoup.connect("https://dl.dropboxusercontent.com/u/10600322/edges.json").get();
+            Json = JsonUtils.isJSONObject(doc.text());
+            JsonObject report = JsonUtils.getJsonObject(doc.text());
+            chRepos = (ArrayList) getKeysFromJson(doc.text());
+            for (int i = 0; i < chRepos.size(); i++) {
+                chURLs.add(report.get(chRepos.get(i).toString()).toString().replaceAll("\"",""));
+                chURLNames.add(report.get(chRepos.get(i).toString()).toString().replaceAll("\\..*","").replaceAll("\"",""));
+                if (!ChReposlist.contains(chURLs.get(i))) {
+                    ChReposlist.add(chURLs.get(i));
+                }
+            }
+            /*
             URL repoListing;
             repoListing = new URL("https://dl.dropboxusercontent.com/u/10600322/edges.json");
             BufferedReader h = new BufferedReader(new InputStreamReader(repoListing.openStream()));
@@ -63,9 +79,13 @@ public class CreeperHost extends Thread {
                         if (!ChReposlist.contains(splitEntry[1])) {
                             ChReposlist.add(splitEntry[1].substring(0));
                         }
+                        System.out.println(splitEntry[0] + " - " +
+                                splitEntry[1] + " - " +
+                                splitEntry[1].substring(0, splitEntry[1].indexOf(getRepoURL(splitEntry[1]))));
                     }
                 }
             }
+            */
             event.getUser().send().notice("Got edges.json from progwml6");
             progwml6 = true;
         } catch (Exception f) {
@@ -84,18 +104,13 @@ public class CreeperHost extends Thread {
                         try {
                             String edgesjson = JsonUtils.getStringFromFile(System.getProperty("user.dir") + "/edges.json");
                             Json = JsonUtils.isJSONObject(edgesjson);
-                            String[] splitString = edgesjson.split(",");
-                            for (String entry : splitString) {
-                                String[] splitEntry = entry.split(":");
-                                chRepos.add(splitEntry[0]);
-                                chURLs.add(splitEntry[1]);
-                                chURLNames.add(splitEntry[1].substring(0, splitEntry[1].indexOf(".creeperrepo.net")));
-                                if (!ChReposlist.contains(splitEntry[1].substring(0, splitEntry[1].indexOf(".creeperrepo.net")))) {
-                                    ChReposlist.add(splitEntry[1].substring(0, splitEntry[1].indexOf(".creeperrepo.net")));
-                                    chURLNames.add(splitEntry[1]);
-                                    if (!ChReposlist.contains(splitEntry[1])) {
-                                        ChReposlist.add(splitEntry[1].substring(0));
-                                    }
+                            JsonObject report = JsonUtils.getJsonObject(edgesjson);
+                            chRepos = (ArrayList) getKeysFromJson(edgesjson);
+                            for (int i = 0; i < chRepos.size(); i++) {
+                                chURLs.add(report.get(chRepos.get(i).toString()).toString().replaceAll("\"",""));
+                                chURLNames.add(report.get(chRepos.get(i).toString()).toString().replaceAll("\\..*","").replaceAll("\"",""));
+                                if (!ChReposlist.contains(chURLs.get(i))) {
+                                    ChReposlist.add(chURLs.get(i));
                                 }
                             }
                             ch--;
@@ -114,27 +129,18 @@ public class CreeperHost extends Thread {
             } while (!connect);
 
             try {
-                URL url;
-                url = new URL("http://" + edges + "/edges.json");
-                BufferedReader re = new BufferedReader(new InputStreamReader(url.openStream()));
-                String st;
-                while ((st = re.readLine()) != null) {
-                    Json = JsonUtils.isJSONObject(st);
-                    st = st.replace("{", "").replace("}", "").replace("\"", "");
-                    String[] splitString = st.split(",");
-                    for (String entry : splitString) {
-                        String[] splitEntry = entry.split(":");
-                        if (splitEntry.length == 2) {
-                            chRepos.add(splitEntry[0]);
-                            chURLs.add(splitEntry[1]);
-                            chURLNames.add(splitEntry[1].substring(0, splitEntry[1].indexOf(getRepoURL(splitEntry[1]))));
-                            if (!ChReposlist.contains(splitEntry[1])) {
-                                ChReposlist.add(splitEntry[1].substring(0));
-                            }
-                        }
+                Document doc = Jsoup.connect("http://" + edges + "/edges.json").get();
+                Json = JsonUtils.isJSONObject(doc.text());
+                JsonObject report = JsonUtils.getJsonObject(doc.text());
+                chRepos = (ArrayList) getKeysFromJson(doc.text());
+                for (int i = 0; i < chRepos.size(); i++) {
+                    chURLs.add(report.get(chRepos.get(i).toString()).toString().replaceAll("\"",""));
+                    chURLNames.add(report.get(chRepos.get(i).toString()).toString().replaceAll("\\..*","").replaceAll("\"",""));
+                    if (!ChReposlist.contains(chURLs.get(i))) {
+                        ChReposlist.add(chURLs.get(i));
                     }
                 }
-            } catch (IOException E) {
+            } catch (Exception E) {
                 E.printStackTrace();
             }
         }
@@ -148,27 +154,21 @@ public class CreeperHost extends Thread {
             }
             if (chURLs.get(i).contains("creeperrepo.net") || chURLs.get(i).contains("cursecdn.com")) {
                 try {
-                    boolean test = false;
-                    Socket s = new Socket(InetAddress.getByName(chURLs.get(i)), 80);
-                    s.setSoTimeout(3000);
-                    if (s.isConnected()) {
-                        test = true;
-                    }
-                    tests.add(test);
-                    if (!test) {
-                        event.getUser().send().notice("Ping to " + chURLs.get(i) + " timedout!");
-                        System.out.println("Ping to " + chURLs.get(i) + " timedout!");
-                    } else {
+                    Socket s = new Socket();
+                    System.out.println(chURLs.get(i));
+                    s.connect(new InetSocketAddress(chURLs.get(i),80), 3000);
+                    //If it connects
+                        System.out.println("Connected to " +chURLs.get(i));
                         canConnect = true;
-                    }
+                        tests.add(true);
+
                     s.close();
                 } catch (Exception e) {
-                    //e.printStackTrace();
+                    tests.add(false);
+                    System.out.println("Could not connect to: " + chURLs.get(i));
+                    event.getUser().send().notice("Ping to " + chRepos.get(i) + " repo timed out!");
                 }
 
-                if (chURLNames.get(i).contains("chicago2")) {
-                    continue;
-                }
                 if (chURLs.get(i).contains("creeperrepo.net")) {
                     String jsonURL = "http://status.creeperrepo.net/fetchjson.php?l=" + chURLNames.get(i);
                     if (canConnect) {
@@ -184,7 +184,7 @@ public class CreeperHost extends Thread {
                             BufferedReader re = new BufferedReader(new InputStreamReader(urlConn.getInputStream()));
                             final long endTime = System.currentTimeMillis();
                             String jsons = re.readLine();
-                            System.out.println("[" + chURLNames.get(i) + "] Connected to stats page in " + (endTime - startTime1) + "(MS)");
+                            //System.out.println("[" + chURLNames.get(i) + "] Connected to stats page in " + (endTime - startTime1) + "(MS)");
                             String test;
                             int x;
                             JsonObject jsonObj = JsonUtils.getJsonObject(jsons);
@@ -224,7 +224,7 @@ public class CreeperHost extends Thread {
 
         Message.add("CreeperRepo: " + test + Colors.NORMAL + " Average Load " + (int) calculateAverage(Load) + "% | ");
         String ColorLoad = "-";
-
+        //System.out.println(chRepos.toString() + "\n"  + tests + "\n" + Status.toString() + "\n" + Load.toString());
         for (int x = 0; x < chRepos.size(); x++) {
             //Yay for colors! I think. Prog don't remove the colors -.-
 
@@ -271,6 +271,32 @@ public class CreeperHost extends Thread {
         }
         return ".cursecdn.com";
 
+    }
+
+    static List getKeysFromJson(String string) throws Exception
+    {
+        Object things = new Gson().fromJson(string, Object.class);
+        List keys = new ArrayList();
+        collectAllTheKeys(keys, things);
+        return keys;
+    }
+
+    static void collectAllTheKeys(List keys, Object o)
+    {
+        Collection values = null;
+        if (o instanceof Map)
+        {
+            Map map = (Map) o;
+            keys.addAll(map.keySet()); // collect keys at current level in hierarchy
+            values = map.values();
+        }
+        else if (o instanceof Collection)
+            values = (Collection) o;
+        else // nothing further to collect keys from
+            return;
+
+        for (Object value : values)
+            collectAllTheKeys(keys, value);
     }
 
 }
