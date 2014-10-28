@@ -158,7 +158,21 @@ public class Info extends Command {
                         return false;
                     }
                 }
-
+                if (args.length == 2 && args[1].contains("command")) {
+                    if (new File("commands/" + event.getChannel().getName() + "/").exists()) {
+                        File folder = new File("commands/" + event.getChannel().getName() + "/");
+                        File[] listOfFiles = folder.listFiles();
+                        for (File listOfFile : listOfFiles) {
+                            if (listOfFile.isFile())
+                                filename += listOfFile.getName() + " | \t";
+                        }
+                        if (!filename.isEmpty())
+                            event.getUser().send().notice(filename.replaceAll(".cmd", ""));
+                        else
+                            event.getUser().send().notice("There are no custom command for this channel yet!");
+                    }
+                    return true;
+                }
                 if (args.length == 2 && args[1].equalsIgnoreCase("full") | args[1].equalsIgnoreCase("all")) {
                     String exe = JsonUtils.getStringFromFile(System.getProperty("user.dir") + "/exec.json");
                     Permission exec = JsonUtils.getPermsFromString(exe).getPermission();
@@ -176,8 +190,7 @@ public class Info extends Command {
                     } catch (Exception url) {
                         url.printStackTrace();
                     }
-
-                    Perms perms = Main.map.get(event.getChannel().getName());
+                    Perms perms = Main.map.get(event.getChannel().getName().toLowerCase());
                     Permission p = perms.getPermission();
 
                     event.getUser().send().notice("Permission everyone has: " + JsonUtils.prettyPrint(p.getEveryone()).replaceAll("command.", "")); //Everyone Perms

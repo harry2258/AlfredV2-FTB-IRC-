@@ -191,7 +191,7 @@ public class Add extends Command {
                                 return true;
                             }
                         } catch (Exception ex) {
-                            System.out.println(ex);
+                            ex.printStackTrace();
                         }
                     } else {
                         event.getChannel().send().message("There is no command by that name!");
@@ -228,7 +228,7 @@ public class Add extends Command {
                                     return true;
                                 }
                             } catch (Exception ex) {
-                                System.out.println(ex);
+                                ex.printStackTrace();
                             }
                         } else {
                             event.getChannel().send().message("There is no command by that name!");
@@ -331,7 +331,7 @@ public class Add extends Command {
                                 return true;
                             }
                         } catch (Exception ex) {
-                            System.out.println(ex);
+                            ex.printStackTrace();
                         }
                     } else {
                         event.getChannel().send().message("There is no command by that name!");
@@ -361,7 +361,6 @@ public class Add extends Command {
                         }
 
                         JsonObject jsonObj = JsonUtils.getJsonObject(strFileJson);
-                        System.out.println(isAdded(newUser, event.getChannel().getName(), args));
                         if (!isAdded(newUser, event.getChannel().getName(), args)) {
                             temp = jsonObj.getAsJsonObject("Perms").get("Admins").toString();
                             String[] tempArray = (temp.replaceAll("[\\[\\]\"]", "") + "," + newuser + "").split(",");
@@ -444,7 +443,6 @@ public class Add extends Command {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        System.out.println(Array);
         return Array;
     }
 
@@ -460,7 +458,7 @@ public class Add extends Command {
 
     public static boolean isAdded(User user, String channel, String[] type) throws Exception {
         String sender = Main.Login.get(user.getNick());
-        Perms perm = Main.map.get(channel);
+        Perms perm = Main.map.get(channel.toLowerCase());
         if (sender == null) return true;
         if (type[1].equalsIgnoreCase("mod")) {
             for (String users : perm.getPermission().getMods()) {
@@ -469,9 +467,8 @@ public class Add extends Command {
                 }
             }
         } else if (type[1].equalsIgnoreCase("admin")) {
-            System.out.println(sender);
-            System.out.println(perm.getPermission().getAdmins());
             for (String users : perm.getPermission().getAdmins()) {
+                System.out.println(users);
                 if (users.equalsIgnoreCase(sender)) {
                     return true;
                 }

@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -76,7 +77,9 @@ public class Log extends Command {
             JsonObject jsonObj = JsonUtils.getJsonObject(test);
             URL url;
             url = new URL(Raw);
-            BufferedReader br = new BufferedReader(new InputStreamReader(url.openStream()));
+            URLConnection u = url.openConnection();
+            u.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/537.17 (KHTML, like Gecko) Chrome/24.0.1312.57 Safari/537.17");
+            BufferedReader br = new BufferedReader(new InputStreamReader(u.getInputStream()));
 
             if (br.readLine().contains("Technic Launcher Error Report")) {
                 System.out.println("Technic Log");

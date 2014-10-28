@@ -57,6 +57,9 @@ public class Remind extends Command {
                 out.println(date + " [" + event.getUser().getNick() + "] " + sb);
                 out.close();
                 event.getUser().send().notice("Reminder set! It will be sent the next time " + args[1] + " is active.");
+            } catch (Exception e) {
+                e.printStackTrace();
+                return false;
             }
         }
         return true;
