@@ -76,6 +76,7 @@ public class Utils {
         try {
             HttpURLConnection conn = (HttpURLConnection) new URL(link).openConnection();
             conn.addRequestProperty("User-Agent", USER_AGENT);
+            conn.setInstanceFollowRedirects(true);
             String type = conn.getContentType();
             int length = conn.getContentLength() / 1024;
             response = String.format("HTTP %s: %s", conn.getResponseCode(), conn.getResponseMessage());
