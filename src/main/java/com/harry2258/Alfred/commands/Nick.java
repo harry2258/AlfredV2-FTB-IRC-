@@ -3,6 +3,7 @@ package com.harry2258.Alfred.commands;
 import com.harry2258.Alfred.Main;
 import com.harry2258.Alfred.api.Command;
 import com.harry2258.Alfred.api.Config;
+import com.harry2258.Alfred.api.MessageUtils;
 import com.harry2258.Alfred.api.PermissionManager;
 import org.pircbotx.hooks.events.MessageEvent;
 
@@ -34,7 +35,7 @@ public class Nick extends Command {
                             stmt.execute();
                         } catch (SQLException e) {
                             e.printStackTrace();
-                            event.getUser().send().notice("Could not update the database!");
+                            MessageUtils.sendUserNotice(event, "Could not update the database!");
                         }
                     }
                     return true;

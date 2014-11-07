@@ -2,10 +2,7 @@ package com.harry2258.Alfred.commands;
 
 import com.harry2258.Alfred.Database.Create;
 import com.harry2258.Alfred.Main;
-import com.harry2258.Alfred.api.Command;
-import com.harry2258.Alfred.api.Config;
-import com.harry2258.Alfred.api.JsonUtils;
-import com.harry2258.Alfred.api.PermissionManager;
+import com.harry2258.Alfred.api.*;
 import com.harry2258.Alfred.json.Perms;
 import org.pircbotx.Channel;
 import org.pircbotx.hooks.events.MessageEvent;
@@ -30,7 +27,7 @@ public class Join extends Command {
             Channel target = event.getBot().getUserChannelDao().getChannel(args[1]);
 
             if (target.getName().equalsIgnoreCase("#dragonweyr") || target.getName().equalsIgnoreCase("#help") || target.getName().equalsIgnoreCase("#lobby") || target.getName().equalsIgnoreCase("#coders") || target.getName().equalsIgnoreCase("#esper") || target.getName().equalsIgnoreCase("#helper")) {
-                event.getChannel().send().message("YOU CRAZY SENDIN' ME OUT THERE?! AWW HELL NAW!!");
+                MessageUtils.sendChannel(event, "YOU CRAZY SENDIN' ME OUT THERE?! AWW HELL NAW!!");
                 return true;
             }
 

@@ -2,6 +2,7 @@ package com.harry2258.Alfred.commands;
 
 import com.harry2258.Alfred.api.Command;
 import com.harry2258.Alfred.api.Config;
+import com.harry2258.Alfred.api.MessageUtils;
 import com.harry2258.Alfred.api.PermissionManager;
 import org.pircbotx.hooks.events.MessageEvent;
 
@@ -27,10 +28,10 @@ public class Delcmd extends Command {
             File command = new File("commands/" + event.getChannel().getName() + "/" + commandname + ".cmd");
             if (command.exists()) {
                 command.delete();
-                event.getUser().send().notice("deleted command \"" + commandname + "\"");
+                MessageUtils.sendUserNotice(event, "deleted command \"" + commandname + "\"");
                 return true;
             } else {
-                event.getUser().send().notice("There is no custom command by that name!");
+                MessageUtils.sendUserNotice(event, "There is no custom command by that name!");
                 return true;
             }
         }

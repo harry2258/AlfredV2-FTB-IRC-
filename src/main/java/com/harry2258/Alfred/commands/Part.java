@@ -3,6 +3,7 @@ package com.harry2258.Alfred.commands;
 import com.harry2258.Alfred.Database.Create;
 import com.harry2258.Alfred.api.Command;
 import com.harry2258.Alfred.api.Config;
+import com.harry2258.Alfred.api.MessageUtils;
 import com.harry2258.Alfred.api.PermissionManager;
 import org.pircbotx.Channel;
 import org.pircbotx.hooks.events.MessageEvent;
@@ -29,7 +30,7 @@ public class Part extends Command {
                             Create.RemoveChannel(target.getName(), config, manager);
                         return true;
                     } else {
-                        event.getUser().send().notice("I'm not in the channel " + args[1] + "!");
+                        MessageUtils.sendUserNotice(event, "I'm not in the channel " + args[1] + "!");
                         return true;
                     }
                 } else {

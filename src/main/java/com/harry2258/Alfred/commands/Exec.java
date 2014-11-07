@@ -64,19 +64,19 @@ public class Exec extends Command {
                             return true;
                         } catch (EvalError ex) {
                             Logger.getLogger(Exec.class.getName()).log(Level.SEVERE, null, ex);
-                            event.getChannel().send().message(ex.toString());
+                            MessageUtils.sendChannel(event, ex.toString());
                             return true;
                         }
                     }
                 }
 
             } else {
-                event.getUser().send().notice("You have to be in the group 'Exec' to use this command!");
+                MessageUtils.sendUserNotice(event, "You have to be in the group 'Exec' to use this command!");
                 return false;
             }
         } catch (Exception ex) {
             Logger.getLogger(Exec.class.getName()).log(Level.SEVERE, null, ex);
-            event.getChannel().send().message(ex.getMessage());
+            MessageUtils.sendChannel(event, ex.getMessage());
         }
         return false;
     }

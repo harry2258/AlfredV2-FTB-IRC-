@@ -1,9 +1,6 @@
 package com.harry2258.Alfred.commands;
 
-import com.harry2258.Alfred.api.Command;
-import com.harry2258.Alfred.api.Config;
-import com.harry2258.Alfred.api.PermissionManager;
-import com.harry2258.Alfred.api.Utils;
+import com.harry2258.Alfred.api.*;
 import org.pircbotx.hooks.events.MessageEvent;
 
 public class Uptime extends Command {
@@ -17,7 +14,7 @@ public class Uptime extends Command {
 
     @Override
     public boolean execute(MessageEvent event) {
-        event.getChannel().send().message("Current bot uptime: " + Utils.getUptime());
+        MessageUtils.sendChannel(event, "Current bot uptime: " + Utils.getUptime());
         return true;
     }
 

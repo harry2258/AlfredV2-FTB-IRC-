@@ -1,10 +1,7 @@
 package com.harry2258.Alfred.commands;
 
 import com.google.gson.JsonObject;
-import com.harry2258.Alfred.api.Command;
-import com.harry2258.Alfred.api.Config;
-import com.harry2258.Alfred.api.JsonUtils;
-import com.harry2258.Alfred.api.PermissionManager;
+import com.harry2258.Alfred.api.*;
 import org.pircbotx.Colors;
 import org.pircbotx.hooks.events.MessageEvent;
 
@@ -51,7 +48,7 @@ public class Ud extends Command {
             String json1 = result.replaceAll("\n", " ");
             JsonObject jsonObj = JsonUtils.getJsonObject(json1);
             if (jsonObj.get("result_type").getAsString().equals("no_results")) {
-                event.getChannel().send().message("Could not find \"" + Word + "\" on Urban Dictionary :(");
+                MessageUtils.sendChannel(event, "Could not find \"" + Word + "\" on Urban Dictionary :(");
                 return true;
             }
             String definition = "";
@@ -62,7 +59,7 @@ public class Ud extends Command {
                 example = jsonObj.getAsJsonArray("list").get(id).getAsJsonObject().get("example").getAsString().replaceAll("\\n|\\r|\\t", " ").replaceAll("  ", " ");
                 permalink = jsonObj.getAsJsonArray("list").get(id).getAsJsonObject().get("permalink").getAsString();
             } catch (Exception x) {
-                event.getChannel().send().message("Could not get #" + id + " definition for the word '" + Word + "'");
+                MessageUtils.sendChannel(event, "Could not get #" + id + " definition for the word '" + Word + "'");
                 return true;
             }
             String info = definition;
@@ -77,7 +74,7 @@ public class Ud extends Command {
                 Example = example.substring(0, maxLengthEx) + "...";
             }
 
-            event.getChannel().send().message(Colors.BOLD + "Def: " + Colors.NORMAL + info + " | " + Colors.BOLD + "Ex: " + Colors.NORMAL + Example + " [ " + permalink + " ]");
+            MessageUtils.sendChannel(event, Colors.BOLD + "Def: " + Colors.NORMAL + info + " | " + Colors.BOLD + "Ex: " + Colors.NORMAL + Example + " [ " + permalink + " ]");
         } catch (Exception e) {
             e.printStackTrace();
             return false;

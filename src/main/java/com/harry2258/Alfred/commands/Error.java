@@ -3,6 +3,7 @@ package com.harry2258.Alfred.commands;
 import com.harry2258.Alfred.Main;
 import com.harry2258.Alfred.api.Command;
 import com.harry2258.Alfred.api.Config;
+import com.harry2258.Alfred.api.MessageUtils;
 import com.harry2258.Alfred.api.PermissionManager;
 import org.pircbotx.Colors;
 import org.pircbotx.hooks.events.MessageEvent;
@@ -41,26 +42,26 @@ public class Error extends Command {
         try {
             Class.forName("com.mysql.jdbc.Driver");
             if (args.length == 2 && args[1].equalsIgnoreCase("test")) {
-                event.getUser().send().notice("Trying to connect to database.");
+                MessageUtils.sendUserNotice(event, "Trying to connect to database.");
                 if (getConnection().isValid(5000)) {
                     Main.database = DriverManager.getConnection("jdbc:mysql://" + config.DatabaseHost() + "/" + config.Database(), config.DatabaseUser(), config.DatabasePass());
-                    event.getChannel().send().message("Connection to database was successful!");
+                    MessageUtils.sendChannel(event, "Connection to database was successful!");
                 } else {
-                    event.getChannel().send().message("Could not connect to the database, Please recheck your configuration.");
+                    MessageUtils.sendChannel(event, "Could not connect to the database, Please recheck your configuration.");
                 }
                 return true;
             }
 
             if (args.length == 2 && args[1].equalsIgnoreCase("create")) {
                 createTables();
-                event.getChannel().send().message("Created Table!");
+                MessageUtils.sendChannel(event, "Created Table!");
                 return true;
             }
 
             if (args.length == 2 && args[1].equalsIgnoreCase("review")) {
-                event.getUser().send().notice(Colors.BOLD + "Errors: " + Colors.NORMAL + Errors.get(event.getUser().getNick()));
-                event.getUser().send().notice(Colors.BOLD + "Diagnosis: " + Colors.NORMAL + Diagnosis.get(event.getUser().getNick()));
-                event.getUser().send().notice(Colors.BOLD + "Suggestion: " + Colors.NORMAL + Suggestion.get(event.getUser().getNick()));
+                MessageUtils.sendUserNotice(event, Colors.BOLD + "Errors: " + Colors.NORMAL + Errors.get(event.getUser().getNick()));
+                MessageUtils.sendUserNotice(event, Colors.BOLD + "Diagnosis: " + Colors.NORMAL + Diagnosis.get(event.getUser().getNick()));
+                MessageUtils.sendUserNotice(event, Colors.BOLD + "Suggestion: " + Colors.NORMAL + Suggestion.get(event.getUser().getNick()));
                 return true;
             }
 
@@ -72,13 +73,13 @@ public class Error extends Command {
                 Diagnosis.remove(event.getUser().getNick());
                 Suggestion.remove(event.getUser().getNick());
                 Errors.remove(event.getUser().getNick());
-                event.getChannel().send().message("Submissions successful!");
+                MessageUtils.sendChannel(event, "Submissions successful!");
                 return true;
             }
 
         } catch (Exception e) {
             e.printStackTrace();
-            event.getChannel().send().message(e.toString());
+            MessageUtils.sendChannel(event, e.toString());
             return true;
         }
 
@@ -89,7 +90,7 @@ public class Error extends Command {
         }
         Errors.remove(event.getUser().getNick());
         Errors.put(event.getUser().getNick(), br.toString());
-        event.getUser().send().notice("Added " + br.toString() + "to Error List!");
+        MessageUtils.sendUserNotice(event, "Added " + br.toString() + "to Error List!");
         return true;
     }
 
@@ -198,12 +199,12 @@ public class Error extends Command {
             stmt.close();
             if (!errors.isEmpty() || !Diag.isEmpty() || !Sugg.isEmpty()) {
                 for (int i = 0; i < Diag.size(); i++) {
-                    //event.getChannel().send().message(Colors.BOLD + "Diagnosis: " + Colors.NORMAL + Diag.get(i));
-                    event.getChannel().send().message(Colors.BOLD + "Suggestion: " + Colors.NORMAL + Sugg.get(i));
+                    //MessageUtils.sendChannel(event, Colors.BOLD + "Diagnosis: " + Colors.NORMAL + Diag.get(i));
+                    MessageUtils.sendChannel(event, Colors.BOLD + "Suggestion: " + Colors.NORMAL + Sugg.get(i));
 
                 }
             } else {
-                event.getChannel().send().message("No match found in database!");
+                MessageUtils.sendChannel(event, "No match found in database!");
             }
         } catch (SQLException ex) {
             System.out.println("SQLException: " + ex.getMessage());

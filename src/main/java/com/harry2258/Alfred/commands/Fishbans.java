@@ -1,9 +1,6 @@
 package com.harry2258.Alfred.commands;
 
-import com.harry2258.Alfred.api.Command;
-import com.harry2258.Alfred.api.Config;
-import com.harry2258.Alfred.api.PermissionManager;
-import com.harry2258.Alfred.api.Utils;
+import com.harry2258.Alfred.api.*;
 import org.pircbotx.hooks.events.MessageEvent;
 
 /**
@@ -21,7 +18,7 @@ public class Fishbans extends Command {
     @Override
     public boolean execute(MessageEvent event) throws Exception {
         String[] args = event.getMessage().split(" ");
-        event.getChannel().send().message(Utils.McBans(args[1]));
+        MessageUtils.sendChannel(event, Utils.McBans(args[1]));
         return true;
     }
 

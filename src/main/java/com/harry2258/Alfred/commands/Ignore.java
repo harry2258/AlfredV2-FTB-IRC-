@@ -6,10 +6,7 @@ package com.harry2258.Alfred.commands;
 
 
 import com.harry2258.Alfred.Main;
-import com.harry2258.Alfred.api.Command;
-import com.harry2258.Alfred.api.Config;
-import com.harry2258.Alfred.api.PermissionManager;
-import com.harry2258.Alfred.api.Utils;
+import com.harry2258.Alfred.api.*;
 import org.pircbotx.User;
 import org.pircbotx.hooks.events.MessageEvent;
 
@@ -51,12 +48,12 @@ public class Ignore extends Command {
                 target = event.getBot().getUserChannelDao().getUser(args[1]);
 
                 if (!event.getChannel().getUsers().contains(target)) {
-                    event.getChannel().send().message("User \"" + args[1] + "\" is not in the channel!");
+                    MessageUtils.sendChannel(event, "User \"" + args[1] + "\" is not in the channel!");
                     return false;
                 }
 
                 if (target.getNick().equals(event.getUser().getNick())) {
-                    event.getChannel().send().message(event.getUser().getNick() + " hurt itself in confusion!");
+                    MessageUtils.sendChannel(event, event.getUser().getNick() + " hurt itself in confusion!");
                     return true;
                 }
 
@@ -71,7 +68,7 @@ public class Ignore extends Command {
 
                                 if (user != null) {
                                     if (user.equalsIgnoreCase(Main.Login.get(event.getUser().getNick()))) {
-                                        event.getChannel().send().message(event.getUser().getNick() + " hurt itself in confusion!");
+                                        MessageUtils.sendChannel(event, event.getUser().getNick() + " hurt itself in confusion!");
                                         return true;
                                     }
                                 }

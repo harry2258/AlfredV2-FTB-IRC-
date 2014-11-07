@@ -67,16 +67,16 @@ public class Remove extends Command {
                                 p.setMods(temp);
                                 perm.setPermission(p);
                                 JsonUtils.writeJsonFile(file, perm);
-                                event.getUser().send().notice(args[2] + " is no longer a Moderator for channel " + event.getChannel().getName());
+                                MessageUtils.sendUserNotice(event, args[2] + " is no longer a Moderator for channel " + event.getChannel().getName());
                                 Main.map.put(event.getChannel().getName().toLowerCase(), perm);
-                                event.getUser().send().notice("Reloaded Permissions");
+                                MessageUtils.sendUserNotice(event, "Reloaded Permissions");
                                 if (inChan) {
                                     event.getBot().getUserChannelDao().getUser(args[2]).send()
                                             .notice("You are no longer a " + Colors.BOLD + "MODERATOR" + Colors.NORMAL + " for channel " + event.getChannel().getName());
                                 }
                                 return true;
                             } else {
-                                event.getChannel().send().message(args[2] + " is not on the list!");
+                                MessageUtils.sendChannel(event, args[2] + " is not on the list!");
                                 return true;
                             }
                         } catch (Exception ex) {
@@ -102,12 +102,12 @@ public class Remove extends Command {
                                 p.setModPerms(temp);
                                 perm.setPermission(p);
                                 JsonUtils.writeJsonFile(file, perm);
-                                event.getUser().send().notice("Moderators can no longer use the command '" + args[2] + "'");
+                                MessageUtils.sendUserNotice(event, "Moderators can no longer use the command '" + args[2] + "'");
                                 Main.map.put(event.getChannel().getName().toLowerCase(), perm);
-                                event.getUser().send().notice("Reloaded Permissions");
+                                MessageUtils.sendUserNotice(event, "Reloaded Permissions");
                                 return true;
                             } else {
-                                event.getChannel().send().message(command + " is not on the list!");
+                                MessageUtils.sendChannel(event, command + " is not on the list!");
                                 return true;
                             }
                         } catch (Exception ex) {
@@ -136,16 +136,16 @@ public class Remove extends Command {
                                 p.setAdmins(temp);
                                 perm.setPermission(p);
                                 JsonUtils.writeJsonFile(file, perm);
-                                event.getUser().send().notice(args[2] + " is no longer an Admin for channel " + event.getChannel().getName());
+                                MessageUtils.sendUserNotice(event, args[2] + " is no longer an Admin for channel " + event.getChannel().getName());
                                 Main.map.put(event.getChannel().getName().toLowerCase(), perm);
-                                event.getUser().send().notice("Reloaded Permissions");
+                                MessageUtils.sendUserNotice(event, "Reloaded Permissions");
                                 if (inChan) {
                                     event.getBot().getUserChannelDao().getUser(args[2]).send()
                                             .notice("You are no longer an " + Colors.BOLD + "ADMIN" + Colors.NORMAL + " for channel " + event.getChannel().getName());
                                 }
                                 return true;
                             } else {
-                                event.getChannel().send().message(args[2] + " is not on the list!");
+                                MessageUtils.sendChannel(event, args[2] + " is not on the list!");
                                 return true;
                             }
                         } catch (Exception ex) {
@@ -171,12 +171,12 @@ public class Remove extends Command {
                                 p.setEveryone(temp);
                                 perm.setPermission(p);
                                 JsonUtils.writeJsonFile(file, perm);
-                                event.getUser().send().notice("Regular users can no longer use the command '" + args[2] + "'");
+                                MessageUtils.sendUserNotice(event, "Regular users can no longer use the command '" + args[2] + "'");
                                 Main.map.put(event.getChannel().getName().toLowerCase(), perm);
-                                event.getUser().send().notice("Reloaded Permissions");
+                                MessageUtils.sendUserNotice(event, "Reloaded Permissions");
                                 return true;
                             } else {
-                                event.getChannel().send().message(args[2] + " is not on the list!");
+                                MessageUtils.sendChannel(event, args[2] + " is not on the list!");
                                 return true;
                             }
                         } catch (Exception ex) {
@@ -203,10 +203,10 @@ public class Remove extends Command {
                                 temp.remove(command);
                                 perm2.setGlobal(temp);
                                 JsonUtils.writeJsonFile(Main.globalperm, perm2);
-                                event.getUser().send().notice(args[2] + " was removed from the list!");
+                                MessageUtils.sendUserNotice(event, args[2] + " was removed from the list!");
                                 return true;
                             } else {
-                                event.getChannel().send().message(args[2] + " is not on the list!");
+                                MessageUtils.sendChannel(event, args[2] + " is not on the list!");
                                 return true;
                             }
                         } catch (Exception ex) {
@@ -263,16 +263,16 @@ public class Remove extends Command {
                             perm.setPermission(p);
                             PreparedStatement stmt1 = Main.database.prepareStatement("UPDATE `Channel_Permissions` SET `Permission` = '" + JsonUtils.GSON.toJson(perm) + "' WHERE `Channel` = '" + channel + "';");
                             stmt1.execute();
-                            event.getUser().send().notice(args[2] + " is no longer a Moderator for channel " + event.getChannel().getName());
+                            MessageUtils.sendUserNotice(event, args[2] + " is no longer a Moderator for channel " + event.getChannel().getName());
                             Main.map.put(event.getChannel().getName().toLowerCase(), perm);
-                            event.getUser().send().notice("Reloaded Permissions");
+                            MessageUtils.sendUserNotice(event, "Reloaded Permissions");
                             if (inChan) {
                                 event.getBot().getUserChannelDao().getUser(args[2]).send()
                                         .notice("You are no longer a " + Colors.BOLD + "MODERATOR" + Colors.NORMAL + " for channel " + event.getChannel().getName());
                             }
                             return true;
                         } else {
-                            event.getChannel().send().message(args[2] + " is not on the list!");
+                            MessageUtils.sendChannel(event, args[2] + " is not on the list!");
                             return true;
                         }
                     } catch (Exception ex) {
@@ -298,12 +298,12 @@ public class Remove extends Command {
                             perm.setPermission(p);
                             PreparedStatement stmt1 = Main.database.prepareStatement("UPDATE `Channel_Permissions` SET `Permission` = '" + JsonUtils.GSON.toJson(perm) + "' WHERE `Channel` = '" + channel + "';");
                             stmt1.execute();
-                            event.getUser().send().notice("Moderators can no longer use the command '" + args[2] + "'");
+                            MessageUtils.sendUserNotice(event, "Moderators can no longer use the command '" + args[2] + "'");
                             Main.map.put(event.getChannel().getName().toLowerCase(), perm);
-                            event.getUser().send().notice("Reloaded Permissions");
+                            MessageUtils.sendUserNotice(event, "Reloaded Permissions");
                             return true;
                         } else {
-                            event.getChannel().send().message(command + " is not on the list!");
+                            MessageUtils.sendChannel(event, command + " is not on the list!");
                             return true;
                         }
                     } catch (Exception ex) {
@@ -332,16 +332,16 @@ public class Remove extends Command {
                             perm.setPermission(p);
                             PreparedStatement stmt1 = Main.database.prepareStatement("UPDATE `Channel_Permissions` SET `Permission` = '" + JsonUtils.GSON.toJson(perm) + "' WHERE `Channel` = '" + channel + "';");
                             stmt1.execute();
-                            event.getUser().send().notice(args[2] + " is no longer an Admin for channel " + event.getChannel().getName());
+                            MessageUtils.sendUserNotice(event, args[2] + " is no longer an Admin for channel " + event.getChannel().getName());
                             Main.map.put(event.getChannel().getName().toLowerCase(), perm);
-                            event.getUser().send().notice("Reloaded Permissions");
+                            MessageUtils.sendUserNotice(event, "Reloaded Permissions");
                             if (inChan) {
                                 event.getBot().getUserChannelDao().getUser(args[2]).send()
                                         .notice("You are no longer an " + Colors.BOLD + "ADMIN" + Colors.NORMAL + " for channel " + event.getChannel().getName());
                             }
                             return true;
                         } else {
-                            event.getChannel().send().message(args[2] + " is not on the list!");
+                            MessageUtils.sendChannel(event, args[2] + " is not on the list!");
                             return true;
                         }
                     } catch (Exception ex) {
@@ -367,12 +367,12 @@ public class Remove extends Command {
                             perm.setPermission(p);
                             PreparedStatement stmt1 = Main.database.prepareStatement("UPDATE `Channel_Permissions` SET `Permission` = '" + JsonUtils.GSON.toJson(perm) + "' WHERE `Channel` = '" + channel + "';");
                             stmt1.execute();
-                            event.getUser().send().notice("Regular users can no longer use the command '" + args[2] + "'");
+                            MessageUtils.sendUserNotice(event, "Regular users can no longer use the command '" + args[2] + "'");
                             Main.map.put(event.getChannel().getName().toLowerCase(), perm);
-                            event.getUser().send().notice("Reloaded Permissions");
+                            MessageUtils.sendUserNotice(event, "Reloaded Permissions");
                             return true;
                         } else {
-                            event.getChannel().send().message(args[2] + " is not on the list!");
+                            MessageUtils.sendChannel(event, args[2] + " is not on the list!");
                             return true;
                         }
                     } catch (Exception ex) {

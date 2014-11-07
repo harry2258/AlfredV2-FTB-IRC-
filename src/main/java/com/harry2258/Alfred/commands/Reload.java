@@ -1,10 +1,7 @@
 package com.harry2258.Alfred.commands;
 
 import com.harry2258.Alfred.Main;
-import com.harry2258.Alfred.api.Command;
-import com.harry2258.Alfred.api.Config;
-import com.harry2258.Alfred.api.JsonUtils;
-import com.harry2258.Alfred.api.PermissionManager;
+import com.harry2258.Alfred.api.*;
 import com.harry2258.Alfred.json.Perms;
 import org.pircbotx.hooks.events.MessageEvent;
 
@@ -36,7 +33,7 @@ public class Reload extends Command {
             Perms p = JsonUtils.getPermsFromString(perms);
             Main.map.put(event.getChannel().getName(), p);
 
-            event.getUser().send().notice("Permissions were reloaded for " + event.getChannel().getName().toLowerCase() + "!");
+            MessageUtils.sendUserNotice(event, "Permissions were reloaded for " + event.getChannel().getName().toLowerCase() + "!");
             return true;
         } else {
             try {
@@ -58,7 +55,7 @@ public class Reload extends Command {
                     Ignore.ignored.add(rs3.getString("User"));
                 }
 
-                event.getChannel().send().message("Reloaded settings for currently connected channel.");
+                MessageUtils.sendChannel(event, "Reloaded settings for currently connected channel.");
                 return true;
             } catch (Exception e) {
                 e.printStackTrace();

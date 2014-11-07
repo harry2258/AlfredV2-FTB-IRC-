@@ -2,6 +2,7 @@ package com.harry2258.Alfred.commands;
 
 import com.harry2258.Alfred.api.Command;
 import com.harry2258.Alfred.api.Config;
+import com.harry2258.Alfred.api.MessageUtils;
 import com.harry2258.Alfred.api.PermissionManager;
 import org.pircbotx.hooks.events.MessageEvent;
 
@@ -23,7 +24,7 @@ public class Devoice extends Command {
         if (PermissionManager.hasExec(event.getUser().getNick())) {
             if (args.length == 2) {
                 event.getChannel().send().deVoice(event.getBot().getUserChannelDao().getUser(args[1]));
-                event.getChannel().send().message("You didn't see that coming, did you now " + args[1]);
+                MessageUtils.sendChannel(event, "You didn't see that coming, did you now " + args[1]);
                 return true;
             }
         }

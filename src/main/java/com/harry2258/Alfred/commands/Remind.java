@@ -1,9 +1,6 @@
 package com.harry2258.Alfred.commands;
 
-import com.harry2258.Alfred.api.Command;
-import com.harry2258.Alfred.api.Config;
-import com.harry2258.Alfred.api.PermissionManager;
-import com.harry2258.Alfred.api.Utils;
+import com.harry2258.Alfred.api.*;
 import org.pircbotx.User;
 import org.pircbotx.hooks.events.MessageEvent;
 
@@ -56,7 +53,7 @@ public class Remind extends Command {
             try (PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(file, true)))) {
                 out.println(date + " [" + event.getUser().getNick() + "] " + sb);
                 out.close();
-                event.getUser().send().notice("Reminder set! It will be sent the next time " + args[1] + " is active.");
+                MessageUtils.sendUserNotice(event, "Reminder set! It will be sent the next time " + args[1] + " is active.");
             } catch (Exception e) {
                 e.printStackTrace();
                 return false;

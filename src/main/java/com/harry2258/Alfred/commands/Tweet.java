@@ -20,7 +20,7 @@ import java.util.List;
 public class Tweet extends Command {
 
     public Tweet() {
-        super("Tweet", "Gets the latest tweets from the users!","Tweet (Tweet number)[@Name]");
+        super("Tweet", "Gets the latest tweets from the users!", "Tweet (Tweet number)[@Name]");
     }
 
     @Override
@@ -50,7 +50,7 @@ public class Tweet extends Command {
         String users = JsonUtils.getStringFromFile(TweetUsers.toString());
         JsonObject tweetuser = JsonUtils.getJsonObject(users);
         if (Auth.get("OAuthConsumerKey").getAsString().isEmpty() | Auth.get("OAuthConsumerSecret").getAsString().isEmpty() | Auth.get("OAuthAccessToken").getAsString().isEmpty() | Auth.get("OAuthAccessTokenSecret").getAsString().isEmpty()) {
-            event.getChannel().send().message("Holy Crap! This is something wrong with your \"oauth.json\" file in Twitter folder.");
+            MessageUtils.sendChannel(event, "Holy Crap! This is something wrong with your \"oauth.json\" file in Twitter folder.");
             return false;
         }
 
@@ -83,7 +83,7 @@ public class Tweet extends Command {
                 String text = "";
                 text += statuses.get(post).getText().replace("\n", " ").replace("\r", " ");
                 String address = "http://twitter.com/" + statuses.get(post).getUser().getName() + "/status/" + statuses.get(post).getId();
-                event.getChannel().send().message("[" + Colors.RED + "Twitter" + Colors.NORMAL + "] [ " + Utils.shortenUrl(address) + " ] [" + Colors.BOLD + statuses.get(post).getUser().getName() + Colors.NORMAL + "] " + text);
+                MessageUtils.sendChannel(event, "[" + Colors.RED + "Twitter" + Colors.NORMAL + "] [ " + Utils.shortenUrl(address) + " ] [" + Colors.BOLD + statuses.get(post).getUser().getName() + Colors.NORMAL + "] " + text);
                 if (!com.harry2258.Alfred.Misc.Twitter.tweets.containsValue(test)) {
                     tweets.put(args[1], test);
                 }
@@ -102,7 +102,7 @@ public class Tweet extends Command {
                 System.out.println(test);
                 if (!tweets.containsValue(test)) {
                     tweets.put(arg, test);
-                    event.getChannel().send().message(test);
+                    MessageUtils.sendChannel(event, test);
                 }
                 if (!com.harry2258.Alfred.Misc.Twitter.tweets.containsValue(test)) {
                     tweets.put(arg, test);

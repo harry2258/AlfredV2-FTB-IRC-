@@ -49,7 +49,7 @@ public class Transfer extends Command {
                 return false;
             }
         } else
-            event.getChannel().send().message("This command is used to transfer permissions to database. You are not using a Database to store information.");
+            MessageUtils.sendChannel(event, "This command is used to transfer permissions to database. You are not using a Database to store information.");
         return true;
     }
 

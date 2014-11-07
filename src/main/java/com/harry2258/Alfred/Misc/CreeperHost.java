@@ -3,6 +3,7 @@ package com.harry2258.Alfred.Misc;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.harry2258.Alfred.api.JsonUtils;
+import com.harry2258.Alfred.api.MessageUtils;
 import com.harry2258.Alfred.api.Utils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -10,15 +11,15 @@ import org.pircbotx.Colors;
 import org.pircbotx.hooks.events.MessageEvent;
 
 import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.*;
+import java.net.HttpURLConnection;
+import java.net.InetSocketAddress;
+import java.net.Socket;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Created by Hardik at 11:24 PM on 2/4/14.
@@ -55,37 +56,12 @@ public class CreeperHost extends Thread {
             JsonObject report = JsonUtils.getJsonObject(doc.text());
             chRepos = (ArrayList) getKeysFromJson(doc.text());
             for (int i = 0; i < chRepos.size(); i++) {
-                chURLs.add(report.get(chRepos.get(i).toString()).toString().replaceAll("\"",""));
-                chURLNames.add(report.get(chRepos.get(i).toString()).toString().replaceAll("\\..*","").replaceAll("\"",""));
+                chURLs.add(report.get(chRepos.get(i).toString()).toString().replaceAll("\"", ""));
+                chURLNames.add(report.get(chRepos.get(i).toString()).toString().replaceAll("\\..*", "").replaceAll("\"", ""));
                 if (!ChReposlist.contains(chURLs.get(i))) {
                     ChReposlist.add(chURLs.get(i));
                 }
             }
-            /*
-            URL repoListing;
-            repoListing = new URL("https://dl.dropboxusercontent.com/u/10600322/edges.json");
-            BufferedReader h = new BufferedReader(new InputStreamReader(repoListing.openStream()));
-            String st;
-            while ((st = h.readLine()) != null) {
-                Json = JsonUtils.isJSONObject(st);
-                st = st.replace("{", "").replace("}", "").replace("\"", "");
-                String[] splitString = st.split(",");
-                for (String entry : splitString) {
-                    String[] splitEntry = entry.split(":");
-                    if (splitEntry.length == 2) {
-                        chRepos.add(splitEntry[0]);
-                        chURLs.add(splitEntry[1]);
-                        chURLNames.add(splitEntry[1].substring(0, splitEntry[1].indexOf(getRepoURL(splitEntry[1]))));
-                        if (!ChReposlist.contains(splitEntry[1])) {
-                            ChReposlist.add(splitEntry[1].substring(0));
-                        }
-                        System.out.println(splitEntry[0] + " - " +
-                                splitEntry[1] + " - " +
-                                splitEntry[1].substring(0, splitEntry[1].indexOf(getRepoURL(splitEntry[1]))));
-                    }
-                }
-            }
-            */
             event.getUser().send().notice("Got edges.json from progwml6");
             progwml6 = true;
         } catch (Exception f) {
@@ -107,8 +83,8 @@ public class CreeperHost extends Thread {
                             JsonObject report = JsonUtils.getJsonObject(edgesjson);
                             chRepos = (ArrayList) getKeysFromJson(edgesjson);
                             for (int i = 0; i < chRepos.size(); i++) {
-                                chURLs.add(report.get(chRepos.get(i).toString()).toString().replaceAll("\"",""));
-                                chURLNames.add(report.get(chRepos.get(i).toString()).toString().replaceAll("\\..*","").replaceAll("\"",""));
+                                chURLs.add(report.get(chRepos.get(i).toString()).toString().replaceAll("\"", ""));
+                                chURLNames.add(report.get(chRepos.get(i).toString()).toString().replaceAll("\\..*", "").replaceAll("\"", ""));
                                 if (!ChReposlist.contains(chURLs.get(i))) {
                                     ChReposlist.add(chURLs.get(i));
                                 }
@@ -134,8 +110,8 @@ public class CreeperHost extends Thread {
                 JsonObject report = JsonUtils.getJsonObject(doc.text());
                 chRepos = (ArrayList) getKeysFromJson(doc.text());
                 for (int i = 0; i < chRepos.size(); i++) {
-                    chURLs.add(report.get(chRepos.get(i).toString()).toString().replaceAll("\"",""));
-                    chURLNames.add(report.get(chRepos.get(i).toString()).toString().replaceAll("\\..*","").replaceAll("\"",""));
+                    chURLs.add(report.get(chRepos.get(i).toString()).toString().replaceAll("\"", ""));
+                    chURLNames.add(report.get(chRepos.get(i).toString()).toString().replaceAll("\\..*", "").replaceAll("\"", ""));
                     if (!ChReposlist.contains(chURLs.get(i))) {
                         ChReposlist.add(chURLs.get(i));
                     }
@@ -156,11 +132,11 @@ public class CreeperHost extends Thread {
                 try {
                     Socket s = new Socket();
                     System.out.println(chURLs.get(i));
-                    s.connect(new InetSocketAddress(chURLs.get(i),80), 3000);
+                    s.connect(new InetSocketAddress(chURLs.get(i), 80), 3000);
                     //If it connects
-                        System.out.println("Connected to " +chURLs.get(i));
-                        canConnect = true;
-                        tests.add(true);
+                    System.out.println("Connected to " + chURLs.get(i));
+                    canConnect = true;
+                    tests.add(true);
 
                     s.close();
                 } catch (Exception e) {
@@ -224,9 +200,7 @@ public class CreeperHost extends Thread {
 
         Message.add("CreeperRepo: " + test + Colors.NORMAL + " Average Load " + (int) calculateAverage(Load) + "% | ");
         String ColorLoad = "-";
-        //System.out.println(chRepos.toString() + "\n"  + tests + "\n" + Status.toString() + "\n" + Load.toString());
         for (int x = 0; x < chRepos.size(); x++) {
-            //Yay for colors! I think. Prog don't remove the colors -.-
 
             if (Load.get(x) == -1) {
                 ColorLoad = "N/A";
@@ -244,7 +218,7 @@ public class CreeperHost extends Thread {
             sendMessage += s;
         }
 
-        event.getChannel().send().message(sendMessage);
+        MessageUtils.sendChannel(event, sendMessage);
         final long endTime = System.currentTimeMillis();
         Double time = (double) (endTime - startTime) / 1000;
         event.getUser().send().notice("Took me " + time + " seconds");
@@ -273,26 +247,22 @@ public class CreeperHost extends Thread {
 
     }
 
-    static List getKeysFromJson(String string) throws Exception
-    {
+    static List getKeysFromJson(String string) throws Exception {
         Object things = new Gson().fromJson(string, Object.class);
         List keys = new ArrayList();
         collectAllTheKeys(keys, things);
         return keys;
     }
 
-    static void collectAllTheKeys(List keys, Object o)
-    {
+    static void collectAllTheKeys(List keys, Object o) {
         Collection values = null;
-        if (o instanceof Map)
-        {
+        if (o instanceof Map) {
             Map map = (Map) o;
-            keys.addAll(map.keySet()); // collect keys at current level in hierarchy
+            keys.addAll(map.keySet());
             values = map.values();
-        }
-        else if (o instanceof Collection)
+        } else if (o instanceof Collection)
             values = (Collection) o;
-        else // nothing further to collect keys from
+        else
             return;
 
         for (Object value : values)

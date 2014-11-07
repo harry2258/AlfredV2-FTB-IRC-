@@ -2,6 +2,7 @@ package com.harry2258.Alfred.commands;
 
 import com.harry2258.Alfred.api.Command;
 import com.harry2258.Alfred.api.Config;
+import com.harry2258.Alfred.api.MessageUtils;
 import com.harry2258.Alfred.api.PermissionManager;
 import org.pircbotx.hooks.events.MessageEvent;
 
@@ -50,12 +51,12 @@ public class Setcmd extends Command {
                             writer.println(s);
                         }
                     } else {
-                        event.getChannel().send().message("lines must be less than or equal to 3!");
+                        MessageUtils.sendChannel(event, "lines must be less than or equal to 3!");
                         return false;
                     }
                     writer.flush();
                     writer.close();
-                    event.getUser().send().notice("'" + args[1] + "' was set to '" + sb.toString() + "'");
+                    MessageUtils.sendUserNotice(event, "'" + args[1] + "' was set to '" + sb.toString() + "'");
 
                     return true;
                 } catch (Exception e) {
@@ -63,7 +64,7 @@ public class Setcmd extends Command {
                 }
             }
         } else {
-            event.getUser().send().notice("You cannot create a custom command by that name!");
+            MessageUtils.sendUserNotice(event, "You cannot create a custom command by that name!");
         }
         return false;
     }

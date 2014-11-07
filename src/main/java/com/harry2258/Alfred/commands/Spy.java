@@ -3,6 +3,7 @@ package com.harry2258.Alfred.commands;
 import com.harry2258.Alfred.Main;
 import com.harry2258.Alfred.api.Command;
 import com.harry2258.Alfred.api.Config;
+import com.harry2258.Alfred.api.MessageUtils;
 import com.harry2258.Alfred.api.PermissionManager;
 import org.pircbotx.Channel;
 import org.pircbotx.hooks.events.MessageEvent;
@@ -32,7 +33,7 @@ public class Spy extends Command {
                     Channels.add(Main.relay.get(i).getName());
                 }
 
-                event.getUser().send().notice(Channels.toString());
+                MessageUtils.sendUserNotice(event, Channels.toString());
                 return true;
             }
 
@@ -40,14 +41,14 @@ public class Spy extends Command {
             Channel chan = event.getChannel();
             if (Main.relay.containsKey(target)) {
                 Main.relay.remove(target);
-                event.getChannel().send().message("no longer spying on channel " + target.getName());
+                MessageUtils.sendChannel(event, "no longer spying on channel " + target.getName());
                 return true;
             }
             Main.relay.put(target, chan);
-            event.getChannel().send().message("now spying on channel " + target.getName());
+            MessageUtils.sendChannel(event, "now spying on channel " + target.getName());
             return true;
         } else {
-            event.getUser().send().notice("You need to have Exec to use this command!");
+            MessageUtils.sendUserNotice(event, "You need to have Exec to use this command!");
         }
         return true;
 

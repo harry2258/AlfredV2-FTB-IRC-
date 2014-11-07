@@ -2,6 +2,7 @@ package com.harry2258.Alfred.commands;
 
 import com.harry2258.Alfred.api.Command;
 import com.harry2258.Alfred.api.Config;
+import com.harry2258.Alfred.api.MessageUtils;
 import com.harry2258.Alfred.api.PermissionManager;
 import org.pircbotx.hooks.events.MessageEvent;
 
@@ -10,7 +11,7 @@ import org.pircbotx.hooks.events.MessageEvent;
  */
 public class Suggestion extends Command {
     public Suggestion() {
-        super("Suggestion","Used with Log\\Error command", "Suggestion [Suggestion to fix the error]");
+        super("Suggestion", "Used with Log\\Error command", "Suggestion [Suggestion to fix the error]");
     }
 
     @Override
@@ -24,7 +25,7 @@ public class Suggestion extends Command {
         }
 
         Error.Suggestion.put(event.getUser().getNick(), br.toString());
-        event.getUser().send().notice("Added to suggestion list!");
+        MessageUtils.sendUserNotice(event, "Added to suggestion list!");
         return true;
     }
 

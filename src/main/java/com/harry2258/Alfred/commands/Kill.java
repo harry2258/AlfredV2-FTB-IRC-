@@ -7,7 +7,6 @@ import com.harry2258.Alfred.api.Config;
 import com.harry2258.Alfred.api.PermissionManager;
 import com.harry2258.Alfred.runnables.ChatSocketListener;
 import org.pircbotx.Colors;
-import org.pircbotx.PircBotX;
 import org.pircbotx.hooks.WaitForQueue;
 import org.pircbotx.hooks.events.MessageEvent;
 

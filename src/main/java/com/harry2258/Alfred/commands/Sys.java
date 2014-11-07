@@ -2,6 +2,7 @@ package com.harry2258.Alfred.commands;
 
 import com.harry2258.Alfred.api.Command;
 import com.harry2258.Alfred.api.Config;
+import com.harry2258.Alfred.api.MessageUtils;
 import com.harry2258.Alfred.api.PermissionManager;
 import org.pircbotx.Colors;
 import org.pircbotx.hooks.events.MessageEvent;
@@ -22,7 +23,7 @@ public class Sys extends Command {
     private PermissionManager manager;
 
     public Sys() {
-        super("Sys", "Gets the system uptime!","Sys");
+        super("Sys", "Gets the system uptime!", "Sys");
     }
 
     @Override
@@ -46,7 +47,7 @@ public class Sys extends Command {
             long Mins = TimeUnit.MILLISECONDS.toMinutes(uptime) - (TimeUnit.MILLISECONDS.toHours(uptime) * 60);
             long Secs = TimeUnit.MILLISECONDS.toSeconds(uptime) - (TimeUnit.MILLISECONDS.toMinutes(uptime) * 60);
             String time = String.format("%d Days, %d Hours, %d Min, %d Sec", Days, Hours, Mins, Secs);
-            event.getChannel().send().message(Colors.DARK_GREEN + "System uptime" + Colors.NORMAL + ": " + time);
+            MessageUtils.sendChannel(event, Colors.DARK_GREEN + "System uptime" + Colors.NORMAL + ": " + time);
 
         } else if (os.contains("mac") || os.contains("nix") || os.contains("nux") || os.contains("aix")) {
             int unixTime = Integer.valueOf(new Scanner(new FileInputStream("/proc/uptime")).next().replaceAll("\\.[0-9]+", ""));
@@ -55,7 +56,7 @@ public class Sys extends Command {
             long minute = TimeUnit.SECONDS.toMinutes(unixTime) - (TimeUnit.SECONDS.toHours(unixTime) * 60);
             long seconds = TimeUnit.SECONDS.toSeconds(unixTime) - (TimeUnit.SECONDS.toMinutes(unixTime) * 60);
             String time = String.format("%d Days %d Hours %d Minutes and %d seconds", day, hours, minute, seconds);
-            event.getChannel().send().message(Colors.DARK_GREEN + "System uptime" + Colors.NORMAL + ": " + time);
+            MessageUtils.sendChannel(event, Colors.DARK_GREEN + "System uptime" + Colors.NORMAL + ": " + time);
         }
 
         return true;

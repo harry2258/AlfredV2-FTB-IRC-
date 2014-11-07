@@ -1,9 +1,6 @@
 package com.harry2258.Alfred.commands;
 
-import com.harry2258.Alfred.api.Command;
-import com.harry2258.Alfred.api.Config;
-import com.harry2258.Alfred.api.PermissionManager;
-import com.harry2258.Alfred.api.Utils;
+import com.harry2258.Alfred.api.*;
 import org.pircbotx.Colors;
 import org.pircbotx.hooks.events.MessageEvent;
 
@@ -24,10 +21,10 @@ public class Paid extends Command {
         String[] args = event.getMessage().split(" ");
         Boolean b = Utils.checkAccount(args[1]);
         if (b) {
-            event.getChannel().send().message(args[1] + Colors.DARK_GREEN + " has " + Colors.NORMAL + "paid for minecraft");
+            MessageUtils.sendChannel(event, args[1] + Colors.DARK_GREEN + " has " + Colors.NORMAL + "paid for minecraft");
             return true;
         } else {
-            event.getChannel().send().message(args[1] + Colors.RED + " has not " + Colors.NORMAL + "paid for minecraft");
+            MessageUtils.sendChannel(event, args[1] + Colors.RED + " has not " + Colors.NORMAL + "paid for minecraft");
             return true;
         }
     }

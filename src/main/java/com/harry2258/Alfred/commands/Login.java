@@ -22,31 +22,31 @@ public class Login extends Command {
         String[] args = event.getMessage().split(" ");
         if (args.length == 2) {
             if (args[1].equalsIgnoreCase("again")) {
-                event.getUser().send().notice("Removing old login!");
+                MessageUtils.sendUserNotice(event, "Removing old login!");
                 Main.Login.remove(event.getUser().getNick());
                 Main.NotLoggedIn.remove(event.getUser().getNick());
-                event.getUser().send().notice("Logging in...");
+                MessageUtils.sendUserNotice(event, "Logging in...");
                 String account = Utils.getAccount(event.getUser(), event);
                 Main.Login.put(event.getUser().getNick(), account);
-                event.getUser().send().notice("Logged in!");
+                MessageUtils.sendUserNotice(event, "Logged in!");
                 return true;
             }
             if (args[1].equalsIgnoreCase("info")) {
-                event.getUser().send().notice("You are logged in as: " + Main.Login.get(event.getUser().getNick()));
-                event.getUser().send().notice("You are in group: " + Group(Main.Login.get(event.getUser().getNick()), event.getChannel().getName().toLowerCase()));
+                MessageUtils.sendUserNotice(event, "You are logged in as: " + Main.Login.get(event.getUser().getNick()));
+                MessageUtils.sendUserNotice(event, "You are in group: " + Group(Main.Login.get(event.getUser().getNick()), event.getChannel().getName().toLowerCase()));
                 return true;
             }
         }
 
 
         if (Main.Login.containsKey(event.getUser().getNick()) && !Main.NotLoggedIn.contains(event.getUser().getNick())) {
-            event.getUser().send().notice("You are already logged in! If you want to update login, use \"" + config.getTrigger() + "login again\"");
+            MessageUtils.sendUserNotice(event, "You are already logged in! If you want to update login, use \"" + config.getTrigger() + "login again\"");
             return true;
         }
         String account = Utils.getAccount(event.getUser(), event);
         Main.Login.put(event.getUser().getNick(), account);
         Main.NotLoggedIn.remove(event.getUser().getNick());
-        event.getUser().send().notice("You are now Logged in!");
+        MessageUtils.sendUserNotice(event, "You are now Logged in!");
         return true;
     }
 

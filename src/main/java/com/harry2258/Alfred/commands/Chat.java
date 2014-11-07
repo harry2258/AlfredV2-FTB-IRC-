@@ -4,10 +4,9 @@ import com.harry2258.Alfred.Main;
 import com.harry2258.Alfred.Misc.ChatterBot;
 import com.harry2258.Alfred.api.Command;
 import com.harry2258.Alfred.api.Config;
+import com.harry2258.Alfred.api.MessageUtils;
 import com.harry2258.Alfred.api.PermissionManager;
 import org.pircbotx.hooks.events.MessageEvent;
-
-import java.util.concurrent.TimeUnit;
 
 /**
  * Created by Hardik at 10:32 PM on 8/1/2014.
@@ -29,6 +28,7 @@ public class Chat extends Command {
         if (args.length == 3 && args[1].equalsIgnoreCase("exec") && PermissionManager.hasExec(event.getUser().getNick())) {
             try {
                 Main.Chat.put(event.getChannel(), Boolean.valueOf(args[2]));
+                MessageUtils.sendUserNotice(event, "Chat is now turned " + Boolean.valueOf(args[2]) + " for channel " + event.getChannel().getName());
                 return true;
             } catch (Exception e) {
                 e.printStackTrace();
@@ -50,7 +50,7 @@ public class Chat extends Command {
             ChatterBot.UserAnswered = true;
             waitForThread();
         }
-        event.getChannel().send().message(ChatterBot.s);
+        MessageUtils.sendChannel(event, ChatterBot.s);
         Thread.sleep(1000);
         return true;
     }

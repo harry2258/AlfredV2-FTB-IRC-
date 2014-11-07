@@ -1,15 +1,7 @@
 package com.harry2258.Alfred.commands;
 
-import com.google.common.collect.ImmutableSortedSet;
 import com.harry2258.Alfred.api.*;
 import org.pircbotx.hooks.events.MessageEvent;
-
-import java.lang.reflect.Array;
-import java.nio.channels.Channel;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
 
 
 public class Test extends Command {
@@ -24,10 +16,15 @@ public class Test extends Command {
     @Override
     public boolean execute(MessageEvent event) throws Exception {
 
-        event.getChannel().send().message("Test!");
-        event.getChannel().send().message(event.getUser().getUserLevels(event.getChannel()).toString());
-        event.getChannel().send().message(("Logged in as: " + Utils.getAccount(event.getUser(), event)));
+        MessageUtils.sendChannel(event, "Test!");
+        MessageUtils.sendChannel(event, event.getUser().getUserLevels(event.getChannel()).toString());
+        MessageUtils.sendChannel(event, ("Logged in as: " + Utils.getAccount(event.getUser(), event)));
 
+        /*
+        MessageUtils.sendChannel(event, "Test!");
+        MessageUtils.sendChannel(event, event.getUser().getUserLevels(event.getChannel()).toString());
+        MessageUtils.sendChannel(event, ("Logged in as: " + Utils.getAccount(event.getUser(), event)));
+        //Cause i'm too lazy to write the HTML
         /*
         ArrayList<String> help = new ArrayList<>();
         help.clear();

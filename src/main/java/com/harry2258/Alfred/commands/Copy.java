@@ -2,6 +2,7 @@ package com.harry2258.Alfred.commands;
 
 import com.harry2258.Alfred.api.Command;
 import com.harry2258.Alfred.api.Config;
+import com.harry2258.Alfred.api.MessageUtils;
 import com.harry2258.Alfred.api.PermissionManager;
 import org.pircbotx.Channel;
 import org.pircbotx.hooks.events.MessageEvent;
@@ -47,9 +48,9 @@ public class Copy extends Command {
                 }
                 inStream.close();
                 outStream.close();
-                event.getChannel().send().message("Copied the command successfully!");
+                MessageUtils.sendChannel(event, "Copied the command successfully!");
             } else {
-                event.getChannel().send().message("There is no custom command by that names in the channel " + targetChan.getName());
+                MessageUtils.sendChannel(event, "There is no custom command by that names in the channel " + targetChan.getName());
             }
 
         } else {

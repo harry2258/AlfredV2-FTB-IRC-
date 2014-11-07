@@ -2,6 +2,7 @@ package com.harry2258.Alfred.commands;
 
 import com.harry2258.Alfred.api.Command;
 import com.harry2258.Alfred.api.Config;
+import com.harry2258.Alfred.api.MessageUtils;
 import com.harry2258.Alfred.api.PermissionManager;
 import org.pircbotx.hooks.events.MessageEvent;
 
@@ -11,7 +12,7 @@ import org.pircbotx.hooks.events.MessageEvent;
 public class Diagnosis extends Command {
 
     public Diagnosis() {
-        super("Diagnosis", "Used with Logs\\Error command","Diagnosis [Diagnosis]");
+        super("Diagnosis", "Used with Logs\\Error command", "Diagnosis [Diagnosis]");
     }
 
     @Override
@@ -24,7 +25,7 @@ public class Diagnosis extends Command {
             br.append(args[i]).append(" ");
         }
         Error.Diagnosis.put(event.getUser().getNick(), br.toString());
-        event.getUser().send().notice("Added to diagnosis list!");
+        MessageUtils.sendUserNotice(event, "Added to diagnosis list!");
 
         return true;
     }

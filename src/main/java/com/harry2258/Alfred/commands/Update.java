@@ -3,6 +3,7 @@ package com.harry2258.Alfred.commands;
 import com.harry2258.Alfred.Main;
 import com.harry2258.Alfred.api.Command;
 import com.harry2258.Alfred.api.Config;
+import com.harry2258.Alfred.api.MessageUtils;
 import com.harry2258.Alfred.api.PermissionManager;
 import org.pircbotx.hooks.events.MessageEvent;
 
@@ -19,7 +20,7 @@ public class Update extends Command {
     private PermissionManager manager;
 
     public Update() {
-        super("Update", "Check for new updates!","Update");
+        super("Update", "Check for new updates!", "Update");
     }
 
     @Override
@@ -33,7 +34,7 @@ public class Update extends Command {
                 BufferedReader br = new BufferedReader(new InputStreamReader(url.openStream()));
                 String result;
                 while ((result = br.readLine()) != null) {
-                    event.getChannel().send().message(result);
+                    MessageUtils.sendChannel(event, result);
                 }
                 return true;
             } catch (Exception e) {
@@ -51,9 +52,9 @@ public class Update extends Command {
             int remote = Integer.valueOf(result.replaceAll("\\.", ""));
             int current = Integer.valueOf(Main.version.replaceAll("\\.", ""));
             if (remote > current) {
-                event.getChannel().send().message("New version of Alfred (" + result + ") is available now!");
+                MessageUtils.sendChannel(event, "New version of Alfred (" + result + ") is available now!");
             } else {
-                event.getChannel().send().message("Alfred is up-to-date!");
+                MessageUtils.sendChannel(event, "Alfred is up-to-date!");
             }
         } catch (Exception e) {
             e.printStackTrace();

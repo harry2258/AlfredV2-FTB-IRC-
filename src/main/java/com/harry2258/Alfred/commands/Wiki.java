@@ -40,7 +40,7 @@ public class Wiki extends Command {
 
 
         if (args.length == 1) {
-            event.getChannel().send().message("Official FTB Wiki: http://wiki.feed-the-beast.com");
+            MessageUtils.sendChannel(event, "Official FTB Wiki: http://wiki.feed-the-beast.com");
             return true;
         }
 
@@ -141,7 +141,7 @@ public class Wiki extends Command {
                 URL = x;
             }
 
-            event.getChannel().send().message(info + " [ " + URL + " ]");
+            MessageUtils.sendChannel(event, info + " [ " + URL + " ]");
             return true;
         } catch (Exception derp) {
             //derp.printStackTrace();
@@ -183,7 +183,7 @@ public class Wiki extends Command {
                 JsonObject jsonObj = JsonUtils.getJsonObject(json1);
 
                 if (jsonObj.getAsJsonObject("query").get("pages").toString().contains("Vanilla|type=")) {
-                    event.getChannel().send().message(test + " (Vanilla):" + ("http://minecraft.gamepedia.com/" + test).replaceAll(" ", "_"));
+                    MessageUtils.sendChannel(event, test + " (Vanilla):" + ("http://minecraft.gamepedia.com/" + test).replaceAll(" ", "_"));
                     return true;
                 }
 
@@ -241,13 +241,13 @@ public class Wiki extends Command {
                     URL = x;
                 }
 
-                event.getChannel().send().message(info + " [ " + URL + " ]");
+                MessageUtils.sendChannel(event, info + " [ " + URL + " ]");
                 return true;
             }
         } catch (Exception x) {
             x.printStackTrace();
             if (x.getMessage().contains("Read timed out"))
-                event.getUser().send().notice("Connection timed-out while connecting to the Official Wiki");
+                MessageUtils.sendUserNotice(event, "Connection timed-out while connecting to the Official Wiki");
             System.out.println("[Try 1] Could not find " + message + " on Official FTB Wiki");
             timeout = true;
         }
@@ -291,7 +291,7 @@ public class Wiki extends Command {
                 JsonObject jsonObj = JsonUtils.getJsonObject(json1);
 
                 if (jsonObj.getAsJsonObject("query").get("pages").toString().contains("Vanilla|type=")) {
-                    event.getChannel().send().message(name + " (Vanilla):" + ("http://minecraft.gamepedia.com/" + name).replaceAll(" ", "_"));
+                    MessageUtils.sendChannel(event, name + " (Vanilla):" + ("http://minecraft.gamepedia.com/" + name).replaceAll(" ", "_"));
                     return true;
                 }
 
@@ -363,7 +363,7 @@ public class Wiki extends Command {
                     URL = x;
                 }
 
-                event.getChannel().send().message(info + " [ " + URL + " ]");
+                MessageUtils.sendChannel(event, info + " [ " + URL + " ]");
                 return true;
             } catch (Exception e) {
                 e.printStackTrace();
@@ -410,7 +410,7 @@ public class Wiki extends Command {
             JsonObject jsonObj = JsonUtils.getJsonObject(json1);
 
             if (jsonObj.getAsJsonObject("query").get("pages").toString().contains("Vanilla|type=")) {
-                event.getChannel().send().message(name + " (Vanilla):" + ("http://minecraft.gamepedia.com/" + name).replaceAll(" ", "_"));
+                MessageUtils.sendChannel(event, name + " (Vanilla):" + ("http://minecraft.gamepedia.com/" + name).replaceAll(" ", "_"));
                 return true;
             }
 
@@ -459,8 +459,8 @@ public class Wiki extends Command {
             //x.printStackTrace();
             System.out.println("Could not find " + message + " on ftbwiki.org");
             if (x.getMessage().contains("504"))
-                event.getUser().send().notice("Connection timed-out while connecting to the ftbwiki.org");
-            event.getChannel().send().message("http://youtu.be/gvdf5n-zI14  |  Please check your spelling!  | The item/block was not found on The Minecraft Wiki, The Official FTB, and ftbwiki.org");
+                MessageUtils.sendUserNotice(event, "Connection timed-out while connecting to the ftbwiki.org");
+            MessageUtils.sendChannel(event, "http://youtu.be/gvdf5n-zI14  |  Please check your spelling!  | The item/block was not found on The Minecraft Wiki, The Official FTB, and ftbwiki.org");
             return true;
         }
 
@@ -478,7 +478,7 @@ public class Wiki extends Command {
             URL = x;
         }
 
-        event.getChannel().send().message(info + " [ " + URL + " ]");
+        MessageUtils.sendChannel(event, info + " [ " + URL + " ]");
 
         return true;
     }

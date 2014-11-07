@@ -2,6 +2,7 @@ package com.harry2258.Alfred.commands;
 
 import com.harry2258.Alfred.api.Command;
 import com.harry2258.Alfred.api.Config;
+import com.harry2258.Alfred.api.MessageUtils;
 import com.harry2258.Alfred.api.PermissionManager;
 import org.pircbotx.hooks.events.MessageEvent;
 
@@ -20,7 +21,7 @@ public class Say extends Command {
         for (int i = 1; i < args.length; i++) {
             builder.append(args[i]).append(" ");
         }
-        event.getChannel().send().message(builder.toString().trim());
+        MessageUtils.sendChannel(event, builder.toString().trim());
         return true;
     }
 

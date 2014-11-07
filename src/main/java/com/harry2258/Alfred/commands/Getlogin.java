@@ -1,10 +1,7 @@
 package com.harry2258.Alfred.commands;
 
 import com.harry2258.Alfred.Main;
-import com.harry2258.Alfred.api.Command;
-import com.harry2258.Alfred.api.Config;
-import com.harry2258.Alfred.api.PermissionManager;
-import com.harry2258.Alfred.api.Utils;
+import com.harry2258.Alfred.api.*;
 import org.pircbotx.User;
 import org.pircbotx.hooks.events.MessageEvent;
 
@@ -42,7 +39,7 @@ public class Getlogin extends Command {
                 }
             }
             final long endTime = System.currentTimeMillis();
-            event.getUser().send().notice("Got " + i + " users from " + event.getChannel().getName() + "! It took me " + ((endTime - startTime) / 1000) + " seconds.");
+            MessageUtils.sendUserNotice(event, "Got " + i + " users from " + event.getChannel().getName() + "! It took me " + ((endTime - startTime) / 1000) + " seconds.");
 
         }
         return true;

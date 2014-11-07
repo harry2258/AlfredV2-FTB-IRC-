@@ -1,9 +1,6 @@
 package com.harry2258.Alfred.commands;
 
-import com.harry2258.Alfred.api.Command;
-import com.harry2258.Alfred.api.Config;
-import com.harry2258.Alfred.api.PermissionManager;
-import com.harry2258.Alfred.api.Utils;
+import com.harry2258.Alfred.api.*;
 import org.pircbotx.hooks.events.MessageEvent;
 
 /**
@@ -25,7 +22,7 @@ public class Skin extends Command {
             event.respond("https://tntup.me/player/" + args[1] + "/128  |  " + "http://api.bionikcraft.com/ftb-launcher/?u=" + args[1] + "&p=d1-p1-r&s=256&f=1");
             return true;
         } else {
-            event.getChannel().send().message("Please enter a valid MineCraft name!");
+            MessageUtils.sendChannel(event, "Please enter a valid MineCraft name!");
         }
         return true;
     }

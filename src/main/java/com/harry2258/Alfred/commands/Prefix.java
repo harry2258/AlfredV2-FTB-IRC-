@@ -3,6 +3,7 @@ package com.harry2258.Alfred.commands;
 import com.harry2258.Alfred.Main;
 import com.harry2258.Alfred.api.Command;
 import com.harry2258.Alfred.api.Config;
+import com.harry2258.Alfred.api.MessageUtils;
 import com.harry2258.Alfred.api.PermissionManager;
 import org.pircbotx.hooks.events.MessageEvent;
 
@@ -27,7 +28,7 @@ public class Prefix extends Command {
                     config.setTrigger(args[1]);
                     if (config.useDatabase)
                         Main.database.prepareStatement("UPDATE `Bot` SET `Bot_Trigger` = '" + config.getTrigger() + "' WHERE `Bot`.`Nick` = '" + event.getBot().getUserBot().getNick() + "';").execute();
-                    event.getUser().send().notice("Bot prefix was set to " + config.getTrigger() + " from " + oldtrigger);
+                    MessageUtils.sendUserNotice(event, "Bot prefix was set to " + config.getTrigger() + " from " + oldtrigger);
                     return true;
                 } else {
                     return false;

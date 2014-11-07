@@ -104,6 +104,7 @@ public class Main {
             if (!edgesjsonfile.exists()) {
                 Utils.edges(edgesjsonfile);
             }
+
             Reflections reflections = new Reflections("com.harry2258.Alfred.commands");
             Set<Class<? extends Command>> subTypes = reflections.getSubTypesOf(Command.class);
             for (Class c : subTypes) {
@@ -124,6 +125,7 @@ public class Main {
             builder.setVersion("2.4.0");
             builder.setMessageDelay(500);
             builder.setServer(config.getServerHostame(), Integer.parseInt(config.getServerPort()), config.getServerPassword());
+            builder.setMaxLineLength(450);
 
             //Gotta listen to 'em
             builder.getListenerManager().addListener(new MessageEvent(config, manager));
@@ -204,10 +206,11 @@ public class Main {
                 new Thread(new Update(bot, config)).start();
             }
 
-            //new Thread(new WebServ()).start();
             bot.startBot();
+
         } catch (Exception ex) {
             ex.printStackTrace();
+            System.out.println("Help! I've crashed and I can't recover!");
             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
         }
     }

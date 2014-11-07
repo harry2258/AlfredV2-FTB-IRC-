@@ -1,9 +1,6 @@
 package com.harry2258.Alfred.commands;
 
-import com.harry2258.Alfred.api.Command;
-import com.harry2258.Alfred.api.Config;
-import com.harry2258.Alfred.api.PermissionManager;
-import com.harry2258.Alfred.api.Utils;
+import com.harry2258.Alfred.api.*;
 import org.pircbotx.Channel;
 import org.pircbotx.hooks.events.MessageEvent;
 
@@ -31,7 +28,7 @@ public class Compliment extends Command {
         String[] args = event.getMessage().split(" ");
         if (args.length == 2) {
             System.out.println(args[1]);
-            event.getChannel().send().message(args[1].trim() + ", " + compliment);
+            MessageUtils.sendChannel(event, args[1].trim() + ", " + compliment);
             return true;
         }
         if (args.length >= 2) {
@@ -55,7 +52,7 @@ public class Compliment extends Command {
                 e.printStackTrace();
             }
         }
-        event.getChannel().send().message(compliment);
+        MessageUtils.sendChannel(event, compliment);
         return true;
     }
 
@@ -63,7 +60,7 @@ public class Compliment extends Command {
         String[] args = event.getMessage().split(" ");
 
         if (chan.getName().equalsIgnoreCase("#dragonweyr") || chan.getName().equalsIgnoreCase("#help") || chan.getName().equalsIgnoreCase("#lobby") || chan.getName().equalsIgnoreCase("#coders") || chan.getName().equalsIgnoreCase("#esper") || chan.getName().equalsIgnoreCase("#helper")) {
-            event.getChannel().send().message("YOU CRAZY SENDIN' ME OUT THERE?! AWW HELL NAW!!");
+            MessageUtils.sendChannel(event, "YOU CRAZY SENDIN' ME OUT THERE?! AWW HELL NAW!!");
             return;
         }
         if (chan.isInviteOnly() || chan.isSecret() || chan.isChannelPrivate()) {

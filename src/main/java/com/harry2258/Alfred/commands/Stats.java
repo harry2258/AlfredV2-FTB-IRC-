@@ -1,18 +1,9 @@
 package com.harry2258.Alfred.commands;
 
-import com.google.gson.JsonObject;
 import com.harry2258.Alfred.api.Command;
 import com.harry2258.Alfred.api.Config;
-import com.harry2258.Alfred.api.JsonUtils;
 import com.harry2258.Alfred.api.PermissionManager;
 import org.pircbotx.hooks.events.MessageEvent;
-
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLConnection;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Created by Hardik at 12:44 PM on 5/28/14.
@@ -70,7 +61,7 @@ public class Stats extends Command {
             ex.printStackTrace();
         }
 
-        event.getChannel().send().message(String.format("The modpack %s has been installed %s times, launched %s times and has crashed %s times. Total play time is: %s", TrackerName, Installed, Launched, String.valueOf(Crashed), Hours));
+        MessageUtils.sendChannel(event, String.format("The modpack %s has been installed %s times, launched %s times and has crashed %s times. Total play time is: %s", TrackerName, Installed, Launched, String.valueOf(Crashed), Hours));
         */
         return true;
     }

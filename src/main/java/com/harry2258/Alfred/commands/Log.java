@@ -83,13 +83,18 @@ public class Log extends Command {
 
             if (br.readLine().contains("Technic Launcher Error Report")) {
                 System.out.println("Technic Log");
-            }else {
+            } else {
                 while ((tmp = br.readLine()) != null) {
                     if (tmp.contains("This paste has been removed!")) {
-                        event.getChannel().send().message("The paste cannot be found!");
+                        MessageUtils.sendChannel(event, "The paste cannot be found!");
                         return true;
                     } else if (tmp.contains("FTBLaunch starting up")) {
-                        temp = Colors.BOLD + "Launcher: " + Colors.NORMAL + tmp.replaceAll(".*(?:version )|\\)", "");
+                        temp = Colors.BOLD + "Launcher: " + Colors.NORMAL + tmp.replaceAll(".*(?:version )|(?: Build).*", "");
+                        if (!info.contains(temp)) {
+                            info.add(temp);
+                        }
+                    } else if (tmp.contains("FTB Launcher CI Build")) {
+                        temp = Colors.BOLD + "CI #" + Colors.NORMAL + tmp.replaceAll(".*(?:#: )|(?:,).*", "");
                         if (!info.contains(temp)) {
                             info.add(temp);
                         }
@@ -148,12 +153,12 @@ public class Log extends Command {
                 }
 
                 if (message.length() > 500) {
-                    event.getChannel().send().message("The log was too big and was not sent! Please retry again or disable some features in parser.json");
+                    MessageUtils.sendChannel(event, "The log was too big and was not sent! Please retry again or disable some features in parser.json");
                     return false;
                 } else if (message.isEmpty()) {
-                    event.getChannel().send().message("Could not get any information from that log!");
+                    MessageUtils.sendChannel(event, "Could not get any information from that log!");
                 } else {
-                    event.getChannel().send().message(message);
+                    MessageUtils.sendChannel(event, message);
                 }
             }
 

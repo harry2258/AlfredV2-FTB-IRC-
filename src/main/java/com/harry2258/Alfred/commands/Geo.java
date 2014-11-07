@@ -28,7 +28,7 @@ public class Geo extends Command {
         String ip = args[1];
 
         if (event.getChannel().isChannelPrivate() || event.getChannel().isSecret() || event.getChannel().isInviteOnly()) {
-            event.getChannel().send().message("No no no! Not in here!");
+            MessageUtils.sendChannel(event, "No no no! Not in here!");
             return true;
         }
 
@@ -74,7 +74,7 @@ public class Geo extends Command {
             } catch (Exception e) {
                 e.printStackTrace();
                 if (e.getMessage().contains("400")) {
-                    event.getChannel().send().message("IPV6 aren't supported yet!");
+                    MessageUtils.sendChannel(event, "IPV6 aren't supported yet!");
                 }
                 return false;
             }
@@ -95,10 +95,10 @@ public class Geo extends Command {
                 Logger.getLogger(com.harry2258.Alfred.listeners.MessageEvent.class.getName()).log(Level.SEVERE, null, ex);
             }
         } else {
-            if (Utils.ValidIP(args[2]))
-                ip = args[2];
+            if (Utils.ValidIP(args[1]))
+                ip = args[1];
             else
-                ip = java.net.InetAddress.getByName(args[2]).getHostAddress();
+                ip = java.net.InetAddress.getByName(args[1]).getHostAddress();
         }
 
         String geo = "http://freegeoip.net/json/" + ip;
@@ -109,15 +109,15 @@ public class Geo extends Command {
             BufferedReader re = new BufferedReader(new InputStreamReader(url.openStream()));
             jsonstring = re.readLine();
             JSONObject jsonObj = new JSONObject(jsonstring);
-            info += Colors.BOLD + "State: " + Colors.NORMAL + jsonObj.getString("region_name") + " | \t";
-            info += Colors.BOLD + "Country: " + Colors.NORMAL + jsonObj.getString("country_name") + " | \t";
+            info += Colors.BOLD + "State: " + Colors.NORMAL + (jsonObj.getString("region_name").equals("") ? "N/A" : jsonObj.getString("region_name")) + " | \t";
+            info += Colors.BOLD + "Country: " + Colors.NORMAL + (jsonObj.getString("country_name").equals("") ? "N/A" : jsonObj.getString("country_name")) + " | \t";
             info += Colors.BOLD + "Coords: " + Colors.NORMAL + jsonObj.getString("latitude").replaceAll("(?:\\.).*", "") + " " + jsonObj.getString("longitude").replaceAll("(?:\\.).*", "");
 
-            event.getChannel().send().message(info);
+            MessageUtils.sendChannel(event, info);
         } catch (Exception e) {
             e.printStackTrace();
             if (jsonstring.contains("Not Found")) {
-                event.getChannel().send().message("IPV6 aren't supported yet!");
+                MessageUtils.sendChannel(event, "IPV6 aren't supported yet!");
             }
             return false;
         }

@@ -2,6 +2,7 @@ package com.harry2258.Alfred.commands;
 
 import com.harry2258.Alfred.api.Command;
 import com.harry2258.Alfred.api.Config;
+import com.harry2258.Alfred.api.MessageUtils;
 import com.harry2258.Alfred.api.PermissionManager;
 import org.pircbotx.Channel;
 import org.pircbotx.hooks.events.MessageEvent;
@@ -36,7 +37,7 @@ public class Cycle extends Command {
                     chan.send().part();
                     chan.getBot().sendIRC().joinChannel(chan.getName());
                 } else {
-                    event.getUser().send().notice("I am not in that channel!");
+                    MessageUtils.sendUserNotice(event, "I am not in that channel!");
                 }
                 return true;
             }

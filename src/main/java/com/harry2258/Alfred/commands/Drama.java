@@ -1,9 +1,6 @@
 package com.harry2258.Alfred.commands;
 
-import com.harry2258.Alfred.api.Command;
-import com.harry2258.Alfred.api.Config;
-import com.harry2258.Alfred.api.PermissionManager;
-import com.harry2258.Alfred.api.Utils;
+import com.harry2258.Alfred.api.*;
 import org.pircbotx.hooks.events.MessageEvent;
 
 /**
@@ -20,7 +17,7 @@ public class Drama extends Command {
     @Override
     public boolean execute(MessageEvent event) throws Exception {
         try {
-            event.getChannel().send().message(Utils.getDrama());
+            MessageUtils.sendChannel(event, Utils.getDrama());
         } catch (Exception e) {
             return false;
         }

@@ -12,6 +12,8 @@ import java.io.File;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
 
 /**
  * Created by Hardik on 1/8/14.
@@ -30,6 +32,8 @@ public class Info extends Command {
     public boolean execute(MessageEvent event) throws Exception {
         String[] args = event.getMessage().split(" ");
         String filename = "";
+        ArrayList<String> CommandsName = new ArrayList<>();
+        HashSet<String> hs = new HashSet<>();
         String URL = "None";
 
         if (!config.useDatabase) {
@@ -47,9 +51,9 @@ public class Info extends Command {
                             filename += listOfFile.getName() + " | \t";
                     }
                     if (!filename.isEmpty())
-                        event.getUser().send().notice(filename.replaceAll(".cmd", ""));
+                        MessageUtils.sendUserNotice(event, filename.replaceAll(".cmd", ""));
                     else
-                        event.getUser().send().notice("There are no custom command for this channel yet!");
+                        MessageUtils.sendUserNotice(event, "There are no custom command for this channel yet!");
                 }
                 return true;
             }
@@ -66,13 +70,13 @@ public class Info extends Command {
                     NumberofCommand = new File("commands/" + event.getChannel().getName() + "/").listFiles().length;
                 }
 
-                event.getUser().send().notice("Permission everyone has: " + JsonUtils.prettyPrint(p.getEveryone()).replaceAll("command.", "")); //Everyone Perms
-                event.getUser().send().notice("Mod Permissions: " + JsonUtils.prettyPrint(p.getModPerms()).replaceAll("command.", "")); //Mod Permissions
-                event.getUser().send().notice("Moderators: " + JsonUtils.prettyPrint(p.getMods())); //Mod List
-                event.getUser().send().notice("Admins: " + JsonUtils.prettyPrint(p.getAdmins())); //Admin List
-                event.getUser().send().notice("Executive Users: " + JsonUtils.prettyPrint(exec.getExec()));  //Global Exec!!
-                event.getUser().send().notice("Number of custom command: " + NumberofCommand + ". For a full list, type " + config.getTrigger() + "info commands");
-                event.getUser().send().notice("URL scanning: " + URL);
+                MessageUtils.sendUserNotice(event, "Permission everyone has: " + JsonUtils.prettyPrint(p.getEveryone()).replaceAll("command.", "")); //Everyone Perms
+                MessageUtils.sendUserNotice(event, "Mod Permissions: " + JsonUtils.prettyPrint(p.getModPerms()).replaceAll("command.", "")); //Mod Permissions
+                MessageUtils.sendUserNotice(event, "Moderators: " + JsonUtils.prettyPrint(p.getMods())); //Mod List
+                MessageUtils.sendUserNotice(event, "Admins: " + JsonUtils.prettyPrint(p.getAdmins())); //Admin List
+                MessageUtils.sendUserNotice(event, "Executive Users: " + JsonUtils.prettyPrint(exec.getExec()));  //Global Exec!!
+                MessageUtils.sendUserNotice(event, "Number of custom command: " + NumberofCommand + ". For a full list, type " + config.getTrigger() + "info commands");
+                MessageUtils.sendUserNotice(event, "URL scanning: " + URL);
                 return true;
             }
 
@@ -80,20 +84,45 @@ public class Info extends Command {
             String Usergroup = Login.Group(Main.Login.get(event.getUser().getNick()), event.getChannel().getName());
 
             if (Usergroup.equalsIgnoreCase("None :<")) {
-                event.getUser().send().notice("You are in the default group and have access to: " + JsonUtils.prettyPrint(p.getEveryone()).replaceAll("command.", ""));
+                MessageUtils.sendUserNotice(event, "You are in the default group and have access to: " + JsonUtils.prettyPrint(p.getEveryone()).replaceAll("command.", ""));
             }
             if (Usergroup.equalsIgnoreCase("Moderator")) {
-                event.getUser().send().notice("You are in the Moderator group and have access to: " + JsonUtils.prettyPrint(p.getModPerms()).replaceAll("command.", "") + JsonUtils.prettyPrint(p.getEveryone()).replaceAll("command.", ""));
+                MessageUtils.sendUserNotice(event, "You are in the Moderator group and have access to: " + JsonUtils.prettyPrint(p.getModPerms()).replaceAll("command.", "") + JsonUtils.prettyPrint(p.getEveryone()).replaceAll("command.", ""));
             }
             if (Usergroup.equalsIgnoreCase("Admin")) {
-                event.getUser().send().notice("You are a Admin! You have access to all commands " + Colors.BOLD + "except" + Colors.NORMAL + " a few critical commands such as Kill, Exec, Etc.");
+                MessageUtils.sendUserNotice(event, "You are a Admin! You have access to all commands " + Colors.BOLD + "except" + Colors.NORMAL + " a few critical commands such as Kill, Exec, Etc.");
             }
             if (Usergroup.equalsIgnoreCase("Exec")) {
-                event.getUser().send().notice("You own this town!");
+                MessageUtils.sendUserNotice(event, "You own this town!");
             }
             return true;
         } else {
             try {
+                if (args.length == 2 && args[1].contains("command")) {
+                    if (new File("commands/" + event.getChannel().getName() + "/").exists()) {
+                        File folder = new File("commands/" + event.getChannel().getName() + "/");
+                        File[] listOfFiles = folder.listFiles();
+                        if (listOfFiles != null) {
+                            for (File listOfFile : listOfFiles) {
+                                if (listOfFile.isFile()) {
+                                    CommandsName.add((Character.toUpperCase(listOfFile.getName().charAt(0)) + listOfFile.getName().substring(1).toLowerCase()).replace(".cmd",""));
+                                }
+                            }
+                        } else {
+                            MessageUtils.sendUserNotice(event, "There are no custom command for this channel yet!");
+                            return true;
+                        }
+                            hs.addAll(CommandsName);
+                            CommandsName.clear();
+                            CommandsName.addAll(hs);
+                            Collections.sort(CommandsName);
+                            String temp = CommandsName.toString();
+                            MessageUtils.sendChannel(event, temp);
+
+                    }
+                    return true;
+                }
+
                 if (args.length == 2 && args[1].equalsIgnoreCase("rejoin")) {
                     PreparedStatement stmt = Main.database.prepareStatement("SELECT Channel  FROM `Rejoin_Channels`");
                     ResultSet rs = stmt.executeQuery();
@@ -101,7 +130,7 @@ public class Info extends Command {
                     while (rs.next()) {
                         channels.add(rs.getString("Channel"));
                     }
-                    event.getUser().send().notice("Channels to join when restarting: " + channels.toString());
+                    MessageUtils.sendUserNotice(event, "Channels to join when restarting: " + channels.toString());
                     return true;
                 }
 
@@ -114,10 +143,11 @@ public class Info extends Command {
                             i = i + 1;
                         }
                     }
-                    event.getUser().send().notice(String.valueOf(i) + " users are ignored by the bot. ");
+                    MessageUtils.sendUserNotice(event, String.valueOf(i) + " users are ignored by the bot. ");
                     if (i > 0)
-                        event.getUser().send().notice("Type \"" + config.getTrigger() + "info ignored list \" for a full list!");
+                        MessageUtils.sendUserNotice(event, "Type \"" + config.getTrigger() + "info ignored list \" for a full list!");
                 }
+
                 if (args.length == 3 && args[2].equalsIgnoreCase("list")) {
                     ArrayList<String> IgnoredUsers = new ArrayList<>();
                     PreparedStatement stmt3 = Main.database.prepareStatement("SELECT * FROM `Ignored_Users`");
@@ -133,9 +163,10 @@ public class Info extends Command {
                             }
                         }
                     }
-                    event.getUser().send().notice("Ignored Users: " + JsonUtils.prettyPrint(IgnoredUsers));
+                    MessageUtils.sendUserNotice(event, "Ignored Users: " + JsonUtils.prettyPrint(IgnoredUsers));
                     return true;
                 }
+
                 if (args.length == 4 && args[2].equalsIgnoreCase("user")) {
                     String info;
                     String account = "";
@@ -150,7 +181,7 @@ public class Info extends Command {
                         ResultSet rs = stmt.executeQuery();
                         while (rs.next()) {
                             info = "User " + args[3] + " was ignored by " + rs.getString("Ignored_By") + " on " + rs.getDate("Date") + " at " + rs.getTime("Date") + " UTC";
-                            event.getChannel().send().message(info);
+                            MessageUtils.sendChannel(event, info);
                         }
                         return true;
                     } catch (Exception user) {
@@ -158,22 +189,8 @@ public class Info extends Command {
                         return false;
                     }
                 }
-                if (args.length == 2 && args[1].contains("command")) {
-                    if (new File("commands/" + event.getChannel().getName() + "/").exists()) {
-                        File folder = new File("commands/" + event.getChannel().getName() + "/");
-                        File[] listOfFiles = folder.listFiles();
-                        for (File listOfFile : listOfFiles) {
-                            if (listOfFile.isFile())
-                                filename += listOfFile.getName() + " | \t";
-                        }
-                        if (!filename.isEmpty())
-                            event.getUser().send().notice(filename.replaceAll(".cmd", ""));
-                        else
-                            event.getUser().send().notice("There are no custom command for this channel yet!");
-                    }
-                    return true;
-                }
-                if (args.length == 2 && args[1].equalsIgnoreCase("full") | args[1].equalsIgnoreCase("all")) {
+
+                if (args.length == 2 && (args[1].equalsIgnoreCase("full") || args[1].equalsIgnoreCase("all"))) {
                     String exe = JsonUtils.getStringFromFile(System.getProperty("user.dir") + "/exec.json");
                     Permission exec = JsonUtils.getPermsFromString(exe).getPermission();
 
@@ -193,13 +210,13 @@ public class Info extends Command {
                     Perms perms = Main.map.get(event.getChannel().getName().toLowerCase());
                     Permission p = perms.getPermission();
 
-                    event.getUser().send().notice("Permission everyone has: " + JsonUtils.prettyPrint(p.getEveryone()).replaceAll("command.", "")); //Everyone Perms
-                    event.getUser().send().notice("Mod Permissions: " + JsonUtils.prettyPrint(p.getModPerms()).replaceAll("command.", "")); //Mod Permissions
-                    event.getUser().send().notice("Moderators: " + JsonUtils.prettyPrint(p.getMods())); //Mod List
-                    event.getUser().send().notice("Admins: " + JsonUtils.prettyPrint(p.getAdmins())); //Admin List
-                    event.getUser().send().notice("Executive Users: " + JsonUtils.prettyPrint(exec.getExec()));  //Global Exec!!
-                    event.getUser().send().notice("Number of custom command: " + NumberofCommand + ". For a full list, type " + config.getTrigger() + "info commands");
-                    event.getUser().send().notice("URL scanning: " + URL);
+                    MessageUtils.sendUserNotice(event, "Permission everyone has: " + JsonUtils.prettyPrint(p.getEveryone()).replaceAll("command.", "")); //Everyone Perms
+                    MessageUtils.sendUserNotice(event, "Mod Permissions: " + JsonUtils.prettyPrint(p.getModPerms()).replaceAll("command.", "")); //Mod Permissions
+                    MessageUtils.sendUserNotice(event, "Moderators: " + JsonUtils.prettyPrint(p.getMods())); //Mod List
+                    MessageUtils.sendUserNotice(event, "Admins: " + JsonUtils.prettyPrint(p.getAdmins())); //Admin List
+                    MessageUtils.sendUserNotice(event, "Executive Users: " + JsonUtils.prettyPrint(exec.getExec()));  //Global Exec!!
+                    MessageUtils.sendUserNotice(event, "Number of custom command: " + NumberofCommand + ". For a full list, type " + config.getTrigger() + "info commands");
+                    MessageUtils.sendUserNotice(event, "URL scanning: " + URL);
                 }
 
             } catch (Exception e) {

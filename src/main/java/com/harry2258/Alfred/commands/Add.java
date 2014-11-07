@@ -14,7 +14,7 @@ import com.harry2258.Alfred.json.Perms;
 import org.pircbotx.Colors;
 import org.pircbotx.User;
 import org.pircbotx.hooks.events.MessageEvent;
-
+import com.harry2258.Alfred.api.MessageUtils;
 import java.io.File;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -49,7 +49,7 @@ public class Add extends Command {
                 if (args.length == 3) {
                     try {
                         if (!event.getChannel().getUsers().contains(event.getBot().getUserChannelDao().getUser(args[2]))) {
-                            event.getChannel().send().message("There is no user by that name!");
+                            MessageUtils.sendChannel(event, "There is no user by that name!");
                             return false;
                         }
                         User newUser = event.getBot().getUserChannelDao().getUser(args[2]);
@@ -65,20 +65,20 @@ public class Add extends Command {
                             String[] tempArray = (temp.replaceAll("[\\[\\]\"]", "") + "," + newuser + "").split(",");
                             jsonObj.getAsJsonObject("Perms").add("Mods", Json(tempArray));
                             JsonUtils.writeJsonFile(file, jsonObj.toString());
-                            event.getUser().send().notice(newuser + " is now a Moderator for channel " + event.getChannel().getName());
+                            MessageUtils.sendUserNotice(event, newuser + " is now a Moderator for channel " + event.getChannel().getName());
                             String perms = JsonUtils.getStringFromFile(Jsonfile);
                             Perms p = JsonUtils.getPermsFromString(perms);
                             Main.map.put(event.getChannel().getName().toLowerCase(), p);
-                            event.getUser().send().notice("Reloaded Permissions");
+                            MessageUtils.sendUserNotice(event, "Reloaded Permissions");
                             event.getBot().getUserChannelDao().getUser(args[2]).send().notice("You are now a " + Colors.BOLD + "MODERATOR" + Colors.NORMAL + " for channel " + event.getChannel().getName());
                             return true;
                         } else {
-                            event.getChannel().send().message(newuser + " is already on the list!");
+                            MessageUtils.sendChannel(event, newuser + " is already on the list!");
                             return true;
                         }
                     } catch (Exception ex) {
                         ex.printStackTrace();
-                        event.getChannel().send().message("Please enter a valid username!");
+                        MessageUtils.sendChannel(event, "Please enter a valid username!");
                         return true;
                     }
                 }
@@ -103,21 +103,21 @@ public class Add extends Command {
                                 String[] tempArray = (temp.replaceAll("[\\[\\]\"]", "") + "," + command + "").split(",");
                                 jsonObj.getAsJsonObject("Perms").add("ModPerms", Json(tempArray));
                                 JsonUtils.writeJsonFile(file, jsonObj.toString());
-                                event.getUser().send().notice("Moderators are now able to use the command '" + args[2] + "'");
+                                MessageUtils.sendUserNotice(event, "Moderators are now able to use the command '" + args[2] + "'");
                                 String perms = JsonUtils.getStringFromFile(Jsonfile);
                                 Perms p = JsonUtils.getPermsFromString(perms);
                                 Main.map.put(event.getChannel().getName().toLowerCase(), p);
-                                event.getUser().send().notice("Reloaded Permissions");
+                                MessageUtils.sendUserNotice(event, "Reloaded Permissions");
                                 return true;
                             } else {
-                                event.getChannel().send().message(args[2] + " is already on the list!");
+                                MessageUtils.sendChannel(event, args[2] + " is already on the list!");
                                 return true;
                             }
                         } catch (Exception ex) {
                             ex.printStackTrace();
                         }
                     } else {
-                        event.getChannel().send().message("There is no command by that name!");
+                        MessageUtils.sendChannel(event, "There is no command by that name!");
                         return true;
                     }
                 }
@@ -127,7 +127,7 @@ public class Add extends Command {
                 if (args.length == 3) {
                     try {
                         if (!event.getChannel().getUsers().contains(event.getBot().getUserChannelDao().getUser(args[2])) || new File("plugins/" + Character.toUpperCase(args[2].charAt(0)) + event.getMessage().split(" ")[2].substring(1).toLowerCase() + ".bsh").exists()) {
-                            event.getChannel().send().message("There is no user by that name!");
+                            MessageUtils.sendChannel(event, "There is no user by that name!");
                             return false;
                         }
                         User newUser = event.getBot().getUserChannelDao().getUser(args[2]);
@@ -142,20 +142,20 @@ public class Add extends Command {
                             String[] tempArray = (temp.replaceAll("[\\[\\]\"]", "") + "," + newuser + "").split(",");
                             jsonObj.getAsJsonObject("Perms").add("Admins", Json(tempArray));
                             JsonUtils.writeJsonFile(file, jsonObj.toString());
-                            event.getUser().send().notice(newuser + " is now an Admin for channel " + event.getChannel().getName());
+                            MessageUtils.sendUserNotice(event, newuser + " is now an Admin for channel " + event.getChannel().getName());
                             String perms = JsonUtils.getStringFromFile(Jsonfile);
                             Perms p = JsonUtils.getPermsFromString(perms);
                             Main.map.put(event.getChannel().getName().toLowerCase(), p);
-                            event.getUser().send().notice("Reloaded Permissions");
+                            MessageUtils.sendUserNotice(event, "Reloaded Permissions");
                             event.getBot().getUserChannelDao().getUser(args[2]).send().notice("You are now an " + Colors.BOLD + "ADMIN" + Colors.NORMAL + " for channel " + event.getChannel().getName());
                             return true;
                         } else {
-                            event.getChannel().send().message(newuser + " is already on the list!");
+                            MessageUtils.sendChannel(event, newuser + " is already on the list!");
                             return true;
                         }
                     } catch (Exception ex) {
                         ex.printStackTrace();
-                        event.getChannel().send().message("Please enter a valid username!");
+                        MessageUtils.sendChannel(event, "Please enter a valid username!");
                         return true;
                     }
                 }
@@ -180,21 +180,21 @@ public class Add extends Command {
                                 String[] tempArray = (temp.replaceAll("[\\[\\]\"]", "") + "," + command + "").split(",");
                                 jsonObj.getAsJsonObject("Perms").add("Everyone", Json(tempArray));
                                 JsonUtils.writeJsonFile(file, jsonObj.toString());
-                                event.getUser().send().notice("Everyone is now able to use the command '" + args[2] + "'");
+                                MessageUtils.sendUserNotice(event, "Everyone is now able to use the command '" + args[2] + "'");
                                 String perms = JsonUtils.getStringFromFile(Jsonfile);
                                 Perms p = JsonUtils.getPermsFromString(perms);
                                 Main.map.put(event.getChannel().getName().toLowerCase(), p);
-                                event.getUser().send().notice("Reloaded Permissions");
+                                MessageUtils.sendUserNotice(event, "Reloaded Permissions");
                                 return true;
                             } else {
-                                event.getChannel().send().message(args[2] + " is already on the list!");
+                                MessageUtils.sendChannel(event, args[2] + " is already on the list!");
                                 return true;
                             }
                         } catch (Exception ex) {
                             ex.printStackTrace();
                         }
                     } else {
-                        event.getChannel().send().message("There is no command by that name!");
+                        MessageUtils.sendChannel(event, "There is no command by that name!");
                         return true;
                     }
                 }
@@ -220,23 +220,23 @@ public class Add extends Command {
                                     String[] tempArray = (temp.replaceAll("[\\[\\]\"]", "") + "," + command + "").split(",");
                                     jsonObj.add("Permissions", Json(tempArray));
                                     JsonUtils.writeJsonFile(Main.globalperm, jsonObj.toString());
-                                    event.getUser().send().notice(args[2] + " was added to the list!");
-                                    event.getUser().send().notice("Reloaded Permissions");
+                                    MessageUtils.sendUserNotice(event, args[2] + " was added to the list!");
+                                    MessageUtils.sendUserNotice(event, "Reloaded Permissions");
                                     return true;
                                 } else {
-                                    event.getChannel().send().message(args[2] + " is already on the list!");
+                                    MessageUtils.sendChannel(event, args[2] + " is already on the list!");
                                     return true;
                                 }
                             } catch (Exception ex) {
                                 ex.printStackTrace();
                             }
                         } else {
-                            event.getChannel().send().message("There is no command by that name!");
+                            MessageUtils.sendChannel(event, "There is no command by that name!");
                             return true;
                         }
                     }
                 } else {
-                    event.getUser().send().notice("You need to be Exec to add permission to this group!");
+                    MessageUtils.sendUserNotice(event, "You need to be Exec to add permission to this group!");
                     return true;
                 }
             }
@@ -260,7 +260,7 @@ public class Add extends Command {
 
                     try {
                         if (!event.getChannel().getUsers().contains(event.getBot().getUserChannelDao().getUser(args[2])) || new File("plugins/" + Character.toUpperCase(args[2].charAt(0)) + event.getMessage().split(" ")[2].substring(1).toLowerCase() + ".bsh").exists()) {
-                            event.getChannel().send().message("There is no user by that name!");
+                            MessageUtils.sendChannel(event, "There is no user by that name!");
                             return false;
                         }
 
@@ -282,20 +282,20 @@ public class Add extends Command {
                             jsonObj.getAsJsonObject("Perms").add("Mods", Json(tempArray));
                             PreparedStatement stmt1 = Main.database.prepareStatement("UPDATE `Channel_Permissions` SET `Permission` = '" + jsonObj.toString() + "' WHERE `Channel` = '" + channel + "';");
                             stmt1.execute();
-                            event.getUser().send().notice(newuser + " is now an Moderator for channel " + event.getChannel().getName());
+                            MessageUtils.sendUserNotice(event, newuser + " is now an Moderator for channel " + event.getChannel().getName());
                             Perms p = JsonUtils.getPermsFromString(jsonObj.toString());
                             Main.map.put(event.getChannel().getName().toLowerCase(), p);
-                            event.getUser().send().notice("Reloaded Permissions");
+                            MessageUtils.sendUserNotice(event, "Reloaded Permissions");
                             event.getBot().getUserChannelDao().getUser(args[2]).send().notice("You are now an " + Colors.BOLD + "MODERATOR" + Colors.NORMAL + " for channel " + event.getChannel().getName());
                             return true;
                         } else {
-                            event.getChannel().send().message(newuser + " is already on the list!");
+                            MessageUtils.sendChannel(event, newuser + " is already on the list!");
                             return true;
                         }
 
                     } catch (Exception ex) {
                         ex.printStackTrace();
-                        event.getChannel().send().message("Please enter a valid username!");
+                        MessageUtils.sendChannel(event, "Please enter a valid username!");
                         return false;
                     }
 
@@ -321,20 +321,20 @@ public class Add extends Command {
                                 jsonObj.getAsJsonObject("Perms").add("ModPerms", Json(tempArray));
                                 PreparedStatement stmt1 = Main.database.prepareStatement("UPDATE `Channel_Permissions` SET `Permission` = '" + jsonObj.toString() + "' WHERE `Channel` = '" + channel + "';");
                                 stmt1.execute();
-                                event.getUser().send().notice("Moderators are now able to use the command '" + args[2] + "'");
+                                MessageUtils.sendUserNotice(event, "Moderators are now able to use the command '" + args[2] + "'");
                                 Perms p = JsonUtils.getPermsFromString(jsonObj.toString());
                                 Main.map.put(event.getChannel().getName().toLowerCase(), p);
-                                event.getUser().send().notice("Reloaded Permissions");
+                                MessageUtils.sendUserNotice(event, "Reloaded Permissions");
                                 return true;
                             } else {
-                                event.getChannel().send().message(args[2] + " is already on the list!");
+                                MessageUtils.sendChannel(event, args[2] + " is already on the list!");
                                 return true;
                             }
                         } catch (Exception ex) {
                             ex.printStackTrace();
                         }
                     } else {
-                        event.getChannel().send().message("There is no command by that name!");
+                        MessageUtils.sendChannel(event, "There is no command by that name!");
                         return true;
                     }
                 }
@@ -344,7 +344,7 @@ public class Add extends Command {
 
                     try {
                         if (!event.getChannel().getUsers().contains(event.getBot().getUserChannelDao().getUser(args[2])) || new File("plugins/" + Character.toUpperCase(args[2].charAt(0)) + event.getMessage().split(" ")[2].substring(1).toLowerCase() + ".bsh").exists()) {
-                            event.getChannel().send().message("There is no user by that name!");
+                            MessageUtils.sendChannel(event, "There is no user by that name!");
                             return false;
                         }
 
@@ -367,20 +367,20 @@ public class Add extends Command {
                             jsonObj.getAsJsonObject("Perms").add("Admins", Json(tempArray));
                             PreparedStatement stmt1 = Main.database.prepareStatement("UPDATE `Channel_Permissions` SET `Permission` = '" + jsonObj.toString() + "' WHERE `Channel` = '" + channel + "';");
                             stmt1.execute();
-                            event.getUser().send().notice(newuser + " is now an Admin for channel " + event.getChannel().getName());
+                            MessageUtils.sendUserNotice(event, newuser + " is now an Admin for channel " + event.getChannel().getName());
                             Perms p = JsonUtils.getPermsFromString(jsonObj.toString());
                             Main.map.put(event.getChannel().getName().toLowerCase(), p);
-                            event.getUser().send().notice("Reloaded Permissions");
+                            MessageUtils.sendUserNotice(event, "Reloaded Permissions");
                             event.getBot().getUserChannelDao().getUser(args[2]).send().notice("You are now an " + Colors.BOLD + "ADMIN" + Colors.NORMAL + " for channel " + event.getChannel().getName());
                             return true;
                         } else {
-                            event.getChannel().send().message(newuser + " is already on the list!");
+                            MessageUtils.sendChannel(event, newuser + " is already on the list!");
                             return true;
                         }
 
                     } catch (Exception ex) {
                         ex.printStackTrace();
-                        event.getChannel().send().message("Please enter a valid username!");
+                        MessageUtils.sendChannel(event, "Please enter a valid username!");
                         return false;
                     }
 
@@ -406,24 +406,24 @@ public class Add extends Command {
                                 jsonObj.getAsJsonObject("Perms").add("Everyone", Json(tempArray));
                                 PreparedStatement stmt1 = Main.database.prepareStatement("UPDATE `Channel_Permissions` SET `Permission` = '" + jsonObj.toString() + "' WHERE `Channel` = '" + channel + "';");
                                 stmt1.execute();
-                                event.getUser().send().notice("Everyone is now able to use the command '" + args[2] + "'");
+                                MessageUtils.sendUserNotice(event, "Everyone is now able to use the command '" + args[2] + "'");
                                 System.out.println(jsonObj.toString());
                                 Perms p = JsonUtils.getPermsFromString(jsonObj.toString());
                                 System.out.println(p);
                                 Main.map.put(event.getChannel().getName().toLowerCase(), p);
                                 System.out.println(Main.map.get(event.getChannel().getName()) + "\n" + Main.map.get("#gazserver"));
 
-                                event.getUser().send().notice("Reloaded Permissions");
+                                MessageUtils.sendUserNotice(event, "Reloaded Permissions");
                                 return true;
                             } else {
-                                event.getChannel().send().message(args[2] + " is already on the list!");
+                                MessageUtils.sendChannel(event, args[2] + " is already on the list!");
                                 return true;
                             }
                         } catch (Exception ex) {
                             ex.printStackTrace();
                         }
                     } else {
-                        event.getChannel().send().message("There is no command by that name!");
+                        MessageUtils.sendChannel(event, "There is no command by that name!");
                         return true;
                     }
                 }

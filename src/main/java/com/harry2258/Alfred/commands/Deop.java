@@ -2,6 +2,7 @@ package com.harry2258.Alfred.commands;
 
 import com.harry2258.Alfred.api.Command;
 import com.harry2258.Alfred.api.Config;
+import com.harry2258.Alfred.api.MessageUtils;
 import com.harry2258.Alfred.api.PermissionManager;
 import org.pircbotx.User;
 import org.pircbotx.hooks.events.MessageEvent;
@@ -24,14 +25,14 @@ public class Deop extends Command {
             if (event.getChannel().isHalfOp(event.getBot().getUserBot())) {
                 if (event.getChannel().getOps().contains(event.getUser())) {
                     User u = event.getBot().getUserChannelDao().getUser(args[1]);
-                    event.getChannel().send().message("It sucks to be " + u.getNick() + " right now :/");
+                    MessageUtils.sendChannel(event, "It sucks to be " + u.getNick() + " right now :/");
                     event.getChannel().send().deOp(u);
                     return true;
                 } else {
                     event.respond("You are not an OP!");
                 }
             } else {
-                event.getUser().send().notice("I can't do that!");
+                MessageUtils.sendUserNotice(event, "I can't do that!");
                 return true;
             }
         }

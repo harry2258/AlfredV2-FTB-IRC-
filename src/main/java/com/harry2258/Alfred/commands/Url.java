@@ -3,6 +3,7 @@ package com.harry2258.Alfred.commands;
 import com.harry2258.Alfred.Main;
 import com.harry2258.Alfred.api.Command;
 import com.harry2258.Alfred.api.Config;
+import com.harry2258.Alfred.api.MessageUtils;
 import com.harry2258.Alfred.api.PermissionManager;
 import org.pircbotx.hooks.events.MessageEvent;
 
@@ -23,12 +24,12 @@ public class Url extends Command {
         if (args.length == 2) {
             if (args[1].startsWith("list")) {
                 if (Main.URL.isEmpty()) {
-                    event.getUser().send().notice("There are no channels that have URL scanning!");
+                    MessageUtils.sendUserNotice(event, "There are no channels that have URL scanning!");
                     return true;
                 }
 
                 String Message = Main.URL.toString();
-                event.getUser().send().notice(Message);
+                MessageUtils.sendUserNotice(event, Message);
                 return true;
             }
             String state = args[1];
@@ -37,7 +38,7 @@ public class Url extends Command {
                 Main.URL.put(event.getChannel().getName(), "YouTube");
                 if (config.useDatabase)
                     Main.database.prepareStatement("UPDATE `Channel_Permissions` SET `URL` = 'yt' WHERE `Channel` = '" + event.getChannel().getName().toLowerCase() + "';").execute();
-                event.getUser().send().notice("Added " + event.getChannel().getName() + " to YouTube URLs only scanning!");
+                MessageUtils.sendUserNotice(event, "Added " + event.getChannel().getName() + " to YouTube URLs only scanning!");
                 return true;
             }
 
@@ -45,7 +46,7 @@ public class Url extends Command {
                 Main.URL.put(event.getChannel().getName(), "All");
                 if (config.useDatabase)
                     Main.database.prepareStatement("UPDATE `Channel_Permissions` SET `URL` = 'all' WHERE `Channel` = '" + event.getChannel().getName().toLowerCase() + "';").execute();
-                event.getUser().send().notice("Added " + event.getChannel().getName() + " to URL scanning!");
+                MessageUtils.sendUserNotice(event, "Added " + event.getChannel().getName() + " to URL scanning!");
                 return true;
             }
 
@@ -53,7 +54,7 @@ public class Url extends Command {
                 Main.URL.remove(event.getChannel().getName());
                 if (config.useDatabase)
                     Main.database.prepareStatement("UPDATE `Channel_Permissions` SET `URL` = 'none' WHERE `Channel` = '" + event.getChannel().getName().toLowerCase() + "';").execute();
-                event.getUser().send().notice("Removed " + event.getChannel().getName() + " from URL scanning!");
+                MessageUtils.sendUserNotice(event, "Removed " + event.getChannel().getName() + " from URL scanning!");
                 return true;
             }
         }

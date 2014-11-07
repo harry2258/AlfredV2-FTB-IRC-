@@ -33,11 +33,6 @@ public class Create {
 
     public static boolean AddChannel(String Channel, Connection conn) throws SQLException {
         String Permissions = "{\"Perms\":{\"Mods\":[\"niel\"], \"ModPerms\": [\"command.custom\", \"command.info\"], \"Admins\":[\"Gaz492\"], \"Everyone\": [\"command.mcstatus\", \"command.chstatus\"]}}";
-        /*
-        String Mods = Add.Json(("niel,tterrag").split(",")).toString();
-        String Modperms = Add.Json(("command.custom,command.google").split(",")).toString();
-        String Everyone = Add.Json(("command.mcstatus,command.chstatus").split(",")).toString();
-        */
 
         try {
             PreparedStatement stmt = conn.prepareStatement("INSERT IGNORE INTO `Channel_Permissions` (`Channel`, `Permission`, `URL`) VALUES (?, ?, 'none')");

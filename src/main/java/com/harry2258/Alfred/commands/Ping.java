@@ -1,9 +1,6 @@
 package com.harry2258.Alfred.commands;
 
-import com.harry2258.Alfred.api.Command;
-import com.harry2258.Alfred.api.Config;
-import com.harry2258.Alfred.api.PermissionManager;
-import com.harry2258.Alfred.api.Utils;
+import com.harry2258.Alfred.api.*;
 import org.pircbotx.hooks.events.MessageEvent;
 
 import java.net.InetAddress;
@@ -42,7 +39,7 @@ public class Ping extends Command {
 
                 time = System.currentTimeMillis() - start;
                 returns = args[1] + " response time: " + time + " miliseconds";
-                event.getChannel().send().message(returns);
+                MessageUtils.sendChannel(event, returns);
                 return true;
             }
 
@@ -61,10 +58,10 @@ public class Ping extends Command {
             returns = "Response time: " + time + " miliseconds";
 
         } catch (Exception ex) {
-            event.getChannel().send().message(ex.toString());
+            MessageUtils.sendChannel(event, ex.toString());
             return false;
         }
-        event.getChannel().send().message(returns);
+        MessageUtils.sendChannel(event, returns);
         return true;
     }
 
