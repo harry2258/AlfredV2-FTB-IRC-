@@ -54,8 +54,11 @@ public class Info extends Command {
                         MessageUtils.sendUserNotice(event, filename.replaceAll(".cmd", ""));
                     else
                         MessageUtils.sendUserNotice(event, "There are no custom command for this channel yet!");
+                    return true;
+                } else {
+                    MessageUtils.sendUserNotice(event, "There are no custom command for this channel yet!");
+                    return true;
                 }
-                return true;
             }
 
             Perms perms = Main.map.get(event.getChannel().getName());
@@ -102,6 +105,7 @@ public class Info extends Command {
                     if (new File("commands/" + event.getChannel().getName() + "/").exists()) {
                         File folder = new File("commands/" + event.getChannel().getName() + "/");
                         File[] listOfFiles = folder.listFiles();
+                        System.out.println((listOfFiles != null));
                         if (listOfFiles != null) {
                             for (File listOfFile : listOfFiles) {
                                 if (listOfFile.isFile()) {
@@ -120,6 +124,7 @@ public class Info extends Command {
                             MessageUtils.sendChannel(event, temp);
 
                     }
+                    MessageUtils.sendUserNotice(event, "There are no custom command for this channel yet!");
                     return true;
                 }
 
