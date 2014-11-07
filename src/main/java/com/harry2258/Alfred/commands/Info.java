@@ -122,6 +122,7 @@ public class Info extends Command {
                             Collections.sort(CommandsName);
                             String temp = CommandsName.toString();
                             MessageUtils.sendChannel(event, temp);
+                            return true;
 
                     }
                     MessageUtils.sendUserNotice(event, "There are no custom command for this channel yet!");
