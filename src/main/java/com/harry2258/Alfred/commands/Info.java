@@ -121,7 +121,7 @@ public class Info extends Command {
                             CommandsName.addAll(hs);
                             Collections.sort(CommandsName);
                             String temp = CommandsName.toString();
-                            MessageUtils.sendChannel(event, temp);
+                            MessageUtils.sendUserNotice(event, temp);
                             return true;
 
                     }
