@@ -4,7 +4,6 @@ import com.harry2258.Alfred.Database.Create;
 import com.harry2258.Alfred.Main;
 import com.harry2258.Alfred.api.Config;
 import com.harry2258.Alfred.api.PermissionManager;
-import com.harry2258.Alfred.api.Utils;
 import org.pircbotx.User;
 import org.pircbotx.hooks.ListenerAdapter;
 import org.pircbotx.hooks.WaitForQueue;
@@ -30,19 +29,19 @@ public class InviteEvent extends ListenerAdapter {
             return;
         }
         User user = event.getBot().getUserChannelDao().getUser(event.getUser());
-        if (!Main.Login.containsKey(event.getUser()) && !Main.NotLoggedIn.contains(event.getUser())) {
+        if (!Main.Login.containsKey(event.getUser().getNick()) && !Main.NotLoggedIn.contains(event.getUser().getNick())) {
             if (user.isVerified()) {
                 String account = getAccount(user, event);
-                Main.Login.put(event.getUser(), account);
+                Main.Login.put(event.getUser().getNick(), account);
             } else {
-                Main.NotLoggedIn.add(event.getUser());
+                Main.NotLoggedIn.add(event.getUser().getNick());
             }
         }
         if (config.isAutoAcceptInvite()) {
             String level = event.getBot().getUserChannelDao().getChannel("#batbot").getUserLevels(event.getBot().getUserChannelDao().getUser(event.getUser())).toString().replaceAll("]|\\[", "");
             System.out.println(event.getUser());
-            System.out.println(PermissionManager.hasExec(event.getUser()));
-            if (level.equalsIgnoreCase("op") || level.equalsIgnoreCase("voice") || PermissionManager.hasExec(event.getUser())) {
+            System.out.println(PermissionManager.hasExec(event.getUser().getNick()));
+            if (level.equalsIgnoreCase("op") || level.equalsIgnoreCase("voice") || PermissionManager.hasExec(event.getUser().getNick())) {
                 event.getBot().sendRaw().rawLineNow("PRIVMSG #batbot :Invited to " + event.getChannel() + " by " + event.getUser());
                 event.getBot().sendIRC().joinChannel(event.getChannel());
             } else {

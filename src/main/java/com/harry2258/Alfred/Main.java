@@ -9,14 +9,15 @@ import com.harry2258.Alfred.api.*;
 import com.harry2258.Alfred.json.Perms;
 import com.harry2258.Alfred.listeners.*;
 import com.harry2258.Alfred.runnables.ChatSocketListener;
-//import com.harry2258.Alfred.runnables.WebServ;
 import org.pircbotx.Channel;
 import org.pircbotx.Configuration;
 import org.pircbotx.PircBotX;
+import org.pircbotx.exception.IrcException;
 import org.reflections.Reflections;
 import org.slf4j.impl.SimpleLogger;
 
 import java.io.File;
+import java.io.IOException;
 import java.nio.charset.Charset;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -31,12 +32,15 @@ import java.util.logging.Logger;
 
 import static com.harry2258.Alfred.api.JsonUtils.writeJsonFile;
 
+//import com.harry2258.Alfred.runnables.WebServ;
+
 /**
  * Hello world!
  */
 public class Main {
     public static long startup = 0;
     public static PircBotX bot;
+    public static boolean SafeStop = false;
 
     public static Map<String, Perms> map = new HashMap<>();
     public static Map<String, String> Login = new HashMap<>();
@@ -205,8 +209,7 @@ public class Main {
             if (config.UpdaterChecker()) {
                 new Thread(new Update(bot, config)).start();
             }
-
-            bot.startBot();
+            startBot(bot);
 
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -214,4 +217,17 @@ public class Main {
             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+
+    private static boolean startBot(PircBotX bot) {
+        try {
+            do {
+                bot.startBot();
+            } while (SafeStop);
+        } catch (IOException | IrcException e) {
+            e.printStackTrace();
+            return false;
+        }
+        return true;
+    }
+
 }

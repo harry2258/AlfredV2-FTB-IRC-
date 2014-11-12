@@ -68,6 +68,8 @@ public class Exec extends Command {
                             return true;
                         }
                     }
+                } else {
+                    MessageUtils.sendUserNotice(event, "You cannot run that command! I'm so sorry, I'm Canadian sorry.");
                 }
 
             } else {

@@ -1,7 +1,6 @@
 package com.harry2258.Alfred.api;
 
 
-import org.pircbotx.Colors;
 import org.pircbotx.hooks.events.MessageEvent;
 
 /**

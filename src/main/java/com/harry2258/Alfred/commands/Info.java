@@ -109,20 +109,20 @@ public class Info extends Command {
                         if (listOfFiles != null) {
                             for (File listOfFile : listOfFiles) {
                                 if (listOfFile.isFile()) {
-                                    CommandsName.add((Character.toUpperCase(listOfFile.getName().charAt(0)) + listOfFile.getName().substring(1).toLowerCase()).replace(".cmd",""));
+                                    CommandsName.add((Character.toUpperCase(listOfFile.getName().charAt(0)) + listOfFile.getName().substring(1).toLowerCase()).replace(".cmd", ""));
                                 }
                             }
                         } else {
                             MessageUtils.sendUserNotice(event, "There are no custom command for this channel yet!");
                             return true;
                         }
-                            hs.addAll(CommandsName);
-                            CommandsName.clear();
-                            CommandsName.addAll(hs);
-                            Collections.sort(CommandsName);
-                            String temp = CommandsName.toString();
-                            MessageUtils.sendUserNotice(event, temp);
-                            return true;
+                        hs.addAll(CommandsName);
+                        CommandsName.clear();
+                        CommandsName.addAll(hs);
+                        Collections.sort(CommandsName);
+                        String temp = CommandsName.toString();
+                        MessageUtils.sendUserNotice(event, temp);
+                        return true;
 
                     }
                     MessageUtils.sendUserNotice(event, "There are no custom command for this channel yet!");
@@ -199,7 +199,7 @@ public class Info extends Command {
                 if (args.length == 2 && (args[1].equalsIgnoreCase("full") || args[1].equalsIgnoreCase("all"))) {
                     String exe = JsonUtils.getStringFromFile(System.getProperty("user.dir") + "/exec.json");
                     Permission exec = JsonUtils.getPermsFromString(exe).getPermission();
-
+                    event.respond(String.valueOf(Runtime.getRuntime().totalMemory()));
                     int NumberofCommand = 0;
                     if (new File("commands/" + event.getChannel().getName() + "/").exists()) {
                         NumberofCommand = new File("commands/" + event.getChannel().getName() + "/").listFiles().length;

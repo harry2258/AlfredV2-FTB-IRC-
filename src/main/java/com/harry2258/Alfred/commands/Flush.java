@@ -20,17 +20,22 @@ public class Flush extends Command {
     public boolean execute(MessageEvent event) throws Exception {
         String[] args = event.getMessage().split(" ");
         if (PermissionManager.hasExec(event.getUser().getNick())) {
-            try {
-                Main.Login.remove(args[1]);
-                Main.NotLoggedIn.remove(args[1]);
-                MessageUtils.sendUserNotice(event, "Flushed all information related to user " + args[1]);
-                if (Ignore.ignored.contains(args[1])) {
-                    Ignore.ignored.remove(args[1]);
-                    MessageUtils.sendUserNotice(event, Colors.BOLD + args[1] + " was on the ignored list!");
+            if (args.length == 2) {
+                try {
+                    Main.Login.remove(args[1]);
+                    Main.NotLoggedIn.remove(args[1]);
+                    MessageUtils.sendUserNotice(event, "Flushed all information related to user " + args[1]);
+                    if (Ignore.ignored.contains(args[1])) {
+                        Ignore.ignored.remove(args[1]);
+                        MessageUtils.sendUserNotice(event, Colors.BOLD + args[1] + " was on the ignored list!");
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    return false;
                 }
-            } catch (Exception e) {
-                e.printStackTrace();
-                return false;
+            } else {
+                Main.Login.remove(event.getUser().getNick());
+                Main.NotLoggedIn.remove(event.getUser().getNick());
             }
         } else {
             Main.Login.remove(event.getUser().getNick());

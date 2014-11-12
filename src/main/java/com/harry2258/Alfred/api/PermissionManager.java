@@ -7,7 +7,6 @@ package com.harry2258.Alfred.api;
 
 import com.google.gson.JsonObject;
 import com.harry2258.Alfred.Main;
-import com.harry2258.Alfred.commands.Sys;
 import com.harry2258.Alfred.json.Permission;
 import com.harry2258.Alfred.json.Perms;
 import org.pircbotx.Channel;

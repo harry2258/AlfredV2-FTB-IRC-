@@ -65,7 +65,7 @@ public class MessageEvent extends ListenerAdapter {
         }
 
         if (Main.NotLoggedIn.contains(event.getUser().getNick())) {
-            if (event.getMessage().startsWith(config.getTrigger())){
+            if (event.getMessage().startsWith(config.getTrigger())) {
                 event.getUser().send().notice("You need to be logged in with NickServ to use the bot!");
             }
             return;
@@ -174,7 +174,9 @@ public class MessageEvent extends ListenerAdapter {
                         }
                     }
                 }
-                if (!Main.database.isValid(5000)) {Main.database = com.harry2258.Alfred.Database.Utils.getConnection(config);}
+                if (config.useDatabase && !Main.database.isValid(5000)) {
+                    Main.database = com.harry2258.Alfred.Database.Utils.getConnection(config);
+                }
 
                 String name = "";
                 Boolean exist = false;

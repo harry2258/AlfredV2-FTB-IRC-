@@ -14,7 +14,7 @@ public class Utils {
     private Config config;
     private PermissionManager manager;
 
-    public static Connection getConnection(Config config){
+    public static Connection getConnection(Config config) {
         try {
             return DriverManager.getConnection("jdbc:mysql://" + config.DatabaseHost() + "/" + config.Database(), config.DatabaseUser(), config.DatabasePass());
         } catch (SQLException e) {
