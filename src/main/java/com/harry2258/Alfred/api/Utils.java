@@ -81,13 +81,7 @@ public class Utils {
             String info;
             if (type.contains("text") || type.contains("application")) {
                 Document doc = Jsoup.connect(link).userAgent(USER_AGENT).followRedirects(true).get();
-                String title = doc.title() == null || doc.title().isEmpty() ? "No title found!" : doc.title();
-                info = String.format("%s"
-                        //"- Content Type: %s Size: %skb"
-                        , title
-                        //, type, length
-                );
-                return info;
+                return (doc.title() == null || doc.title().isEmpty() ? "No title found!" : doc.title());
             }
             info = String.format("Content Type: %s Size: %skb", type, length);
             return info;
@@ -445,22 +439,37 @@ public class Utils {
     }
 
     public static void TweetAuth(File file) {
-        JsonObject obj = new JsonObject();
         try {
-            obj.addProperty("OAuthConsumerKey", "");
-            obj.addProperty("OAuthConsumerSecret", "");
-            obj.addProperty("OAuthAccessToken", "");
-            obj.addProperty("OAuthAccessTokenSecret", "");
-            JsonUtils.writeJsonFile(file, obj.toString());
-            System.out.println(obj.toString());
+            BufferedReader s = new BufferedReader(new InputStreamReader(Main.class.getResourceAsStream("NewTwitter/oauth.json")));
+            String tmp = "";
+            file.createNewFile();
+            BufferedWriter out = new BufferedWriter(new FileWriter(file));
+            while ((tmp = s.readLine()) != null) {
+                out.write(tmp);
+                out.flush();
+                out.newLine();
+            }
+            out.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     public static void TweetUser(File file) {
-        String Auth = "{\"Users\":[\"FTB_Team\", \"TPPIModPack\"]}";
-        JsonUtils.writeJsonFile(file, Auth);
+        try {
+            BufferedReader s = new BufferedReader(new InputStreamReader(Main.class.getResourceAsStream("NewTwitter/tweetuser.json")));
+            String tmp = "";
+            file.createNewFile();
+            BufferedWriter out = new BufferedWriter(new FileWriter(file));
+            while ((tmp = s.readLine()) != null) {
+                out.write(tmp);
+                out.flush();
+                out.newLine();
+            }
+            out.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public static String getTime(long time) {

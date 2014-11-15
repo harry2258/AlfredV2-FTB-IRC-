@@ -40,7 +40,6 @@ public class Copy extends Command {
                 byte[] buffer = new byte[1024];
 
                 int length;
-                //copy the file content in bytes
                 while ((length = inStream.read(buffer)) > 0) {
 
                     outStream.write(buffer, 0, length);

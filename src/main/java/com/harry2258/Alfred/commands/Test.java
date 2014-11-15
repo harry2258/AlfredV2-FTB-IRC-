@@ -16,14 +16,11 @@ public class Test extends Command {
     @Override
     public boolean execute(MessageEvent event) throws Exception {
 
+        String group = event.getUser().getUserLevels(event.getChannel()).toString();
         MessageUtils.sendChannel(event, "Test!");
-        MessageUtils.sendChannel(event, event.getUser().getUserLevels(event.getChannel()).toString());
+        MessageUtils.sendChannel(event, group.isEmpty() ? "None" : group);
         MessageUtils.sendChannel(event, ("Logged in as: " + Utils.getAccount(event.getUser(), event)));
 
-        /*
-        MessageUtils.sendChannel(event, "Test!");
-        MessageUtils.sendChannel(event, event.getUser().getUserLevels(event.getChannel()).toString());
-        MessageUtils.sendChannel(event, ("Logged in as: " + Utils.getAccount(event.getUser(), event)));
         //Cause i'm too lazy to write the HTML
         /*
         ArrayList<String> help = new ArrayList<>();

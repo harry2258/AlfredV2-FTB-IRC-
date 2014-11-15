@@ -39,7 +39,6 @@ public class Sys extends Command {
                     SimpleDateFormat format = new SimpleDateFormat("'Statistics since' MM/dd/yyyy hh:mm:ss a");
                     Date boottime = format.parse(line);
                     uptime = System.currentTimeMillis() - boottime.getTime();
-                    System.out.println(System.currentTimeMillis() + " | " + boottime.getTime());
                 }
             }
             long Days = TimeUnit.MILLISECONDS.toDays(uptime);

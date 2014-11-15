@@ -34,6 +34,9 @@ public class MessageEvent extends ListenerAdapter {
             return;
         }
 
+        final String eventuser = event.getUser().getNick();
+        boolean Ignored = Ignore.ignored.contains(Main.Login.get(eventuser));
+
         if (Main.Chat.containsKey(event.getChannel()) && Main.Chat.get(event.getChannel())) {
             Command command = CommandRegistry.getCommand("Chat");
             command.setConfig(config);
@@ -54,7 +57,7 @@ public class MessageEvent extends ListenerAdapter {
             return;
         }
 
-        if (event.getMessage().startsWith(config.getTrigger() + "flush")) {
+        if (event.getMessage().startsWith(config.getTrigger() + "flush") && !Ignored) {
             Command command = CommandRegistry.getCommand("Flush");
             command.setConfig(config);
             if (!command.execute(event)) {
@@ -64,20 +67,19 @@ public class MessageEvent extends ListenerAdapter {
             return;
         }
 
-        if (Main.NotLoggedIn.contains(event.getUser().getNick())) {
+        if (Main.NotLoggedIn.contains(eventuser) && !Main.Login.containsKey(eventuser)) {
             if (event.getMessage().startsWith(config.getTrigger())) {
-                event.getUser().send().notice("You need to be logged in with NickServ to use the bot!");
+                event.getUser().send().notice("You need to be logged in with NickServ to use the bot! If you are already logged in, try " + config.getTrigger() + "flush");
             }
             return;
         }
-        String trigger = config.getTrigger();
+
         String[] args = event.getMessage().split(" ");
         Date date = new Date();
-        final String eventuser = event.getUser().getNick();
         String Ruser;
-        boolean contains = true;
+        boolean contains = Main.Login.containsKey(eventuser);
 
-        if (!Main.Login.containsKey(eventuser) && !Main.NotLoggedIn.contains(eventuser)) {
+        if (!contains && !Main.NotLoggedIn.contains(eventuser)) {
             contains = false;
             if (event.getUser().isVerified()) {
                 String account = Utils.getAccount(event.getUser(), event);
@@ -93,7 +95,7 @@ public class MessageEvent extends ListenerAdapter {
         }
 
 
-        if (event.getMessage().equalsIgnoreCase("prefix")) {
+        if (event.getMessage().equalsIgnoreCase("prefix") && !Ignored) {
             event.getUser().send().notice("The prefix is: " + config.getTrigger());
         }
 
@@ -103,8 +105,8 @@ public class MessageEvent extends ListenerAdapter {
         } else {
             Ruser = eventuser;
         }
-        //String login = System.getProperty("user.dir") + "/Reminders/" + Ruser + ".txt";
-        File reminder = null;
+
+        File reminder;
 
         if (new File(System.getProperty("user.dir") + "/Reminders/" + Ruser + ".txt").exists()) {
             reminder = new File(System.getProperty("user.dir") + "/Reminders/" + Ruser + ".txt");
@@ -116,6 +118,7 @@ public class MessageEvent extends ListenerAdapter {
             }
             in.close();
             reminder.delete();
+
         } else if (new File(System.getProperty("user.dir") + "/Reminders/" + eventuser + ".txt").exists()) {
             reminder = new File(System.getProperty("user.dir") + "/Reminders/" + eventuser + ".txt");
             BufferedReader in = new BufferedReader(new FileReader(reminder));
@@ -128,18 +131,12 @@ public class MessageEvent extends ListenerAdapter {
             reminder.delete();
         }
 
-
-        if (event.getMessage().startsWith(trigger) && !Ignore.ignored.contains(Main.Login.get(eventuser))) {
+        if (event.getMessage().startsWith(config.getTrigger()) && !Ignored) {
             String classname = Character.toUpperCase(event.getMessage().split(" ")[0].charAt(1)) + event.getMessage().split(" ")[0].substring(2).toLowerCase();
             String permission = "command." + classname.toLowerCase();
 
-            Boolean hasPerms = manager.hasPermission(permission, event.getUser(), event.getChannel(), event);
+            Boolean hasPerms = manager.hasPermission(permission, eventuser, event.getChannel());
             Boolean verified = event.getUser().isVerified();
-
-            if (!Main.Login.containsKey(eventuser)) {
-                event.getUser().send().notice("You need to be logged in with NickServ to use the bot!");
-                return;
-            }
 
             File file = new File(System.getProperty("user.dir") + "/Logs/" + event.getChannel().getName() + "/" + "CommandIssued.txt");
             if (!file.exists()) {
@@ -148,7 +145,7 @@ public class MessageEvent extends ListenerAdapter {
             }
 
             try {
-                if (manager.hasPermission("command.custom", event.getUser(), event.getChannel(), event)) {
+                if (manager.hasPermission("command.custom", eventuser, event.getChannel())) {
 
                     String commandname = event.getMessage().split(" ")[0].substring(1).toLowerCase();
                     File commandfile = new File("commands/" + event.getChannel().getName() + "/" + commandname + ".cmd");
@@ -220,7 +217,7 @@ public class MessageEvent extends ListenerAdapter {
                             }
 
                             try (PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(file, true)))) {
-                                out.println("[" + date + "]" + " " + event.getUser().getNick() + ": " + "[" + classname + "] " + sb);
+                                out.println("[" + date + "]" + " " + eventuser + ": " + "[" + classname + "] " + sb);
                                 out.close();
                             }
 
@@ -231,7 +228,7 @@ public class MessageEvent extends ListenerAdapter {
                         event.getUser().send().notice("There is no command by that name!");
                     }
                 } else {
-                    event.getUser().send().notice("You need to be logged in with NickServ to use the bot!");
+                    event.getUser().send().notice("You need to be logged in with NickServ to use the bot! If you are already logged in, try " + config.getTrigger() + "flush");
                 }
             } catch (Exception e) {
                 /*
@@ -246,19 +243,18 @@ public class MessageEvent extends ListenerAdapter {
 
         if (Main.URL.containsKey(event.getChannel().getName()) && Main.URL.get(event.getChannel().getName()).equalsIgnoreCase("youtube")) {
             for (String word : event.getMessage().split(" ")) {
-                if (Utils.isUrl(word) && word.matches("(https?://)?(www\\.)?(youtube|yimg|youtu)\\.([A-Za-z]{2,4}|[A-Za-z]{2}\\.[A-Za-z]{2})/(watch\\?v=)?[A-Za-z0-9\\-_]{6,12}(&[A-Za-z0-9\\-_]{1,}=[A-Za-z0-9\\-_]{1,})*")) {
+                if (Utils.isUrl(word) && word.matches("(https?://)?(www\\.)?(youtube|yimg|youtu)\\.([A-Za-z]{2,4}|[A-Za-z]{2}\\.[A-Za-z]{2})/(watch\\?v=)?[A-Za-z0-9\\-_]{6,12}(&[A-Za-z0-9\\-_]+=[A-Za-z0-9\\-_]+)*")) {
                     event.getChannel().send().message("[" + Colors.RED + "YouTube" + Colors.NORMAL + "] " + Utils.getYoutubeInfo(word));
                 }
             }
 
         }
-
         if (Main.URL.containsKey(event.getChannel().getName()) && Main.URL.get(event.getChannel().getName()).equalsIgnoreCase("all")) {
             for (String word : event.getMessage().split(" ")) {
-                if (Utils.isUrl(word) && !word.equals(config.getTrigger() + "setcmd") && !word.matches("(https?://)?(www\\.)?(youtube|yimg|youtu)\\.([A-Za-z]{2,4}|[A-Za-z]{2}\\.[A-Za-z]{2})/(watch\\?v=)?[A-Za-z0-9\\-_]{6,12}(&[A-Za-z0-9\\-_]{1,}=[A-Za-z0-9\\-_]{1,})*")) {
-                    event.getChannel().send().message("[" + Colors.RED + event.getUser().getNick() + Colors.NORMAL + "] " + Utils.getTitle(word));
+                if (Utils.isUrl(word) && !word.equals(config.getTrigger() + "setcmd") && !word.matches("(https?://)?(www\\.)?(youtube|yimg|youtu)\\.([A-Za-z]{2,4}|[A-Za-z]{2}\\.[A-Za-z]{2})/(watch\\?v=)?[A-Za-z0-9\\-_]{6,12}(&[A-Za-z0-9\\-_]+=[A-Za-z0-9\\-_]+)*")) {
+                    event.getChannel().send().message("[" + Colors.RED + eventuser + Colors.NORMAL + "] " + Utils.getTitle(word));
                 }
-                if (Utils.isUrl(word) && !word.equals(config.getTrigger() + "ping") && word.matches("(https?://)?(www\\.)?(youtube|yimg|youtu)\\.([A-Za-z]{2,4}|[A-Za-z]{2}\\.[A-Za-z]{2})/(watch\\?v=)?[A-Za-z0-9\\-_]{6,12}(&[A-Za-z0-9\\-_]{1,}=[A-Za-z0-9\\-_]{1,})*")) {
+                if (Utils.isUrl(word) && !word.equals(config.getTrigger() + "ping") && word.matches("(https?://)?(www\\.)?(youtube|yimg|youtu)\\.([A-Za-z]{2,4}|[A-Za-z]{2}\\.[A-Za-z]{2})/(watch\\?v=)?[A-Za-z0-9\\-_]{6,12}(&[A-Za-z0-9\\-_]+=[A-Za-z0-9\\-_]+)*")) {
                     event.getChannel().send().message("[" + Colors.RED + "YouTube" + Colors.NORMAL + "] " + Utils.getYoutubeInfo(word));
 
                 }

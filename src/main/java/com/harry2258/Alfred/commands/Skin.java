@@ -19,7 +19,7 @@ public class Skin extends Command {
     public boolean execute(MessageEvent event) throws Exception {
         String[] args = event.getMessage().split(" ");
         if (args.length == 2 && Utils.checkAccount(args[1])) {
-            event.respond("https://tntup.me/player/" + args[1] + "/128  |  " + "http://api.bionikcraft.com/ftb-launcher/?u=" + args[1] + "&p=d1-p1-r&s=256&f=1");
+            event.respond("https://tntup.me/player/" + args[1] + "/128");
             return true;
         } else {
             MessageUtils.sendChannel(event, "Please enter a valid MineCraft name!");

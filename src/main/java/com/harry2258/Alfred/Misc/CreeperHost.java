@@ -199,12 +199,10 @@ public class CreeperHost extends Thread {
         }
 
         Message.add("CreeperRepo: " + test + Colors.NORMAL + " Average Load " + (int) calculateAverage(Load) + "% | ");
-        String ColorLoad = "-";
+        String ColorLoad = "";
         for (int x = 0; x < chRepos.size(); x++) {
 
-            if (Load.get(x) == -1) {
-                ColorLoad = "N/A";
-            } else if (Load.get(x) < 33) {
+            if (Load.get(x) < 33) {
                 ColorLoad = Colors.DARK_GREEN + Load.get(x) + "%" + Colors.NORMAL;
             } else if (Load.get(x) >= 33 && Load.get(x) < 66) {
                 ColorLoad = Colors.YELLOW + Load.get(x) + "%" + Colors.NORMAL;

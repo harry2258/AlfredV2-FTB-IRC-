@@ -55,13 +55,14 @@ public class Weather extends Command {
                 State = "/" + event.getMessage().replaceAll(".*(?:, )", "");
             }
             URL url = new URL(("http://api.wunderground.com/api/" + config.WeatherKey() + "/conditions/q" + State + City + ".json").replaceAll(" ", "_"));
+            System.out.println(url.toString());
             BufferedReader br = new BufferedReader(new InputStreamReader(url.openStream()));
             String jsonstring = "";
             String tmp;
             while ((tmp = br.readLine()) != null) {
                 jsonstring += tmp;
             }
-            System.out.println(jsonstring.replaceAll("\n", ""));
+            System.out.println(jsonstring.replaceAll("\n", "").replaceAll("\t","").replaceAll("\r",""));
             if (jsonstring.contains(", \"results\": [")) {
                 JsonObject jsonObj = JsonUtils.getJsonObject(jsonstring.replaceAll("\n", ""));
                 String CityID = jsonObj.getAsJsonObject("response").getAsJsonArray("results").get(0).getAsJsonObject().get("l").toString();
@@ -77,10 +78,10 @@ public class Weather extends Command {
             String state = jsonObj.getAsJsonObject("display_location").get("state").getAsString();
             String Weather = jsonObj.get("weather").getAsString();
             String Temp = jsonObj.get("temperature_string").getAsString();
-            String Wind = jsonObj.get("wind_string").getAsString() + " " + jsonObj.get("wind_gust_mph").getAsString() + " Gusting at MPH ";
+            String Wind = jsonObj.get("wind_string").getAsString() + ", Gusting at " + jsonObj.get("wind_gust_mph").getAsString() +" MPH";
             String Humidity = jsonObj.get("relative_humidity").getAsString();
 
-            MessageUtils.sendChannel(event, city + ", " + state + ": " + Weather + " | " + Temp + " | " + Colors.BOLD + "Humidity" + Colors.NORMAL + ": " + Humidity + " | " + Colors.BOLD + "Winds" + Colors.NORMAL + " " + Wind);
+            MessageUtils.sendChannel(event, city + ", " + state + ": " + Weather + " | " + Temp + " | " + Colors.BOLD + "Humidity" + Colors.NORMAL + ": " + Humidity + " | " + Colors.BOLD + "Winds" + Colors.NORMAL + ": " + Wind);
         } catch (Exception e) {
             e.printStackTrace();
             return false;

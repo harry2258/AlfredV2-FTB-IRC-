@@ -121,13 +121,14 @@ public class Reddit extends Thread {
                 }
                 Thread.sleep(60000);
             } catch (Exception e) {
+                e.printStackTrace();
+                bot.getUserChannelDao().getUser("batman").send().message("[Reddit] " + e.toString());
                 try {
                     Thread.sleep(300000);
                 } catch (InterruptedException e1) {
                     e1.printStackTrace();
                 }
-                e.printStackTrace();
-                bot.getUserChannelDao().getUser("batman").send().message("[Reddit] " + e.toString());
+
 
             }
         }

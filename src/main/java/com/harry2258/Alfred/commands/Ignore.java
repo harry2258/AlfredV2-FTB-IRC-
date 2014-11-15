@@ -60,7 +60,7 @@ public class Ignore extends Command {
                 user = Utils.getAccount(target, event);
 
                 if (!PermissionManager.hasExec(target.getNick())) {
-                    if (!PermissionManager.hasAdmin(target.getNick(), event)) {
+                    if (!PermissionManager.hasAdmin(target.getNick(), event.getChannel())) {
 
                         if (!target.isIrcop()) {
 

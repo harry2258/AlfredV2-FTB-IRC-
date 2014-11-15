@@ -71,7 +71,7 @@ public class Wiki extends Command {
         boolean exist = true;
         boolean timeout = false;
         try {
-            URL vanilla = new URL("http://minecraft.gamepedia.com/api.php?format=xml&action=query&titles=" + message + "&prop=revisions&rvprop=content&format=json");
+            URL vanilla = new URL("http://minecraft.gamepedia.com/api.php?&action=query&titles=" + message + "&prop=revisions&rvprop=content&format=json");
             URLConnection c = vanilla.openConnection();
             c.setReadTimeout((int) TimeUnit.SECONDS.toMillis(ReadTimeout));
             c.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/537.17 (KHTML, like Gecko) Chrome/24.0.1312.57 Safari/537.17");
@@ -80,7 +80,7 @@ public class Wiki extends Command {
 
             if (xy.contains("#REDIRECT")) {
                 String redirect = xy.replaceAll("\\{\\{[^}]+\\}\\}|\\[\\[Category:[^\\]]+\\]\\]|.*\\[\\[|\\]\\].*|^\\s+|\\s+$|<[^>]+>", "");
-                String newtemp = ("http://minecraft.gamepedia.com/api.php?format=xml&action=query&titles=" + redirect + "&prop=revisions&rvprop=content&format=json").replaceAll(" ", "%20");
+                String newtemp = ("http://minecraft.gamepedia.com/api.php?&action=query&titles=" + redirect + "&prop=revisions&rvprop=content&format=json").replaceAll(" ", "%20");
                 URL url = new URL(newtemp);
                 URLConnection x = url.openConnection();
                 x.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/537.17 (KHTML, like Gecko) Chrome/24.0.1312.57 Safari/537.17");
@@ -151,7 +151,7 @@ public class Wiki extends Command {
         try {
             URL z = new URL("http://wiki.feed-the-beast.com/" + message);
             URLConnection y = z.openConnection();
-            y.setReadTimeout((int) TimeUnit.SECONDS.toMillis(ReadTimeout));
+            y.setReadTimeout(ReadTimeout * 1000);
             BufferedReader first = new BufferedReader(new InputStreamReader(y.getInputStream()));
             String tmp;
 
@@ -162,7 +162,7 @@ public class Wiki extends Command {
             }
 
             if (exist) {
-                String temp = ("http://wiki.feed-the-beast.com/api.php?format=xml&action=query&titles=" + message + "&prop=revisions&rvprop=content&format=json").replaceAll(" ", "%20");
+                String temp = ("http://wiki.feed-the-beast.com/api.php?&action=query&titles=" + message + "&prop=revisions&rvprop=content&format=json").replaceAll(" ", "%20");
                 URL u = new URL(temp);
                 URLConnection c = u.openConnection();
                 BufferedReader in = new BufferedReader(new InputStreamReader(c.getInputStream()));
@@ -170,7 +170,7 @@ public class Wiki extends Command {
 
                 if (xy.contains("#REDIRECT")) {
                     String redirect = xy.replaceAll("\\{\\{[^}]+\\}\\}|\\[\\[Category:[^\\]]+\\]\\]|.*\\[\\[|\\]\\].*|^\\s+|\\s+$|<[^>]+>", "");
-                    String newtemp = ("http://wiki.feed-the-beast.com/api.php?format=xml&action=query&titles=" + redirect + "&prop=revisions&rvprop=content&format=json").replaceAll(" ", "%20");
+                    String newtemp = ("http://wiki.feed-the-beast.com/api.php?&action=query&titles=" + redirect + "&prop=revisions&rvprop=content&format=json").replaceAll(" ", "%20");
                     URL url = new URL(newtemp);
                     URLConnection x = url.openConnection();
                     x.setReadTimeout((int) TimeUnit.SECONDS.toMillis(ReadTimeout));
@@ -270,7 +270,7 @@ public class Wiki extends Command {
                 } else {
                     name = (searchJson).replace("/ko", "").replaceAll("/ru", "").replaceAll("/fr", "").replaceAll("/zh", "").replaceAll("/pl", "");
                 }
-                String temp = ("http://wiki.feed-the-beast.com/api.php?format=xml&action=query&titles=" + name + "&prop=revisions&rvprop=content&format=json").replaceAll(" ", "%20");
+                String temp = ("http://wiki.feed-the-beast.com/api.php?&action=query&titles=" + name + "&prop=revisions&rvprop=content&format=json").replaceAll(" ", "%20");
                 URL u = new URL(temp);
                 URLConnection c = u.openConnection();
                 BufferedReader in = new BufferedReader(new InputStreamReader(c.getInputStream()));
@@ -279,7 +279,7 @@ public class Wiki extends Command {
                 if (xy.contains("#REDIRECT")) {
                     String redirect = xy.replaceAll("\\{\\{[^}]+\\}\\}|\\[\\[Category:[^\\]]+\\]\\]|.*\\[\\[|\\]\\].*|^\\s+|\\s+$|<[^>]+>", "");
                     name = redirect;
-                    String newtemp = ("http://wiki.feed-the-beast.com/api.php?format=xml&action=query&titles=" + redirect + "&prop=revisions&rvprop=content&format=json").replaceAll(" ", "%20");
+                    String newtemp = ("http://wiki.feed-the-beast.com/api.php?&action=query&titles=" + redirect + "&prop=revisions&rvprop=content&format=json").replaceAll(" ", "%20");
                     URL url = new URL(newtemp);
                     url.openConnection().setReadTimeout((int) TimeUnit.SECONDS.toMillis(ReadTimeout));
                     URLConnection x = url.openConnection();
@@ -297,7 +297,7 @@ public class Wiki extends Command {
 
                 try {
                     name = json.getAsJsonObject("query").getAsJsonArray("search").get(0).getAsJsonObject().get("title").toString().replaceAll("\"", "");
-                    URL newTitle = new URL("http://wiki.feed-the-beast.com/api.php?format=xml&action=query&titles=" + name + "&prop=revisions&rvprop=content&format=json");
+                    URL newTitle = new URL("http://wiki.feed-the-beast.com/api.php?&action=query&titles=" + name + "&prop=revisions&rvprop=content&format=json");
                     newTitle.openConnection().setReadTimeout((int) TimeUnit.SECONDS.toMillis(ReadTimeout));
                     URLConnection x = newTitle.openConnection();
                     BufferedReader br = new BufferedReader(new InputStreamReader(x.getInputStream()));
@@ -398,7 +398,7 @@ public class Wiki extends Command {
                 name = (searchJson).replace("/ko", "").replaceAll("/ru", "").replaceAll("/fr", "").replaceAll("/zh", "").replaceAll("/pl", "");
             }
 
-            String temp = ("http://ftbwiki.org/api.php?format=xml&action=query&titles=" + name + "&prop=revisions&rvprop=content&format=json").replaceAll(" ", "%20").replaceAll("\"", "");
+            String temp = ("http://ftbwiki.org/api.php?&action=query&titles=" + name + "&prop=revisions&rvprop=content&format=json").replaceAll(" ", "%20").replaceAll("\"", "");
             URL u = new URL(temp);
             u.openConnection().setReadTimeout((int) TimeUnit.SECONDS.toMillis(ReadTimeout));
             URLConnection c = u.openConnection();

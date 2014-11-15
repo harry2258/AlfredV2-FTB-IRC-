@@ -25,9 +25,9 @@ public class PermissionManager {
     public PermissionManager(Config conf) {
     }
 
-    public boolean hasPermission(String permission, User user, Channel channel, MessageEvent event) throws Exception {
+    public boolean hasPermission(String permission, String Nick, Channel channel) throws Exception {
         try {
-            String Nick = user.getNick();
+            //String Nick = user.getNick();
             File file = new File(System.getProperty("user.dir") + "/perms/" + channel.getName().toLowerCase() + "/" + "perms.json");
             if (!file.exists()) {
                 JsonUtils.createJsonStructure(file);
@@ -59,12 +59,12 @@ public class PermissionManager {
             }
 
             if (p.getModPerms().contains(permission)) {
-                if (hasAdmin(Nick, event) || hasMod(Nick, event)) {
+                if (hasAdmin(Nick, channel) || hasMod(Nick, channel)) {
                     return true;
                 }
             }
 
-            return hasAdmin(Nick, event) || hasExec(Nick);
+            return hasAdmin(Nick, channel) || hasExec(Nick);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -88,10 +88,10 @@ public class PermissionManager {
         return false;
     }
 
-    public static boolean hasAdmin(String Nick, MessageEvent event) throws Exception {
+    public static boolean hasAdmin(String Nick, Channel channel) throws Exception {
 
         String sender = Main.Login.get(Nick);
-        Perms perm = Main.map.get(event.getChannel().getName().toLowerCase());
+        Perms perm = Main.map.get(channel.getName().toLowerCase());
         Set<String> set = new HashSet<>(perm.getPermission().getAdmins());
         return set.contains(sender);
     }
@@ -100,9 +100,9 @@ public class PermissionManager {
         return this;
     }
 
-    public static boolean hasMod(String Nick, MessageEvent event) throws Exception {
+    public static boolean hasMod(String Nick, Channel channel) throws Exception {
         String sender = Main.Login.get(Nick);
-        Perms perm = Main.map.get(event.getChannel().getName().toLowerCase());
+        Perms perm = Main.map.get(channel.getName().toLowerCase());
         Set<String> set = new HashSet<>(perm.getPermission().getMods());
         return set.contains(sender);
     }
