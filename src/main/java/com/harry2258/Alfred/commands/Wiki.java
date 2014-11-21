@@ -66,7 +66,7 @@ public class Wiki extends Command {
         String xy;
         String searchJson;
         String id;
-        int ReadTimeout = 5; // in Seconds
+        int ReadTimeout = 15; // in Seconds
 
         boolean exist = true;
         boolean timeout = false;
