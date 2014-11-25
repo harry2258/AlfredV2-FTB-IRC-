@@ -118,7 +118,7 @@ public class Main {
             }
 
             //i have no idea what this is, but IDEA wouldn't shut the fuck up about changing it.
-            Configuration.Builder<PircBotX> builder = new Configuration.Builder<>();
+            Configuration.Builder builder = new Configuration.Builder();
             builder.setName(config.getBotNickname());
             builder.setRealName(config.getBotUsername());
             builder.setLogin(config.getBotIdent());
@@ -128,7 +128,7 @@ public class Main {
             builder.setAutoReconnect(config.isAutoReconnectServer());
             builder.setVersion("2.4.0");
             builder.setMessageDelay(500);
-            builder.setServer(config.getServerHostame(), Integer.parseInt(config.getServerPort()), config.getServerPassword());
+            builder.addServer(config.getServerHostame(), Integer.parseInt(config.getServerPort()));
             builder.setMaxLineLength(450);
 
             //Gotta listen to 'em

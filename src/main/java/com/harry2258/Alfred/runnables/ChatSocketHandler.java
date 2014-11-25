@@ -34,7 +34,7 @@ public class ChatSocketHandler extends Thread {
             writer = new BufferedWriter(new PrintWriter(socket.getOutputStream()));
             writer.write("Connected to " + bot.getNick() + "\r\n");
             writer.write("The first line you send will be ignored! (no idea why)\r\n");
-            writer.write("Currently connect to " + bot.getConfiguration().getServerHostname() + "\r\n");
+            writer.write("Currently connect to: " + bot.getServerHostname() + "\r\n");
             writer.flush();
             String line;
             while ((line = reader.readLine()) != null) {

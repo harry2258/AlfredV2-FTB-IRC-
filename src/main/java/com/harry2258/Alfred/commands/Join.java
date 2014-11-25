@@ -22,17 +22,20 @@ public class Join extends Command {
 
     @Override
     public boolean execute(MessageEvent event) throws Exception {
-        if (PermissionManager.hasExec(event.getUser().getNick())) {
+            if (PermissionManager.hasExec(event.getUser().getNick())) {
+
             String[] args = event.getMessage().split(" ");
+                event.getBot().sendIRC().joinChannel(args[1]);
+            /*
             Channel target = event.getBot().getUserChannelDao().getChannel(args[1]);
 
-            if (target.getName().equalsIgnoreCase("#dragonweyr") || target.getName().equalsIgnoreCase("#help") || target.getName().equalsIgnoreCase("#lobby") || target.getName().equalsIgnoreCase("#coders") || target.getName().equalsIgnoreCase("#esper") || target.getName().equalsIgnoreCase("#helper")) {
+            if (args[1].equalsIgnoreCase("#dragonweyr") || args[1].equalsIgnoreCase("#help") || args[1].equalsIgnoreCase("#lobby") || args[1].equalsIgnoreCase("#coders") || args[1].equalsIgnoreCase("#esper") || args[1].equalsIgnoreCase("#helper")) {
                 MessageUtils.sendChannel(event, "YOU CRAZY SENDIN' ME OUT THERE?! AWW HELL NAW!!");
                 return true;
             }
 
             if (target.isInviteOnly()) {
-                event.getBot().sendRaw().rawLineNow("KNOCK " + target.getName() + " :Asked to join this channel by user " + event.getUser().getNick() + " in channel " + event.getChannel().getName());
+                event.getBot().sendRaw().rawLineNow("KNOCK " + target.getName());
             }
             event.getBot().sendIRC().joinChannel(target.getName());
             if (config.useDatabase) {
@@ -61,6 +64,7 @@ public class Join extends Command {
                 Main.map.put(channel.toLowerCase(), p);
                 System.out.println("Loaded perms for " + channel);
             }
+            */
             return true;
         }
         return false;

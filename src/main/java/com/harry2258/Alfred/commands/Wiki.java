@@ -33,14 +33,16 @@ public class Wiki extends Command {
 
         String pattern = "(\\{\\{L\\|)(.*?)(\\}\\})";
         String pattern2 = "(\\[\\[#.*?\\|)(.*?)(]])";
+        String pattern3 = "(\\{\\{U\\|)(.*?)(\\}\\})";
 
         Pattern p = Pattern.compile(pattern);
         Pattern p2 = Pattern.compile(pattern2);
+        Pattern p3 = Pattern.compile(pattern3);
         Matcher m;
 
 
         if (args.length == 1) {
-            MessageUtils.sendChannel(event, "Official FTB Wiki: http://wiki.feed-the-beast.com");
+            MessageUtils.sendChannel(event, "Official FTB Wiki: http://ftb.gamepedia.com/");
             return true;
         }
 
@@ -66,7 +68,7 @@ public class Wiki extends Command {
         String xy;
         String searchJson;
         String id;
-        int ReadTimeout = 15; // in Seconds
+        int ReadTimeout = 10; // in Seconds
 
         boolean exist = true;
         boolean timeout = false;
@@ -96,6 +98,7 @@ public class Wiki extends Command {
 
             StringBuffer buffer = new StringBuffer();
             StringBuffer buffer2 = new StringBuffer();
+            StringBuffer buffer3 = new StringBuffer();
 
             try {
                 m = p.matcher(APItest);
@@ -108,18 +111,24 @@ public class Wiki extends Command {
                 m.appendTail(buffer);
 
                 m = p2.matcher(buffer.toString());
-
                 while (m.find()) {
                     GroupName = m.group(2);
                     m.appendReplacement(buffer2, "&&&" + GroupName + "&&&");
                 }
-
                 m.appendTail(buffer2);
+
+                m = p3.matcher(buffer2.toString());
+                while (m.find()) {
+                    GroupName = m.group(2);
+                    m.appendReplacement(buffer3, "&&&" + GroupName + "&&&");
+                }
+                m.appendTail(buffer3);
+
             } catch (Exception buffered) {
                 buffered.printStackTrace();
             }
 
-            String working = buffer2.toString();
+            String working = buffer3.toString();
 
             String df = working.replaceAll("\\{\\{[^}]+\\}\\}|\\[\\[Category:[^\\]]+\\]\\]|\\[\\[|\\]\\]|^\\s+|\\s+$|<[^>]+>|\\\\n", "").trim()
                     .replaceAll("\\r?\\n.*|(?:==.*?==).*", "")
@@ -149,9 +158,10 @@ public class Wiki extends Command {
         }
 
         try {
-            URL z = new URL("http://wiki.feed-the-beast.com/" + message);
+            URL z = new URL("http://ftb.gamepedia.com/" + message);
             URLConnection y = z.openConnection();
-            y.setReadTimeout(ReadTimeout * 1000);
+            y.setReadTimeout((int) TimeUnit.SECONDS.toMillis(ReadTimeout));
+            y.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/537.17 (KHTML, like Gecko) Chrome/24.0.1312.57 Safari/537.17");
             BufferedReader first = new BufferedReader(new InputStreamReader(y.getInputStream()));
             String tmp;
 
@@ -162,18 +172,20 @@ public class Wiki extends Command {
             }
 
             if (exist) {
-                String temp = ("http://wiki.feed-the-beast.com/api.php?&action=query&titles=" + message + "&prop=revisions&rvprop=content&format=json").replaceAll(" ", "%20");
+                String temp = ("http://ftb.gamepedia.com/api.php?&action=query&titles=" + message + "&prop=revisions&rvprop=content&format=json");
                 URL u = new URL(temp);
                 URLConnection c = u.openConnection();
+                c.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/537.17 (KHTML, like Gecko) Chrome/24.0.1312.57 Safari/537.17");
                 BufferedReader in = new BufferedReader(new InputStreamReader(c.getInputStream()));
                 xy = in.readLine();
 
                 if (xy.contains("#REDIRECT")) {
                     String redirect = xy.replaceAll("\\{\\{[^}]+\\}\\}|\\[\\[Category:[^\\]]+\\]\\]|.*\\[\\[|\\]\\].*|^\\s+|\\s+$|<[^>]+>", "");
-                    String newtemp = ("http://wiki.feed-the-beast.com/api.php?&action=query&titles=" + redirect + "&prop=revisions&rvprop=content&format=json").replaceAll(" ", "%20");
+                    String newtemp = ("http://ftb.gamepedia.com/api.php?&action=query&titles=" + redirect + "&prop=revisions&rvprop=content&format=json").replaceAll(" ", "%20");
                     URL url = new URL(newtemp);
                     URLConnection x = url.openConnection();
                     x.setReadTimeout((int) TimeUnit.SECONDS.toMillis(ReadTimeout));
+                    x.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/537.17 (KHTML, like Gecko) Chrome/24.0.1312.57 Safari/537.17");
                     BufferedReader br = new BufferedReader(new InputStreamReader(x.getInputStream()));
                     xy = br.readLine();
                 }
@@ -182,15 +194,11 @@ public class Wiki extends Command {
                 id = json1.replaceAll("[{\"/>}{\\\\']", "").replaceAll(".*(?:pages:)|(?::pageid.*)", "");
                 JsonObject jsonObj = JsonUtils.getJsonObject(json1);
 
-                if (jsonObj.getAsJsonObject("query").get("pages").toString().contains("Vanilla|type=")) {
-                    MessageUtils.sendChannel(event, test + " (Vanilla):" + ("http://minecraft.gamepedia.com/" + test).replaceAll(" ", "_"));
-                    return true;
-                }
-
                 String APItest = jsonObj.getAsJsonObject("query").getAsJsonObject("pages").getAsJsonObject(id).getAsJsonArray("revisions").get(0).getAsJsonObject().get("*").toString();
-
+                System.out.println(APItest);
                 StringBuffer buffer = new StringBuffer();
                 StringBuffer buffer2 = new StringBuffer();
+                StringBuffer buffer3 = new StringBuffer();
 
                 try {
                     m = p.matcher(APItest);
@@ -210,16 +218,24 @@ public class Wiki extends Command {
                     }
 
                     m.appendTail(buffer2);
+
+                    m = p3.matcher(buffer2.toString());
+                    while (m.find()) {
+                        GroupName = m.group(2);
+                        m.appendReplacement(buffer3, "!!!" + GroupName + "!!!");
+                    }
+                    m.appendTail(buffer3);
+
                 } catch (Exception buffered) {
                     buffered.printStackTrace();
                 }
 
-                String working = buffer2.toString();
+                String working = buffer3.toString();
 
                 String df = working.replaceAll("\\{\\{[^}]+\\}\\}|\\[\\[Category:[^\\]]+\\]\\]|\\[\\[|\\]\\]|^\\s+|\\s+$|<[^>]+>|\\\\n", "").trim()
                         .replaceAll("\\r?\\n.*|(?:==.*?==).*", "")
                         .replaceAll("\\S+\\|(\\S+)", "$1")
-                        .replaceAll(".*(?:}})", "").replaceAll("&&&", "");
+                        .replaceAll(".*(?:}})", "").replaceAll("&&&", "").replaceAll("!!!", Colors.UNDERLINE);
 
                 String fd = df.replaceAll("'''", Colors.BOLD).replaceAll("''", Colors.UNDERLINE).replaceAll("\"", "").replaceAll("===", Colors.BOLD + " ").replaceAll("==", Colors.BOLD + " ");
                 info = fd;
@@ -230,9 +246,9 @@ public class Wiki extends Command {
 
                 String x;
                 if (message.contains("User:")) {
-                    x = "http://wiki.feed-the-beast.com/" + message;
+                    x = "http://ftb.gamepedia.com/" + message;
                 } else {
-                    x = "http://wiki.feed-the-beast.com/" + URLEncoder.encode(message.replaceAll(" ", "_"), "UTF-8");
+                    x = "http://ftb.gamepedia.com/" + URLEncoder.encode(message.replaceAll(" ", "_"), "UTF-8");
                 }
                 String URL;
                 if (x.length() > 50) {
@@ -246,19 +262,24 @@ public class Wiki extends Command {
             }
         } catch (Exception x) {
             x.printStackTrace();
-            if (x.getMessage().contains("Read timed out"))
+            if (x.getMessage().contains("Read timed out")) {
                 MessageUtils.sendUserNotice(event, "Connection timed-out while connecting to the Official Wiki");
+                timeout = true;
+            }
             System.out.println("[Try 1] Could not find " + message + " on Official FTB Wiki");
-            timeout = true;
+
         }
 
         //---------------------------------------------------------------------------
         if (!timeout) {
             try {
                 URL read;
-                read = new URL("http://wiki.feed-the-beast.com/api.php?format=json&action=query&list=search&srsearch=" + message + "&srwhat=title");
-                read.openConnection().setReadTimeout((int) TimeUnit.SECONDS.toMillis(ReadTimeout));
-                BufferedReader xx = new BufferedReader(new InputStreamReader(read.openStream()));
+                read = new URL("http://ftb.gamepedia.com/api.php?format=json&action=query&list=search&srsearch=" + message + "&srwhat=title");
+                URLConnection c = read.openConnection();
+                c.setReadTimeout((int) TimeUnit.SECONDS.toMillis(ReadTimeout));
+                c.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/537.17 (KHTML, like Gecko) Chrome/24.0.1312.57 Safari/537.17");
+                BufferedReader xx = new BufferedReader(new InputStreamReader(c.getInputStream()));
+
                 String search = xx.readLine();
                 JsonObject json = JsonUtils.getJsonObject(search);
                 searchJson = json.getAsJsonObject("query").getAsJsonArray("search").get(0).getAsJsonObject().get("title").toString();
@@ -270,16 +291,16 @@ public class Wiki extends Command {
                 } else {
                     name = (searchJson).replace("/ko", "").replaceAll("/ru", "").replaceAll("/fr", "").replaceAll("/zh", "").replaceAll("/pl", "");
                 }
-                String temp = ("http://wiki.feed-the-beast.com/api.php?&action=query&titles=" + name + "&prop=revisions&rvprop=content&format=json").replaceAll(" ", "%20");
+                String temp = ("http://ftb.gamepedia.com/api.php?&action=query&titles=" + name + "&prop=revisions&rvprop=content&format=json").replaceAll(" ", "%20");
                 URL u = new URL(temp);
-                URLConnection c = u.openConnection();
-                BufferedReader in = new BufferedReader(new InputStreamReader(c.getInputStream()));
+                URLConnection d = u.openConnection();
+                BufferedReader in = new BufferedReader(new InputStreamReader(d.getInputStream()));
                 xy = in.readLine();
 
                 if (xy.contains("#REDIRECT")) {
                     String redirect = xy.replaceAll("\\{\\{[^}]+\\}\\}|\\[\\[Category:[^\\]]+\\]\\]|.*\\[\\[|\\]\\].*|^\\s+|\\s+$|<[^>]+>", "");
                     name = redirect;
-                    String newtemp = ("http://wiki.feed-the-beast.com/api.php?&action=query&titles=" + redirect + "&prop=revisions&rvprop=content&format=json").replaceAll(" ", "%20");
+                    String newtemp = ("http://ftb.gamepedia.com/api.php?&action=query&titles=" + redirect + "&prop=revisions&rvprop=content&format=json").replaceAll(" ", "%20");
                     URL url = new URL(newtemp);
                     url.openConnection().setReadTimeout((int) TimeUnit.SECONDS.toMillis(ReadTimeout));
                     URLConnection x = url.openConnection();
@@ -297,7 +318,7 @@ public class Wiki extends Command {
 
                 try {
                     name = json.getAsJsonObject("query").getAsJsonArray("search").get(0).getAsJsonObject().get("title").toString().replaceAll("\"", "");
-                    URL newTitle = new URL("http://wiki.feed-the-beast.com/api.php?&action=query&titles=" + name + "&prop=revisions&rvprop=content&format=json");
+                    URL newTitle = new URL("http://ftb.gamepedia.com/api.php?&action=query&titles=" + name + "&prop=revisions&rvprop=content&format=json");
                     newTitle.openConnection().setReadTimeout((int) TimeUnit.SECONDS.toMillis(ReadTimeout));
                     URLConnection x = newTitle.openConnection();
                     BufferedReader br = new BufferedReader(new InputStreamReader(x.getInputStream()));
@@ -313,6 +334,7 @@ public class Wiki extends Command {
 
                 StringBuffer buffer = new StringBuffer();
                 StringBuffer buffer2 = new StringBuffer();
+                StringBuffer buffer3 = new StringBuffer();
 
                 try {
                     m = p.matcher(APItest);
@@ -332,16 +354,23 @@ public class Wiki extends Command {
                     }
 
                     m.appendTail(buffer2);
+                    m = p3.matcher(buffer2.toString());
+                    while (m.find()) {
+                        GroupName = m.group(2);
+                        m.appendReplacement(buffer3, "!!!" + GroupName + "!!!");
+                    }
+                    m.appendTail(buffer3);
+
                 } catch (Exception buffered) {
                     buffered.printStackTrace();
                 }
 
-                String working = buffer2.toString();
+                String working = buffer3.toString();
 
                 String df = working.replaceAll("\\{\\{[^}]+\\}\\}|\\[\\[Category:[^\\]]+\\]\\]|\\[\\[|\\]\\]|^\\s+|\\s+$|<[^>]+>|\\\\n", "").trim()
                         .replaceAll("\\r?\\n.*|(?:==.*?==).*", "")
                         .replaceAll("\\S+\\|(\\S+)", "$1")
-                        .replaceAll(".*(?:}})", "").replaceAll("&&&", "");
+                        .replaceAll(".*(?:}})", "").replaceAll("&&&", "").replaceAll("!!!", Colors.UNDERLINE);
 
                 String fd = df.replaceAll("'''", Colors.BOLD).replaceAll("''", Colors.UNDERLINE).replaceAll("\"", "").replaceAll("===", Colors.BOLD + " ").replaceAll("==", Colors.BOLD + " ");
                 info = fd;
@@ -352,9 +381,9 @@ public class Wiki extends Command {
 
                 String x;
                 if (message.contains("User:")) {
-                    x = "http://wiki.feed-the-beast.com/" + name;
+                    x = "http://ftb.gamepedia.com/" + name;
                 } else {
-                    x = "http://wiki.feed-the-beast.com/" + URLEncoder.encode(name.replaceAll(" ", "_"), "UTF-8");
+                    x = "http://ftb.gamepedia.com/" + URLEncoder.encode(name.replaceAll(" ", "_"), "UTF-8");
                 }
                 String URL;
                 if (x.length() > 50) {
@@ -367,10 +396,12 @@ public class Wiki extends Command {
                 return true;
             } catch (Exception e) {
                 e.printStackTrace();
-                event.respond(e.getLocalizedMessage());
+                //event.respond(e.getLocalizedMessage());
                 System.out.println("[Try 2] Could not find " + message + " on Official FTB Wiki");
             }
         }
+
+        //------------------------------
         try {
             URL read;
             read = new URL("http://ftbwiki.org/api.php?format=json&action=query&list=search&srsearch=" + URLEncoder.encode(sb.toString().trim(), "UTF-8") + "&srwhat=title");
@@ -418,6 +449,7 @@ public class Wiki extends Command {
 
             StringBuffer buffer = new StringBuffer();
             StringBuffer buffer2 = new StringBuffer();
+            StringBuffer buffer3 = new StringBuffer();
 
             try {
                 m = p.matcher(APItest);
@@ -437,16 +469,24 @@ public class Wiki extends Command {
                 }
 
                 m.appendTail(buffer2);
+
+                m = p3.matcher(buffer2.toString());
+                while (m.find()) {
+                    GroupName = m.group(2);
+                    m.appendReplacement(buffer3, "!!!" + GroupName + "!!!");
+                }
+                m.appendTail(buffer3);
+
             } catch (Exception buffered) {
                 buffered.printStackTrace();
             }
 
-            String working = buffer2.toString();
+            String working = buffer3.toString();
 
             String df = working.replaceAll("\\{\\{[^}]+\\}\\}|\\[\\[Category:[^\\]]+\\]\\]|\\[\\[|\\]\\]|^\\s+|\\s+$|<[^>]+>|\\\\n", "").trim()
                     .replaceAll("\\r?\\n.*|(?:==.*?==).*", "")
                     .replaceAll("\\S+\\|(\\S+)", "$1")
-                    .replaceAll(".*(?:}})", "").replaceAll("&&&", "");
+                    .replaceAll(".*(?:}})", "").replaceAll("&&&", "").replaceAll("!!!", Colors.UNDERLINE);
 
             String fd = df.replaceAll("'''", Colors.BOLD).replaceAll("''", Colors.UNDERLINE).replaceAll("\"", "").replaceAll("===", Colors.BOLD + " ").replaceAll("==", Colors.BOLD + " ");
             info = fd;

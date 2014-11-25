@@ -41,7 +41,6 @@ repositories {
 }
 dependencies {
 
-    //compile 'org.pircbotx:pircbotx:2.0.1'
     compile 'org.pircbotx:pircbotx:2.1-SNAPSHOT'
     compile 'org.beanshell:bsh:2.0b4'
     compile 'org.jsoup:jsoup:1.7.2'
