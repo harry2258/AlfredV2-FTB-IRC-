@@ -66,7 +66,7 @@ public class Kill extends Command {
                                         }
 
                                         System.out.println("Shutting down");
-                                        //System.exit(1);
+                                        System.exit(1);
                                     }
                                 }
                             }

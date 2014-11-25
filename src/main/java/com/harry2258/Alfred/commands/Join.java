@@ -25,7 +25,34 @@ public class Join extends Command {
             if (PermissionManager.hasExec(event.getUser().getNick())) {
 
             String[] args = event.getMessage().split(" ");
+                String target = args[1];
                 event.getBot().sendIRC().joinChannel(args[1]);
+                    if (config.useDatabase) {
+                    try {
+                        Create.AddChannel(target.toLowerCase(), Main.database);
+                        PreparedStatement stmt = Main.database.prepareStatement("SELECT Permission FROM `Channel_Permissions` WHERE Channel = ?");
+                        stmt.setString(1, target.toLowerCase());
+                        ResultSet rs = stmt.executeQuery();
+                        rs.next();
+                        Perms p = JsonUtils.getPermsFromString(rs.getString("Permission"));
+                        Main.map.put(target.toLowerCase(), p);
+                        System.out.println("Loaded perms for " + target);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    String channel = target;
+                    File file = new File(System.getProperty("user.dir") + "/perms/" + channel.toLowerCase() + "/" + "perms.json");
+                    String Jsonfile = System.getProperty("user.dir") + "/perms/" + channel.toLowerCase() + "/" + "perms.json";
+                    if (!file.exists()) {
+                        System.out.println("Creating perms.json for " + channel);
+                        JsonUtils.createJsonStructure(file);
+                    }
+                    String perms = JsonUtils.getStringFromFile(Jsonfile);
+                    Perms p = JsonUtils.getPermsFromString(perms);
+                    Main.map.put(channel.toLowerCase(), p);
+                    System.out.println("Loaded perms for " + channel);
+                }
             /*
             Channel target = event.getBot().getUserChannelDao().getChannel(args[1]);
 
