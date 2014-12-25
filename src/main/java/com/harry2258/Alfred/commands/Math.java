@@ -3,10 +3,10 @@ package com.harry2258.Alfred.commands;
 import com.harry2258.Alfred.api.Command;
 import com.harry2258.Alfred.api.Config;
 import com.harry2258.Alfred.api.PermissionManager;
+import net.objecthunter.exp4j.Expression;
+import net.objecthunter.exp4j.ExpressionBuilder;
 import org.pircbotx.hooks.events.MessageEvent;
 
-import javax.script.ScriptEngine;
-import javax.script.ScriptEngineManager;
 
 /**
  * Created by Hardik at 10:00 PM on 12/19/2014.
@@ -24,14 +24,12 @@ public class Math extends Command {
     public boolean execute(MessageEvent event) throws Exception {
         String[] args = event.getMessage().split(" ");
         StringBuilder sb = new StringBuilder();
-
         for (int i = 1; i < args.length; i++) {
             sb.append(args[i]).append(" ");
         }
 
-        ScriptEngineManager mgr = new ScriptEngineManager();
-        ScriptEngine engine = mgr.getEngineByName("JavaScript");
-        event.respond(String.valueOf(engine.eval(sb.toString().trim())));
+        Expression e = new ExpressionBuilder(sb.toString()).build();
+        event.respond(String.valueOf(e.evaluate()));
         return true;
     }
 
