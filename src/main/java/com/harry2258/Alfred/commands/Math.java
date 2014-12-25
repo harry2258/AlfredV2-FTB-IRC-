@@ -17,7 +17,7 @@ public class Math extends Command {
     private PermissionManager manager;
 
     public Math() {
-        super("Math", "Does Math then you're too lazy too!", "Math [Operation]");
+        super("Math", "Does Math when you're too lazy!", "Math [Equation]");
     }
 
     @Override
@@ -27,10 +27,13 @@ public class Math extends Command {
         for (int i = 1; i < args.length; i++) {
             sb.append(args[i]).append(" ");
         }
-
-        Expression e = new ExpressionBuilder(sb.toString()).build();
-        event.respond(String.valueOf(e.evaluate()));
-        return true;
+        try {
+            Expression e = new ExpressionBuilder(sb.toString()).build();
+            event.respond(String.valueOf(e.evaluate()));
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     @Override
