@@ -1,1 +1,6 @@
-{"Perms":{"Exec":["batman", "progwml6"]}}
+{
+  "Perms":
+  {
+    "Exec":["batman", "progwml6"]
+  }
+}

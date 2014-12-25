@@ -199,7 +199,6 @@ public class Info extends Command {
                 if (args.length == 2 && (args[1].equalsIgnoreCase("full") || args[1].equalsIgnoreCase("all"))) {
                     String exe = JsonUtils.getStringFromFile(System.getProperty("user.dir") + "/exec.json");
                     Permission exec = JsonUtils.getPermsFromString(exe).getPermission();
-                    event.respond(String.valueOf(Runtime.getRuntime().totalMemory()));
                     int NumberofCommand = 0;
                     if (new File("commands/" + event.getChannel().getName() + "/").exists()) {
                         NumberofCommand = new File("commands/" + event.getChannel().getName() + "/").listFiles().length;
@@ -225,6 +224,22 @@ public class Info extends Command {
                     MessageUtils.sendUserNotice(event, "URL scanning: " + URL);
                 }
 
+                String Usergroup = Login.Group(Main.Login.get(event.getUser().getNick()), event.getChannel().getName());
+                Perms perms = Main.map.get(event.getChannel().getName().toLowerCase());
+                Permission p = perms.getPermission();
+
+                if (Usergroup.equalsIgnoreCase("None :<")) {
+                    MessageUtils.sendUserNotice(event, "You are in the default group and have access to: " + JsonUtils.prettyPrint(p.getEveryone()).replaceAll("command.", ""));
+                }
+                if (Usergroup.equalsIgnoreCase("Moderator")) {
+                    MessageUtils.sendUserNotice(event, "You are in the Moderator group and have access to: " + JsonUtils.prettyPrint(p.getModPerms()).replaceAll("command.", "") + JsonUtils.prettyPrint(p.getEveryone()).replaceAll("command.", ""));
+                }
+                if (Usergroup.equalsIgnoreCase("Admin")) {
+                    MessageUtils.sendUserNotice(event, "You are a Admin! You have access to all commands " + Colors.BOLD + "except" + Colors.NORMAL + " a few critical commands such as Kill, Exec, Etc.");
+                }
+                if (Usergroup.equalsIgnoreCase("Exec")) {
+                    MessageUtils.sendUserNotice(event, "You own this town!");
+                }
             } catch (Exception e) {
                 e.printStackTrace();
                 return false;

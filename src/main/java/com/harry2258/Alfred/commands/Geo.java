@@ -12,6 +12,7 @@ import twitter4j.JSONObject;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.net.UnknownHostException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -22,7 +23,7 @@ public class Geo extends Command {
     }
 
     @Override
-    public boolean execute(MessageEvent event) throws Exception {
+    public boolean execute(MessageEvent event) throws UnknownHostException {
         String[] args = event.getMessage().split(" ");
         String info = "";
         String ip = args[1];
@@ -48,15 +49,21 @@ public class Geo extends Command {
                 } catch (InterruptedException ex) {
                     Logger.getLogger(com.harry2258.Alfred.listeners.MessageEvent.class.getName()).log(Level.SEVERE, null, ex);
 
+                } catch (UnknownHostException e) {
+                    e.printStackTrace();
                 }
             } else {
                 if (Utils.ValidIP(args[2]))
                     ip = args[2];
                 else
-                    ip = java.net.InetAddress.getByName(args[2]).getHostAddress();
+                    try {
+                        ip = java.net.InetAddress.getByName(args[2]).getHostAddress();
+                    } catch (UnknownHostException e) {
+                        e.printStackTrace();
+                    }
             }
 
-            String geo = "http://freegeoip.net/json/" + ip;
+            String geo = "http://ip-api.com/json/" + ip;
             try {
                 URL url;
                 url = new URL(geo);
@@ -64,36 +71,21 @@ public class Geo extends Command {
                 String jsonstring = re.readLine();
                 JsonObject jsonObj = JsonUtils.getJsonObject(jsonstring);
                 info += Colors.BOLD + "City: " + Colors.NORMAL + jsonObj.get("city").getAsString() + " | \t";
-                info += Colors.BOLD + "Zip: " + Colors.NORMAL + jsonObj.get("zipcode").getAsString() + " | \t";
-                info += Colors.BOLD + "State: " + Colors.NORMAL + jsonObj.get("region_name").getAsString() + " | \t";
-                info += Colors.BOLD + "Country: " + Colors.NORMAL + jsonObj.get("country_name").getAsString() + " | \t";
-                info += Colors.BOLD + "Coords: " + Colors.NORMAL + jsonObj.get("latitude").getAsString() + " " + jsonObj.get("longitude").getAsString();
+                info += Colors.BOLD + "Zip: " + Colors.NORMAL + jsonObj.get("zip").getAsString() + " | \t";
+                info += Colors.BOLD + "State: " + Colors.NORMAL + jsonObj.get("regionName").getAsString() + " | \t";
+                info += Colors.BOLD + "Country: " + Colors.NORMAL + jsonObj.get("country").getAsString() + " | \t";
+                info += Colors.BOLD + "Coords: " + Colors.NORMAL + jsonObj.get("lat").getAsString() + " " + jsonObj.get("lon").getAsString();
 
                 event.getUser().send().message(info);
                 return true;
             } catch (Exception e) {
                 e.printStackTrace();
-                if (e.getMessage().contains("400")) {
-                    MessageUtils.sendChannel(event, "IPV6 aren't supported yet!");
-                }
                 return false;
             }
         }
-        if (event.getChannel().getUsers().toString().contains(args[1])) {
-            User u = event.getBot().getUserChannelDao().getUser(args[1]);
-            event.getBot().sendRaw().rawLineNow("WHOIS " + u.getNick());
-            WaitForQueue waitForQueue = new WaitForQueue(event.getBot());
-            WhoisEvent test;
-            try {
-                test = waitForQueue.waitFor(WhoisEvent.class);
-                waitForQueue.close();
-                if (Utils.ValidIP(test.getHostname()))
-                    ip = test.getHostname();
-                else
-                    ip = java.net.InetAddress.getByName(test.getHostname()).getHostAddress();
-            } catch (InterruptedException ex) {
-                Logger.getLogger(com.harry2258.Alfred.listeners.MessageEvent.class.getName()).log(Level.SEVERE, null, ex);
-            }
+
+        if (event.getChannel().getUsers().asList().contains(args[1])) {
+            ip = Utils.getIP(args[1], event);
         } else {
             if (Utils.ValidIP(args[1]))
                 ip = args[1];
@@ -101,7 +93,7 @@ public class Geo extends Command {
                 ip = java.net.InetAddress.getByName(args[1]).getHostAddress();
         }
 
-        String geo = "http://freegeoip.net/json/" + ip;
+        String geo = "http://ip-api.com/json/" + ip;
         String jsonstring = "";
         try {
             URL url;
@@ -109,16 +101,13 @@ public class Geo extends Command {
             BufferedReader re = new BufferedReader(new InputStreamReader(url.openStream()));
             jsonstring = re.readLine();
             JSONObject jsonObj = new JSONObject(jsonstring);
-            info += Colors.BOLD + "State: " + Colors.NORMAL + (jsonObj.getString("region_name").equals("") ? "N/A" : jsonObj.getString("region_name")) + " | \t";
-            info += Colors.BOLD + "Country: " + Colors.NORMAL + (jsonObj.getString("country_name").equals("") ? "N/A" : jsonObj.getString("country_name")) + " | \t";
-            info += Colors.BOLD + "Coords: " + Colors.NORMAL + jsonObj.getString("latitude").replaceAll("(?:\\.).*", "") + " " + jsonObj.getString("longitude").replaceAll("(?:\\.).*", "");
+            info += Colors.BOLD + "State: " + Colors.NORMAL + (jsonObj.getString("regionName").equals("") ? "N/A" : jsonObj.getString("regionName")) + " | \t";
+            info += Colors.BOLD + "Country: " + Colors.NORMAL + (jsonObj.getString("country").equals("") ? "N/A" : jsonObj.getString("country")) + " | \t";
+            info += Colors.BOLD + "Coords: " + Colors.NORMAL + jsonObj.getString("lat").replaceAll("(?:\\.).*", "") + " " + jsonObj.getString("lon").replaceAll("(?:\\.).*", "");
 
             MessageUtils.sendChannel(event, info);
         } catch (Exception e) {
             e.printStackTrace();
-            if (jsonstring.contains("Not Found")) {
-                MessageUtils.sendChannel(event, "IPV6 aren't supported yet!");
-            }
             return false;
         }
         return true;

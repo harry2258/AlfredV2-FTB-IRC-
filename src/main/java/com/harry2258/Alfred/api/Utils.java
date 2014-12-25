@@ -550,4 +550,26 @@ public class Utils {
         return false;
     }
 
+    public static String getIP(String User, org.pircbotx.hooks.events.MessageEvent event) {
+        String ip = null;
+
+        User u = event.getBot().getUserChannelDao().getUser(User);
+        event.getBot().sendRaw().rawLineNow("WHOIS " + u.getNick());
+        WaitForQueue waitForQueue = new WaitForQueue(event.getBot());
+        WhoisEvent test;
+        try {
+            test = waitForQueue.waitFor(WhoisEvent.class);
+            waitForQueue.close();
+            if (Utils.ValidIP(test.getHostname()))
+                ip = test.getHostname();
+            else
+                ip = java.net.InetAddress.getByName(test.getHostname()).getHostAddress();
+        } catch (InterruptedException ex) {
+            Logger.getLogger(com.harry2258.Alfred.listeners.MessageEvent.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+        }
+        return ip;
+    }
+
 }

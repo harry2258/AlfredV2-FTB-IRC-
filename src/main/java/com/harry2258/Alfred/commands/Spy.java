@@ -27,7 +27,6 @@ public class Spy extends Command {
             String[] args = event.getMessage().split(" ");
             if (args[1].startsWith("list")) {
                 ArrayList<String> Channels = new ArrayList<>();
-                String Message = null;
 
                 for (int i = 0; i < Main.relay.size(); i++) {
                     Channels.add(Main.relay.get(i).getName());

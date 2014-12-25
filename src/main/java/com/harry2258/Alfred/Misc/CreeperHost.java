@@ -154,13 +154,10 @@ public class CreeperHost extends Thread {
                             HttpURLConnection urlConn = (HttpURLConnection) newURL.openConnection();
                             urlConn.setConnectTimeout(3000);
                             urlConn.setReadTimeout(5000);
-                            final long startTime1 = System.currentTimeMillis();
                             urlConn.connect();
 
                             BufferedReader re = new BufferedReader(new InputStreamReader(urlConn.getInputStream()));
-                            final long endTime = System.currentTimeMillis();
                             String jsons = re.readLine();
-                            //System.out.println("[" + chURLNames.get(i) + "] Connected to stats page in " + (endTime - startTime1) + "(MS)");
                             String test;
                             int x;
                             JsonObject jsonObj = JsonUtils.getJsonObject(jsons);
@@ -208,6 +205,8 @@ public class CreeperHost extends Thread {
                 ColorLoad = Colors.YELLOW + Load.get(x) + "%" + Colors.NORMAL;
             } else if (Load.get(x) >= 66) {
                 ColorLoad = Colors.RED + Load.get(x) + "%" + Colors.NORMAL;
+            } else if (Load.get(x) == -1) {
+                ColorLoad = "";
             }
 
             Message.add(chRepos.get(x) + ": " + Status.get(x) + Colors.NORMAL + " " + ColorLoad + " | ");
@@ -234,14 +233,6 @@ public class CreeperHost extends Thread {
             }
             return sum.doubleValue() / (marks.size() - bad);
         } else return 0.0;
-
-    }
-
-    public static String getRepoURL(String fullURL) {
-        if (fullURL.contains("creeper")) {
-            return ".creeperrepo.net";
-        }
-        return ".cursecdn.com";
 
     }
 

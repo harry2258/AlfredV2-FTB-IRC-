@@ -61,24 +61,6 @@ public class Config {
     public void load() {
         try {
             Properties properties = new Properties();
-            /*
-            File config = new File("bot.properties");
-
-            if (!config.exists()) {
-                System.out.println("[!!] No configuration file found! generating a new one! [!!]");
-                BufferedReader s = new BufferedReader(new InputStreamReader(Main.class.getResourceAsStream("/bot.properties")));
-                String tmp = "";
-                config.createNewFile();
-                BufferedWriter out = new BufferedWriter(new FileWriter(config));
-                while ((tmp = s.readLine()) != null) {
-                    out.write(tmp);
-                    out.flush();
-                    out.newLine();
-                }
-                out.close();
-                System.out.println("[!!] Done! [!!]");
-            }
-            */
 
             properties.load(new FileInputStream("bot.properties"));
             this.setBotNickname(properties.getProperty("bot-nickname"));

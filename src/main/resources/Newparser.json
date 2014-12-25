@@ -1,1 +1,12 @@
-{"Modded":true,"ServerType":true,"Suggestion":true,"MCVersion":true,"Description":true,"Stacktrace":false,"OSName":true,"JavaVersion":true,"ServerBrand":true,"Information":true}
+{
+  "Modded":true,
+  "ServerType":true,
+  "Suggestion":true,
+  "MCVersion":true,
+  "Description":true,
+  "Stacktrace":false,
+  "OSName":true,
+  "JavaVersion":true,
+  "ServerBrand":true,
+  "Information":true
+}
