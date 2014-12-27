@@ -37,7 +37,7 @@ public class Insult extends Command {
                 if (dayOfWeek == 1) {
                     MessageUtils.sendChannel(event, args[1] + ", " + insult1);
                 } else {
-                    MessageUtils.sendChannel(event, "You only have " + (7 - dayOfWeek) + " more days to go!");
+                    MessageUtils.sendChannel(event, "You only have " + (8 - dayOfWeek) + " more days to go!");
                 }
             } else {
                 MessageUtils.sendChannel(event, args[1] + ", " + insult1);
