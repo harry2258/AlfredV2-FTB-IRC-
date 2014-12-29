@@ -11,6 +11,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.net.URLConnection;
 import java.util.HashMap;
 
 public class Reddit extends Thread {
@@ -53,9 +54,11 @@ public class Reddit extends Thread {
                 for (String hur : test) {
                     String[] args = hur.split(":");
                     Channel chan = bot.getUserChannelDao().getChannel(args[0]);
-                    URL url = new URL("http://www.reddit.com/r/" + args[1] + "/new.json");
+                    URL u = new URL("http://www.reddit.com/r/" + args[1] + "/new.json");
+                    URLConnection c = u.openConnection();
+                    c.setRequestProperty("User-Agent", "AlfredV2 by /u/harry2258"); //Who knew Reddit wanted User Agents like that.
                     String ts;
-                    BufferedReader br = new BufferedReader(new InputStreamReader(url.openStream()));
+                    BufferedReader br = new BufferedReader(new InputStreamReader(c.getInputStream()));
                     String result;
                     String title = "";
                     String text = "";
@@ -122,7 +125,11 @@ public class Reddit extends Thread {
                 Thread.sleep(60000);
             } catch (Exception e) {
                 e.printStackTrace();
-                bot.getUserChannelDao().getUser("batman").send().message("[Reddit] " + e.toString());
+                try {
+                    bot.getUserChannelDao().getUser("batman").send().message("[Reddit] " + e.toString());
+                } catch (Exception ex) {
+                    bot.getUserChannelDao().getUser("BruceWayne").send().message("[Reddit] " + e.toString());
+                }
                 try {
                     Thread.sleep(300000);
                 } catch (InterruptedException e1) {

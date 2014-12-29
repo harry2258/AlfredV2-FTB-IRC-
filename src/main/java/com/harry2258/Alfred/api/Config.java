@@ -184,7 +184,7 @@ public class Config {
             rs.close();
             stmt.close();
 
-            //Netowork Settings
+            //Network Settings
             PreparedStatement stmt1 = conn.prepareStatement("SELECT * FROM `Network_Settings`");
             ResultSet rs1 = stmt1.executeQuery();
             while (rs1.next()) {
