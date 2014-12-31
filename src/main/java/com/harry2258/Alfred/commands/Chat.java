@@ -12,13 +12,33 @@ import org.pircbotx.hooks.events.MessageEvent;
  * Created by Hardik at 10:32 PM on 8/1/2014.
  */
 public class Chat extends Command {
-    private Config config;
-    private PermissionManager manager;
     public static final Object monitor = new Object();
     public static boolean monitorState = false;
+    private Config config;
+    private PermissionManager manager;
 
     public Chat() {
         super("Chat", "Bored? Chat with Alfred!", "Chat [Text]");
+    }
+
+    public static void waitForThread() {
+        monitorState = true;
+        while (monitorState) {
+            synchronized (monitor) {
+                try {
+                    monitor.wait(); // wait until notified
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    public static void unlockWaiter() {
+        synchronized (monitor) {
+            monitorState = false;
+            monitor.notifyAll(); // unlock again
+        }
     }
 
     @Override
@@ -63,25 +83,5 @@ public class Chat extends Command {
     @Override
     public void setManager(PermissionManager manager) {
         this.manager = manager;
-    }
-
-    public static void waitForThread() {
-        monitorState = true;
-        while (monitorState) {
-            synchronized (monitor) {
-                try {
-                    monitor.wait(); // wait until notified
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-    }
-
-    public static void unlockWaiter() {
-        synchronized (monitor) {
-            monitorState = false;
-            monitor.notifyAll(); // unlock again
-        }
     }
 }

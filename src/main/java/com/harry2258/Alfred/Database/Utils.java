@@ -16,7 +16,7 @@ public class Utils {
 
     public static Connection getConnection(Config config) {
         try {
-            return DriverManager.getConnection("jdbc:mysql://" + config.DatabaseHost() + "/" + config.Database(), config.DatabaseUser(), config.DatabasePass());
+            return DriverManager.getConnection("jdbc:mysql://" + config.getDatabaseHost() + "/" + config.getDatabase(), config.getDatabaseUser(), config.getDatabasePass());
         } catch (SQLException e) {
             e.printStackTrace();
         }

@@ -32,7 +32,40 @@ public class Add extends Command {
         super("Add", "Adds the Permission/User to the list", "Add [Group] [User/Permission]");
     }
 
-    //TODO FIX THIS SHIT!
+    public static JsonElement Json(String[] list) {
+        final JsonArray Array = new JsonArray();
+        try {
+            for (final String tmp : list) {
+                final JsonPrimitive JsonList = new JsonPrimitive(tmp);
+                Array.add(JsonList);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return Array;
+    }
+
+    public static boolean isAdded(User user, String channel, String[] type) throws Exception {
+        String sender = Main.Login.get(user.getNick());
+        Perms perm = Main.map.get(channel.toLowerCase());
+        if (sender == null) return true;
+        if (type[1].equalsIgnoreCase("mod")) {
+            for (String users : perm.getPermission().getMods()) {
+                if (users.equalsIgnoreCase(sender)) {
+                    return true;
+                }
+            }
+        } else if (type[1].equalsIgnoreCase("admin")) {
+            for (String users : perm.getPermission().getAdmins()) {
+                if (users.equalsIgnoreCase(sender)) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
     @Override
     public boolean execute(MessageEvent event) throws Exception {
         String[] args = event.getMessage().split(" ");
@@ -97,7 +130,6 @@ public class Add extends Command {
                             }
                             String strFileJson = JsonUtils.getStringFromFile(Jsonfile);
                             JsonObject jsonObj = JsonUtils.getJsonObject(strFileJson);
-                            System.out.println(jsonObj.getAsJsonObject("Perms").get("ModPerms").toString());
                             if (!jsonObj.getAsJsonObject("Perms").get("ModPerms").toString().contains(command)) {
                                 temp = jsonObj.getAsJsonObject("Perms").get("ModPerms").toString();
                                 String[] tempArray = (temp.replaceAll("[\\[\\]\"]", "") + "," + command + "").split(",");
@@ -407,9 +439,7 @@ public class Add extends Command {
                                 PreparedStatement stmt1 = Main.database.prepareStatement("UPDATE `Channel_Permissions` SET `Permission` = '" + jsonObj.toString() + "' WHERE `Channel` = '" + channel + "';");
                                 stmt1.execute();
                                 MessageUtils.sendUserNotice(event, "Everyone is now able to use the command '" + args[2] + "'");
-                                System.out.println(jsonObj.toString());
                                 Perms p = JsonUtils.getPermsFromString(jsonObj.toString());
-                                System.out.println(p);
                                 Main.map.put(event.getChannel().getName().toLowerCase(), p);
                                 System.out.println(Main.map.get(event.getChannel().getName()) + "\n" + Main.map.get("#gazserver"));
 
@@ -433,19 +463,6 @@ public class Add extends Command {
         return false;
     }
 
-    public static JsonElement Json(String[] list) {
-        final JsonArray Array = new JsonArray();
-        try {
-            for (final String tmp : list) {
-                final JsonPrimitive JsonList = new JsonPrimitive(tmp);
-                Array.add(JsonList);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return Array;
-    }
-
     @Override
     public void setConfig(Config config) {
         this.config = config;
@@ -454,28 +471,6 @@ public class Add extends Command {
     @Override
     public void setManager(PermissionManager manager) {
         this.manager = manager;
-    }
-
-    public static boolean isAdded(User user, String channel, String[] type) throws Exception {
-        String sender = Main.Login.get(user.getNick());
-        Perms perm = Main.map.get(channel.toLowerCase());
-        if (sender == null) return true;
-        if (type[1].equalsIgnoreCase("mod")) {
-            for (String users : perm.getPermission().getMods()) {
-                if (users.equalsIgnoreCase(sender)) {
-                    return true;
-                }
-            }
-        } else if (type[1].equalsIgnoreCase("admin")) {
-            for (String users : perm.getPermission().getAdmins()) {
-                System.out.println(users);
-                if (users.equalsIgnoreCase(sender)) {
-                    return true;
-                }
-            }
-        }
-
-        return false;
     }
 
 }

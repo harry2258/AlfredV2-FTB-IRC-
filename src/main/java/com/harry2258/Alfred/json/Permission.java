@@ -23,36 +23,36 @@ public class Permission {
         return this.mods;
     }
 
-    public List<String> getAdmins() {
-        return this.admins;
-    }
-
-    public List<String> getModPerms() {
-        return this.modPerms;
-    }
-
-    public List<String> getEveryone() {
-        return this.everyone;
-    }
-
-    public List<String> getExec() {
-        return this.exec;
-    }
-
     public void setMods(List<String> mods) {
         this.mods = mods;
+    }
+
+    public List<String> getAdmins() {
+        return this.admins;
     }
 
     public void setAdmins(List<String> admins) {
         this.admins = admins;
     }
 
+    public List<String> getModPerms() {
+        return this.modPerms;
+    }
+
     public void setModPerms(List<String> modPerms) {
         this.modPerms = modPerms;
     }
 
+    public List<String> getEveryone() {
+        return this.everyone;
+    }
+
     public void setEveryone(List<String> everyone) {
         this.everyone = everyone;
+    }
+
+    public List<String> getExec() {
+        return this.exec;
     }
 
     public void setExec(List<String> exec) {

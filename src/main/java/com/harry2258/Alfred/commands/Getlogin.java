@@ -12,14 +12,13 @@ import java.util.ArrayList;
  */
 public class Getlogin extends Command {
 
+    ArrayList<String> user = new ArrayList<>();
     private Config config;
     private PermissionManager manager;
 
     public Getlogin() {
         super("Getlogin", "Gets Getlogin names of all the users [Can take time with a lot of people!]", "Getlogin");
     }
-
-    ArrayList<String> user = new ArrayList<>();
 
     @Override
     public boolean execute(MessageEvent event) throws Exception {

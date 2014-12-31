@@ -21,14 +21,60 @@ public class Error extends Command {
     public static HashMap<String, String> Diagnosis = new HashMap<>();
     public static HashMap<String, String> Errors = new HashMap<>();
     public static HashMap<String, String> Suggestion = new HashMap<>();
-
+    private static Config config;
+    private PermissionManager manager;
     public Error() {
 
         super("Error", "Errors Database!", "Error [Error]");
     }
 
-    private static Config config;
-    private PermissionManager manager;
+    private static Connection getConnection() throws SQLException {
+        try {
+            Class.forName("com.mysql.jdbc.Driver");
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        String host = config.getDatabaseHost();
+        String user = config.getDatabaseUser();
+        String pass = config.getDatabasePass();
+        String database = config.getDatabase();
+        return DriverManager.getConnection("jdbc:mysql://" + host + "/" + database, user, pass);
+    }
+
+    public static void getProblems(String pasteContent, MessageEvent event) {
+        String errors = "";
+        ArrayList<String> Diag = new ArrayList<>();
+        ArrayList<String> Sugg = new ArrayList<>();
+        Connection conn;
+        try {
+
+            conn = Main.database;
+
+            PreparedStatement stmt = conn.prepareStatement("SELECT Problems.ID as ID, Diagnosis, Suggestion, CONCAT('%', GROUP_CONCAT(Error, '%')) as Errors FROM Problems, ProblemErrors WHERE Problems.ID = ProblemErrors.ProblemID GROUP BY ID, Diagnosis, Suggestion HAVING ? LIKE Errors");
+            stmt.setString(1, pasteContent);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                errors += rs.getString("Errors").replaceAll("%", "") + " | ";
+                Diag.add(rs.getString("Diagnosis"));
+                Sugg.add(rs.getString("Suggestion"));
+            }
+            rs.close();
+            stmt.close();
+            if (!errors.isEmpty() || !Diag.isEmpty() || !Sugg.isEmpty()) {
+                for (int i = 0; i < Diag.size(); i++) {
+                    //MessageUtils.sendChannel(event, Colors.BOLD + "Diagnosis: " + Colors.NORMAL + Diag.get(i));
+                    MessageUtils.sendChannel(event, Colors.BOLD + "Suggestion: " + Colors.NORMAL + Sugg.get(i));
+
+                }
+            } else {
+                MessageUtils.sendChannel(event, "No match found in database!");
+            }
+        } catch (SQLException ex) {
+            System.out.println("SQLException: " + ex.getMessage());
+            System.out.println("SQLState: " + ex.getSQLState());
+            System.out.println("VendorError: " + ex.getErrorCode());
+        }
+    }
 
     @Override
     public boolean execute(MessageEvent event) {
@@ -44,7 +90,7 @@ public class Error extends Command {
             if (args.length == 2 && args[1].equalsIgnoreCase("test")) {
                 MessageUtils.sendUserNotice(event, "Trying to connect to database.");
                 if (getConnection().isValid(5000)) {
-                    Main.database = DriverManager.getConnection("jdbc:mysql://" + config.DatabaseHost() + "/" + config.Database(), config.DatabaseUser(), config.DatabasePass());
+                    Main.database = DriverManager.getConnection("jdbc:mysql://" + config.getDatabaseHost() + "/" + config.getDatabase(), config.getDatabaseUser(), config.getDatabasePass());
                     MessageUtils.sendChannel(event, "Connection to database was successful!");
                 } else {
                     MessageUtils.sendChannel(event, "Could not connect to the database, Please recheck your configuration.");
@@ -102,19 +148,6 @@ public class Error extends Command {
     @Override
     public void setManager(PermissionManager manager) {
         this.manager = manager;
-    }
-
-    private static Connection getConnection() throws SQLException {
-        try {
-            Class.forName("com.mysql.jdbc.Driver");
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-        String host = config.DatabaseHost();
-        String user = config.DatabaseUser();
-        String pass = config.DatabasePass();
-        String database = config.Database();
-        return DriverManager.getConnection("jdbc:mysql://" + host + "/" + database, user, pass);
     }
 
     public void createTables() throws SQLException {
@@ -176,40 +209,5 @@ public class Error extends Command {
         }
 
         conn.close();
-    }
-
-    public static void getProblems(String pasteContent, MessageEvent event) {
-        String errors = "";
-        ArrayList<String> Diag = new ArrayList<>();
-        ArrayList<String> Sugg = new ArrayList<>();
-        Connection conn;
-        try {
-
-            conn = Main.database;
-
-            PreparedStatement stmt = conn.prepareStatement("SELECT Problems.ID as ID, Diagnosis, Suggestion, CONCAT('%', GROUP_CONCAT(Error, '%')) as Errors FROM Problems, ProblemErrors WHERE Problems.ID = ProblemErrors.ProblemID GROUP BY ID, Diagnosis, Suggestion HAVING ? LIKE Errors");
-            stmt.setString(1, pasteContent);
-            ResultSet rs = stmt.executeQuery();
-            while (rs.next()) {
-                errors += rs.getString("Errors").replaceAll("%", "") + " | ";
-                Diag.add(rs.getString("Diagnosis"));
-                Sugg.add(rs.getString("Suggestion"));
-            }
-            rs.close();
-            stmt.close();
-            if (!errors.isEmpty() || !Diag.isEmpty() || !Sugg.isEmpty()) {
-                for (int i = 0; i < Diag.size(); i++) {
-                    //MessageUtils.sendChannel(event, Colors.BOLD + "Diagnosis: " + Colors.NORMAL + Diag.get(i));
-                    MessageUtils.sendChannel(event, Colors.BOLD + "Suggestion: " + Colors.NORMAL + Sugg.get(i));
-
-                }
-            } else {
-                MessageUtils.sendChannel(event, "No match found in database!");
-            }
-        } catch (SQLException ex) {
-            System.out.println("SQLException: " + ex.getMessage());
-            System.out.println("SQLState: " + ex.getSQLState());
-            System.out.println("VendorError: " + ex.getErrorCode());
-        }
     }
 }

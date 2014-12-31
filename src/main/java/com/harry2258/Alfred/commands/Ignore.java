@@ -72,6 +72,7 @@ public class Ignore extends Command {
                                         return true;
                                     }
                                 }
+
                                 ignored.add(user);
                                 event.respond(user + " was added to the ignore list.");
 
@@ -97,6 +98,13 @@ public class Ignore extends Command {
                         if (!ignored.contains(user)) {
                             ignored.add(user);
                             event.respond(user + " was added to the ignore list.");
+                            if (config.useDatabase) {
+                                PreparedStatement stmt = Main.database.prepareStatement("INSERT IGNORE INTO `Ignored_Users` (`User`, `Ignored_By`, `User_Nick`, `Date`) VALUES (?, ?, ?, UTC_TIMESTAMP())");
+                                stmt.setString(1, user);
+                                stmt.setString(2, event.getUser().getNick());
+                                stmt.setString(3, args[1]);
+                                stmt.execute();
+                            }
                             return true;
                         } else {
                             event.respond(user + " is already in the ignore list");

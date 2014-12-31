@@ -17,14 +17,13 @@ import java.util.Set;
  */
 public class Remind extends Command {
 
+    Date date = new Date();
     private Config config;
     private PermissionManager manager;
 
     public Remind() {
         super("Remind", "Adds a reminder for the user!", "Remind [user] [reminder]");
     }
-
-    Date date = new Date();
 
     @Override
     public boolean execute(MessageEvent event) throws Exception {

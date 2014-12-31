@@ -9,6 +9,7 @@ import org.pircbotx.PircBotX;
 import java.net.ServerSocket;
 
 public class ChatSocketListener extends Thread {
+    private static volatile boolean isRunning = true;
     private int port;
     private PircBotX bot;
 
@@ -18,7 +19,9 @@ public class ChatSocketListener extends Thread {
         System.out.println("Starting chat socket listener on port " + port);
     }
 
-    private static volatile boolean isRunning = true;
+    public static void kill() {
+        isRunning = false;
+    }
 
     public void run() {
         try {
@@ -30,9 +33,5 @@ public class ChatSocketListener extends Thread {
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-    }
-
-    public static void kill() {
-        isRunning = false;
     }
 }

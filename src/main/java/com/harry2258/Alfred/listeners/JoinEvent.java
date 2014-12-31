@@ -28,6 +28,22 @@ public class JoinEvent extends ListenerAdapter {
         this.manager = man;
     }
 
+    public static String getAccount(User u, org.pircbotx.hooks.events.JoinEvent event) {
+        String user = "";
+        event.getBot().sendRaw().rawLineNow("WHOIS " + u.getNick());
+        WaitForQueue waitForQueue = new WaitForQueue(event.getBot());
+        WhoisEvent test = null;
+        try {
+            test = waitForQueue.waitFor(WhoisEvent.class);
+            waitForQueue.close();
+            user = test.getRegisteredAs();
+        } catch (InterruptedException ex) {
+            Logger.getLogger(com.harry2258.Alfred.listeners.MessageEvent.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        waitForQueue.close();
+        return user;
+    }
+
     @Override
     public void onJoin(org.pircbotx.hooks.events.JoinEvent event) throws Exception {
         Thread.sleep(1000);
@@ -63,21 +79,5 @@ public class JoinEvent extends ListenerAdapter {
         if (Main.relay.containsKey(event.getChannel())) {
             Main.relay.get(event.getChannel()).send().message("[" + event.getChannel().getName() + "] " + event.getUser().getNick() + " joined the channel.");
         }
-    }
-
-    public static String getAccount(User u, org.pircbotx.hooks.events.JoinEvent event) {
-        String user = "";
-        event.getBot().sendRaw().rawLineNow("WHOIS " + u.getNick());
-        WaitForQueue waitForQueue = new WaitForQueue(event.getBot());
-        WhoisEvent test = null;
-        try {
-            test = waitForQueue.waitFor(WhoisEvent.class);
-            waitForQueue.close();
-            user = test.getRegisteredAs();
-        } catch (InterruptedException ex) {
-            Logger.getLogger(com.harry2258.Alfred.listeners.MessageEvent.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        waitForQueue.close();
-        return user;
     }
 }

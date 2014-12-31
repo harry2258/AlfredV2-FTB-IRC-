@@ -10,12 +10,19 @@ import org.pircbotx.hooks.events.MessageEvent;
  */
 public class Stats extends Command {
 
+    private Config config;
+    private PermissionManager manager;
     public Stats() {
         super("Stats", "Gets stats on modpack that use YAMPST!", "Stats [Author] [Modpack Name]");
     }
 
-    private Config config;
-    private PermissionManager manager;
+    public static String PlayTime(Long time) {
+        int seconds = (int) (time / 1000) % 60;
+        int minutes = (int) (time / (60000)) % 60;
+        int hours = (int) (time / (3600000)) % 24;
+        int days = (int) (time / 86400000);
+        return String.format("%d Days %d Hours %d Minutes and %d Seconds", days, hours, minutes, seconds);
+    }
 
     @Override
     public boolean execute(MessageEvent event) {
@@ -74,13 +81,5 @@ public class Stats extends Command {
     @Override
     public void setManager(PermissionManager manager) {
         this.manager = manager;
-    }
-
-    public static String PlayTime(Long time) {
-        int seconds = (int) (time / 1000) % 60;
-        int minutes = (int) (time / (60000)) % 60;
-        int hours = (int) (time / (3600000)) % 24;
-        int days = (int) (time / 86400000);
-        return String.format("%d Days %d Hours %d Minutes and %d Seconds", days, hours, minutes, seconds);
     }
 }

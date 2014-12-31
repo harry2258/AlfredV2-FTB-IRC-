@@ -10,12 +10,31 @@ import org.pircbotx.hooks.events.MessageEvent;
 public class Compliment extends Command {
     private Config config;
     private PermissionManager manager;
+    private String last = "";
 
     public Compliment() {
         super("Compliment", "Make someones day a little brighter!", "Compliment [user]");
     }
 
-    private String last = "";
+    private static void sendCompliment(MessageEvent event, String Compliment, Channel chan) {
+        String[] args = event.getMessage().split(" ");
+
+        if (chan.getName().equalsIgnoreCase("#dragonweyr") || chan.getName().equalsIgnoreCase("#help") || chan.getName().equalsIgnoreCase("#lobby") || chan.getName().equalsIgnoreCase("#coders") || chan.getName().equalsIgnoreCase("#esper") || chan.getName().equalsIgnoreCase("#helper")) {
+            MessageUtils.sendChannel(event, "YOU CRAZY SENDIN' ME OUT THERE?! AWW HELL NAW!!");
+            return;
+        }
+        if (chan.isInviteOnly() || chan.isSecret() || chan.isChannelPrivate()) {
+            event.respond("I cannot join " + chan.getName() + "!");
+        } else {
+            if (event.getBot().getUserBot().getChannels().contains(chan)) {
+                chan.send().message(Compliment);
+            } else {
+                event.getBot().sendIRC().joinChannel(chan.getName());
+                chan.send().message(Compliment);
+                chan.send().part();
+            }
+        }
+    }
 
     @Override
     public boolean execute(MessageEvent event) throws Exception {
@@ -54,26 +73,6 @@ public class Compliment extends Command {
         }
         MessageUtils.sendChannel(event, compliment);
         return true;
-    }
-
-    private static void sendCompliment(MessageEvent event, String Compliment, Channel chan) {
-        String[] args = event.getMessage().split(" ");
-
-        if (chan.getName().equalsIgnoreCase("#dragonweyr") || chan.getName().equalsIgnoreCase("#help") || chan.getName().equalsIgnoreCase("#lobby") || chan.getName().equalsIgnoreCase("#coders") || chan.getName().equalsIgnoreCase("#esper") || chan.getName().equalsIgnoreCase("#helper")) {
-            MessageUtils.sendChannel(event, "YOU CRAZY SENDIN' ME OUT THERE?! AWW HELL NAW!!");
-            return;
-        }
-        if (chan.isInviteOnly() || chan.isSecret() || chan.isChannelPrivate()) {
-            event.respond("I cannot join " + chan.getName() + "!");
-        } else {
-            if (event.getBot().getUserBot().getChannels().contains(chan)) {
-                chan.send().message(Compliment);
-            } else {
-                event.getBot().sendIRC().joinChannel(chan.getName());
-                chan.send().message(Compliment);
-                chan.send().part();
-            }
-        }
     }
 
     @Override

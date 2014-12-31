@@ -22,6 +22,8 @@ import java.util.logging.Logger;
 //TODO LOMBOKIZE!!!
 public class Config {
 
+    public boolean useDatabase;
+    public boolean updateDatabase;
     private boolean debug;
     private boolean autoNickChange;
     private boolean autoReconnectServer;
@@ -33,8 +35,6 @@ public class Config {
     private boolean TwitterEnabled;
     private boolean RedditEnabled;
     private boolean updater;
-    public boolean useDatabase;
-    public boolean updateDatabase;
     private String trigger;
     private String serverHostame;
     private String serverPassword;
@@ -145,7 +145,7 @@ public class Config {
     public void loadDatabase(Connection conn) {
 
         try {
-            //conn.prepareStatement("CREATE TABLE IF NOT EXISTS Channel_Permissions ( Channel VARCHAR(255) NOT NULL PRIMARY KEY, Admins VARCHAR(2000), Mods VARCHAR(2000), ModPerms VARCHAR(5000), Everyone VARCHAR(5000), URL VARCHAR(30) )").execute();
+            //Check if tables exists, if not create them.
             conn.prepareStatement("CREATE TABLE IF NOT EXISTS Channel_Permissions (Channel VARCHAR(255) NOT NULL PRIMARY KEY, Permission LONGTEXT, URL VARCHAR(4))").execute();
             conn.prepareStatement("CREATE TABLE IF NOT EXISTS Rejoin_Channels (Channel VARCHAR(255) NOT NULL PRIMARY KEY)").execute();
             conn.prepareStatement("CREATE TABLE IF NOT EXISTS Bot (`Nick` VARCHAR(255) NOT NULL PRIMARY KEY, `Password` VARCHAR(255), `Username` VARCHAR(255), `Ident` VARCHAR(255), `Bot_Trigger` VARCHAR(255), `Reconnect` VARCHAR(5), `Accept_Invite` VARCHAR(5), `Rejoin_Channels` VARCHAR(5), `CTCP_Finger_Reply` VARCHAR(1000), `CTCP_Version_Reply` VARCHAR(1000))").execute();
@@ -214,6 +214,7 @@ public class Config {
             rs2.close();
             stmt2.close();
 
+            //Ignored Users. Shame on them :C
             PreparedStatement stmt3 = conn.prepareStatement("SELECT * FROM `Ignored_Users`");
             ResultSet rs3 = stmt3.executeQuery();
             int i = 0;
@@ -240,11 +241,12 @@ public class Config {
                 e.printStackTrace();
             }
 
-
+            //Nukes basic settings, Keeps Channel perms, Rejoin channels and Ignored Users.
             conn.prepareStatement("TRUNCATE Bot").execute();
             conn.prepareStatement("TRUNCATE Network_Settings").execute();
             conn.prepareStatement("TRUNCATE Misc").execute();
 
+            //Update them from bot.properties
             String bot = String.format("INSERT INTO `Bot` (`Nick`, `Password`, `Username`, `Ident`, `Bot_Trigger`, `Reconnect`, `Accept_Invite`, `Rejoin_Channels`, `CTCP_Finger_Reply`, `CTCP_Version_Reply`) VALUES ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s')",
                     properties.getProperty("bot-nickname"),
                     properties.getProperty("bot-password"),
@@ -256,6 +258,7 @@ public class Config {
                     properties.getProperty("auto-rejoin"),
                     properties.getProperty("ctcp-finger-reply"),
                     properties.getProperty("ctcp-version-reply"));
+
             String Network = String.format("INSERT INTO Network_Settings (`Server_Host`, `Server_Port`, `Server_Password`, `Use_SSL`, `Permissions_Denied`, `Verify_SSL`, `Enable_Chat_Socket`, `Chat_Socket_Port`) VALUES ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s')",
                     properties.getProperty("server-hostname"),
                     properties.getProperty("server-port"),
@@ -265,6 +268,7 @@ public class Config {
                     properties.getProperty("verify-ssl"),
                     properties.getProperty("enable-chat-socket"),
                     properties.getProperty("chat-socket-port"));
+
             String Misc = String.format("INSERT INTO Misc (`Bot`, `Twitter`, `Reddit`, `Check_Update`, `Update_Channel`, `Update_Interval`, `Weather_API_KEY`) VALUES ('%s', '%s', '%s', '%s', '%s', '%s', '%s')",
                     properties.getProperty("bot-nickname"),
                     properties.getProperty("Twitter"),
@@ -278,12 +282,14 @@ public class Config {
             conn.prepareStatement(Network).execute();
             conn.prepareStatement(Misc).execute();
 
+            //Add any new channels to the Auto-Join list.
             for (String channel : Arrays.asList(properties.getProperty("channels").split(" "))) {
                 if (Create.AddChannel(channel, conn)) System.out.println("Created Perms for " + channel);
                 else System.out.println("Could not create permissions for " + channel);
             }
 
 
+            //Done updating DB, don't want to leave it on. Do we?
             properties.setProperty("Update-Database", "false");
             properties.store(new FileOutputStream("bot.properties"), null);
 
@@ -592,94 +598,165 @@ public class Config {
         this.enableChatSocket = enableChatSocket;
     }
 
+    /**
+     * @return chatSocketPort
+     */
     public int getChatSocketPort() {
         return chatSocketPort;
     }
 
+    /**
+     * @param chatSocketPort the chatSocketPort to set
+     */
     public void setChatSocketPort(int chatSocketPort) {
         this.chatSocketPort = chatSocketPort;
     }
 
-    public boolean isEnabledTwitter() {
+    /**
+     * @return isTwitterEnabled
+     */
+    public boolean isTwitterEnabled() {
         return TwitterEnabled;
     }
 
+    /**
+     * @param Twitterenable Enable or Disable twitter
+     */
     private void setTwitterEnabled(boolean Twitterenable) {
         this.TwitterEnabled = Twitterenable;
     }
 
+    /**
+     * @return isRedditEnabled
+     */
     public boolean isRedditEnabled() {
         return RedditEnabled;
     }
 
+    /**
+     * @param Redditenabled Enable ot Disable Reddit.
+     */
     private void setRedditEnabled(boolean Redditenabled) {
         this.RedditEnabled = Redditenabled;
     }
 
-    public String Database() {
+    /**
+     * @return the getDatabase name
+     */
+    public String getDatabase() {
         return DBtable;
     }
 
+    /**
+     * @param database Database name.
+     */
     private void DB(String database) {
         this.DBtable = database;
     }
 
-    public String DatabaseHost() {
+    /**
+     * @return the getDatabaseHost
+     */
+    public String getDatabaseHost() {
         return DBhost;
     }
 
+    /**
+     * @param host Database host, IP/URL
+     */
     private void DBHostName(String host) {
         this.DBhost = host;
     }
 
-    public String DatabaseUser() {
+    /**
+     * @return the getDatabaseUser
+     */
+    public String getDatabaseUser() {
         return DBuser;
     }
 
+    /**
+     * @param user Username for Database
+     */
     private void DBUserName(String user) {
         this.DBuser = user;
     }
 
-    public String DatabasePass() {
+    /**
+     * @return the getDatabasePass
+     */
+    public String getDatabasePass() {
         return DBpass;
     }
 
+    /**
+     * @param pass Password for Database
+     */
     private void DBPassName(String pass) {
         this.DBpass = pass;
     }
 
+    /**
+     * @param Updater Enable or Disable update checker
+     */
     private void setUpdater(boolean Updater) {
         this.updater = Updater;
     }
 
+    /**
+     * @return the UpdateChecker
+     */
     public boolean UpdaterChecker() {
         return updater;
     }
 
+    /**
+     * @param updateChan Channel to announce updates in.
+     */
     private void setUpdateChan(String updateChan) {
         this.updatechan = updateChan;
     }
 
+    /**
+     * @return the Updaterchanel
+     */
     public String Updaterchannel() {
         return updatechan;
     }
 
+    /**
+     * @return getUpdateInterval
+     */
     public int getUpdateInterval() {
         return UpdateInterval;
     }
 
+    /**
+     * How often to check for Updates
+     *
+     * @param updateInterval Update timer.
+     */
     private void setUpdateInterval(int updateInterval) {
         UpdateInterval = updateInterval;
     }
 
+    /**
+     * @param Key WUnderground API Key
+     */
     private void WeatherAPI(String Key) {
         this.Weather = Key;
     }
 
-    public String WeatherKey() {
+    /**
+     * @return the getWeatherKey
+     */
+    public String getWeatherKey() {
         return Weather;
     }
 
+    /**
+     * @param use Using the database for configuration or not.
+     */
     public void usingDatabase(Boolean use) {
         this.useDatabase = use;
     }

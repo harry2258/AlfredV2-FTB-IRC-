@@ -18,12 +18,12 @@ public class Perms {
         return this.permission;
     }
 
-    public List<String> getGlobal() {
-        return this.global;
-    }
-
     public void setPermission(Permission permission) {
         this.permission = permission;
+    }
+
+    public List<String> getGlobal() {
+        return this.global;
     }
 
     public void setGlobal(List<String> global) {

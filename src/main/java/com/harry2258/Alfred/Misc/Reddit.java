@@ -15,14 +15,17 @@ import java.net.URLConnection;
 import java.util.HashMap;
 
 public class Reddit extends Thread {
-    PircBotX bot;
     public static HashMap<String, String> chaninfo = new HashMap<>();
+    private static volatile boolean isRunning = true;
+    PircBotX bot;
 
     public Reddit(PircBotX bot) {
         this.bot = bot;
     }
 
-    private static volatile boolean isRunning = true;
+    public static void kill() {
+        isRunning = false;
+    }
 
     public void run() {
 
@@ -139,11 +142,6 @@ public class Reddit extends Thread {
 
             }
         }
-    }
-
-
-    public static void kill() {
-        isRunning = false;
     }
 
 }

@@ -16,7 +16,7 @@ public class Create {
     public static boolean CreateTables(Config config, PermissionManager manager) throws SQLException {
 
         try {
-            Connection conn = DriverManager.getConnection("jdbc:mysql://" + config.DatabaseHost() + "/" + config.Database(), config.DatabaseUser(), config.DatabasePass());
+            Connection conn = DriverManager.getConnection("jdbc:mysql://" + config.getDatabaseHost() + "/" + config.getDatabase(), config.getDatabaseUser(), config.getDatabasePass());
             //conn.prepareStatement("CREATE TABLE IF NOT EXISTS Channels ( ID INT NOT NULL AUTO_INCREMENT PRIMARY KEY, Channel VARCHAR(255) ) ").execute();
             conn.prepareStatement("CREATE TABLE IF NOT EXISTS Channel_Permissions ( Channel VARCHAR(255) NOT NULL PRIMARY KEY, Admins VARCHAR(255), Mods VARCHAR(255), ModPerms VARCHAR(255), Everyone VARCHAR(255), URL VARCHAR(30) ) ").execute();
             conn.prepareStatement("CREATE TABLE IF NOT EXISTS Rejoin_Channels (Channel VARCHAR(255) NOT NULL PRIMARY KEY)").execute();
@@ -69,10 +69,10 @@ public class Create {
             e.printStackTrace();
         }
 
-        String host = config.DatabaseHost();
-        String user = config.DatabaseUser();
-        String pass = config.DatabasePass();
-        String database = config.Database();
+        String host = config.getDatabaseHost();
+        String user = config.getDatabaseUser();
+        String pass = config.getDatabasePass();
+        String database = config.getDatabase();
 
         return DriverManager.getConnection("jdbc:mysql://" + host + "/" + database, user, pass);
     }

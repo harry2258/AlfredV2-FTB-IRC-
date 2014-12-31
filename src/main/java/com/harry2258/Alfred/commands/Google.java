@@ -7,12 +7,11 @@ import com.harry2258.Alfred.api.Utils;
 import org.pircbotx.hooks.events.MessageEvent;
 
 public class Google extends Command {
+    private Config config;
+    private PermissionManager manager;
     public Google() {
         super("Google", "Searches google for something.", "Google how to google");
     }
-
-    private Config config;
-    private PermissionManager manager;
 
     @Override
     public boolean execute(MessageEvent event) {

@@ -17,6 +17,32 @@ public class Login extends Command {
         super("Login", "Log into the bot!", "Login (again/info)");
     }
 
+    public static String Group(String user, String channel) throws Exception {
+        String group = "None :<";
+
+        try {
+            Perms perm = Main.map.get(channel);
+
+            if (perm.getPermission().getMods().contains(user))
+                group = "Moderator";
+
+            if (perm.getPermission().getAdmins().contains(user))
+                group = "Admin";
+
+            String Exec = JsonUtils.getStringFromFile(Main.jsonFilePath.toString());
+            JsonObject exec = JsonUtils.getJsonObject(Exec);
+            for (String users : exec.getAsJsonObject("Perms").get("Exec").toString().replaceAll("[\\[\\]\"]", "").split(",")) {
+                if (users.equalsIgnoreCase(user))
+                    return "Exec";
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return group;
+    }
+
     @Override
     public boolean execute(MessageEvent event) throws Exception {
         String[] args = event.getMessage().split(" ");
@@ -48,32 +74,6 @@ public class Login extends Command {
         Main.NotLoggedIn.remove(event.getUser().getNick());
         MessageUtils.sendUserNotice(event, "You are now Logged in!");
         return true;
-    }
-
-    public static String Group(String user, String channel) throws Exception {
-        String group = "None :<";
-
-        try {
-            Perms perm = Main.map.get(channel);
-
-            if (perm.getPermission().getMods().contains(user))
-                group = "Moderator";
-
-            if (perm.getPermission().getAdmins().contains(user))
-                group = "Admin";
-
-            String Exec = JsonUtils.getStringFromFile(Main.jsonFilePath.toString());
-            JsonObject exec = JsonUtils.getJsonObject(Exec);
-            for (String users : exec.getAsJsonObject("Perms").get("Exec").toString().replaceAll("[\\[\\]\"]", "").split(",")) {
-                if (users.equalsIgnoreCase(user))
-                    return "Exec";
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return group;
     }
 
     @Override

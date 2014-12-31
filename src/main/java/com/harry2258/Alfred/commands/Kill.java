@@ -1,5 +1,7 @@
 package com.harry2258.Alfred.commands;
 
+import com.harry2258.Alfred.Main;
+import com.harry2258.Alfred.Misc.RecentChanges;
 import com.harry2258.Alfred.Misc.Reddit;
 import com.harry2258.Alfred.Misc.Twitter;
 import com.harry2258.Alfred.api.Command;
@@ -50,12 +52,14 @@ public class Kill extends Command {
 
                                 if (currentEvent != null) {
                                     if (currentEvent.getMessage().equalsIgnoreCase(config.getTrigger() + "kill") && currentEvent.getUser().getNick().equals(user)) {
+                                        System.out.println("Shutting down");
                                         event.getBot().stopBotReconnect();
                                         event.getBot().sendIRC().quitServer("Killed by " + event.getUser().getNick());
+                                        Main.SafeStop = true;
                                         if (config.isEnableChatSocket()) {
                                             ChatSocketListener.kill();
                                         }
-                                        if (config.isEnabledTwitter()) {
+                                        if (config.isTwitterEnabled()) {
                                             Twitter.kill();
                                         }
                                         if (config.isRedditEnabled()) {
@@ -64,9 +68,8 @@ public class Kill extends Command {
                                         if (config.UpdaterChecker()) {
                                             com.harry2258.Alfred.Misc.Update.kill();
                                         }
-
-                                        System.out.println("Shutting down");
-                                        System.exit(1);
+                                        RecentChanges.kill();
+                                        System.exit(2258);
                                     }
                                 }
                             }
@@ -79,9 +82,7 @@ public class Kill extends Command {
                         f.get(10, TimeUnit.SECONDS);
                     }
 
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    return true;
+                } catch (Exception ignored) {
                 }
                 service.shutdown();
                 queue.close();

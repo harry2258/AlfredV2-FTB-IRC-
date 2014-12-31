@@ -1,5 +1,9 @@
 package com.harry2258.Alfred.commands;
 
+import com.harry2258.Alfred.Main;
+import com.harry2258.Alfred.Misc.RecentChanges;
+import com.harry2258.Alfred.Misc.Reddit;
+import com.harry2258.Alfred.Misc.Twitter;
 import com.harry2258.Alfred.api.Command;
 import com.harry2258.Alfred.api.Config;
 import com.harry2258.Alfred.api.PermissionManager;
@@ -19,41 +23,26 @@ public class Restart extends Command {
 
     @Override
     public boolean execute(MessageEvent event) throws Exception {
-        /*
-        System.out.println("Restarting Bot!");
-        if (PermissionManager.hasExec(event.getUser(), event)) {
-            if (config.isEnableChatSocket()) {
-                ChatSocketListener.kill();
-                ChatSocketHandler.kill();
-            }
-            if (config.isEnabledTwitter()) {
-                Twitter.kill();
-            }
-            if (config.isRedditEnabled()) {
-                Reddit.kill();
-            }
-            if (config.UpdaterChecker()) {
-                com.harry2258.Alfred.Misc.Update.kill();
-            }
-            final String javaBin = System.getProperty("java.home") + File.separator + "bin" + File.separator + "java";
-            final File currentJar = new File(Main.class.getProtectionDomain().getCodeSource().getLocation().toURI());
 
-            if (!currentJar.getName().endsWith(".jar")) {
-                return false;
-            }
+        if (PermissionManager.hasExec(event.getUser().getNick())) {
+            //Clear some stuff
+            Main.Chat.clear();
+            Main.URL.clear();
+            Main.relay.clear();
+            Main.map.clear();
+            Reddit.chaninfo.clear();
+            Twitter.tweets.clear();
+            RecentChanges.changes.clear();
+            //Keeping login names, Less work after startup.
 
-            final ArrayList<String> command = new ArrayList<>();
-            command.add(javaBin);
-            command.add("-jar");
-            command.add(currentJar.getPath());
-            final ProcessBuilder builder = new ProcessBuilder(command);
-            builder.start();
-            //Runtime.getRuntime().exec(command.toString());
-            System.exit(1);
-
+            //The restart part. Fancy? I think so.
+            event.getBot().stopBotReconnect();
+            event.getBot().sendIRC().quitServer("Restarting");
+            return true;
+        } else {
+            event.getUser().send().notice("You are not an executive user!");
+            return true;
         }
-        */
-        return false;
     }
 
     @Override

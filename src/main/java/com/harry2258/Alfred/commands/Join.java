@@ -21,6 +21,7 @@ public class Join extends Command {
 
     @Override
     public boolean execute(MessageEvent event) throws Exception {
+
         if (PermissionManager.hasExec(event.getUser().getNick())) {
 
             String[] args = event.getMessage().split(" ");
@@ -56,43 +57,11 @@ public class Join extends Command {
                 Main.map.put(channel.toLowerCase(), p);
                 System.out.println("Loaded perms for " + channel);
             }
-            /*
-            Channel target = event.getBot().getUserChannelDao().getChannel(args[1]);
-
-            if (target.isInviteOnly()) {
-                event.getBot().sendRaw().rawLineNow("KNOCK " + target.getName());
-            }
-            event.getBot().sendIRC().joinChannel(target.getName());
-            if (config.useDatabase) {
-                try {
-                    Create.AddChannel(target.getName().toLowerCase(), Main.database);
-                    PreparedStatement stmt = Main.database.prepareStatement("SELECT Permission FROM `Channel_Permissions` WHERE Channel = ?");
-                    stmt.setString(1, target.getName());
-                    ResultSet rs = stmt.executeQuery();
-                    rs.next();
-                    Perms p = JsonUtils.getPermsFromString(rs.getString("Permission"));
-                    Main.map.put(target.getName().toLowerCase(), p);
-                    System.out.println("Loaded perms for " + target.getName());
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            } else {
-                String channel = target.getName();
-                File file = new File(System.getProperty("user.dir") + "/perms/" + channel.toLowerCase() + "/" + "perms.json");
-                String Jsonfile = System.getProperty("user.dir") + "/perms/" + channel.toLowerCase() + "/" + "perms.json";
-                if (!file.exists()) {
-                    System.out.println("Creating perms.json for " + channel);
-                    JsonUtils.createJsonStructure(file);
-                }
-                String perms = JsonUtils.getStringFromFile(Jsonfile);
-                Perms p = JsonUtils.getPermsFromString(perms);
-                Main.map.put(channel.toLowerCase(), p);
-                System.out.println("Loaded perms for " + channel);
-            }
-            */
+            return true;
+        } else {
+            event.getUser().send().notice("You are not an executive user!");
             return true;
         }
-        return false;
     }
 
     @Override

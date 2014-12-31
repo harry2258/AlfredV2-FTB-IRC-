@@ -25,6 +25,14 @@ public class ChatSocketHandler extends Thread {
         this.bot = bot;
     }
 
+    public static String Uptime() {
+        Long time = System.currentTimeMillis() - Main.startup;
+        int seconds = (int) (time / 1000) % 60;
+        int minutes = (int) (time / (60000)) % 60;
+        int hours = (int) (time / (3600000)) % 24;
+        int days = (int) (time / 86400000);
+        return String.format("%d Days %d Hours %d Minutes and %d seconds", days, hours, minutes, seconds);
+    }
 
     @Override
     public void run() {
@@ -52,14 +60,5 @@ public class ChatSocketHandler extends Thread {
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-    }
-
-    public static String Uptime() {
-        Long time = System.currentTimeMillis() - Main.startup;
-        int seconds = (int) (time / 1000) % 60;
-        int minutes = (int) (time / (60000)) % 60;
-        int hours = (int) (time / (3600000)) % 24;
-        int days = (int) (time / 86400000);
-        return String.format("%d Days %d Hours %d Minutes and %d seconds", days, hours, minutes, seconds);
     }
 }

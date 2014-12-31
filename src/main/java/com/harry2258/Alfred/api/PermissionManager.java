@@ -10,8 +10,6 @@ import com.harry2258.Alfred.Main;
 import com.harry2258.Alfred.json.Permission;
 import com.harry2258.Alfred.json.Perms;
 import org.pircbotx.Channel;
-import org.pircbotx.User;
-import org.pircbotx.hooks.events.MessageEvent;
 
 import java.io.File;
 import java.util.HashSet;
@@ -23,6 +21,37 @@ public class PermissionManager {
     public Properties properties;
 
     public PermissionManager(Config conf) {
+    }
+
+    public static boolean hasExec(String Nick) {
+        try {
+            String Exec = JsonUtils.getStringFromFile(Main.jsonFilePath.toString());
+            JsonObject exec = JsonUtils.getJsonObject(Exec);
+            String account = Main.Login.get(Nick);
+            for (String users : exec.getAsJsonObject("Perms").get("Exec").toString().replaceAll("[\\[\\]\"]", "").split(",")) {
+                if (users.equalsIgnoreCase(account)) {
+                    return true;
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public static boolean hasAdmin(String Nick, Channel channel) throws Exception {
+
+        String sender = Main.Login.get(Nick);
+        Perms perm = Main.map.get(channel.getName().toLowerCase());
+        Set<String> set = new HashSet<>(perm.getPermission().getAdmins());
+        return set.contains(sender);
+    }
+
+    public static boolean hasMod(String Nick, Channel channel) throws Exception {
+        String sender = Main.Login.get(Nick);
+        Perms perm = Main.map.get(channel.getName().toLowerCase());
+        Set<String> set = new HashSet<>(perm.getPermission().getMods());
+        return set.contains(sender);
     }
 
     public boolean hasPermission(String permission, String Nick, Channel channel) throws Exception {
@@ -72,38 +101,7 @@ public class PermissionManager {
         return false;
     }
 
-    public static boolean hasExec(String Nick) {
-        try {
-            String Exec = JsonUtils.getStringFromFile(Main.jsonFilePath.toString());
-            JsonObject exec = JsonUtils.getJsonObject(Exec);
-            String account = Main.Login.get(Nick);
-            for (String users : exec.getAsJsonObject("Perms").get("Exec").toString().replaceAll("[\\[\\]\"]", "").split(",")) {
-                if (users.equalsIgnoreCase(account)) {
-                    return true;
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return false;
-    }
-
-    public static boolean hasAdmin(String Nick, Channel channel) throws Exception {
-
-        String sender = Main.Login.get(Nick);
-        Perms perm = Main.map.get(channel.getName().toLowerCase());
-        Set<String> set = new HashSet<>(perm.getPermission().getAdmins());
-        return set.contains(sender);
-    }
-
     public PermissionManager getPermissionsManager() {
         return this;
-    }
-
-    public static boolean hasMod(String Nick, Channel channel) throws Exception {
-        String sender = Main.Login.get(Nick);
-        Perms perm = Main.map.get(channel.getName().toLowerCase());
-        Set<String> set = new HashSet<>(perm.getPermission().getMods());
-        return set.contains(sender);
     }
 }

@@ -18,10 +18,10 @@ import static com.harry2258.Alfred.api.CommandRegistry.commands;
 
 public class MessageEvent extends ListenerAdapter {
     public static PircBotX bot;
+    public static boolean waiting = false;
+    static Interpreter interpreter = new Interpreter();
     private Config config;
     private PermissionManager manager;
-    static Interpreter interpreter = new Interpreter();
-    public static boolean waiting = false;
 
     public MessageEvent(Config conf, PermissionManager man) {
         this.config = conf;

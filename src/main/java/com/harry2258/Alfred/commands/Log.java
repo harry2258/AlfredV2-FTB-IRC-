@@ -19,12 +19,22 @@ import java.util.Scanner;
  * Created by Hardik on 1/23/14.
  */
 public class Log extends Command {
+    private Config config;
+    private PermissionManager manager;
     public Log() {
         super("Log", "Parse a minecraft error log", "Log [Crash log link]");
     }
 
-    private Config config;
-    private PermissionManager manager;
+    public static String readString(InputStream stream) {
+        Scanner scanner = new Scanner(stream).useDelimiter("\\A");
+        return scanner.hasNext() ? scanner.next() : "";
+    }
+
+    private static String TechnicLauncher(BufferedReader br) {
+        String info = null;
+
+        return info;
+    }
 
     @Override
     public boolean execute(MessageEvent event) throws IOException {
@@ -169,18 +179,6 @@ public class Log extends Command {
         }
         return true;
     }
-
-    public static String readString(InputStream stream) {
-        Scanner scanner = new Scanner(stream).useDelimiter("\\A");
-        return scanner.hasNext() ? scanner.next() : "";
-    }
-
-    private static String TechnicLauncher(BufferedReader br) {
-        String info = null;
-
-        return info;
-    }
-
 
     @Override
     public void setConfig(Config config) {

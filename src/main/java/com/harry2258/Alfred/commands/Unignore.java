@@ -27,7 +27,7 @@ public class Unignore extends Command {
     public boolean execute(MessageEvent event) {
         String[] args = event.getMessage().split(" ");
         if (args.length == 2) {
-            String user = null;
+            String user;
             try {
                 user = Utils.getAccount(event.getBot().getUserChannelDao().getUser(args[1]), event);
             } catch (Exception e) {

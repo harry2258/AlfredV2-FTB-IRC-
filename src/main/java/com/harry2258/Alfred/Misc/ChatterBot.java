@@ -10,15 +10,13 @@ import org.pircbotx.PircBotX;
  * Created by Hardik at 10:25 PM on 8/1/2014.
  */
 public class ChatterBot extends Thread {
+    public static String s = "";
+    public static boolean UserAnswered = false;
+    private static volatile boolean isRunning = true;
     PircBotX bot;
-
     public ChatterBot(PircBotX bot) {
         this.bot = bot;
     }
-
-    private static volatile boolean isRunning = true;
-    public static String s = "";
-    public static boolean UserAnswered = false;
 
     public void run() {
         try {

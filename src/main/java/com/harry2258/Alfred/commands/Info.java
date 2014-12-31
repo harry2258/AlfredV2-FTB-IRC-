@@ -152,6 +152,7 @@ public class Info extends Command {
                     MessageUtils.sendUserNotice(event, String.valueOf(i) + " users are ignored by the bot. ");
                     if (i > 0)
                         MessageUtils.sendUserNotice(event, "Type \"" + config.getTrigger() + "info ignored list \" for a full list!");
+                    return true;
                 }
 
                 if (args.length == 3 && args[2].equalsIgnoreCase("list")) {
@@ -240,6 +241,7 @@ public class Info extends Command {
                 if (Usergroup.equalsIgnoreCase("Exec")) {
                     MessageUtils.sendUserNotice(event, "You own this town!");
                 }
+
             } catch (Exception e) {
                 e.printStackTrace();
                 return false;

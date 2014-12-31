@@ -1,29 +1,26 @@
 package com.harry2258.Alfred.commands;
 
-import com.google.common.collect.ImmutableList;
 import com.google.gson.JsonObject;
 import com.harry2258.Alfred.api.*;
 import org.pircbotx.Colors;
-import org.pircbotx.User;
 import org.pircbotx.hooks.events.MessageEvent;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.URL;
-import java.util.ArrayList;
 
 /**
  * Created by Hardik at 4:33 PM on 8/1/2014.
  */
 public class Weather extends Command {
 
+    private Config config;
+    private PermissionManager manager;
     public Weather() {
         super("Weather", "Gets the Weather for the city", "Weather [City name], (State)");
     }
 
-    private Config config;
-    private PermissionManager manager;
-//TODO Add alerts feature
+    //TODO Add alerts feature
     // | alerts/q/ |
     @Override
     public boolean execute(MessageEvent event) throws Exception {
@@ -35,9 +32,9 @@ public class Weather extends Command {
         String jsonstring = "";
         String alerts = "";
         String Alert = "None";
-        Boolean IPAddress= false;
-        String UndergroundURL = "http://api.wunderground.com/api/" + config.WeatherKey() + "/conditions/q";
-        String UndergroundAlerts = "http://api.wunderground.com/api/" + config.WeatherKey() + "/alerts/q";
+        Boolean IPAddress = false;
+        String UndergroundURL = "http://api.wunderground.com/api/" + config.getWeatherKey() + "/conditions/q";
+        String UndergroundAlerts = "http://api.wunderground.com/api/" + config.getWeatherKey() + "/alerts/q";
         try {
             //If not args are provided, defaults to the user running the command
             if (args.length == 1) {
@@ -49,21 +46,33 @@ public class Weather extends Command {
                     JsonObject jsonObj = JsonUtils.getJsonObject(IPjsonstring);
                     City = "/" + jsonObj.get("city").getAsString();
                     State = "/" + jsonObj.get("regionName").getAsString();
-                }catch (Exception e) {
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
 
             //If args happens to be a User connected to the IRC
-            if (args.length == 2 && event.getChannel().getUsers().asList().contains(event.getBot().getUserChannelDao().getUser(args[1]))) {
-                ip = Utils.getIP(args[1], event);
-                IPAddress = true;
-            } else if (args.length > 1) {
-                StringBuilder sb = new StringBuilder();
-                for (int i = 1; i < args.length; i++) {
-                    sb.append(args[i]).append(" ");
+            try {
+                if (args.length == 2 && event.getChannel().getUsers().asList().contains(event.getBot().getUserChannelDao().getUser(args[1]))) {
+                    ip = Utils.getIP(args[1], event);
+                    IPAddress = true;
+                } else if (args.length > 1) {
+                    StringBuilder sb = new StringBuilder();
+                    for (int i = 1; i < args.length; i++) {
+                        sb.append(args[i]).append(" ");
+                    }
+                    City = "/" + sb.toString().replace(",", "");
                 }
-                City = "/" + sb.toString().replace(",", "");
+            } catch (Exception e) {
+                e.printStackTrace();
+
+                if (args.length >= 1) {
+                    StringBuilder sb = new StringBuilder();
+                    for (int i = 1; i < args.length; i++) {
+                        sb.append(args[i]).append(" ");
+                    }
+                    City = "/" + sb.toString().replace(",", "");
+                }
             }
 
             if (event.getMessage().contains(",")) {
@@ -107,7 +116,7 @@ public class Weather extends Command {
             if (jsonstring.contains(", \"results\": [")) {
                 JsonObject jsonObj = JsonUtils.getJsonObject(jsonstring.replaceAll("\n", ""));
                 String CityID = jsonObj.getAsJsonObject("response").getAsJsonArray("results").get(0).getAsJsonObject().get("l").toString();
-                URL url = new URL(("http://api.wunderground.com/api/" + config.WeatherKey() + "/conditions" + CityID + ".json").replaceAll(" ", "_").replaceAll("\"", ""));
+                URL url = new URL(("http://api.wunderground.com/api/" + config.getWeatherKey() + "/conditions" + CityID + ".json").replaceAll(" ", "_").replaceAll("\"", ""));
                 BufferedReader br = new BufferedReader(new InputStreamReader(url.openStream()));
                 jsonstring = "";
                 String tmp;
@@ -122,11 +131,12 @@ public class Weather extends Command {
             String state = jsonObj.getAsJsonObject("display_location").get("state").getAsString();
             String Weather = jsonObj.get("weather").getAsString();
             String Temp = jsonObj.get("temperature_string").getAsString();
-            String Wind = jsonObj.get("wind_string").getAsString().contains("Gusting to") ? jsonObj.get("wind_string").getAsString() : jsonObj.get("wind_string").getAsString() + ", Gusting at " + jsonObj.get("wind_gust_mph").getAsString() +" MPH";
+            String Wind = jsonObj.get("wind_string").getAsString().contains("Gusting to") ? jsonObj.get("wind_string").getAsString() : jsonObj.get("wind_string").getAsString() + ", Gusting at " + jsonObj.get("wind_gust_mph").getAsString() + " MPH";
             String Humidity = jsonObj.get("relative_humidity").getAsString();
             try {
-                Alert = (JsonUtils.getJsonObject(alerts.replaceAll("\n", "")).getAsJsonArray("alerts").get(0).getAsJsonObject().get("description").getAsString().isEmpty()) ? "None" : Colors.BOLD + Colors.RED + JsonUtils.getJsonObject(alerts.replaceAll("\n", "")).getAsJsonArray("alerts").get(0).getAsJsonObject().get("description").getAsString() + Colors.NORMAL + "till " + JsonUtils.getJsonObject(alerts.replaceAll("\n", "")).getAsJsonArray("alerts").get(0).getAsJsonObject().get("expires").getAsString();
-            } catch (Exception e) {}
+                Alert = (JsonUtils.getJsonObject(alerts.replaceAll("\n", "")).getAsJsonArray("alerts").get(0).getAsJsonObject().get("description").getAsString().isEmpty()) ? "None" : Colors.BOLD + Colors.RED + JsonUtils.getJsonObject(alerts.replaceAll("\n", "")).getAsJsonArray("alerts").get(0).getAsJsonObject().get("description").getAsString() + Colors.NORMAL + " till " + JsonUtils.getJsonObject(alerts.replaceAll("\n", "")).getAsJsonArray("alerts").get(0).getAsJsonObject().get("expires").getAsString();
+            } catch (Exception e) {
+            }
 
             MessageUtils.sendChannel(event, city + ", " + state + ": " + Weather + " | " + Temp + " | " + Colors.BOLD + "Humidity" + Colors.NORMAL + ": " + Humidity + " | " + Colors.BOLD + "Winds" + Colors.NORMAL + ": " + Wind + " | Alerts: " + Alert);
         } catch (Exception e) {

@@ -28,6 +28,22 @@ public class NickChangeEvent extends ListenerAdapter {
         this.manager = man;
     }
 
+    public static String getAccount(User u, org.pircbotx.hooks.events.NickChangeEvent event) {
+        String user = "";
+        event.getBot().sendRaw().rawLineNow("WHOIS " + u.getNick());
+        WaitForQueue waitForQueue = new WaitForQueue(event.getBot());
+        WhoisEvent test = null;
+        try {
+            test = waitForQueue.waitFor(WhoisEvent.class);
+            waitForQueue.close();
+            user = test.getRegisteredAs();
+        } catch (InterruptedException ex) {
+            Logger.getLogger(com.harry2258.Alfred.listeners.MessageEvent.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        waitForQueue.close();
+        return user;
+    }
+
     @Override
     public void onNickChange(org.pircbotx.hooks.events.NickChangeEvent event) throws Exception {
         String oldNick = event.getOldNick();
@@ -52,21 +68,5 @@ public class NickChangeEvent extends ListenerAdapter {
         Main.Login.put(newNick, user);
         Main.NotLoggedIn.remove(oldNick);
 
-    }
-
-    public static String getAccount(User u, org.pircbotx.hooks.events.NickChangeEvent event) {
-        String user = "";
-        event.getBot().sendRaw().rawLineNow("WHOIS " + u.getNick());
-        WaitForQueue waitForQueue = new WaitForQueue(event.getBot());
-        WhoisEvent test = null;
-        try {
-            test = waitForQueue.waitFor(WhoisEvent.class);
-            waitForQueue.close();
-            user = test.getRegisteredAs();
-        } catch (InterruptedException ex) {
-            Logger.getLogger(com.harry2258.Alfred.listeners.MessageEvent.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        waitForQueue.close();
-        return user;
     }
 }

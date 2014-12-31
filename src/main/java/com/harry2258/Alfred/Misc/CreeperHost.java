@@ -26,14 +26,34 @@ import java.util.Map;
  */
 
 public class CreeperHost extends Thread {
+    public static ArrayList<String> ChReposlist = new ArrayList<>();
+    private static String edges = "new";
     MessageEvent event;
-
     public CreeperHost(MessageEvent event) {
         this.event = event;
     }
 
-    public static ArrayList<String> ChReposlist = new ArrayList<>();
-    private static String edges = "new";
+    static List getKeysFromJson(String string) throws Exception {
+        Object things = new Gson().fromJson(string, Object.class);
+        List keys = new ArrayList();
+        collectAllTheKeys(keys, things);
+        return keys;
+    }
+
+    static void collectAllTheKeys(List keys, Object o) {
+        Collection values = null;
+        if (o instanceof Map) {
+            Map map = (Map) o;
+            keys.addAll(map.keySet());
+            values = map.values();
+        } else if (o instanceof Collection)
+            values = (Collection) o;
+        else
+            return;
+
+        for (Object value : values)
+            collectAllTheKeys(keys, value);
+    }
 
     public void run() {
         ArrayList chRepos = new ArrayList<>();
@@ -234,28 +254,6 @@ public class CreeperHost extends Thread {
             return sum.doubleValue() / (marks.size() - bad);
         } else return 0.0;
 
-    }
-
-    static List getKeysFromJson(String string) throws Exception {
-        Object things = new Gson().fromJson(string, Object.class);
-        List keys = new ArrayList();
-        collectAllTheKeys(keys, things);
-        return keys;
-    }
-
-    static void collectAllTheKeys(List keys, Object o) {
-        Collection values = null;
-        if (o instanceof Map) {
-            Map map = (Map) o;
-            keys.addAll(map.keySet());
-            values = map.values();
-        } else if (o instanceof Collection)
-            values = (Collection) o;
-        else
-            return;
-
-        for (Object value : values)
-            collectAllTheKeys(keys, value);
     }
 
 }

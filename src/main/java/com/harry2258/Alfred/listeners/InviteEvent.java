@@ -23,6 +23,22 @@ public class InviteEvent extends ListenerAdapter {
         this.manager = man;
     }
 
+    public static String getAccount(User u, org.pircbotx.hooks.events.InviteEvent event) {
+        String user = "";
+        event.getBot().sendRaw().rawLineNow("WHOIS " + u.getNick());
+        WaitForQueue waitForQueue = new WaitForQueue(event.getBot());
+        WhoisEvent test = null;
+        try {
+            test = waitForQueue.waitFor(WhoisEvent.class);
+            waitForQueue.close();
+            user = test.getRegisteredAs();
+        } catch (InterruptedException ex) {
+            Logger.getLogger(com.harry2258.Alfred.listeners.MessageEvent.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        waitForQueue.close();
+        return user;
+    }
+
     @Override
     public void onInvite(org.pircbotx.hooks.events.InviteEvent event) {
         if (PrivateMessageEvent.waiting) {
@@ -57,21 +73,5 @@ public class InviteEvent extends ListenerAdapter {
                 }
             }
         }
-    }
-
-    public static String getAccount(User u, org.pircbotx.hooks.events.InviteEvent event) {
-        String user = "";
-        event.getBot().sendRaw().rawLineNow("WHOIS " + u.getNick());
-        WaitForQueue waitForQueue = new WaitForQueue(event.getBot());
-        WhoisEvent test = null;
-        try {
-            test = waitForQueue.waitFor(WhoisEvent.class);
-            waitForQueue.close();
-            user = test.getRegisteredAs();
-        } catch (InterruptedException ex) {
-            Logger.getLogger(com.harry2258.Alfred.listeners.MessageEvent.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        waitForQueue.close();
-        return user;
     }
 }

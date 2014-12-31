@@ -20,14 +20,17 @@ import java.util.List;
  */
 @SuppressWarnings("InfiniteLoopStatement")
 public class Twitter extends Thread {
-    PircBotX bot;
     public static HashMap<String, String> tweets = new HashMap<>();
+    private static volatile boolean isRunning = true;
+    PircBotX bot;
 
     public Twitter(PircBotX bot) {
         this.bot = bot;
     }
 
-    private static volatile boolean isRunning = true;
+    public static void kill() {
+        isRunning = false;
+    }
 
     public void run() {
         try {
@@ -109,9 +112,5 @@ public class Twitter extends Thread {
                 e.printStackTrace();
             }
         }
-    }
-
-    public static void kill() {
-        isRunning = false;
     }
 }

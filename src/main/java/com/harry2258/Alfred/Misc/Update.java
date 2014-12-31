@@ -14,6 +14,7 @@ import java.net.URL;
  */
 public class Update extends Thread {
 
+    private static volatile boolean isRunning = true;
     private PircBotX bot;
     private Config config;
     private int time;
@@ -24,7 +25,9 @@ public class Update extends Thread {
         this.time = config.getUpdateInterval() * 1000;
     }
 
-    private static volatile boolean isRunning = true;
+    public static void kill() {
+        isRunning = false;
+    }
 
     public void run() {
         try {
@@ -51,9 +54,5 @@ public class Update extends Thread {
                 e.printStackTrace();
             }
         }
-    }
-
-    public static void kill() {
-        isRunning = false;
     }
 }

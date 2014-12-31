@@ -17,12 +17,11 @@ import org.pircbotx.hooks.events.MessageEvent;
  */
 public class Ban extends Command {
 
+    private Config config;
+    private PermissionManager manager;
     public Ban() {
         super("Ban", "Bans a user from a channel", "Ban <hostmask> (optional: reason) | Ban <#channel> <hostmask> (optional: reason)");
     }
-
-    private Config config;
-    private PermissionManager manager;
 
     @Override
     public boolean execute(MessageEvent event) {

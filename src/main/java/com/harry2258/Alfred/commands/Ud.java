@@ -14,12 +14,11 @@ import java.net.URLConnection;
  * Created by Hardik at 10:07 PM on 4/19/14.
  */
 public class Ud extends Command {
+    private Config config;
+    private PermissionManager manager;
     public Ud() {
         super("Ud", "Don't know what the word means in the language of the Internet? Urban Dictionary it!", "UD [word]");
     }
-
-    private Config config;
-    private PermissionManager manager;
 
     @Override
     public boolean execute(MessageEvent event) throws Exception {
