@@ -54,7 +54,7 @@ public class PermissionManager {
         return set.contains(sender);
     }
 
-    public boolean hasPermission(String permission, String Nick, Channel channel) throws Exception {
+    public boolean hasPermission(String permission, String Nick, Channel channel) {
         try {
             //String Nick = user.getNick();
             File file = new File(System.getProperty("user.dir") + "/perms/" + channel.getName().toLowerCase() + "/" + "perms.json");
@@ -78,22 +78,23 @@ public class PermissionManager {
             String Geveryone = JsonUtils.getStringFromFile(Main.globalperm.toString());
             JsonObject everyone = JsonUtils.getJsonObject(Geveryone);
 
+            if (hasAdmin(Nick, channel) || hasExec(Nick)) {
+                return true;
+            }
 
+            //Global Permissions everyone has, Not channel based
             if (everyone.get("Permissions").toString().contains(permission)) {
                 return true;
             }
 
+            //Permissions everyone has based on current channel
             if (p.getEveryone().contains(permission)) {
                 return true;
             }
 
-            if (p.getModPerms().contains(permission)) {
-                if (hasAdmin(Nick, channel) || hasMod(Nick, channel)) {
-                    return true;
-                }
+            if (p.getModPerms().contains(permission) && hasMod(Nick, channel)) {
+                return true;
             }
-
-            return hasAdmin(Nick, channel) || hasExec(Nick);
 
         } catch (Exception e) {
             e.printStackTrace();

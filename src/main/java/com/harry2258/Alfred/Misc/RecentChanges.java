@@ -36,10 +36,20 @@ public class RecentChanges extends Thread {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        Channel chan = null;
         String tmp = null;
-        while (isRunning) {
+        boolean FoundChannel = false;
+        try {
+            chan = bot.getUserChannelDao().getChannel("#ftb-wiki-recentchanges");
+            FoundChannel = true;
+        } catch (Exception e) {
+            System.out.println("The bot is not in the #ftb-wiki-recentchanges channel");
+            FoundChannel = false;
+        }
+
+        while (isRunning && FoundChannel) {
             try {
-                Channel chan = bot.getUserChannelDao().getChannel("#ftb-wiki-recentchanges");
                 URL change = new URL(ChangeUrl);
                 URLConnection c = change.openConnection();
                 c.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/537.17 (KHTML, like Gecko) Chrome/24.0.1312.57 Safari/537.17");
@@ -72,6 +82,11 @@ public class RecentChanges extends Thread {
             } catch (Exception e) {
                 changes.remove(tmp);
                 e.printStackTrace();
+                try {
+                    Thread.sleep(60000);
+                } catch (InterruptedException e1) {
+                    e1.printStackTrace();
+                }
             }
         }
     }

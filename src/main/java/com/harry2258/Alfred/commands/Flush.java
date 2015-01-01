@@ -26,8 +26,7 @@ public class Flush extends Command {
                     Main.NotLoggedIn.remove(args[1]);
                     MessageUtils.sendUserNotice(event, "Flushed all information related to user " + args[1]);
                     if (Ignore.ignored.contains(args[1])) {
-                        Ignore.ignored.remove(args[1]);
-                        MessageUtils.sendUserNotice(event, Colors.BOLD + args[1] + " was on the ignored list!");
+                        MessageUtils.sendUserNotice(event, Colors.BOLD + args[1] + " is on the ignored list!");
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -40,6 +39,7 @@ public class Flush extends Command {
         } else {
             Main.Login.remove(event.getUser().getNick());
             Main.NotLoggedIn.remove(event.getUser().getNick());
+            MessageUtils.sendUserNotice(event, "Flushed all information related to user " + args[1]);
         }
         return true;
     }

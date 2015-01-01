@@ -33,6 +33,7 @@ public class Twitter extends Thread {
     }
 
     public void run() {
+
         try {
             System.out.println("[Twitter] Sleeping for 1 minutes. Waiting for bot to start up.");
             Thread.sleep(60000);
