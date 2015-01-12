@@ -29,10 +29,14 @@ public class Twitter extends Thread {
     }
 
     public static void kill() {
+
+        Thread.currentThread().interrupt();
         isRunning = false;
     }
 
     public void run() {
+        Thread.currentThread().setName("Twitter");
+        isRunning = true;
 
         try {
             System.out.println("[Twitter] Sleeping for 1 minutes. Waiting for bot to start up.");
@@ -69,6 +73,7 @@ public class Twitter extends Thread {
                 if (Auth.get("OAuthConsumerKey").getAsString().isEmpty() | Auth.get("OAuthConsumerSecret").getAsString().isEmpty() | Auth.get("OAuthAccessToken").getAsString().isEmpty() | Auth.get("OAuthAccessTokenSecret").getAsString().isEmpty()) {
                     for (Channel chan : bot.getUserBot().getChannels()) {
                         chan.send().message("UH-OH!! This is something wrong with your \"oauth.json\" file in Twitter folder.");
+                        break;
                     }
                 }
 
@@ -105,11 +110,13 @@ public class Twitter extends Thread {
 
                     } catch (TwitterException te) {
                         te.printStackTrace();
+                        System.out.println(Thread.currentThread().getName() + " ->> " + te.toString());
                         System.out.println("Failed to get timeline: " + te.getMessage());
                     }
                 }
                 Thread.sleep(60000);
             } catch (Exception e) {
+                System.out.println(Thread.currentThread().getName() + " ->> " + e.toString());
                 e.printStackTrace();
             }
         }

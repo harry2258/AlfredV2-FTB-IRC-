@@ -3,6 +3,7 @@ package com.harry2258.Alfred.Misc;
 import com.google.gson.JsonObject;
 import com.harry2258.Alfred.api.JsonUtils;
 import com.harry2258.Alfred.api.Utils;
+import com.harry2258.Alfred.commands.Sys;
 import org.pircbotx.Channel;
 import org.pircbotx.Colors;
 import org.pircbotx.PircBotX;
@@ -24,10 +25,14 @@ public class Reddit extends Thread {
     }
 
     public static void kill() {
+
+        Thread.currentThread().interrupt();
         isRunning = false;
     }
 
     public void run() {
+        Thread.currentThread().setName("Reddit");
+        isRunning = true;
 
         try {
             System.out.println("[Reddit] Sleeping for 1 minutes. Waiting for bot to start up.");
@@ -108,11 +113,11 @@ public class Reddit extends Thread {
                             }
 
                             if (!chaninfo.get(hur).equalsIgnoreCase(result)) {
-                                chan.send().message("[" + Colors.RED + "Reddit" + Colors.NORMAL + "] " + " [ " + Utils.shortenUrl(URL) + " ] [" + Utils.getTime(CreateTime) + " ago] " + Colors.BOLD + author + Colors.NORMAL + ": " + infotitle + " " + infotext);
+                                chan.send().message("[" + Colors.RED + "Reddit" + Colors.NORMAL + "] " + " [ " + Utils.shortenUrl(URL) + " ] [" + Utils.getTimeDifference(CreateTime) + " ago] " + Colors.BOLD + author + Colors.NORMAL + ": " + infotitle + " " + infotext);
                             }
 
                         } else {
-                            chan.send().message("[" + Colors.RED + "Reddit" + Colors.NORMAL + "] " + " [ " + Utils.shortenUrl(URL) + " ] [" + Utils.getTime(CreateTime) + " ago ] " + Colors.BOLD + author + Colors.NORMAL + ": " + infotitle + " " + infotext);
+                            chan.send().message("[" + Colors.RED + "Reddit" + Colors.NORMAL + "] " + " [ " + Utils.shortenUrl(URL) + " ] [" + Utils.getTimeDifference(CreateTime) + " ago ] " + Colors.BOLD + author + Colors.NORMAL + ": " + infotitle + " " + infotext);
                         }
 
                     } catch (Exception ex) {
@@ -128,6 +133,7 @@ public class Reddit extends Thread {
                 Thread.sleep(60000);
             } catch (Exception e) {
                 e.printStackTrace();
+                System.out.println(Thread.currentThread().getName() + " ->> " + e.toString());
                 try {
                     bot.getUserChannelDao().getUser("batman").send().message("[Reddit] " + e.toString());
                 } catch (Exception ex) {

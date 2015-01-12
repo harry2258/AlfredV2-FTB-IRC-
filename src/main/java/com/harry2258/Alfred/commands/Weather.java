@@ -20,8 +20,6 @@ public class Weather extends Command {
         super("Weather", "Gets the Weather for the city", "Weather [City name], (State)");
     }
 
-    //TODO Add alerts feature
-    // | alerts/q/ |
     @Override
     public boolean execute(MessageEvent event) throws Exception {
 

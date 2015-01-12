@@ -6,7 +6,9 @@ import com.harry2258.Alfred.Misc.Reddit;
 import com.harry2258.Alfred.Misc.Twitter;
 import com.harry2258.Alfred.api.Command;
 import com.harry2258.Alfred.api.Config;
+import com.harry2258.Alfred.api.MessageUtils;
 import com.harry2258.Alfred.api.PermissionManager;
+import com.harry2258.Alfred.runnables.ChatSocketListener;
 import org.pircbotx.hooks.events.MessageEvent;
 //import org.tanukisoftware.wrapper.WrapperManager;
 
@@ -23,8 +25,26 @@ public class Restart extends Command {
 
     @Override
     public boolean execute(MessageEvent event) throws Exception {
-
+        String[] args = event.getMessage().split(" ");
         if (PermissionManager.hasExec(event.getUser().getNick())) {
+
+            if (args.length == 3 && args[1].equalsIgnoreCase("thread")) {
+
+                String ThreadName = args[2];
+
+                if(ThreadName.equalsIgnoreCase("reddit")) {
+                    Reddit.kill();
+                    new Thread(new Reddit(event.getBot())).start();
+                } else if (ThreadName.equalsIgnoreCase("Twitter")) {
+                    Twitter.kill();
+                    new Thread(new Twitter(event.getBot())).start();
+                } else {
+                    MessageUtils.sendUserNotice(event, "Please enter a valid thread name. Valid Threads: Reddit | Twitter");
+                }
+
+                return true;
+            }
+
             //Clear some stuff
             Main.Chat.clear();
             Main.URL.clear();
@@ -35,13 +55,21 @@ public class Restart extends Command {
             RecentChanges.changes.clear();
             //Keeping login names, Less work after startup.
 
+            //Killing all threads
+                ChatSocketListener.kill();
+                Twitter.kill();
+                Reddit.kill();
+                com.harry2258.Alfred.Misc.Update.kill();
+            //RecentChanges.kill();
+
             //The restart part. Fancy? I think so.
             event.getBot().stopBotReconnect();
-            event.getBot().sendIRC().quitServer("Restarting");
+            event.getBot().close();
+            event.getBot().sendIRC().quitServer("Restart called by " + event.getUser().getNick());
             return true;
         } else {
             event.getUser().send().notice("You are not an executive user!");
-            return true;
+            return false;
         }
     }
 

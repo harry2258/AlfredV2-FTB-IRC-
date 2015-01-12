@@ -207,7 +207,7 @@ public class Main {
                 if (config.UpdaterChecker()) {
                     new Thread(new Update(bot, config)).start();
                 }
-                new Thread(new RecentChanges(bot)).start();
+                //new Thread(new RecentChanges(bot)).start();
 
                 bot.startBot();
 

@@ -477,7 +477,7 @@ public class Utils {
         }
     }
 
-    public static String getTime(long time) {
+    public static String getTimeDifference(long time) {
         String dif = null;
         try {
             DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
@@ -505,7 +505,7 @@ public class Utils {
             long diffMinutes = diff / (60 * 1000) % 60;
             long diffHours = diff / (60 * 60 * 1000) % 24;
             long diffDays = diff / (24 * 60 * 60 * 1000);
-            dif = diffDays + " Days, " + diffHours + " Hours, " + diffMinutes + " Minutes, " + diffSeconds + " Seconds";
+            dif = Math.abs(diffDays) + " Days, " + Math.abs(diffHours) + " Hours, " + Math.abs(diffMinutes) + " Minutes, " + Math.abs(diffSeconds) + " Seconds";
         } catch (Exception e) {
             e.printStackTrace();
         }

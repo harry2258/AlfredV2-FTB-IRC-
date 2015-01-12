@@ -26,10 +26,13 @@ public class Update extends Thread {
     }
 
     public static void kill() {
+
+        Thread.currentThread().interrupt();
         isRunning = false;
     }
 
     public void run() {
+        isRunning = true;
 
         try {
             System.out.println("Updater started. Waiting 1 minute for bot to start up.");

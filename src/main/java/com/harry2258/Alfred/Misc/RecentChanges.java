@@ -25,10 +25,12 @@ public class RecentChanges extends Thread {
     }
 
     public static void kill() {
-        isRunning = false;
+        Thread.currentThread().interrupt();
     }
 
     public void run() {
+        isRunning = true;
+
         String ChangeUrl = "http://ftb.gamepedia.com/api.php?action=query&list=recentchanges&rcprop=title|user|ids|comment|timestamp&rclimit=3&format=json";
         try {
             System.out.println("[FTB Wiki] Sleeping for 1 minutes. Waiting for bot to start up.");
@@ -40,11 +42,13 @@ public class RecentChanges extends Thread {
         Channel chan = null;
         String tmp = null;
         boolean FoundChannel = false;
+
         try {
             chan = bot.getUserChannelDao().getChannel("#ftb-wiki-recentchanges");
             FoundChannel = true;
         } catch (Exception e) {
             System.out.println("The bot is not in the #ftb-wiki-recentchanges channel");
+            e.printStackTrace();
             FoundChannel = false;
         }
 
@@ -78,7 +82,7 @@ public class RecentChanges extends Thread {
                     }
                 }
 
-                Thread.sleep(30000);
+                Thread.sleep(5000);
             } catch (Exception e) {
                 changes.remove(tmp);
                 e.printStackTrace();
