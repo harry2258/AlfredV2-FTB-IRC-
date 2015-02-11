@@ -98,6 +98,9 @@ public class Log extends Command {
                     if (tmp.contains("This paste has been removed!")) {
                         MessageUtils.sendChannel(event, "The paste cannot be found!");
                         return true;
+                    } else if(tmp.contains("CI Build#: 9999999") || tmp.contains("greg0ree")) {
+                        MessageUtils.sendChannel(event, "We " + Colors.BOLD + "DO NOT" + Colors.NORMAL + " give support for cracked launcher!");
+                        return true;
                     } else if (tmp.contains("FTBLaunch starting up")) {
                         temp = Colors.BOLD + "Launcher: " + Colors.NORMAL + tmp.replaceAll(".*(?:version )|(?: Build).*", "");
                         if (!info.contains(temp)) {
