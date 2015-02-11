@@ -99,7 +99,7 @@ public class Log extends Command {
                         MessageUtils.sendChannel(event, "The paste cannot be found!");
                         return true;
                     } else if(tmp.contains("CI Build#: 9999999") || tmp.contains("by greg0ree") || tmp.contains("FTB_cracked")) {
-                        MessageUtils.sendChannel(event, "We " + Colors.BOLD + "DO NOT" + Colors.NORMAL + " give support for cracked launcher!");
+                        MessageUtils.sendChannel(event, "We " + Colors.BOLD + "DO NOT" + Colors.NORMAL + " give support for cracked launchers!");
                         return true;
                     } else if (tmp.contains("FTBLaunch starting up")) {
                         temp = Colors.BOLD + "Launcher: " + Colors.NORMAL + tmp.replaceAll(".*(?:version )|(?: Build).*", "");
