@@ -40,16 +40,7 @@ public class Log extends Command {
     public boolean execute(MessageEvent event) throws IOException {
         String[] args = event.getMessage().split(" ");
 
-        ArrayList<String> info = new ArrayList<>();
-        ArrayList<String> Message = new ArrayList<>();
-
-        String message = "";
-        String temp = "";
-
         String Raw = args[1];
-        String webpage = "";
-
-        Boolean Optifine = false;
 
         for (String word : event.getMessage().split(" ")) {
             if (word.matches("(https?://)?(www\\.)?(paste.feed-the-beast)\\.([A-Za-z]{2,4}|[A-Za-z]{2}\\.[A-Za-z]{2})/.*")) {
@@ -73,7 +64,22 @@ public class Log extends Command {
             if (word.matches("(https?://)?(www\\.)?(pastie)\\.([A-Za-z]{2,4}|[A-Za-z]{2}\\.[A-Za-z]{2})/.*")) {
                 Raw = "http://pastie.org/pastes/" + args[1].replaceAll(".*(?:org/)", "") + "/text";
             }
+
         }
+
+        GetInfo(Raw);
+        return true;
+    }
+
+    public static String GetInfo(String URL) throws IOException {
+
+        ArrayList<String> info = new ArrayList<>();
+        ArrayList<String> Message = new ArrayList<>();
+
+        String message = "";
+        String temp = "";
+
+        Boolean Optifine = false;
 
         if (!Main.parser.exists()) {
             Main.parser.getParentFile().mkdirs();
@@ -86,7 +92,7 @@ public class Log extends Command {
             String test = JsonUtils.getStringFromFile(Main.parser.toString());
             JsonObject jsonObj = JsonUtils.getJsonObject(test);
             URL url;
-            url = new URL(Raw);
+            url = new URL(URL);
             URLConnection u = url.openConnection();
             u.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/537.17 (KHTML, like Gecko) Chrome/24.0.1312.57 Safari/537.17");
             BufferedReader br = new BufferedReader(new InputStreamReader(u.getInputStream()));
@@ -96,8 +102,7 @@ public class Log extends Command {
             } else {
                 while ((tmp = br.readLine()) != null) {
                     if (tmp.contains("This paste has been removed!")) {
-                        MessageUtils.sendChannel(event, "The paste cannot be found!");
-                        return true;
+                        return "The paste cannot be found!";
                     } else if (tmp.contains("FTBLaunch starting up")) {
                         temp = Colors.BOLD + "Launcher: " + Colors.NORMAL + tmp.replaceAll(".*(?:version )|(?: Build).*", "");
                         if (!info.contains(temp)) {
@@ -149,7 +154,6 @@ public class Log extends Command {
                             info.add(temp);
                         }
                     }
-                    //webpage += tmp;
                 }
 
                 info.add(Colors.BOLD + "Using Optifine: " + Colors.NORMAL + String.valueOf(Optifine));
@@ -163,23 +167,20 @@ public class Log extends Command {
                 }
 
                 if (message.length() > 500) {
-                    MessageUtils.sendChannel(event, "The log was too big and was not sent! Please retry again or disable some features in parser.json");
-                    return false;
+                    return "The log was too big and was not sent! Please retry again or disable some features in parser.json";
                 } else if (message.isEmpty()) {
-                    MessageUtils.sendChannel(event, "Could not get any information from that log!");
+                    return "Could not get any information from that log!";
                 } else {
-                    MessageUtils.sendChannel(event, message);
+                    return message;
                 }
             }
 
             //Error.getProblems(webpage, event);
-            return true;
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return true;
+        return "...I haz no idea what happened. This shouldn't be here..";
     }
-
     @Override
     public void setConfig(Config config) {
         this.config = config;

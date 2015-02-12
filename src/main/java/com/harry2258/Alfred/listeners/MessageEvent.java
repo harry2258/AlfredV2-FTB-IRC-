@@ -5,9 +5,11 @@ import bsh.Interpreter;
 import com.harry2258.Alfred.Main;
 import com.harry2258.Alfred.api.*;
 import com.harry2258.Alfred.commands.Ignore;
+import com.harry2258.Alfred.commands.Log;
 import org.pircbotx.Colors;
 import org.pircbotx.PircBotX;
 import org.pircbotx.hooks.ListenerAdapter;
+import sun.plugin2.message.Message;
 
 import java.io.*;
 import java.util.Date;
@@ -249,6 +251,7 @@ public class MessageEvent extends ListenerAdapter {
             }
 
         }
+
         if (Main.URL.containsKey(event.getChannel().getName()) && Main.URL.get(event.getChannel().getName()).equalsIgnoreCase("all")) {
             for (String word : event.getMessage().split(" ")) {
                 if (Utils.isUrl(word) && !word.equals(config.getTrigger() + "setcmd") && !word.matches("(https?://)?(www\\.)?(youtube|yimg|youtu)\\.([A-Za-z]{2,4}|[A-Za-z]{2}\\.[A-Za-z]{2})/(watch\\?v=)?[A-Za-z0-9\\-_]{6,12}(&[A-Za-z0-9\\-_]+=[A-Za-z0-9\\-_]+)*")) {
@@ -258,6 +261,44 @@ public class MessageEvent extends ListenerAdapter {
                     event.getChannel().send().message("[" + Colors.RED + "YouTube" + Colors.NORMAL + "] " + Utils.getYoutubeInfo(word));
 
                 }
+            }
+        }
+
+        String LogLink = "";
+        Boolean LogFound = false;
+
+        for (String word : event.getMessage().split(" ")) {
+            if (word.matches("(https?://)?(www\\.)?(paste.feed-the-beast)\\.([A-Za-z]{2,4}|[A-Za-z]{2}\\.[A-Za-z]{2})/.*")) {
+                LogLink = "http://paste.feed-the-beast.com/view/raw/" + args[1].replaceAll(".*(?:view/)", "");
+                LogFound = true;
+            }
+            if (word.matches("(https?://)?(www\\.)?(pastebin)\\.([A-Za-z]{2,4}|[A-Za-z]{2}\\.[A-Za-z]{2})/.*")) {
+                LogLink = "http://pastebin.com/raw.php?i=" + word.replaceAll(".*(?:bin..om/)", "");
+                LogFound = true;
+            }
+            if (word.matches("(https?://)?(www\\.)?(hastebin)\\.([A-Za-z]{2,4}|[A-Za-z]{2}\\.[A-Za-z]{2})/.*")) {
+                LogLink = "http://hastebin.com/raw/" + args[1].replaceAll(".*(?:bin..om/)", "");
+                LogFound = true;
+            }
+            if (word.matches("(https?://)?(www\\.)?(paste.atlauncher)\\.([A-Za-z]{2,4}|[A-Za-z]{2}\\.[A-Za-z]{2})/.*")) {
+                LogLink = "http://paste.atlauncher.com/view/raw/" + args[1].replaceAll(".*(?:view/)", "");
+                LogFound = true;
+            }
+            if (word.matches("(https?://)?(www\\.)?(paste)\\.([A-Za-z]{2,4}|[A-Za-z]{2}\\.[A-Za-z]{2})/.*")) {
+                LogLink = "http://paste.ee/r/" + args[1].replaceAll(".*(?:p/)", "");
+                LogFound = true;
+            }
+            if (word.matches("(https?://)?(www\\.)?(gist.github)\\.([A-Za-z]{2,4}|[A-Za-z]{2}\\.[A-Za-z]{2})/.*")) {
+                LogLink = args[1] + "raw";
+                LogFound = true;
+            }
+            if (word.matches("(https?://)?(www\\.)?(pastie)\\.([A-Za-z]{2,4}|[A-Za-z]{2}\\.[A-Za-z]{2})/.*")) {
+                LogLink = "http://pastie.org/pastes/" + args[1].replaceAll(".*(?:org/)", "") + "/text";
+                LogFound = true;
+            }
+            if (LogFound) {
+                MessageUtils.sendChannel(event, Log.GetInfo(LogLink));
+                LogFound = false;
             }
         }
 
