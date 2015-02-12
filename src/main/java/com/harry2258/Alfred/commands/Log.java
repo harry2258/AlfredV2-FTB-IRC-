@@ -103,12 +103,15 @@ public class Log extends Command {
                 while ((tmp = br.readLine()) != null) {
                     if (tmp.contains("This paste has been removed!")) {
                         return "The paste cannot be found!";
-                    } else if (tmp.contains("FTBLaunch starting up")) {
+                    } else if (tmp.contains("FTBLaunch starting up") && !tmp.contains("greg0ree")) {
                         temp = Colors.BOLD + "Launcher: " + Colors.NORMAL + tmp.replaceAll(".*(?:version )|(?: Build).*", "");
                         if (!info.contains(temp)) {
                             info.add(temp);
                         }
-                    } else if (tmp.contains("FTB Launcher CI Build")) {
+                    } else if(tmp.contains("CI Build#: 9999999") || tmp.contains("greg0ree") || tmp.contains("FTB_cracked")) {
+                        return "We " + Colors.BOLD + "DO NOT" + Colors.NORMAL + " give support for cracked launchers!";
+                    }
+                    else if (tmp.contains("FTB Launcher CI Build")) {
                         temp = Colors.BOLD + "CI #" + Colors.NORMAL + tmp.replaceAll(".*(?:#: )|(?:,).*", "");
                         if (!info.contains(temp)) {
                             info.add(temp);
@@ -140,13 +143,9 @@ public class Log extends Command {
                             info.add(temp);
                         }
                     } else if (tmp.contains("Feed The Beast Mod Pack") || tmp.contains("Optifine OptiFine_")) {
-                        System.out.println(tmp);
                         temp = Colors.BOLD + "Mods: " + Colors.NORMAL + tmp.replaceAll("^.*?(?=[A-Z][a-z])", "").replaceAll("\\\\[.*?\\\\]", "").replaceAll(".*(?:, )|mods active", "");
                         if (!info.contains(temp) && jsonObj.get("Modded").getAsBoolean()) {
                             info.add(temp);
-                        }
-                        if (tmp.contains("Optifine")) {
-                            Optifine = true;
                         }
                     } else if (tmp.contains("Operating System: ") || tmp.contains("OS: ")) {
                         temp = Colors.BOLD + "OS: " + Colors.NORMAL + tmp.replaceAll("^.*?(?=[A-Z][a-z])", "").replaceAll("\\\\[.*?\\\\]", "").replaceAll(".*(?:Operating System: )|.*(?:OS: )", "").replaceAll("x86|x64|32-bit|64-bit", "");
@@ -156,20 +155,16 @@ public class Log extends Command {
                     }
                 }
 
-                info.add(Colors.BOLD + "Using Optifine: " + Colors.NORMAL + String.valueOf(Optifine));
-
                 for (String anInfo : info) {
                     Message.add(anInfo);
                 }
 
                 for (String s : Message) {
-                    message += s + " | \t";
+                    message += s + " | ";
                 }
 
                 if (message.length() > 500) {
                     return "The log was too big and was not sent! Please retry again or disable some features in parser.json";
-                } else if (message.isEmpty()) {
-                    return "Could not get any information from that log!";
                 } else {
                     return message;
                 }

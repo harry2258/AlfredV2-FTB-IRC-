@@ -269,7 +269,7 @@ public class MessageEvent extends ListenerAdapter {
 
         for (String word : event.getMessage().split(" ")) {
             if (word.matches("(https?://)?(www\\.)?(paste.feed-the-beast)\\.([A-Za-z]{2,4}|[A-Za-z]{2}\\.[A-Za-z]{2})/.*")) {
-                LogLink = "http://paste.feed-the-beast.com/view/raw/" + args[1].replaceAll(".*(?:view/)", "");
+                LogLink = "http://paste.feed-the-beast.com/view/raw/" + word.replaceAll(".*(?:view/)", "");
                 LogFound = true;
             }
             if (word.matches("(https?://)?(www\\.)?(pastebin)\\.([A-Za-z]{2,4}|[A-Za-z]{2}\\.[A-Za-z]{2})/.*")) {
@@ -277,23 +277,23 @@ public class MessageEvent extends ListenerAdapter {
                 LogFound = true;
             }
             if (word.matches("(https?://)?(www\\.)?(hastebin)\\.([A-Za-z]{2,4}|[A-Za-z]{2}\\.[A-Za-z]{2})/.*")) {
-                LogLink = "http://hastebin.com/raw/" + args[1].replaceAll(".*(?:bin..om/)", "");
+                LogLink = "http://hastebin.com/raw/" + word.replaceAll(".*(?:bin..om/)", "");
                 LogFound = true;
             }
             if (word.matches("(https?://)?(www\\.)?(paste.atlauncher)\\.([A-Za-z]{2,4}|[A-Za-z]{2}\\.[A-Za-z]{2})/.*")) {
-                LogLink = "http://paste.atlauncher.com/view/raw/" + args[1].replaceAll(".*(?:view/)", "");
+                LogLink = "http://paste.atlauncher.com/view/raw/" + word.replaceAll(".*(?:view/)", "");
                 LogFound = true;
             }
             if (word.matches("(https?://)?(www\\.)?(paste)\\.([A-Za-z]{2,4}|[A-Za-z]{2}\\.[A-Za-z]{2})/.*")) {
-                LogLink = "http://paste.ee/r/" + args[1].replaceAll(".*(?:p/)", "");
+                LogLink = "http://paste.ee/r/" + word.replaceAll(".*(?:p/)", "");
                 LogFound = true;
             }
             if (word.matches("(https?://)?(www\\.)?(gist.github)\\.([A-Za-z]{2,4}|[A-Za-z]{2}\\.[A-Za-z]{2})/.*")) {
-                LogLink = args[1] + "raw";
+                LogLink = word + "raw";
                 LogFound = true;
             }
             if (word.matches("(https?://)?(www\\.)?(pastie)\\.([A-Za-z]{2,4}|[A-Za-z]{2}\\.[A-Za-z]{2})/.*")) {
-                LogLink = "http://pastie.org/pastes/" + args[1].replaceAll(".*(?:org/)", "") + "/text";
+                LogLink = "http://pastie.org/pastes/" + word.replaceAll(".*(?:org/)", "") + "/text";
                 LogFound = true;
             }
             if (LogFound) {
