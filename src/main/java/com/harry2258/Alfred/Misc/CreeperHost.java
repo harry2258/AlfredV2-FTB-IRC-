@@ -33,7 +33,7 @@ public class CreeperHost extends Thread {
         this.event = event;
     }
 
-    static List getKeysFromJson(String string) throws Exception {
+    public static List getKeysFromJson(String string) throws Exception {
         Object things = new Gson().fromJson(string, Object.class);
         List keys = new ArrayList();
         collectAllTheKeys(keys, things);
@@ -72,7 +72,6 @@ public class CreeperHost extends Thread {
 
         try {
             Document doc = Jsoup.connect("https://dl.dropboxusercontent.com/u/10600322/edges.json").get();
-            Json = JsonUtils.isJSONObject(doc.text());
             JsonObject report = JsonUtils.getJsonObject(doc.text());
             chRepos = (ArrayList) getKeysFromJson(doc.text());
             for (int i = 0; i < chRepos.size(); i++) {

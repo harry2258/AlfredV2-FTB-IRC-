@@ -297,6 +297,7 @@ public class MessageEvent extends ListenerAdapter {
                 LogFound = true;
             }
             if (LogFound) {
+                System.out.println(LogLink);
                 MessageUtils.sendChannel(event, Log.GetInfo(LogLink));
                 LogFound = false;
             }
