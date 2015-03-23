@@ -9,7 +9,6 @@ import com.harry2258.Alfred.commands.Log;
 import org.pircbotx.Colors;
 import org.pircbotx.PircBotX;
 import org.pircbotx.hooks.ListenerAdapter;
-import sun.plugin2.message.Message;
 
 import java.io.*;
 import java.util.Date;

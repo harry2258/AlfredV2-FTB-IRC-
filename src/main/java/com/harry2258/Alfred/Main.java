@@ -72,6 +72,7 @@ public class Main {
                     if (!config.UseDatabase()) {
                         config.load();
                     } else {
+                        System.out.println("Connecting to " + config.getDatabaseHost());
                         database = DriverManager.getConnection("jdbc:mysql://" + config.getDatabaseHost() + "/" + config.getDatabase(), config.getDatabaseUser(), config.getDatabasePass());
                         config.loadDatabase(database);
                     }
