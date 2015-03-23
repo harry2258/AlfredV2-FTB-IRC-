@@ -189,6 +189,7 @@ public class Utils {
     }
 
     public static String shortenUrl(String longUrl) {
+        /*
         OAuthRequest oAuthRequest = new OAuthRequest(Verb.POST, "https://www.googleapis.com/urlshortener/v1/url");
         oAuthRequest.addHeader("Content-Type", "application/json");
         String json = "{\"longUrl\": \"" + longUrl + "\"}";
@@ -198,6 +199,22 @@ public class Utils {
         }.getType();
         Map<String, String> responseMap = new GsonBuilder().create().fromJson(response.getBody(), typeOfMap);
         return responseMap.get("id");
+        */
+        //Let's try is.gd again
+        //http://is.gd/create.php?format=json&url=" + longUrl
+        
+        try {
+            URL isgd = new URL("http://is.gd/create.php?format=json&url=" + longUrl);
+            URLConnection u = isgd.openConnection();
+            u.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/537.17 (KHTML, like Gecko) Chrome/24.0.1312.57 Safari/537.17");
+            BufferedReader first = new BufferedReader(new InputStreamReader(u.getInputStream()));
+            String result = first.readLine().trim();
+            return JsonUtils.getJsonObject(result).get("shorturl").getAsString();
+            
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+        return null;
     }
 
     public static String checkServerStatus(InetAddress i, int port) {
