@@ -45,7 +45,7 @@ public class Log extends Command {
         String message = "";
         String temp = "";
 
-        Boolean Optifine = false;
+        String CausedBy = "N/A";
 
         if (!Main.parser.exists()) {
             Main.parser.getParentFile().mkdirs();
@@ -97,8 +97,8 @@ public class Log extends Command {
                             info.add(temp);
                         }
 
-                    } else if (tmp.contains("Java version:")) {
-                        temp = Colors.BOLD + "Java Version: " + Colors.NORMAL + tmp.replaceAll(".*(?:Java version: )", "");
+                    } else if (tmp.contains("Java Version:")) {
+                        temp = Colors.BOLD + "Java Version: " + Colors.NORMAL + tmp.replaceAll(".*(?:Java Version: )", "");
                         if (!info.contains(temp) && jsonObj.get("JavaVersion").getAsBoolean()) {
                             info.add(temp);
                         }
@@ -113,11 +113,13 @@ public class Log extends Command {
                             info.add(temp);
                         }
                     } else if (tmp.contains("Operating System: ") || tmp.contains("OS: ")) {
-                        temp = Colors.BOLD + "OS: " + Colors.NORMAL + tmp.replaceAll("^.*?(?=[A-Z][a-z])", "").replaceAll("\\\\[.*?\\\\]", "").replaceAll(".*(?:Operating System: )|.*(?:OS: )", "").replaceAll("x86|x64|32-bit|64-bit", "");
+                        temp = Colors.BOLD + "OS: " + Colors.NORMAL + tmp.replaceAll("^.*?(?=[A-Z][a-z])", "").replaceAll("\\\\[.*?\\\\]", "").replaceAll(".*(?:Operating System: )|.*(?:OS: )", "");
+                        //.replaceAll("x86|x64|32-bit|64-bit|\\(x86\\)", "");
                         if (!info.contains(temp) && jsonObj.get("OSName").getAsBoolean()) {
                             info.add(temp);
                         }
                     }
+                    //TODO get Description and Caused By
                 }
 
                 for (String anInfo : info) {
@@ -173,7 +175,7 @@ public class Log extends Command {
 
         }
 
-        GetInfo(Raw);
+        MessageUtils.sendChannel(event, GetInfo(Raw));
         return true;
     }
 

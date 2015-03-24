@@ -195,7 +195,7 @@ public class CreeperHost extends Thread {
                         Load.add(0);
                     }
                 } else if (chURLs.get(i).contains("cursecdn.com")) {
-                    Load.add(-1);
+                    Load.add(0);
                 }
             }
         }

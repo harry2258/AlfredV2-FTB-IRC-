@@ -298,11 +298,15 @@ public class MessageEvent extends ListenerAdapter {
             if (LogFound) {
                 if (!Main.LogLinks.contains(LogLink)) {
                     if (Main.LogLinks.size() >= 5) {
-                        Main.LogLinks.remove(1);
+                        Main.LogLinks.remove(0);
                     }
                     Main.LogLinks.add(LogLink);
                     MessageUtils.sendChannel(event, Log.GetInfo(LogLink));
                 }
+                /* else if (Main.LogLinks.contains(LogLink) && Main.LogLinks.size() >= 5){
+                    Main.LogLinks.remove(1);
+                }
+                */
                 LogFound = false;
             }
         }
