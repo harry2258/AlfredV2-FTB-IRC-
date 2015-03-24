@@ -16,6 +16,7 @@ import java.net.URLConnection;
 public class Ud extends Command {
     private Config config;
     private PermissionManager manager;
+
     public Ud() {
         super("Ud", "Don't know what the word means in the language of the Internet? Urban Dictionary it!", "UD [word]");
     }

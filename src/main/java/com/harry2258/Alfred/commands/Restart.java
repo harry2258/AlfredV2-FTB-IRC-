@@ -32,7 +32,7 @@ public class Restart extends Command {
 
                 String ThreadName = args[2];
 
-                if(ThreadName.equalsIgnoreCase("reddit")) {
+                if (ThreadName.equalsIgnoreCase("reddit")) {
                     Reddit.kill();
                     new Thread(new Reddit(event.getBot())).start();
                 } else if (ThreadName.equalsIgnoreCase("Twitter")) {
@@ -56,10 +56,10 @@ public class Restart extends Command {
             //Keeping login names, Less work after startup.
 
             //Killing all threads
-                ChatSocketListener.kill();
-                Twitter.kill();
-                Reddit.kill();
-                com.harry2258.Alfred.Misc.Update.kill();
+            ChatSocketListener.kill();
+            Twitter.kill();
+            Reddit.kill();
+            com.harry2258.Alfred.Misc.Update.kill();
             //RecentChanges.kill();
 
             //The restart part. Fancy? I think so.

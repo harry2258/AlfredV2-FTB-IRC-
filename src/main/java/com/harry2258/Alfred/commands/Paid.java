@@ -21,10 +21,10 @@ public class Paid extends Command {
         String[] args = event.getMessage().split(" ");
         Boolean b = Utils.checkAccount(args[1]);
         if (b) {
-            MessageUtils.sendChannel(event, args[1] + Colors.DARK_GREEN + " has " + Colors.NORMAL + "paid for minecraft");
+            MessageUtils.sendChannel(event, (args[1] + Colors.DARK_GREEN + " has " + Colors.NORMAL + "paid for minecraft").trim());
             return true;
         } else {
-            MessageUtils.sendChannel(event, args[1] + Colors.RED + " has not " + Colors.NORMAL + "paid for minecraft");
+            MessageUtils.sendChannel(event, (args[1] + Colors.RED + " has not " + Colors.NORMAL + "paid for minecraft").trim());
             return true;
         }
     }

@@ -4,24 +4,18 @@
  */
 package com.harry2258.Alfred.api;
 
-import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.google.gson.reflect.TypeToken;
-
 import com.harry2258.Alfred.Main;
 import com.harry2258.Alfred.json.Perms;
 import com.harry2258.Alfred.listeners.MessageEvent;
-
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringEscapeUtils;
-
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-
 import org.pircbotx.Channel;
 import org.pircbotx.Colors;
 import org.pircbotx.User;
@@ -29,12 +23,7 @@ import org.pircbotx.UserLevel;
 import org.pircbotx.hooks.WaitForQueue;
 import org.pircbotx.hooks.events.WhoisEvent;
 
-import org.scribe.model.OAuthRequest;
-import org.scribe.model.Response;
-import org.scribe.model.Verb;
-
 import java.io.*;
-import java.lang.reflect.Type;
 import java.net.*;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -42,7 +31,6 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
@@ -189,20 +177,6 @@ public class Utils {
     }
 
     public static String shortenUrl(String longUrl) {
-        /*
-        OAuthRequest oAuthRequest = new OAuthRequest(Verb.POST, "https://www.googleapis.com/urlshortener/v1/url");
-        oAuthRequest.addHeader("Content-Type", "application/json");
-        String json = "{\"longUrl\": \"" + longUrl + "\"}";
-        oAuthRequest.addPayload(json);
-        Response response = oAuthRequest.send();
-        Type typeOfMap = new TypeToken<Map<String, String>>() {
-        }.getType();
-        Map<String, String> responseMap = new GsonBuilder().create().fromJson(response.getBody(), typeOfMap);
-        return responseMap.get("id");
-        */
-        //Let's try is.gd again
-        //http://is.gd/create.php?format=json&url=" + longUrl
-        
         try {
             URL isgd = new URL("http://is.gd/create.php?format=json&url=" + longUrl);
             URLConnection u = isgd.openConnection();
@@ -210,9 +184,9 @@ public class Utils {
             BufferedReader first = new BufferedReader(new InputStreamReader(u.getInputStream()));
             String result = first.readLine().trim();
             return JsonUtils.getJsonObject(result).get("shorturl").getAsString();
-            
+
         } catch (Exception e) {
-            System.out.println(e);
+            e.printStackTrace();
         }
         return null;
     }

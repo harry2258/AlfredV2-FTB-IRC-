@@ -44,7 +44,7 @@ public class Alfred extends Command {
                 }
             }
             Random Randomizer = new Random();
-            event.getChannel().send().message(answers.get(Randomizer.nextInt(answers.size())).toString().replace("\"",""));
+            event.getChannel().send().message(answers.get(Randomizer.nextInt(answers.size())).toString().replace("\"", ""));
             return true;
         } catch (Exception e) {
             e.printStackTrace();

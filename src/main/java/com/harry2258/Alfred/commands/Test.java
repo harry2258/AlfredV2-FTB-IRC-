@@ -3,8 +3,6 @@ package com.harry2258.Alfred.commands;
 import com.harry2258.Alfred.api.*;
 import org.pircbotx.hooks.events.MessageEvent;
 
-import java.io.FileOutputStream;
-
 
 public class Test extends Command {
     private Config config;

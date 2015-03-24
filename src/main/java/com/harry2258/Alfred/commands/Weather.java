@@ -16,6 +16,7 @@ public class Weather extends Command {
 
     private Config config;
     private PermissionManager manager;
+
     public Weather() {
         super("Weather", "Gets the Weather for the city", "Weather [City name], (State)");
     }

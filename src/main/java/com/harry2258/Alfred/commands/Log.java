@@ -21,6 +21,7 @@ import java.util.Scanner;
 public class Log extends Command {
     private Config config;
     private PermissionManager manager;
+
     public Log() {
         super("Log", "Parse a minecraft error log", "Log [Crash log link]");
     }
@@ -34,41 +35,6 @@ public class Log extends Command {
         String info = null;
 
         return info;
-    }
-
-    @Override
-    public boolean execute(MessageEvent event) throws IOException {
-        String[] args = event.getMessage().split(" ");
-
-        String Raw = args[1];
-
-        for (String word : event.getMessage().split(" ")) {
-            if (word.matches("(https?://)?(www\\.)?(paste.feed-the-beast)\\.([A-Za-z]{2,4}|[A-Za-z]{2}\\.[A-Za-z]{2})/.*")) {
-                Raw = "http://paste.feed-the-beast.com/view/raw/" + args[1].replaceAll(".*(?:view/)", "");
-            }
-            if (word.matches("(https?://)?(www\\.)?(pastebin)\\.([A-Za-z]{2,4}|[A-Za-z]{2}\\.[A-Za-z]{2})/.*")) {
-                Raw = "http://pastebin.com/raw.php?i=" + args[1].replaceAll(".*(?:bin..om/)", "");
-            }
-            if (word.matches("(https?://)?(www\\.)?(hastebin)\\.([A-Za-z]{2,4}|[A-Za-z]{2}\\.[A-Za-z]{2})/.*")) {
-                Raw = "http://hastebin.com/raw/" + args[1].replaceAll(".*(?:bin..om/)", "");
-            }
-            if (word.matches("(https?://)?(www\\.)?(paste.atlauncher)\\.([A-Za-z]{2,4}|[A-Za-z]{2}\\.[A-Za-z]{2})/.*")) {
-                Raw = "http://paste.atlauncher.com/view/raw/" + args[1].replaceAll(".*(?:view/)", "");
-            }
-            if (word.matches("(https?://)?(www\\.)?(paste)\\.([A-Za-z]{2,4}|[A-Za-z]{2}\\.[A-Za-z]{2})/.*")) {
-                Raw = "http://paste.ee/r/" + args[1].replaceAll(".*(?:p/)", "");
-            }
-            if (word.matches("(https?://)?(www\\.)?(gist.github)\\.([A-Za-z]{2,4}|[A-Za-z]{2}\\.[A-Za-z]{2})/.*")) {
-                Raw = args[1] + "raw";
-            }
-            if (word.matches("(https?://)?(www\\.)?(pastie)\\.([A-Za-z]{2,4}|[A-Za-z]{2}\\.[A-Za-z]{2})/.*")) {
-                Raw = "http://pastie.org/pastes/" + args[1].replaceAll(".*(?:org/)", "") + "/text";
-            }
-
-        }
-
-        GetInfo(Raw);
-        return true;
     }
 
     public static String GetInfo(String URL) throws IOException {
@@ -108,10 +74,9 @@ public class Log extends Command {
                         if (!info.contains(temp)) {
                             info.add(temp);
                         }
-                    } else if(tmp.contains("CI Build#: 9999999") || tmp.contains("greg0ree") || tmp.contains("FTB_cracked")) {
+                    } else if (tmp.contains("CI Build#: 9999999") || tmp.contains("greg0ree") || tmp.contains("FTB_cracked")) {
                         return "We " + Colors.BOLD + "DO NOT" + Colors.NORMAL + " give support for cracked launchers!";
-                    }
-                    else if (tmp.contains("FTB Launcher CI Build")) {
+                    } else if (tmp.contains("FTB Launcher CI Build")) {
                         temp = Colors.BOLD + "CI #" + Colors.NORMAL + tmp.replaceAll(".*(?:#: )|(?:,).*", "");
                         if (!info.contains(temp)) {
                             info.add(temp);
@@ -176,6 +141,42 @@ public class Log extends Command {
         }
         return "...I haz no idea what happened. This shouldn't be here..";
     }
+
+    @Override
+    public boolean execute(MessageEvent event) throws IOException {
+        String[] args = event.getMessage().split(" ");
+
+        String Raw = args[1];
+
+        for (String word : event.getMessage().split(" ")) {
+            if (word.matches("(https?://)?(www\\.)?(paste.feed-the-beast)\\.([A-Za-z]{2,4}|[A-Za-z]{2}\\.[A-Za-z]{2})/.*")) {
+                Raw = "http://paste.feed-the-beast.com/view/raw/" + args[1].replaceAll(".*(?:view/)", "");
+            }
+            if (word.matches("(https?://)?(www\\.)?(pastebin)\\.([A-Za-z]{2,4}|[A-Za-z]{2}\\.[A-Za-z]{2})/.*")) {
+                Raw = "http://pastebin.com/raw.php?i=" + args[1].replaceAll(".*(?:bin..om/)", "");
+            }
+            if (word.matches("(https?://)?(www\\.)?(hastebin)\\.([A-Za-z]{2,4}|[A-Za-z]{2}\\.[A-Za-z]{2})/.*")) {
+                Raw = "http://hastebin.com/raw/" + args[1].replaceAll(".*(?:bin..om/)", "");
+            }
+            if (word.matches("(https?://)?(www\\.)?(paste.atlauncher)\\.([A-Za-z]{2,4}|[A-Za-z]{2}\\.[A-Za-z]{2})/.*")) {
+                Raw = "http://paste.atlauncher.com/view/raw/" + args[1].replaceAll(".*(?:view/)", "");
+            }
+            if (word.matches("(https?://)?(www\\.)?(paste)\\.([A-Za-z]{2,4}|[A-Za-z]{2}\\.[A-Za-z]{2})/.*")) {
+                Raw = "http://paste.ee/r/" + args[1].replaceAll(".*(?:p/)", "");
+            }
+            if (word.matches("(https?://)?(www\\.)?(gist.github)\\.([A-Za-z]{2,4}|[A-Za-z]{2}\\.[A-Za-z]{2})/.*")) {
+                Raw = args[1] + "raw";
+            }
+            if (word.matches("(https?://)?(www\\.)?(pastie)\\.([A-Za-z]{2,4}|[A-Za-z]{2}\\.[A-Za-z]{2})/.*")) {
+                Raw = "http://pastie.org/pastes/" + args[1].replaceAll(".*(?:org/)", "") + "/text";
+            }
+
+        }
+
+        GetInfo(Raw);
+        return true;
+    }
+
     @Override
     public void setConfig(Config config) {
         this.config = config;

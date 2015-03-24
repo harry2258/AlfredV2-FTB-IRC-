@@ -58,7 +58,7 @@ public class InviteEvent extends ListenerAdapter {
             System.out.println(event.getUser());
             System.out.println(PermissionManager.hasExec(event.getUser().getNick()));
             if (level.equalsIgnoreCase("op") || level.equalsIgnoreCase("voice") || PermissionManager.hasExec(event.getUser().getNick())) {
-                event.getBot().sendRaw().rawLineNow("PRIVMSG #batbot :Invited to " + event.getChannel() + " by " + event.getUser());
+                event.getBot().sendRaw().rawLineNow("PRIVMSG #batbot :Invited to " + event.getChannel() + " by " + event.getUser().getNick());
                 event.getBot().sendIRC().joinChannel(event.getChannel());
             } else {
                 event.getBot().getUserChannelDao().getUser(event.getUser()).send().message("You need to be Voice or higher in #batbot to invite Alfred to other channels!");

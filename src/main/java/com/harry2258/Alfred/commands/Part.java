@@ -11,6 +11,7 @@ import org.pircbotx.hooks.events.MessageEvent;
 public class Part extends Command {
     private Config config;
     private PermissionManager manager;
+
     public Part() {
         super("Part", "Removes the bot from a channel", "part #channel");
     }

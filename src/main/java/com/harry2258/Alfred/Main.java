@@ -1,7 +1,10 @@
 package com.harry2258.Alfred;
 
 import com.harry2258.Alfred.Database.Create;
-import com.harry2258.Alfred.Misc.*;
+import com.harry2258.Alfred.Misc.ChatterBot;
+import com.harry2258.Alfred.Misc.Reddit;
+import com.harry2258.Alfred.Misc.Twitter;
+import com.harry2258.Alfred.Misc.Update;
 import com.harry2258.Alfred.api.*;
 import com.harry2258.Alfred.json.Perms;
 import com.harry2258.Alfred.listeners.*;
@@ -20,10 +23,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -38,6 +38,8 @@ public class Main {
     public static long startup = 0;
     public static PircBotX bot;
     public static boolean SafeStop = false;
+
+    public static ArrayList LogLinks = new ArrayList(5);
 
     public static Map<String, Perms> map = new HashMap<>(); //Channel perms, <Channel Name, Permission Json>
     public static Map<String, String> Login = new HashMap<>(); //Login names - Less WHOIS, <Nickname, Nickserver Name> | Many to one pretty much.

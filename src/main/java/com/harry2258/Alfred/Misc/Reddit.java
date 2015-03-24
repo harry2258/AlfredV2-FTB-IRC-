@@ -3,7 +3,6 @@ package com.harry2258.Alfred.Misc;
 import com.google.gson.JsonObject;
 import com.harry2258.Alfred.api.JsonUtils;
 import com.harry2258.Alfred.api.Utils;
-import com.harry2258.Alfred.commands.Sys;
 import org.pircbotx.Channel;
 import org.pircbotx.Colors;
 import org.pircbotx.PircBotX;
@@ -137,7 +136,7 @@ public class Reddit extends Thread {
                 try {
                     bot.getUserChannelDao().getUser("batman").send().message("[Reddit] " + e.toString());
                 } catch (Exception ex) {
-                    bot.getUserChannelDao().getUser("BruceWayne").send().message("[Reddit] " + e.toString());
+                    //e.printStacktrace();
                 }
                 try {
                     Thread.sleep(300000);

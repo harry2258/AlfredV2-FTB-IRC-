@@ -29,6 +29,7 @@ public class CreeperHost extends Thread {
     public static ArrayList<String> ChReposlist = new ArrayList<>();
     private static String edges = "new";
     MessageEvent event;
+
     public CreeperHost(MessageEvent event) {
         this.event = event;
     }

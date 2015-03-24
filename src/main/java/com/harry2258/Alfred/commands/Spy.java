@@ -40,11 +40,11 @@ public class Spy extends Command {
             Channel chan = event.getChannel();
             if (Main.relay.containsKey(target)) {
                 Main.relay.remove(target);
-                MessageUtils.sendChannel(event, "no longer spying on channel " + target.getName());
+                MessageUtils.sendChannel(event, "No longer spying on channel " + target.getName());
                 return true;
             }
             Main.relay.put(target, chan);
-            MessageUtils.sendChannel(event, "now spying on channel " + target.getName());
+            MessageUtils.sendChannel(event, "Now spying on channel " + target.getName());
             return true;
         } else {
             MessageUtils.sendUserNotice(event, "You need to have Exec to use this command!");

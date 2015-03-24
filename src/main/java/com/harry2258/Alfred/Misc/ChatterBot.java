@@ -14,6 +14,7 @@ public class ChatterBot extends Thread {
     public static boolean UserAnswered = false;
     private static volatile boolean isRunning = true;
     PircBotX bot;
+
     public ChatterBot(PircBotX bot) {
         this.bot = bot;
     }

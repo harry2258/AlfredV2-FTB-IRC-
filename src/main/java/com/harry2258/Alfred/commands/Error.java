@@ -23,6 +23,7 @@ public class Error extends Command {
     public static HashMap<String, String> Suggestion = new HashMap<>();
     private static Config config;
     private PermissionManager manager;
+
     public Error() {
 
         super("Error", "Errors Database!", "Error [Error]");

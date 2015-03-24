@@ -9,6 +9,7 @@ import org.pircbotx.hooks.events.MessageEvent;
 public class Google extends Command {
     private Config config;
     private PermissionManager manager;
+
     public Google() {
         super("Google", "Searches google for something.", "Google how to google");
     }
