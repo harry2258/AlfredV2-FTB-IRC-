@@ -39,7 +39,7 @@ public class Flush extends Command {
         } else {
             Main.Login.remove(event.getUser().getNick());
             Main.NotLoggedIn.remove(event.getUser().getNick());
-            MessageUtils.sendUserNotice(event, "Flushed all information related to user " + args[1]);
+            MessageUtils.sendUserNotice(event, "Flushed all information related to user " + event.getUser().getNick());
         }
         return true;
     }
