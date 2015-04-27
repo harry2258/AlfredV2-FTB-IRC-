@@ -136,7 +136,8 @@ public class Log extends Command {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return "...I haz no idea what happened. This shouldn't be here..";
+        //return "...I haz no idea what happened. This shouldn't be here..";
+        return "";
     }
 
     @Override
