@@ -295,6 +295,7 @@ public class MessageEvent extends ListenerAdapter {
                 LogLink = "http://pastie.org/pastes/" + word.replaceAll(".*(?:org/)", "") + "/text";
                 LogFound = true;
             }
+
             if (LogFound) {
                 if (!Main.LogLinks.contains(LogLink)) {
                     if (Main.LogLinks.size() >= 5) {

@@ -22,7 +22,7 @@ public class BanEvent extends ListenerAdapter {
     public void onSetChannelBan(SetChannelBanEvent event) throws Exception {
 
         if (Main.relay.containsKey(event.getChannel())) {
-            Main.relay.get(event.getChannel()).send().message("[" + event.getChannel().getName() + "] " + event.getUser().getNick() + " sets mode +b for " + event.getHostmask());
+            Main.relay.get(event.getChannel()).send().message("[" + event.getChannel().getName() + "] " + event.getUser().getNick() + " sets mode +b for " + event.getBanHostmask());
         }
     }
 

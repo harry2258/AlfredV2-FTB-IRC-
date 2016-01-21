@@ -45,7 +45,7 @@ public class Main {
     public static Map<String, String> Login = new HashMap<>(); //Login names - Less WHOIS, <Nickname, Nickserver Name> | Many to one pretty much.
     public static Set<String> NotLoggedIn = new HashSet<>(); //People who aren't logged in so we don't have to WHOIS and get a bad response.
 
-    public static HashMap<Channel, Channel> relay = new HashMap<>(); //For Spy command, <Channel being spied on, Channel said messages are being relayed to>
+    public static HashMap<Channel, Channel> relay = new HashMap<>(); //For Spy command, <Channel being spied on, Said Channel messages are being relayed to>
     public static HashMap<String, String> URL = new HashMap<>(); //URL scanning, <Channel, All/Youtube/none>
     public static HashMap<Channel, Boolean> Chat = new HashMap<>(); //Auto-chatting? Why not.
 
@@ -75,6 +75,7 @@ public class Main {
                         config.load();
                     } else {
                         System.out.println("Connecting to " + config.getDatabaseHost());
+                        System.out.println("jdbc:mysql://" + config.getDatabaseHost() + "/" + config.getDatabase() + " " + config.getDatabaseUser() + " " + config.getDatabasePass());
                         database = DriverManager.getConnection("jdbc:mysql://" + config.getDatabaseHost() + "/" + config.getDatabase(), config.getDatabaseUser(), config.getDatabasePass());
                         config.loadDatabase(database);
                     }

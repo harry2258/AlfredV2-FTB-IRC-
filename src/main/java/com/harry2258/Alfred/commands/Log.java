@@ -14,6 +14,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.util.regex.Pattern;
 
 /**
  * Created by Hardik on 1/23/14.
@@ -67,6 +68,21 @@ public class Log extends Command {
                 System.out.println("Technic Log");
             } else {
                 while ((tmp = br.readLine()) != null) {
+                    String pattern = "(Time:).+\\n(Description)";
+                    String pattern2 = "(Affected level)";
+                    Boolean matchFound = Pattern.matches(pattern, tmp);
+                    if (matchFound == true)
+                    {
+
+                        Boolean match2 = Pattern.matches(pattern2, tmp);
+                        if (match2 == true)
+                        {
+                            break;
+                        }
+                        else
+                        {
+                        }
+                    }
                     if (tmp.contains("This paste has been removed!")) {
                         return "The paste cannot be found!";
                     } else if (tmp.contains("FTBLaunch starting up") && !tmp.contains("greg0ree")) {
@@ -114,7 +130,6 @@ public class Log extends Command {
                         }
                     } else if (tmp.contains("Operating System: ") || tmp.contains("OS: ")) {
                         temp = Colors.BOLD + "OS: " + Colors.NORMAL + tmp.replaceAll("^.*?(?=[A-Z][a-z])", "").replaceAll("\\\\[.*?\\\\]", "").replaceAll(".*(?:Operating System: )|.*(?:OS: )", "");
-                        //.replaceAll("x86|x64|32-bit|64-bit|\\(x86\\)", "");
                         if (!info.contains(temp) && jsonObj.get("OSName").getAsBoolean()) {
                             info.add(temp);
                         }
@@ -141,7 +156,7 @@ public class Log extends Command {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return "...I haz no idea what happened. This shouldn't be here..";
+        return "";
     }
 
     @Override
