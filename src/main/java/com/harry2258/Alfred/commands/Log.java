@@ -114,17 +114,12 @@ public class Log extends Command {
                         }
 
                     } else if (tmp.contains("Java Version:")) {
-                        temp = Colors.BOLD + "Java Version: " + Colors.NORMAL + tmp.replaceAll(".*(?:Java Version: )", "");
+                        temp = Colors.BOLD + "Java Version: " + Colors.NORMAL + tmp.replaceAll(".*(?:Java Version: )", "").replaceAll("(?:[Ss]orted as: ).*", "");
                         if (!info.contains(temp) && jsonObj.get("JavaVersion").getAsBoolean()) {
                             info.add(temp);
                         }
                     } else if (tmp.contains("Is Modded: ")) {
                         temp = Colors.BOLD + "Client Brand: " + Colors.NORMAL + tmp.replaceAll("^.*?(?=[A-Z][a-z])", "").replaceAll("\\\\[.*?\\\\]", "").replaceAll(".*(?:Is Modded: Definitely; Client brand changed to )|.*(?:Is Modded: Definitely; Server brand changed to )", "");
-                        if (!info.contains(temp) && jsonObj.get("Modded").getAsBoolean()) {
-                            info.add(temp);
-                        }
-                    } else if (tmp.contains("Feed The Beast Mod Pack") || tmp.contains("Optifine OptiFine_")) {
-                        temp = Colors.BOLD + "Mods: " + Colors.NORMAL + tmp.replaceAll("^.*?(?=[A-Z][a-z])", "").replaceAll("\\\\[.*?\\\\]", "").replaceAll(".*(?:, )|mods active", "");
                         if (!info.contains(temp) && jsonObj.get("Modded").getAsBoolean()) {
                             info.add(temp);
                         }
@@ -156,6 +151,10 @@ public class Log extends Command {
         } catch (Exception e) {
             e.printStackTrace();
         }
+<<<<<<< HEAD
+=======
+        //return "...I haz no idea what happened. This shouldn't be here..";
+>>>>>>> 1fb4301ed3b46566d45589066226388f723eb45b
         return "";
     }
 

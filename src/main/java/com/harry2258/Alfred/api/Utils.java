@@ -372,8 +372,8 @@ public class Utils {
     public static String getDrama() {
         String drama = null;
         try {
-            Document doc = Jsoup.connect("http://asie.pl/drama.php?2").get();
-            drama = doc.body().getElementsByTag("h1").text();
+            Document doc = Jsoup.connect("mc-drama.herokuapp.com").get();
+            drama = doc.body().getElementsByTag("h2").text();
         } catch (Exception e) {
             e.printStackTrace();
         }
