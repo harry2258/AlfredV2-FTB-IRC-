@@ -151,10 +151,6 @@ public class Log extends Command {
         } catch (Exception e) {
             e.printStackTrace();
         }
-<<<<<<< HEAD
-=======
-        //return "...I haz no idea what happened. This shouldn't be here..";
->>>>>>> 1fb4301ed3b46566d45589066226388f723eb45b
         return "";
     }
 
