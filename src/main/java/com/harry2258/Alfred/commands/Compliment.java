@@ -17,7 +17,6 @@ public class Compliment extends Command {
     }
 
     private static void sendCompliment(MessageEvent event, String Compliment, Channel chan) {
-        String[] args = event.getMessage().split(" ");
 
         if (chan.getName().equalsIgnoreCase("#dragonweyr") || chan.getName().equalsIgnoreCase("#help") || chan.getName().equalsIgnoreCase("#lobby") || chan.getName().equalsIgnoreCase("#coders") || chan.getName().equalsIgnoreCase("#esper") || chan.getName().equalsIgnoreCase("#helper")) {
             MessageUtils.sendChannel(event, "YOU CRAZY SENDIN' ME OUT THERE?! AWW HELL NAW!!");
@@ -38,7 +37,7 @@ public class Compliment extends Command {
 
     @Override
     public boolean execute(MessageEvent event) throws Exception {
-        String compliment = "";
+        String compliment;
         do {
             compliment = Utils.getCompliment();
         } while (last.equalsIgnoreCase(compliment));
@@ -51,7 +50,7 @@ public class Compliment extends Command {
             return true;
         }
         if (args.length >= 2) {
-            String channel = args[1];
+            String channel;
             if (args[1].startsWith("#")) {
                 channel = args[1];
             } else {

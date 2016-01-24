@@ -3,18 +3,13 @@ package com.harry2258.Alfred.commands;
 import com.google.gson.JsonObject;
 import com.harry2258.Alfred.api.*;
 import org.pircbotx.Colors;
-import org.pircbotx.User;
-import org.pircbotx.hooks.WaitForQueue;
 import org.pircbotx.hooks.events.MessageEvent;
-import org.pircbotx.hooks.events.WhoisEvent;
 import twitter4j.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.UnknownHostException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class Geo extends Command {
 
@@ -78,7 +73,7 @@ public class Geo extends Command {
         }
 
         String geo = "http://ip-api.com/json/" + ip;
-        String jsonstring = "";
+        String jsonstring;
         try {
             URL url;
             url = new URL(geo);

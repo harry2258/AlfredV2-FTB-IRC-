@@ -20,7 +20,7 @@ public class Insult extends Command {
 
     private static void sendInsult(MessageEvent event, String insult) {
         String[] args = event.getMessage().split(" ");
-        String channel = args[1];
+        String channel;
         if (args[1].startsWith("#")) {
             channel = args[1];
         } else {
@@ -42,7 +42,7 @@ public class Insult extends Command {
 
     @Override
     public boolean execute(MessageEvent event) throws Exception {
-        String insult1 = "";
+        String insult1;
         do {
             insult1 = Utils.getInsult();
         } while (last.equalsIgnoreCase(insult1));
@@ -67,10 +67,7 @@ public class Insult extends Command {
         }
 
         if (args.length >= 2) {
-            String channel;
             if (args[1].startsWith("#")) {
-                channel = args[1];
-                Channel chan = event.getBot().getUserChannelDao().getChannel(channel);
                 String user = "";
 
                 if (args.length == 3) {

@@ -13,7 +13,7 @@ import java.sql.SQLException;
  */
 public class Create {
 
-    public static boolean CreateTables(Config config, PermissionManager manager) throws SQLException {
+    public static boolean CreateTables(Config config) {
 
         try {
             Connection conn = DriverManager.getConnection("jdbc:mysql://" + config.getDatabaseHost() + "/" + config.getDatabase(), config.getDatabaseUser(), config.getDatabasePass());
@@ -31,7 +31,7 @@ public class Create {
         return true;
     }
 
-    public static boolean AddChannel(String Channel, Connection conn) throws SQLException {
+    public static boolean AddChannel(String Channel, Connection conn) {
         String Permissions = "{\"Perms\":{\"Mods\":[\"niel\"], \"ModPerms\": [\"command.custom\", \"command.info\"], \"Admins\":[\"Gaz492\"], \"Everyone\": [\"command.mcstatus\", \"command.chstatus\"]}}";
 
         try {
@@ -52,16 +52,15 @@ public class Create {
         return false;
     }
 
-    public static boolean RemoveChannel(String Channel, Config config, PermissionManager manager) throws SQLException {
-        Connection conn = getConnection(config, manager);
+    public static void RemoveChannel(String Channel, Config config, PermissionManager manager) throws SQLException {
+        Connection conn = getConnection(config);
         PreparedStatement stmt = conn.prepareStatement("DELETE FROM `Rejoin_Channels` WHERE `Channel` = ? LIMIT 1;");
         stmt.setString(1, Channel);
         stmt.execute();
         stmt.close();
-        return false;
     }
 
-    public static Connection getConnection(Config config, PermissionManager manager) throws SQLException {
+    public static Connection getConnection(Config config) throws SQLException {
 
         try {
             Class.forName("com.mysql.jdbc.Driver");

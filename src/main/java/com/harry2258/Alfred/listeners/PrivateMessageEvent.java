@@ -38,7 +38,6 @@ public class PrivateMessageEvent extends ListenerAdapter {
         if (event.getMessage().equalsIgnoreCase("pause")) {
             if (PermissionManager.hasExec(event.getUser().getNick())) {
                 waiting = true;
-                final String user = event.getUser().getNick();
                 final WaitForQueue Private = new WaitForQueue(event.getBot());
 
                 event.getUser().send().message("Pausing bot!");

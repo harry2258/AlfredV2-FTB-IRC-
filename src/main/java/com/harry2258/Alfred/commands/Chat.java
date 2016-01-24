@@ -12,8 +12,8 @@ import org.pircbotx.hooks.events.MessageEvent;
  * Created by Hardik at 10:32 PM on 8/1/2014.
  */
 public class Chat extends Command {
-    public static final Object monitor = new Object();
-    public static boolean monitorState = false;
+    private static final Object monitor = new Object();
+    private static boolean monitorState = false;
     private Config config;
     private PermissionManager manager;
 
@@ -21,7 +21,7 @@ public class Chat extends Command {
         super("Chat", "Bored? Chat with Alfred!", "Chat [Text]");
     }
 
-    public static void waitForThread() {
+    private static void waitForThread() {
         monitorState = true;
         while (monitorState) {
             synchronized (monitor) {

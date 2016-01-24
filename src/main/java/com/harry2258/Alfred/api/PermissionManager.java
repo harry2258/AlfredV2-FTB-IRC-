@@ -20,7 +20,7 @@ public class PermissionManager {
 
     public Properties properties;
 
-    public PermissionManager(Config conf) {
+    public PermissionManager() {
     }
 
     public static boolean hasExec(String Nick) {
@@ -39,7 +39,7 @@ public class PermissionManager {
         return false;
     }
 
-    public static boolean hasAdmin(String Nick, Channel channel) throws Exception {
+    public static boolean hasAdmin(String Nick, Channel channel) {
 
         String sender = Main.Login.get(Nick);
         Perms perm = Main.map.get(channel.getName().toLowerCase());
@@ -47,7 +47,7 @@ public class PermissionManager {
         return set.contains(sender);
     }
 
-    public static boolean hasMod(String Nick, Channel channel) throws Exception {
+    private static boolean hasMod(String Nick, Channel channel) {
         String sender = Main.Login.get(Nick);
         Perms perm = Main.map.get(channel.getName().toLowerCase());
         Set<String> set = new HashSet<>(perm.getPermission().getMods());

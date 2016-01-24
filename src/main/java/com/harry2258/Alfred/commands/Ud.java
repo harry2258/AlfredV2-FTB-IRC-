@@ -39,7 +39,7 @@ public class Ud extends Command {
 
         String Word = sb.toString().trim();
         String link = "http://api.urbandictionary.com/v0/define?term=" + Word.replaceAll(" ", "%20");
-        String result = "";
+        String result;
         try {
             URL Urban = new URL(link);
             URLConnection u = Urban.openConnection();
@@ -51,9 +51,9 @@ public class Ud extends Command {
                 MessageUtils.sendChannel(event, "Could not find \"" + Word + "\" on Urban Dictionary :(");
                 return true;
             }
-            String definition = "";
-            String example = "";
-            String permalink = "";
+            String definition;
+            String example;
+            String permalink;
             try {
                 definition = jsonObj.getAsJsonArray("list").get(id).getAsJsonObject().get("definition").getAsString().replaceAll("\\n|\\r|\\t", " ").replaceAll("  ", " ");
                 example = jsonObj.getAsJsonArray("list").get(id).getAsJsonObject().get("example").getAsString().replaceAll("\\n|\\r|\\t", " ").replaceAll("  ", " ");

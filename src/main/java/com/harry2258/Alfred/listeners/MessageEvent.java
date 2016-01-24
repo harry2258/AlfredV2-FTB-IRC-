@@ -21,7 +21,7 @@ import static com.harry2258.Alfred.api.CommandRegistry.commands;
 public class MessageEvent extends ListenerAdapter {
     public static PircBotX bot;
     public static boolean waiting = false;
-    static Interpreter interpreter = new Interpreter();
+    private static Interpreter interpreter = new Interpreter();
     private Config config;
     private PermissionManager manager;
 

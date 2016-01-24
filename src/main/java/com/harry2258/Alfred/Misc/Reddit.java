@@ -17,7 +17,7 @@ import java.util.HashMap;
 public class Reddit extends Thread {
     public static HashMap<String, String> chaninfo = new HashMap<>();
     private static volatile boolean isRunning = true;
-    PircBotX bot;
+    private PircBotX bot;
 
     public Reddit(PircBotX bot) {
         this.bot = bot;

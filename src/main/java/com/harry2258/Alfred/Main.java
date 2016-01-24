@@ -51,12 +51,9 @@ public class Main {
     public static File jsonFilePath = new File(System.getProperty("user.dir") + "/exec.json");
     public static File parser = new File(System.getProperty("user.dir") + "/parser.json");
     public static File globalperm = new File(System.getProperty("user.dir") + "/global.json");
-    public static File edgesjsonfile = new File(System.getProperty("user.dir") + "/edges.json");
-
     public static String version = "";
-
     public static Connection database;
-
+    private static File edgesjsonfile = new File(System.getProperty("user.dir") + "/edges.json");
 
     public static void main(String[] args) {
 
@@ -67,7 +64,7 @@ public class Main {
             System.out.println("Starting");
             try {
                 final Config config = new Config();
-                PermissionManager manager = new PermissionManager(config);
+                PermissionManager manager = new PermissionManager();
                 System.out.println("Loading and registering commands");
                 try {
                     if (!config.UseDatabase()) {

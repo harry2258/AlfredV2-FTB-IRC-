@@ -5,7 +5,6 @@ package com.harry2258.Alfred.runnables;
  */
 
 
-import com.harry2258.Alfred.Main;
 import com.harry2258.Alfred.api.Utils;
 import org.pircbotx.PircBotX;
 
@@ -15,18 +14,18 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 
-public class ChatSocketHandler extends Thread {
-    PircBotX bot;
-    Socket socket;
-    BufferedReader reader;
-    BufferedWriter writer;
+class ChatSocketHandler extends Thread {
+    private PircBotX bot;
+    private Socket socket;
+    private BufferedReader reader;
+    private BufferedWriter writer;
 
     public ChatSocketHandler(Socket socket, PircBotX bot) {
         this.socket = socket;
         this.bot = bot;
     }
 
-    public static String Uptime() {
+    private static String Uptime() {
         return Utils.getUptime();
     }
 

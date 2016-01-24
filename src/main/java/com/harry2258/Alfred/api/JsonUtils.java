@@ -34,7 +34,7 @@ public class JsonUtils {
     }
 
     public static boolean isJSONObject(String possibleJson) {
-        boolean valid = false;
+        boolean valid;
         try {
             new JsonParser().parse(possibleJson);
             valid = true;
@@ -62,7 +62,7 @@ public class JsonUtils {
     public static String convertStreamToString(InputStream is) throws Exception {
         BufferedReader reader = new BufferedReader(new InputStreamReader(is));
         StringBuilder sb = new StringBuilder();
-        String line = null;
+        String line;
 
         while ((line = reader.readLine()) != null) {
             sb.append(line).append("\n");

@@ -44,9 +44,7 @@ public class Log extends Command {
         ArrayList<String> Message = new ArrayList<>();
 
         String message = "";
-        String temp = "";
-
-        String CausedBy = "N/A";
+        String temp;
 
         if (!Main.parser.exists()) {
             Main.parser.getParentFile().mkdirs();
@@ -71,16 +69,11 @@ public class Log extends Command {
                     String pattern = "(Time:).+\\n(Description)";
                     String pattern2 = "(Affected level)";
                     Boolean matchFound = Pattern.matches(pattern, tmp);
-                    if (matchFound == true)
-                    {
+                    if (matchFound) {
 
                         Boolean match2 = Pattern.matches(pattern2, tmp);
-                        if (match2 == true)
-                        {
+                        if (match2) {
                             break;
-                        }
-                        else
-                        {
                         }
                     }
                     if (tmp.contains("This paste has been removed!")) {

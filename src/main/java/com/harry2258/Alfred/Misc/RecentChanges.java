@@ -18,7 +18,7 @@ import java.util.List;
 public class RecentChanges extends Thread {
     public static List<String> changes = new ArrayList<>();
     private static volatile boolean isRunning = true;
-    PircBotX bot;
+    private PircBotX bot;
 
     public RecentChanges(PircBotX bot) {
         this.bot = bot;
@@ -41,7 +41,7 @@ public class RecentChanges extends Thread {
 
         Channel chan = null;
         String tmp = null;
-        boolean FoundChannel = false;
+        boolean FoundChannel;
 
         try {
             chan = bot.getUserChannelDao().getChannel("#ftb-wiki-recentchanges");

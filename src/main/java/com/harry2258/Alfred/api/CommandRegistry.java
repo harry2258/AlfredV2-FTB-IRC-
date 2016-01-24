@@ -31,6 +31,7 @@ public class CommandRegistry {
                 commands.put(name, (Command) Command.class.getClassLoader().loadClass("com.harry2258.Alfred.commands." + name).newInstance());
                 return commands.get(name);
             } catch (Exception ex) {
+                ex.printStackTrace();
             }
         }
         return null;

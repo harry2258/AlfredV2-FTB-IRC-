@@ -21,7 +21,6 @@ public class Query extends Command {
     @Override
     public boolean execute(MessageEvent event) throws Exception {
         String[] args = event.getMessage().split(" ");
-        String s1 = String.valueOf(event.getMessage().charAt(0));
         String result = null;
         if (args.length == 2) {
             try {

@@ -16,7 +16,7 @@ public class Nick extends Command {
     private Config config;
     private PermissionManager manager;
 
-    public Nick() {
+    private Nick() {
         super("Nick", "changes the bot's nickname", "Nick newnickname");
     }
 

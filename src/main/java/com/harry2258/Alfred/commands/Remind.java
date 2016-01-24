@@ -17,7 +17,7 @@ import java.util.Set;
  */
 public class Remind extends Command {
 
-    Date date = new Date();
+    private Date date = new Date();
     private Config config;
     private PermissionManager manager;
 

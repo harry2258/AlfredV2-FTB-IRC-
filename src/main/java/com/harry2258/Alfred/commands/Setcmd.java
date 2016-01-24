@@ -9,7 +9,6 @@ import org.pircbotx.hooks.events.MessageEvent;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.PrintWriter;
-import java.util.Date;
 
 import static com.harry2258.Alfred.api.CommandRegistry.commands;
 
@@ -30,7 +29,6 @@ public class Setcmd extends Command {
 
     @Override
     public boolean execute(MessageEvent event) throws Exception {
-        Date date = new Date();
         String[] args = event.getMessage().split(" ");
         String classname = Character.toUpperCase(args[1].charAt(0)) + event.getMessage().split(" ")[1].substring(1).toLowerCase();
         if (!commands.containsKey(classname)) {

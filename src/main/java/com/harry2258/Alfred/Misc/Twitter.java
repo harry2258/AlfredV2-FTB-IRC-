@@ -22,7 +22,7 @@ import java.util.List;
 public class Twitter extends Thread {
     public static HashMap<String, String> tweets = new HashMap<>();
     private static volatile boolean isRunning = true;
-    PircBotX bot;
+    private PircBotX bot;
 
     public Twitter(PircBotX bot) {
         this.bot = bot;
@@ -48,7 +48,7 @@ public class Twitter extends Thread {
         while (isRunning) {
             try {
 
-                String test = "";
+                String test;
 
                 File TweetUsers = new File(System.getProperty("user.dir") + "/Twitter/" + "tweetuser.json");
                 File auth = new File(System.getProperty("user.dir") + "/Twitter/" + "oauth.json");
@@ -103,7 +103,6 @@ public class Twitter extends Thread {
                             for (Channel chan : bot.getUserBot().getChannels()) {
                                 if (statuses.get(0).getUser().getName().equals("TPPIModPack") && chan.getName().equals("TestPackPleaseIgnore")) {
                                     chan.send().message(test);
-                                } else {
                                 }
                             }
                         }

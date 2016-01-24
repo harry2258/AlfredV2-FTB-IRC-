@@ -97,7 +97,7 @@ public class Permission {
         return result;
     }
 
-    protected boolean canEqual(Object other) {
+    private boolean canEqual(Object other) {
         return other instanceof Permission;
     }
 

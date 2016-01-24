@@ -39,7 +39,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Utils {
-    static String USER_AGENT = "Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/537.17 (KHTML, like Gecko) Chrome/24.0.1312.57 Safari/537.17";
+    private static String USER_AGENT = "Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/537.17 (KHTML, like Gecko) Chrome/24.0.1312.57 Safari/537.17";
 
     public static boolean isUrl(String s) {
         String url_regex = "^(https?|ftp|file)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]";
@@ -242,7 +242,7 @@ public class Utils {
             JsonElement jelement = new JsonParser().parse(json);
             JsonObject output = jelement.getAsJsonObject();
             output = output.getAsJsonObject("responseData").getAsJsonArray("results").get(0).getAsJsonObject();
-            String result = String.format("Google: %s | %s | [ %s ]", StringEscapeUtils.unescapeHtml4(output.get("titleNoFormatting").toString().replaceAll("\"", "")), StringEscapeUtils.unescapeHtml4(output.get("content").toString().replaceAll("\\s+", " ").replaceAll("\\<.*?>", "").replaceAll("\"", "").replaceAll("\\\\n", "")), Utils.shortenUrl(output.get("url").toString().replaceAll("\"", "")));
+            String result = String.format("Google: %s | %s | [ %s ]", StringEscapeUtils.unescapeHtml4(output.get("titleNoFormatting").toString().replaceAll("\"", "")), StringEscapeUtils.unescapeHtml4(output.get("content").toString().replaceAll("\\s+", " ").replaceAll("<.*?>", "").replaceAll("\"", "").replaceAll("\\\\n", "")), Utils.shortenUrl(output.get("url").toString().replaceAll("\"", "")));
             if (result != null) {
                 return result;
             } else {
@@ -308,6 +308,7 @@ public class Utils {
                 paid = Boolean.valueOf(str);
             }
         } catch (java.io.IOException e1) {
+            e1.printStackTrace();
         }
         return paid;
     }
@@ -403,7 +404,7 @@ public class Utils {
     public static void Geveryone(File file) {
         try {
             BufferedReader s = new BufferedReader(new InputStreamReader(Main.class.getResourceAsStream("/Newglobal.json")));
-            String tmp = "";
+            String tmp;
             file.createNewFile();
             BufferedWriter out = new BufferedWriter(new FileWriter(file));
             while ((tmp = s.readLine()) != null) {
@@ -420,7 +421,7 @@ public class Utils {
     public static void edges(File file) {
         try {
             BufferedReader s = new BufferedReader(new InputStreamReader(Main.class.getResourceAsStream("/Newedges.json")));
-            String tmp = "";
+            String tmp;
             file.createNewFile();
             BufferedWriter out = new BufferedWriter(new FileWriter(file));
             while ((tmp = s.readLine()) != null) {
@@ -437,7 +438,7 @@ public class Utils {
     public static void TweetAuth(File file) {
         try {
             BufferedReader s = new BufferedReader(new InputStreamReader(Main.class.getResourceAsStream("NewTwitter/oauth.json")));
-            String tmp = "";
+            String tmp;
             file.createNewFile();
             BufferedWriter out = new BufferedWriter(new FileWriter(file));
             while ((tmp = s.readLine()) != null) {
@@ -454,7 +455,7 @@ public class Utils {
     public static void TweetUser(File file) {
         try {
             BufferedReader s = new BufferedReader(new InputStreamReader(Main.class.getResourceAsStream("NewTwitter/tweetuser.json")));
-            String tmp = "";
+            String tmp;
             file.createNewFile();
             BufferedWriter out = new BufferedWriter(new FileWriter(file));
             while ((tmp = s.readLine()) != null) {

@@ -28,11 +28,11 @@ public class JoinEvent extends ListenerAdapter {
         this.manager = man;
     }
 
-    public static String getAccount(User u, org.pircbotx.hooks.events.JoinEvent event) {
+    private static String getAccount(User u, org.pircbotx.hooks.events.JoinEvent event) {
         String user = "";
         event.getBot().sendRaw().rawLineNow("WHOIS " + u.getNick());
         WaitForQueue waitForQueue = new WaitForQueue(event.getBot());
-        WhoisEvent test = null;
+        WhoisEvent test;
         try {
             test = waitForQueue.waitFor(WhoisEvent.class);
             waitForQueue.close();

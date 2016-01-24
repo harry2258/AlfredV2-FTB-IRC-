@@ -23,7 +23,7 @@ import java.util.logging.Logger;
 public class Config {
 
     public boolean useDatabase;
-    public boolean updateDatabase;
+    private boolean updateDatabase;
     private boolean debug;
     private boolean autoNickChange;
     private boolean autoReconnectServer;
@@ -108,7 +108,7 @@ public class Config {
             if (!config.exists()) {
                 System.out.println("[!!] No configuration file found! generating a new one! [!!]");
                 BufferedReader s = new BufferedReader(new InputStreamReader(Main.class.getResourceAsStream("/bot.properties")));
-                String tmp = "";
+                String tmp;
                 config.createNewFile();
                 BufferedWriter out = new BufferedWriter(new FileWriter(config));
                 while ((tmp = s.readLine()) != null) {
@@ -232,7 +232,7 @@ public class Config {
         }
     }
 
-    public void UpdateDatabase(Connection conn) {
+    private void UpdateDatabase(Connection conn) {
         try {
             Properties properties = new Properties();
             try {
@@ -310,7 +310,7 @@ public class Config {
     /**
      * @param debug the debug to set
      */
-    public void setDebug(boolean debug) {
+    private void setDebug(boolean debug) {
         this.debug = debug;
     }
 
@@ -324,7 +324,7 @@ public class Config {
     /**
      * @param autoNickChange the autoNickChange to set
      */
-    public void setAutoNickChange(boolean autoNickChange) {
+    private void setAutoNickChange(boolean autoNickChange) {
         this.autoNickChange = autoNickChange;
     }
 
@@ -338,7 +338,7 @@ public class Config {
     /**
      * @param autoReconnectServer the autoReconnectServer to set
      */
-    public void setAutoReconnectServer(boolean autoReconnectServer) {
+    private void setAutoReconnectServer(boolean autoReconnectServer) {
         this.autoReconnectServer = autoReconnectServer;
     }
 
@@ -352,7 +352,7 @@ public class Config {
     /**
      * @param autoRejoinChannel the autoRejoinChannel to set
      */
-    public void setAutoRejoinChannel(boolean autoRejoinChannel) {
+    private void setAutoRejoinChannel(boolean autoRejoinChannel) {
         this.autoRejoinChannel = autoRejoinChannel;
     }
 
@@ -366,7 +366,7 @@ public class Config {
     /**
      * @param autoAcceptInvite the autoAcceptInvite to set
      */
-    public void setAutoAcceptInvite(boolean autoAcceptInvite) {
+    private void setAutoAcceptInvite(boolean autoAcceptInvite) {
         this.autoAcceptInvite = autoAcceptInvite;
     }
 
@@ -380,7 +380,7 @@ public class Config {
     /**
      * @param useSSL the useSSL to set
      */
-    public void setUseSSL(boolean useSSL) {
+    private void setUseSSL(boolean useSSL) {
         this.useSSL = useSSL;
     }
 
@@ -394,7 +394,7 @@ public class Config {
     /**
      * @param verifySSL the verifySSL to set
      */
-    public void setVerifySSL(boolean verifySSL) {
+    private void setVerifySSL(boolean verifySSL) {
         this.verifySSL = verifySSL;
     }
 
@@ -422,7 +422,7 @@ public class Config {
     /**
      * @param serverHostame the serverHostame to set
      */
-    public void setServerHostame(String serverHostame) {
+    private void setServerHostame(String serverHostame) {
         this.serverHostame = serverHostame;
     }
 
@@ -436,7 +436,7 @@ public class Config {
     /**
      * @param serverPassword the serverPassword to set
      */
-    public void setServerPassword(String serverPassword) {
+    private void setServerPassword(String serverPassword) {
         this.serverPassword = serverPassword;
     }
 
@@ -450,7 +450,7 @@ public class Config {
     /**
      * @param serverPort the serverPort to set
      */
-    public void setServerPort(String serverPort) {
+    private void setServerPort(String serverPort) {
         this.serverPort = serverPort;
     }
 
@@ -464,7 +464,7 @@ public class Config {
     /**
      * @param botNickname the botNickname to set
      */
-    public void setBotNickname(String botNickname) {
+    private void setBotNickname(String botNickname) {
         this.botNickname = botNickname;
     }
 
@@ -478,7 +478,7 @@ public class Config {
     /**
      * @param botUsername the botUsername to set
      */
-    public void setBotUsername(String botUsername) {
+    private void setBotUsername(String botUsername) {
         this.botUsername = botUsername;
     }
 
@@ -492,7 +492,7 @@ public class Config {
     /**
      * @param botIdent the botIdent to set
      */
-    public void setBotIdent(String botIdent) {
+    private void setBotIdent(String botIdent) {
         this.botIdent = botIdent;
     }
 
@@ -506,7 +506,7 @@ public class Config {
     /**
      * @param botPassword the botPassword to set
      */
-    public void setBotPassword(String botPassword) {
+    private void setBotPassword(String botPassword) {
         this.botPassword = botPassword;
     }
 
@@ -520,7 +520,7 @@ public class Config {
     /**
      * @param ctcpFinger the ctcpFinger to set
      */
-    public void setCtcpFinger(String ctcpFinger) {
+    private void setCtcpFinger(String ctcpFinger) {
         this.ctcpFinger = ctcpFinger;
     }
 
@@ -534,7 +534,7 @@ public class Config {
     /**
      * @param ctcpVersion the ctcpVersion to set
      */
-    public void setCtcpVersion(String ctcpVersion) {
+    private void setCtcpVersion(String ctcpVersion) {
         this.ctcpVersion = ctcpVersion;
     }
 
@@ -548,7 +548,7 @@ public class Config {
     /**
      * @param channels the channels to set
      */
-    public void setChannels(List<String> channels) {
+    private void setChannels(List<String> channels) {
         this.channels = channels;
     }
 
@@ -562,7 +562,7 @@ public class Config {
     /**
      * @param loggedChannels the loggedChannels to set
      */
-    public void setLoggedChannels(List<String> loggedChannels) {
+    private void setLoggedChannels(List<String> loggedChannels) {
         this.loggedChannels = loggedChannels;
     }
 
@@ -576,7 +576,7 @@ public class Config {
     /**
      * @param permissionDenied the permissionDenied to set
      */
-    public void setPermissionDenied(String permissionDenied) {
+    private void setPermissionDenied(String permissionDenied) {
         this.permissionDenied = permissionDenied;
     }
 
@@ -594,7 +594,7 @@ public class Config {
      *
      * @param enableChatSocket Enable or disable the socket chat listener
      */
-    public void setEnableChatSocket(boolean enableChatSocket) {
+    private void setEnableChatSocket(boolean enableChatSocket) {
         this.enableChatSocket = enableChatSocket;
     }
 
@@ -608,7 +608,7 @@ public class Config {
     /**
      * @param chatSocketPort the chatSocketPort to set
      */
-    public void setChatSocketPort(int chatSocketPort) {
+    private void setChatSocketPort(int chatSocketPort) {
         this.chatSocketPort = chatSocketPort;
     }
 
@@ -757,7 +757,7 @@ public class Config {
     /**
      * @param use Using the database for configuration or not.
      */
-    public void usingDatabase(Boolean use) {
+    private void usingDatabase(Boolean use) {
         this.useDatabase = use;
     }
 }

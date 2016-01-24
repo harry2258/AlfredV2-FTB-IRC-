@@ -26,23 +26,23 @@ import java.util.Map;
  */
 
 public class CreeperHost extends Thread {
-    public static ArrayList<String> ChReposlist = new ArrayList<>();
+    private static ArrayList<String> ChReposlist = new ArrayList<>();
     private static String edges = "new";
-    MessageEvent event;
+    private MessageEvent event;
 
     public CreeperHost(MessageEvent event) {
         this.event = event;
     }
 
-    public static List getKeysFromJson(String string) throws Exception {
+    public static List getKeysFromJson(String string) {
         Object things = new Gson().fromJson(string, Object.class);
         List keys = new ArrayList();
         collectAllTheKeys(keys, things);
         return keys;
     }
 
-    static void collectAllTheKeys(List keys, Object o) {
-        Collection values = null;
+    private static void collectAllTheKeys(List keys, Object o) {
+        Collection values;
         if (o instanceof Map) {
             Map map = (Map) o;
             keys.addAll(map.keySet());

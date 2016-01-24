@@ -1,5 +1,6 @@
 package com.harry2258.Alfred.commands;
 //TODO Fix Regex
+
 import com.google.gson.JsonObject;
 import com.harry2258.Alfred.api.*;
 import org.pircbotx.Colors;
@@ -24,6 +25,54 @@ public class Wiki extends Command {
 
     public Wiki() {
         super("Wiki", "Wiki Minecraft stuff!", "Wiki [Query]");
+    }
+
+    private static String matcher(String text) {
+
+        String pattern = "(\\{\\{L\\|)(.*?)(\\}\\})";
+        String pattern2 = "(\\[\\[#.*?\\|)(.*?)(]])";
+        String pattern3 = "(\\{\\{U\\|)(.*?)(\\}\\})";
+
+        Pattern p = Pattern.compile(pattern);
+        Pattern p2 = Pattern.compile(pattern2);
+        Pattern p3 = Pattern.compile(pattern3);
+        Matcher m;
+
+        StringBuffer buffer = new StringBuffer();
+        StringBuffer buffer2 = new StringBuffer();
+        StringBuffer buffer3 = new StringBuffer();
+
+        try {
+            m = p.matcher(text);
+            String GroupName;
+
+            while (m.find()) {
+                GroupName = m.group(2);
+                m.appendReplacement(buffer, "&&&" + GroupName + "&&&");
+            }
+            m.appendTail(buffer);
+
+            m = p2.matcher(buffer.toString());
+
+            while (m.find()) {
+                GroupName = m.group(2);
+                m.appendReplacement(buffer2, "&&&" + GroupName + "&&&");
+            }
+
+            m.appendTail(buffer2);
+
+            m = p3.matcher(buffer2.toString());
+            while (m.find()) {
+                GroupName = m.group(2);
+                m.appendReplacement(buffer3, "!!!" + GroupName + "!!!");
+            }
+            m.appendTail(buffer3);
+
+        } catch (Exception buffered) {
+            buffered.printStackTrace();
+        }
+
+        return buffer3.toString();
     }
 
     @Override
@@ -87,6 +136,7 @@ public class Wiki extends Command {
             }
 
             String json1 = xy.replaceAll("\n", " ");
+            //TODO Fix this regex!!
             id = json1.replaceAll("[{\"/>}{\\\\']", "").replaceAll(".*(?:pages:)|(?::pageid.*)", "");
             JsonObject jsonObj = JsonUtils.getJsonObject(json1);
 
@@ -162,7 +212,7 @@ public class Wiki extends Command {
                 String APItest = jsonObj.getAsJsonObject("query").getAsJsonObject("pages").getAsJsonObject(id).getAsJsonArray("revisions").get(0).getAsJsonObject().get("*").toString();
                 System.out.println(APItest);
 
-                String working =matcher(APItest);
+                String working = matcher(APItest);
                 System.out.println(working);
                 String df = working.replaceAll("\\{\\{[^}]+\\}\\}|\\[\\[Category:[^\\]]+\\]\\]|\\[\\[|\\]\\]|^\\s+|\\s+$|<[^>]+>|\\\\n", "").trim()
                         .replaceAll("\\r?\\n.*|(?:==.*?==).*", "")
@@ -231,17 +281,16 @@ public class Wiki extends Command {
 
                 if (xy.contains("#REDIRECT")) {
                     String redirect = xy.replaceAll("\\{\\{[^}]+\\}\\}|\\[\\[Category:[^\\]]+\\]\\]|.*\\[\\[|\\]\\].*|^\\s+|\\s+$|<[^>]+>", "");
-                    name = redirect;
                     String newtemp = (FTBWiki + titlesr + redirect).replaceAll(" ", "%20");
                     URL url = new URL(newtemp);
                     url.openConnection().setReadTimeout((int) TimeUnit.SECONDS.toMillis(ReadTimeout));
                     URLConnection x = url.openConnection();
                     BufferedReader br = new BufferedReader(new InputStreamReader(x.getInputStream()));
                     xy = br.readLine();
+                    System.out.println("WIKI REDIRECT -- \n" + br.readLine());
                 }
 
-                String json1 = xy.replaceAll("\n", " ");
-                JsonObject jsonObj = JsonUtils.getJsonObject(json1);
+                JsonObject jsonObj;
 
                 try {
                     name = json.getAsJsonObject("query").getAsJsonArray("search").get(0).getAsJsonObject().get("title").toString().replaceAll("\"", "");
@@ -391,54 +440,6 @@ public class Wiki extends Command {
     @Override
     public void setManager(PermissionManager manager) {
         this.manager = manager;
-    }
-
-    public static String matcher(String text) {
-
-        String pattern = "(\\{\\{L\\|)(.*?)(\\}\\})";
-        String pattern2 = "(\\[\\[#.*?\\|)(.*?)(]])";
-        String pattern3 = "(\\{\\{U\\|)(.*?)(\\}\\})";
-
-        Pattern p = Pattern.compile(pattern);
-        Pattern p2 = Pattern.compile(pattern2);
-        Pattern p3 = Pattern.compile(pattern3);
-        Matcher m;
-
-        StringBuffer buffer = new StringBuffer();
-        StringBuffer buffer2 = new StringBuffer();
-        StringBuffer buffer3 = new StringBuffer();
-
-        try {
-            m = p.matcher(text);
-            String GroupName;
-
-            while (m.find()) {
-                GroupName = m.group(2);
-                m.appendReplacement(buffer, "&&&" + GroupName + "&&&");
-            }
-            m.appendTail(buffer);
-
-            m = p2.matcher(buffer.toString());
-
-            while (m.find()) {
-                GroupName = m.group(2);
-                m.appendReplacement(buffer2, "&&&" + GroupName + "&&&");
-            }
-
-            m.appendTail(buffer2);
-
-            m = p3.matcher(buffer2.toString());
-            while (m.find()) {
-                GroupName = m.group(2);
-                m.appendReplacement(buffer3, "!!!" + GroupName + "!!!");
-            }
-            m.appendTail(buffer3);
-
-        } catch (Exception buffered) {
-            buffered.printStackTrace();
-        }
-
-        return buffer3.toString();
     }
 
 }

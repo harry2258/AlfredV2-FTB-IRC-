@@ -26,7 +26,6 @@ public class Ping extends Command {
             String[] args = event.getMessage().split(" ");
             if (args.length == 2) {
                 String host = args[1].replaceAll("http://|https://|www.", "");
-                String url;
                 Long start = System.currentTimeMillis();
 
                 if (Utils.ValidIP(host)) {

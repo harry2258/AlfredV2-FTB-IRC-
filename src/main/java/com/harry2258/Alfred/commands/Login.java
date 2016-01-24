@@ -17,7 +17,7 @@ public class Login extends Command {
         super("Login", "Log into the bot!", "Login (again/info)");
     }
 
-    public static String Group(String user, String channel) throws Exception {
+    public static String Group(String user, String channel) {
         String group = "None :<";
 
         try {

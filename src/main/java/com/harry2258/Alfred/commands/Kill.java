@@ -24,7 +24,7 @@ public class Kill extends Command {
     private Config config;
     private PermissionManager manager;
 
-    public Kill() {
+    private Kill() {
         super("Kill", "Shuts the bot down.", "Kill");
     }
 

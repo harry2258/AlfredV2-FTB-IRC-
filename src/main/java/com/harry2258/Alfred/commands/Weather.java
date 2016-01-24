@@ -135,6 +135,7 @@ public class Weather extends Command {
             try {
                 Alert = (JsonUtils.getJsonObject(alerts.replaceAll("\n", "")).getAsJsonArray("alerts").get(0).getAsJsonObject().get("description").getAsString().isEmpty()) ? "None" : Colors.BOLD + Colors.RED + JsonUtils.getJsonObject(alerts.replaceAll("\n", "")).getAsJsonArray("alerts").get(0).getAsJsonObject().get("description").getAsString() + Colors.NORMAL + " till " + JsonUtils.getJsonObject(alerts.replaceAll("\n", "")).getAsJsonArray("alerts").get(0).getAsJsonObject().get("expires").getAsString();
             } catch (Exception e) {
+                e.printStackTrace();
             }
 
             MessageUtils.sendChannel(event, city + ", " + state + ": " + Weather + " | " + Temp + " | " + Colors.BOLD + "Humidity" + Colors.NORMAL + ": " + Humidity + " | " + Colors.BOLD + "Winds" + Colors.NORMAL + ": " + Wind + " | Alerts: " + Alert);

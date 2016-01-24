@@ -18,10 +18,7 @@ import java.util.Random;
  */
 
 public class Alfred extends Command {
-    public static ArrayList<Object> answers = new ArrayList<>();
-
-    private Config config;
-    private PermissionManager manager;
+    private static ArrayList<Object> answers = new ArrayList<>();
 
     public Alfred() {
         super("Alfred", "Alfred be ballin'! (8-Ball.. ._. I'll show myself out)");
@@ -35,7 +32,6 @@ public class Alfred extends Command {
         }
         try {
             if (answers.isEmpty()) {
-                Boolean Json = false;
                 Document doc = Jsoup.connect("https://www.dropbox.com/s/dfwe23lx1ogttw7/8ball.json?raw=1").get();
                 JsonObject answer = JsonUtils.getJsonObject(doc.text());
                 ArrayList numbers = (ArrayList) CreeperHost.getKeysFromJson(doc.text());
@@ -54,11 +50,11 @@ public class Alfred extends Command {
 
     @Override
     public void setConfig(Config config) {
-        this.config = config;
+        Config config1 = config;
     }
 
     @Override
     public void setManager(PermissionManager manager) {
-        this.manager = manager;
+        PermissionManager manager1 = manager;
     }
 }

@@ -1,5 +1,6 @@
 package com.harry2258.Alfred.commands;
 
+import com.harry2258.Alfred.Database.Create;
 import com.harry2258.Alfred.Main;
 import com.harry2258.Alfred.api.Command;
 import com.harry2258.Alfred.api.Config;
@@ -19,10 +20,10 @@ import java.util.List;
  */
 public class Error extends Command {
     public static HashMap<String, String> Diagnosis = new HashMap<>();
-    public static HashMap<String, String> Errors = new HashMap<>();
     public static HashMap<String, String> Suggestion = new HashMap<>();
+    private static HashMap<String, String> Errors = new HashMap<>();
     private static Config config;
-    private PermissionManager manager;
+    private static PermissionManager manager;
 
     public Error() {
 
@@ -30,16 +31,7 @@ public class Error extends Command {
     }
 
     private static Connection getConnection() throws SQLException {
-        try {
-            Class.forName("com.mysql.jdbc.Driver");
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-        String host = config.getDatabaseHost();
-        String user = config.getDatabaseUser();
-        String pass = config.getDatabasePass();
-        String database = config.getDatabase();
-        return DriverManager.getConnection("jdbc:mysql://" + host + "/" + database, user, pass);
+        return Create.getConnection(config);
     }
 
     public static void getProblems(String pasteContent, MessageEvent event) {
@@ -148,10 +140,10 @@ public class Error extends Command {
 
     @Override
     public void setManager(PermissionManager manager) {
-        this.manager = manager;
+        Error.manager = manager;
     }
 
-    public void createTables() throws SQLException {
+    private void createTables() throws SQLException {
         Connection conn = getConnection();
         try {
             conn.prepareStatement("CREATE TABLE IF NOT EXISTS Problems ( ID INT NOT NULL AUTO_INCREMENT PRIMARY KEY, Diagnosis VARCHAR(255), Suggestion VARCHAR(255) ) ").execute();
@@ -162,7 +154,7 @@ public class Error extends Command {
         conn.close();
     }
 
-    public void addProblem(String diagnosis, String suggestion, List<String> errors) throws SQLException {
+    private void addProblem(String diagnosis, String suggestion, List<String> errors) throws SQLException {
         Connection conn = getConnection();
         PreparedStatement stmt = conn.prepareStatement("INSERT INTO Problems (Diagnosis, Suggestion) VALUES (?, ?)");
         stmt.setString(1, diagnosis);
@@ -190,9 +182,9 @@ public class Error extends Command {
     public void updateProblem(int ID, String diagnosis, String suggestion, List<String> errors) throws SQLException {
         Connection conn = getConnection();
         PreparedStatement stmt = conn.prepareStatement("UPDATE Problems (Diagnosis, Suggestion) VALUES (?, ?)");
-        stmt.setInt(1, ID);
-        stmt.setString(2, diagnosis);
-        stmt.setString(3, suggestion);
+        //stmt.setInt(1, ID);
+        stmt.setString(1, diagnosis);
+        stmt.setString(2, suggestion);
         stmt.execute();
         stmt.close();
 

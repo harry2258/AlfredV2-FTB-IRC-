@@ -11,12 +11,9 @@ import org.pircbotx.hooks.ListenerAdapter;
 
 public class ActionEvent extends ListenerAdapter {
 
-    private Config config;
-    private PermissionManager manager;
-
     public ActionEvent(Config conf, PermissionManager man) {
-        this.config = conf;
-        this.manager = man;
+        Config config = conf;
+        PermissionManager manager = man;
     }
 
     public void onAction(org.pircbotx.hooks.events.ActionEvent event) throws Exception {

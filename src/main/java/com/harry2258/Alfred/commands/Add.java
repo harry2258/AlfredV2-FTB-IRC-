@@ -26,13 +26,12 @@ import static com.harry2258.Alfred.api.CommandRegistry.commands;
  */
 public class Add extends Command {
     private Config config;
-    private PermissionManager manager;
 
     public Add() {
         super("Add", "Adds the Permission/User to the list", "Add [Group] [User/Permission]");
     }
 
-    public static JsonElement Json(String[] list) {
+    private static JsonElement Json(String[] list) {
         final JsonArray Array = new JsonArray();
         try {
             for (final String tmp : list) {
@@ -45,10 +44,10 @@ public class Add extends Command {
         return Array;
     }
 
-    public static boolean isAdded(User user, String channel, String[] type) throws Exception {
+    private static boolean isAdded(User user, String channel, String[] type) {
         String sender = Main.Login.get(user.getNick());
         Perms perm = Main.map.get(channel.toLowerCase());
-        if (sender == null) return true;
+        if (sender == null) return false;
         if (type[1].equalsIgnoreCase("mod")) {
             for (String users : perm.getPermission().getMods()) {
                 if (users.equalsIgnoreCase(sender)) {
@@ -122,7 +121,7 @@ public class Add extends Command {
                     if (commands.containsKey(Character.toUpperCase(args[2].charAt(0)) + event.getMessage().split(" ")[2].substring(1).toLowerCase()) || new File("plugins/" + Character.toUpperCase(args[2].charAt(0)) + event.getMessage().split(" ")[2].substring(1).toLowerCase() + ".bsh").exists() || args[2].equalsIgnoreCase("custom") || args[2].equalsIgnoreCase("custom.command")) {
                         try {
                             String check = args[2];
-                            String command = null;
+                            String command;
                             if (!check.contains("command.")) {
                                 command = "command." + check;
                             } else {
@@ -198,7 +197,7 @@ public class Add extends Command {
                     if (commands.containsKey(Character.toUpperCase(args[2].charAt(0)) + event.getMessage().split(" ")[2].substring(1).toLowerCase()) || new File("plugins/" + Character.toUpperCase(args[2].charAt(0)) + event.getMessage().split(" ")[2].substring(1).toLowerCase() + ".bsh").exists() || args[2].equalsIgnoreCase("custom") || args[2].equalsIgnoreCase("custom.command")) {
                         try {
                             String check = args[2];
-                            String command = null;
+                            String command;
                             if (!check.contains("command.")) {
                                 command = "command." + check;
                             } else {
@@ -238,7 +237,7 @@ public class Add extends Command {
                         if (commands.containsKey(Character.toUpperCase(args[2].charAt(0)) + event.getMessage().split(" ")[2].substring(1).toLowerCase()) || new File("plugins/" + Character.toUpperCase(args[2].charAt(0)) + event.getMessage().split(" ")[2].substring(1).toLowerCase() + ".bsh").exists()) {
                             try {
                                 String check = args[2];
-                                String command = null;
+                                String command;
                                 if (!check.contains("command.")) {
                                     command = "command." + check;
                                 } else {
@@ -339,7 +338,7 @@ public class Add extends Command {
                     if (commands.containsKey(Character.toUpperCase(args[2].charAt(0)) + event.getMessage().split(" ")[2].substring(1).toLowerCase()) || new File("plugins/" + Character.toUpperCase(args[2].charAt(0)) + event.getMessage().split(" ")[2].substring(1).toLowerCase() + ".bsh").exists() || args[2].equalsIgnoreCase("custom") || args[2].equalsIgnoreCase("custom.command")) {
                         try {
                             String check = args[2];
-                            String command = null;
+                            String command;
                             if (!check.contains("command.")) {
                                 command = "command." + check;
                             } else {
@@ -470,7 +469,7 @@ public class Add extends Command {
 
     @Override
     public void setManager(PermissionManager manager) {
-        this.manager = manager;
+        PermissionManager manager1 = manager;
     }
 
 }
