@@ -63,7 +63,7 @@ public class Permission {
         if (o == this) return true;
         if (!(o instanceof Permission)) return false;
         final Permission other = (Permission) o;
-        if (!other.canEqual((Object) this)) return false;
+        if (!other.canEqual(this)) return false;
         final Object this$mods = this.mods;
         final Object other$mods = other.mods;
         if (this$mods == null ? other$mods != null : !this$mods.equals(other$mods)) return false;
@@ -78,8 +78,7 @@ public class Permission {
         if (this$everyone == null ? other$everyone != null : !this$everyone.equals(other$everyone)) return false;
         final Object this$exec = this.exec;
         final Object other$exec = other.exec;
-        if (this$exec == null ? other$exec != null : !this$exec.equals(other$exec)) return false;
-        return true;
+        return this$exec == null ? other$exec == null : this$exec.equals(other$exec);
     }
 
     public int hashCode() {

@@ -28,8 +28,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import static com.harry2258.Alfred.api.JsonUtils.writeJsonFile;
-
-//import com.harry2258.Alfred.runnables.WebServ;
+//TODO Remove duplicate code!
 
 /**
  * Hello world!
@@ -75,7 +74,6 @@ public class Main {
                         config.load();
                     } else {
                         System.out.println("Connecting to " + config.getDatabaseHost());
-                        System.out.println("jdbc:mysql://" + config.getDatabaseHost() + "/" + config.getDatabase() + " " + config.getDatabaseUser() + " " + config.getDatabasePass());
                         database = DriverManager.getConnection("jdbc:mysql://" + config.getDatabaseHost() + "/" + config.getDatabase(), config.getDatabaseUser(), config.getDatabasePass());
                         config.loadDatabase(database);
                     }

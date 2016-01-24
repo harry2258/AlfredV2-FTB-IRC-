@@ -34,15 +34,14 @@ public class Perms {
         if (o == this) return true;
         if (!(o instanceof Perms)) return false;
         final Perms other = (Perms) o;
-        if (!other.canEqual((Object) this)) return false;
+        if (!other.canEqual(this)) return false;
         final Object this$permission = this.permission;
         final Object other$permission = other.permission;
         if (this$permission == null ? other$permission != null : !this$permission.equals(other$permission))
             return false;
         final Object this$global = this.global;
         final Object other$global = other.global;
-        if (this$global == null ? other$global != null : !this$global.equals(other$global)) return false;
-        return true;
+        return this$global == null ? other$global == null : this$global.equals(other$global);
     }
 
     public int hashCode() {

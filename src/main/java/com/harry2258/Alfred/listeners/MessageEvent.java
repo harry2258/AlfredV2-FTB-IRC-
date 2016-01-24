@@ -1,4 +1,5 @@
 package com.harry2258.Alfred.listeners;
+//TODO Change WHOIS rate and don't WHOIS if said person is in the HashMap already.
 
 import bsh.EvalError;
 import bsh.Interpreter;

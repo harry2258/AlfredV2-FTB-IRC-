@@ -6,6 +6,7 @@ package com.harry2258.Alfred.runnables;
 
 
 import com.harry2258.Alfred.Main;
+import com.harry2258.Alfred.api.Utils;
 import org.pircbotx.PircBotX;
 
 import java.io.BufferedReader;
@@ -26,12 +27,7 @@ public class ChatSocketHandler extends Thread {
     }
 
     public static String Uptime() {
-        Long time = System.currentTimeMillis() - Main.startup;
-        int seconds = (int) (time / 1000) % 60;
-        int minutes = (int) (time / (60000)) % 60;
-        int hours = (int) (time / (3600000)) % 24;
-        int days = (int) (time / 86400000);
-        return String.format("%d Days %d Hours %d Minutes and %d seconds", days, hours, minutes, seconds);
+        return Utils.getUptime();
     }
 
     @Override

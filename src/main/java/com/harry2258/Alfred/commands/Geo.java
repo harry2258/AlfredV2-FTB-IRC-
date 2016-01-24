@@ -35,23 +35,7 @@ public class Geo extends Command {
 
         if (args.length == 3 && PermissionManager.hasExec(event.getUser().getNick()) && args[1].equals("exec")) {
             if (event.getChannel().getUsers().toString().contains(args[2])) {
-                User u = event.getBot().getUserChannelDao().getUser(args[2]);
-                event.getBot().sendRaw().rawLineNow("WHOIS " + u.getNick());
-                WaitForQueue waitForQueue = new WaitForQueue(event.getBot());
-                WhoisEvent test;
-                try {
-                    test = waitForQueue.waitFor(WhoisEvent.class);
-                    waitForQueue.close();
-                    if (Utils.ValidIP(test.getHostname()))
-                        ip = test.getHostname();
-                    else
-                        ip = java.net.InetAddress.getByName(test.getHostname()).getHostAddress();
-                } catch (InterruptedException ex) {
-                    Logger.getLogger(com.harry2258.Alfred.listeners.MessageEvent.class.getName()).log(Level.SEVERE, null, ex);
-
-                } catch (UnknownHostException e) {
-                    e.printStackTrace();
-                }
+                ip = Utils.getIP(args[2], event);
             } else {
                 if (Utils.ValidIP(args[2]))
                     ip = args[2];

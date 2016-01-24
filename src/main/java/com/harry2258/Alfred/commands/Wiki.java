@@ -1,5 +1,5 @@
 package com.harry2258.Alfred.commands;
-
+//TODO Fix Regex
 import com.google.gson.JsonObject;
 import com.harry2258.Alfred.api.*;
 import org.pircbotx.Colors;
@@ -31,21 +31,11 @@ public class Wiki extends Command {
         StringBuilder sb = new StringBuilder();
         String[] args = event.getMessage().split(" ");
 
-        String pattern = "(\\{\\{L\\|)(.*?)(\\}\\})";
-        String pattern2 = "(\\[\\[#.*?\\|)(.*?)(]])";
-        String pattern3 = "(\\{\\{U\\|)(.*?)(\\}\\})";
-
         String FTBWiki = "http://ftb.gamepedia.com/";
         String ftborg = "http://ftbwiki.org/";
 
         String titlesr = "api.php?&action=query&prop=revisions&rvprop=content&format=json&titles=";
         String QueryAllPages = "api.php?format=json&action=query&list=search&srsearch=";
-
-        Pattern p = Pattern.compile(pattern);
-        Pattern p2 = Pattern.compile(pattern2);
-        Pattern p3 = Pattern.compile(pattern3);
-        Matcher m;
-
 
         if (args.length == 1) {
             MessageUtils.sendChannel(event, "Official FTB Wiki: http://ftb.gamepedia.com/");
@@ -102,39 +92,8 @@ public class Wiki extends Command {
 
             String APItest = jsonObj.getAsJsonObject("query").getAsJsonObject("pages").getAsJsonObject(id).getAsJsonArray("revisions").get(0).getAsJsonObject().get("*").toString();
 
-            StringBuffer buffer = new StringBuffer();
-            StringBuffer buffer2 = new StringBuffer();
-            StringBuffer buffer3 = new StringBuffer();
 
-            try {
-                m = p.matcher(APItest);
-                String GroupName;
-
-                while (m.find()) {
-                    GroupName = m.group(2);
-                    m.appendReplacement(buffer, "&&&" + GroupName + "&&&");
-                }
-                m.appendTail(buffer);
-
-                m = p2.matcher(buffer.toString());
-                while (m.find()) {
-                    GroupName = m.group(2);
-                    m.appendReplacement(buffer2, "&&&" + GroupName + "&&&");
-                }
-                m.appendTail(buffer2);
-
-                m = p3.matcher(buffer2.toString());
-                while (m.find()) {
-                    GroupName = m.group(2);
-                    m.appendReplacement(buffer3, "&&&" + GroupName + "&&&");
-                }
-                m.appendTail(buffer3);
-
-            } catch (Exception buffered) {
-                buffered.printStackTrace();
-            }
-
-            String working = buffer3.toString();
+            String working = matcher(APItest);
 
             String df = working.replaceAll("\\{\\{[^}]+\\}\\}|\\[\\[Category:[^\\]]+\\]\\]|\\[\\[|\\]\\]|^\\s+|\\s+$|<[^>]+>|\\\\n", "").trim()
                     .replaceAll("\\r?\\n.*|(?:==.*?==).*", "")
@@ -202,41 +161,8 @@ public class Wiki extends Command {
 
                 String APItest = jsonObj.getAsJsonObject("query").getAsJsonObject("pages").getAsJsonObject(id).getAsJsonArray("revisions").get(0).getAsJsonObject().get("*").toString();
                 System.out.println(APItest);
-                StringBuffer buffer = new StringBuffer();
-                StringBuffer buffer2 = new StringBuffer();
-                StringBuffer buffer3 = new StringBuffer();
 
-                try {
-                    m = p.matcher(APItest);
-                    String GroupName;
-
-                    while (m.find()) {
-                        GroupName = m.group(2);
-                        m.appendReplacement(buffer, "&&&" + GroupName + "&&&");
-                    }
-                    m.appendTail(buffer);
-
-                    m = p2.matcher(buffer.toString());
-
-                    while (m.find()) {
-                        GroupName = m.group(2);
-                        m.appendReplacement(buffer2, "&&&" + GroupName + "&&&");
-                    }
-
-                    m.appendTail(buffer2);
-
-                    m = p3.matcher(buffer2.toString());
-                    while (m.find()) {
-                        GroupName = m.group(2);
-                        m.appendReplacement(buffer3, "!!!" + GroupName + "!!!");
-                    }
-                    m.appendTail(buffer3);
-
-                } catch (Exception buffered) {
-                    buffered.printStackTrace();
-                }
-
-                String working = buffer3.toString();
+                String working =matcher(APItest);
                 System.out.println(working);
                 String df = working.replaceAll("\\{\\{[^}]+\\}\\}|\\[\\[Category:[^\\]]+\\]\\]|\\[\\[|\\]\\]|^\\s+|\\s+$|<[^>]+>|\\\\n", "").trim()
                         .replaceAll("\\r?\\n.*|(?:==.*?==).*", "")
@@ -333,40 +259,7 @@ public class Wiki extends Command {
 
                 String APItest = jsonObj.getAsJsonObject("query").getAsJsonObject("pages").getAsJsonObject(id).getAsJsonArray("revisions").get(0).getAsJsonObject().get("*").toString();
 
-                StringBuffer buffer = new StringBuffer();
-                StringBuffer buffer2 = new StringBuffer();
-                StringBuffer buffer3 = new StringBuffer();
-
-                try {
-                    m = p.matcher(APItest);
-                    String GroupName;
-
-                    while (m.find()) {
-                        GroupName = m.group(2);
-                        m.appendReplacement(buffer, "&&&" + GroupName + "&&&");
-                    }
-                    m.appendTail(buffer);
-
-                    m = p2.matcher(buffer.toString());
-
-                    while (m.find()) {
-                        GroupName = m.group(2);
-                        m.appendReplacement(buffer2, "&&&" + GroupName + "&&&");
-                    }
-
-                    m.appendTail(buffer2);
-                    m = p3.matcher(buffer2.toString());
-                    while (m.find()) {
-                        GroupName = m.group(2);
-                        m.appendReplacement(buffer3, "!!!" + GroupName + "!!!");
-                    }
-                    m.appendTail(buffer3);
-
-                } catch (Exception buffered) {
-                    buffered.printStackTrace();
-                }
-
-                String working = buffer3.toString();
+                String working = matcher(APItest);
 
                 String df = working.replaceAll("\\{\\{[^}]+\\}\\}|\\[\\[Category:[^\\]]+\\]\\]|\\[\\[|\\]\\]|^\\s+|\\s+$|<[^>]+>|\\\\n", "").trim()
                         .replaceAll("\\r?\\n.*|(?:==.*?==).*", "")
@@ -448,42 +341,7 @@ public class Wiki extends Command {
 
             String APItest = jsonObj.getAsJsonObject("query").getAsJsonObject("pages").getAsJsonObject(id).getAsJsonArray("revisions").get(0).getAsJsonObject().get("*").toString();
 
-            StringBuffer buffer = new StringBuffer();
-            StringBuffer buffer2 = new StringBuffer();
-            StringBuffer buffer3 = new StringBuffer();
-
-            System.out.println(APItest);
-            try {
-                m = p.matcher(APItest);
-                String GroupName;
-
-                while (m.find()) {
-                    GroupName = m.group(2);
-                    m.appendReplacement(buffer, "&&&" + GroupName + "&&&");
-                }
-                m.appendTail(buffer);
-                System.out.println(buffer.toString());
-                m = p2.matcher(buffer.toString());
-
-                while (m.find()) {
-                    GroupName = m.group(2);
-                    m.appendReplacement(buffer2, "&&&" + GroupName + "&&&");
-                }
-
-                m.appendTail(buffer2);
-                System.out.println(buffer2.toString());
-                m = p3.matcher(buffer2.toString());
-                while (m.find()) {
-                    GroupName = m.group(2);
-                    m.appendReplacement(buffer3, "!!!" + GroupName + "!!!");
-                }
-                m.appendTail(buffer3);
-                System.out.println(buffer3.toString());
-            } catch (Exception buffered) {
-                buffered.printStackTrace();
-            }
-
-            String working = buffer3.toString();
+            String working = matcher(APItest);
 
             String df = working.replaceAll("\\{\\{[^}]+\\}\\}|\\[\\[Category:[^\\]]+\\]\\]|\\[\\[|\\]\\]|^\\s+|\\s+$|<[^>]+>|\\\\n", "").trim()
                     .replaceAll("\\r?\\n.*|(?:==.*?==).*", "")
@@ -534,4 +392,53 @@ public class Wiki extends Command {
     public void setManager(PermissionManager manager) {
         this.manager = manager;
     }
+
+    public static String matcher(String text) {
+
+        String pattern = "(\\{\\{L\\|)(.*?)(\\}\\})";
+        String pattern2 = "(\\[\\[#.*?\\|)(.*?)(]])";
+        String pattern3 = "(\\{\\{U\\|)(.*?)(\\}\\})";
+
+        Pattern p = Pattern.compile(pattern);
+        Pattern p2 = Pattern.compile(pattern2);
+        Pattern p3 = Pattern.compile(pattern3);
+        Matcher m;
+
+        StringBuffer buffer = new StringBuffer();
+        StringBuffer buffer2 = new StringBuffer();
+        StringBuffer buffer3 = new StringBuffer();
+
+        try {
+            m = p.matcher(text);
+            String GroupName;
+
+            while (m.find()) {
+                GroupName = m.group(2);
+                m.appendReplacement(buffer, "&&&" + GroupName + "&&&");
+            }
+            m.appendTail(buffer);
+
+            m = p2.matcher(buffer.toString());
+
+            while (m.find()) {
+                GroupName = m.group(2);
+                m.appendReplacement(buffer2, "&&&" + GroupName + "&&&");
+            }
+
+            m.appendTail(buffer2);
+
+            m = p3.matcher(buffer2.toString());
+            while (m.find()) {
+                GroupName = m.group(2);
+                m.appendReplacement(buffer3, "!!!" + GroupName + "!!!");
+            }
+            m.appendTail(buffer3);
+
+        } catch (Exception buffered) {
+            buffered.printStackTrace();
+        }
+
+        return buffer3.toString();
+    }
+
 }

@@ -86,7 +86,7 @@ public class Exec extends Command {
 
     @Override
     public void setConfig(Config config) {
-        this.config = config;
+        Exec.config = config;
     }
 
     @Override
