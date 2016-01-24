@@ -9,3 +9,9 @@ notifications:
   template:
    - "%{repository}# - %{build_number} (%{branch} - %{commit} : %{author}): %{message}"
    - "Build details : %{build_url}"
+ webhooks:
+    urls:
+      - https://webhooks.gitter.im/e/c90493cf44a2ece5b843
+    on_success: always  # options: [always|never|change] default: always
+    on_failure: always  # options: [always|never|change] default: always
+    on_start: never     # options: [always|never|change] default: always
