@@ -38,7 +38,7 @@ public class Exec extends Command {
         }
     }
 
-    private Exec() {
+    public Exec() {
         super("Exec", "Execute java code at runtime", "Exec <code> ex. exec chan.send().message(\"Hello World!\");");
     }
 

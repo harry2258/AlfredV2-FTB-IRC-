@@ -57,7 +57,7 @@ public abstract class Command {
      *
      * @return the command's description
      */
-    protected String getDescription() {
+    public String getDescription() {
         return this.description;
     }
 

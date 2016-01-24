@@ -68,7 +68,7 @@ public class InviteEvent extends ListenerAdapter {
             if (config.useDatabase) {
                 try {
                     Create.AddChannel(event.getChannel(), Main.database);
-                } catch (SQLException s) {
+                } catch (Exception s) {
                     s.printStackTrace();
                 }
             }
