@@ -373,8 +373,9 @@ public class Utils {
     public static String getDrama() {
         String drama = null;
         try {
-            Document doc = Jsoup.connect("http://mc-drama.herokuapp.com/").get();
-            drama = doc.body().getElementsByTag("h2").text();
+            URL url = new URL("http://mc-drama.herokuapp.com/raw");
+            BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
+            drama = in.readLine();
         } catch (Exception e) {
             e.printStackTrace();
         }
