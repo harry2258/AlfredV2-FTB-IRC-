@@ -114,7 +114,6 @@ public class Main {
                 //i have no idea what this is, but IDEA wouldn't shut the fuck up about changing it.
                 Configuration.Builder builder = new Configuration.Builder();
                 builder.setName(config.getBotNickname());
-                builder.setAutoNickChange(true);
                 builder.setRealName(config.getBotUsername());
                 builder.setLogin(config.getBotIdent());
                 builder.setFinger(config.getCtcpFinger());
@@ -208,6 +207,7 @@ public class Main {
                     new Thread(new Update(bot, config)).start();
                 }
                 //new Thread(new RecentChanges(bot)).start();
+
                 bot.startBot();
 
             } catch (Exception ex) {

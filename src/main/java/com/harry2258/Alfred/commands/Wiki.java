@@ -8,7 +8,6 @@ import org.pircbotx.hooks.events.MessageEvent;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
@@ -23,11 +22,6 @@ public class Wiki extends Command {
 
     private Config config;
     private PermissionManager manager;
-
-    private static int ReadTimeout = 10; // in Seconds
-
-    private static String QueryAllPages = "api.php?format=json&action=query&list=search&srsearch=";
-    private static String titlesr = "api.php?&action=query&prop=revisions&rvprop=content&format=json&titles=";
 
     public Wiki() {
         super("Wiki", "Wiki Minecraft stuff!", "Wiki [Query]");
@@ -86,6 +80,12 @@ public class Wiki extends Command {
         StringBuilder sb = new StringBuilder();
         String[] args = event.getMessage().split(" ");
 
+        String FTBWiki = "http://ftb.gamepedia.com/";
+        String ftborg = "http://ftbwiki.org/";
+
+        String titlesr = "api.php?&action=query&prop=revisions&rvprop=content&format=json&titles=";
+        String QueryAllPages = "api.php?format=json&action=query&list=search&srsearch=";
+
         if (args.length == 1) {
             MessageUtils.sendChannel(event, "Official FTB Wiki: http://ftb.gamepedia.com/");
             return true;
@@ -107,40 +107,23 @@ public class Wiki extends Command {
             message = URLEncoder.encode(test, "UTF-8").replaceAll("\\+", "_");
         }
 
-        String Text;
 
+        String name;
+        String info;
+        String xy;
+        String searchJson;
+        String id;
+        int ReadTimeout = 10; // in Seconds
 
-        if ((Text = MinecraftWiki(message)) != null) {
-            MessageUtils.sendChannel(event, Text);
-            return true;
-        }
-
-        if ((Text = FTBGamepedia(message)) != null) {
-            MessageUtils.sendChannel(event, Text);
-            return true;
-        }
-
-        if ((Text = FTBwiki(message)) != null) {
-            MessageUtils.sendChannel(event, Text);
-            return true;
-        }
-
-        MessageUtils.sendChannel(event, "The item/block was not found on The Minecraft Wiki, The Official FTB, or on ftbwiki.org | Are you sure you spelled it right?");
-
-        return true;
-    }
-
-    public static String MinecraftWiki(String message) {
-        String Result;
-
-
+        boolean exist = true;
+        boolean timeout = false;
         try {
             URL vanilla = new URL("http://minecraft.gamepedia.com/api.php?&action=query&titles=" + message + "&prop=revisions&rvprop=content&format=json");
             URLConnection c = vanilla.openConnection();
             c.setReadTimeout((int) TimeUnit.SECONDS.toMillis(ReadTimeout));
             c.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/537.17 (KHTML, like Gecko) Chrome/24.0.1312.57 Safari/537.17");
             BufferedReader in = new BufferedReader(new InputStreamReader(c.getInputStream()));
-            String xy = in.readLine();
+            xy = in.readLine();
 
             if (xy.contains("#REDIRECT")) {
                 String redirect = xy.replaceAll("\\{\\{[^}]+\\}\\}|\\[\\[Category:[^\\]]+\\]\\]|.*\\[\\[|\\]\\].*|^\\s+|\\s+$|<[^>]+>", "");
@@ -154,7 +137,7 @@ public class Wiki extends Command {
 
             String json1 = xy.replaceAll("\n", " ");
             //TODO Fix this regex!!
-            String id = json1.replaceAll("[{\"/>}{\\\\']", "").replaceAll(".*(?:pages:)|(?::pageid.*)", "");
+            id = json1.replaceAll("[{\"/>}{\\\\']", "").replaceAll(".*(?:pages:)|(?::pageid.*)", "");
             JsonObject jsonObj = JsonUtils.getJsonObject(json1);
 
             String APItest = jsonObj.getAsJsonObject("query").getAsJsonObject("pages").getAsJsonObject(id).getAsJsonArray("revisions").get(0).getAsJsonObject().get("*").toString();
@@ -168,7 +151,7 @@ public class Wiki extends Command {
                     .replaceAll("(?:\\{\\{.*?\\}\\})", "").replaceAll("&&&", "");
 
             String fd = df.replaceAll("'''", Colors.BOLD).replaceAll("''", Colors.UNDERLINE).replaceAll("\"", "").replaceAll("===", Colors.BOLD + " ").replaceAll("==", Colors.BOLD + " ");
-            String info = fd;
+            info = fd;
             if (fd.length() > 220) {
                 int maxLength = (fd.length() < 220) ? fd.length() : 220;
                 info = fd.substring(0, maxLength) + "...";
@@ -182,33 +165,18 @@ public class Wiki extends Command {
                 URL = x;
             }
 
-            Result = info + " [ " + URL + " ]";
-
+            MessageUtils.sendChannel(event, info + " [ " + URL + " ]");
+            return true;
         } catch (Exception derp) {
             //derp.printStackTrace();
-            Result = null;
-            System.out.println("Could not find " + message + " on Official Minecraft Gamepedia Wiki");
+            System.out.println("Could not find " + message + " on Gamepedia");
         }
-
-        return Result;
-    }
-
-    public static String FTBGamepedia(String message) {
-        String Result = null;
-
-        String name;
-
-        String FTBWiki = "http://ftb.gamepedia.com/";
-
-        boolean exist = true;
-        boolean timeout = false;
 
         try {
             URL z = new URL("http://ftb.gamepedia.com/" + message);
-            URLConnection y = z.openConnection();;
+            URLConnection y = z.openConnection();
             y.setReadTimeout((int) TimeUnit.SECONDS.toMillis(ReadTimeout));
             y.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/537.17 (KHTML, like Gecko) Chrome/24.0.1312.57 Safari/537.17");
-            System.out.println(y.getURL());
             BufferedReader first = new BufferedReader(new InputStreamReader(y.getInputStream()));
             String tmp;
 
@@ -220,12 +188,11 @@ public class Wiki extends Command {
 
             if (exist) {
                 String temp = (FTBWiki + titlesr + message);
-                System.out.println(FTBWiki + titlesr + message);
                 URL u = new URL(temp);
                 URLConnection c = u.openConnection();
                 c.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/537.17 (KHTML, like Gecko) Chrome/24.0.1312.57 Safari/537.17");
                 BufferedReader in = new BufferedReader(new InputStreamReader(c.getInputStream()));
-                String xy = in.readLine();
+                xy = in.readLine();
 
                 if (xy.contains("#REDIRECT")) {
                     String redirect = xy.replaceAll("\\{\\{[^}]+\\}\\}|\\[\\[Category:[^\\]]+\\]\\]|.*\\[\\[|\\]\\].*|^\\s+|\\s+$|<[^>]+>", "");
@@ -239,24 +206,21 @@ public class Wiki extends Command {
                 }
 
                 String json1 = xy.replaceAll("\n", " ");
-                String id = json1.replaceAll("[{\"/>}{\\\\']", "").replaceAll(".*(?:pages:)|(?::pageid.*)", "");
+                id = json1.replaceAll("[{\"/>}{\\\\']", "").replaceAll(".*(?:pages:)|(?::pageid.*)", "");
                 JsonObject jsonObj = JsonUtils.getJsonObject(json1);
-
-                if (jsonObj.getAsJsonObject("query").get("pages").toString().contains("Vanilla|type=")) {
-                    return jsonObj.getAsJsonObject("query").getAsJsonObject("pages").getAsJsonObject(id).get("title").getAsString().replaceAll("\"","") + " [Vanilla] " + ("http://minecraft.gamepedia.com/" + message);
-                }
 
                 String APItest = jsonObj.getAsJsonObject("query").getAsJsonObject("pages").getAsJsonObject(id).getAsJsonArray("revisions").get(0).getAsJsonObject().get("*").toString();
                 System.out.println(APItest);
 
                 String working = matcher(APItest);
+                System.out.println(working);
                 String df = working.replaceAll("\\{\\{[^}]+\\}\\}|\\[\\[Category:[^\\]]+\\]\\]|\\[\\[|\\]\\]|^\\s+|\\s+$|<[^>]+>|\\\\n", "").trim()
                         .replaceAll("\\r?\\n.*|(?:==.*?==).*", "")
                         .replaceAll("\\S+\\|(\\S+)", "$1")
                         .replaceAll("(?:\\{\\{.*?\\}\\})", "").replaceAll("&&&", "").replaceAll("!!!", Colors.UNDERLINE);
 
                 String fd = df.replaceAll("'''", Colors.BOLD).replaceAll("''", Colors.UNDERLINE).replaceAll("\"", "").replaceAll("===", Colors.BOLD + " ").replaceAll("==", Colors.BOLD + " ");
-                String info = fd;
+                info = fd;
                 if (fd.length() > 220) {
                     int maxLength = (fd.length() < 220) ? fd.length() : 220;
                     info = fd.substring(0, maxLength) + "...";
@@ -275,18 +239,21 @@ public class Wiki extends Command {
                     URL = x;
                 }
 
-                Result = info + " [ " + URL + " ]";
+                MessageUtils.sendChannel(event, info + " [ " + URL + " ]");
+                return true;
             }
         } catch (Exception x) {
             x.printStackTrace();
             if (x.getMessage().contains("Read timed out")) {
-                //MessageUtils.sendUserNotice(event, "Connection timed-out while connecting to the Official Wiki");
+                MessageUtils.sendUserNotice(event, "Connection timed-out while connecting to the Official Wiki");
                 timeout = true;
             }
             System.out.println("[Try 1] Could not find " + message + " on Official FTB Wiki");
+
         }
 
-        if (timeout) {
+        //---------------------------------------------------------------------------
+        if (!timeout) {
             try {
                 URL read;
                 read = new URL(FTBWiki + QueryAllPages + message);
@@ -297,7 +264,7 @@ public class Wiki extends Command {
 
                 String search = xx.readLine();
                 JsonObject json = JsonUtils.getJsonObject(search);
-                String searchJson = json.getAsJsonObject("query").getAsJsonArray("search").get(0).getAsJsonObject().get("title").toString();
+                searchJson = json.getAsJsonObject("query").getAsJsonArray("search").get(0).getAsJsonObject().get("title").toString();
                 if (searchJson.contains("Getting Started")) {
                     searchJson = json.getAsJsonObject("query").getAsJsonArray("search").get(1).getAsJsonObject().get("title").toString();
                 }
@@ -306,11 +273,11 @@ public class Wiki extends Command {
                 } else {
                     name = (searchJson).replace("/ko", "").replaceAll("/ru", "").replaceAll("/fr", "").replaceAll("/zh", "").replaceAll("/pl", "");
                 }
-                String temp = (FTBWiki + titlesr + name.replaceAll("\"", "")).replaceAll(" ", "%20");
+                String temp = (FTBWiki + titlesr + name).replaceAll(" ", "%20");
                 URL u = new URL(temp);
                 URLConnection d = u.openConnection();
                 BufferedReader in = new BufferedReader(new InputStreamReader(d.getInputStream()));
-                String xy = in.readLine();
+                xy = in.readLine();
 
                 if (xy.contains("#REDIRECT")) {
                     String redirect = xy.replaceAll("\\{\\{[^}]+\\}\\}|\\[\\[Category:[^\\]]+\\]\\]|.*\\[\\[|\\]\\].*|^\\s+|\\s+$|<[^>]+>", "");
@@ -324,7 +291,7 @@ public class Wiki extends Command {
                 }
 
                 JsonObject jsonObj;
-                String id;
+
                 try {
                     name = json.getAsJsonObject("query").getAsJsonArray("search").get(0).getAsJsonObject().get("title").toString().replaceAll("\"", "");
                     URL newTitle = new URL(FTBWiki + titlesr + name);
@@ -336,7 +303,7 @@ public class Wiki extends Command {
                     id = (xy.replaceAll("\n", " ")).replaceAll("[{\"/>}{\\\\']", "").replaceAll(".*(?:pages:)|(?::pageid.*)", "");
                 } catch (Exception e) {
                     e.printStackTrace();
-                    return null;
+                    return false;
                 }
 
                 String APItest = jsonObj.getAsJsonObject("query").getAsJsonObject("pages").getAsJsonObject(id).getAsJsonArray("revisions").get(0).getAsJsonObject().get("*").toString();
@@ -349,7 +316,7 @@ public class Wiki extends Command {
                         .replaceAll("(?:\\{\\{.*?\\}\\})", "").replaceAll("&&&", "").replaceAll("!!!", Colors.UNDERLINE);
 
                 String fd = df.replaceAll("'''", Colors.BOLD).replaceAll("''", Colors.UNDERLINE).replaceAll("\"", "").replaceAll("===", Colors.BOLD + " ").replaceAll("==", Colors.BOLD + " ");
-                String info = fd;
+                info = fd;
                 if (fd.length() > 220) {
                     int maxLength = (fd.length() < 220) ? fd.length() : 220;
                     info = fd.substring(0, maxLength) + "...";
@@ -368,35 +335,24 @@ public class Wiki extends Command {
                     URL = x;
                 }
 
-                Result = info + " [ " + URL + " ]";
+                MessageUtils.sendChannel(event, info + " [ " + URL + " ]");
+                return true;
             } catch (Exception e) {
                 e.printStackTrace();
                 //event.respond(e.getLocalizedMessage());
                 System.out.println("[Try 2] Could not find " + message + " on Official FTB Wiki");
-                return null;
             }
         }
 
-        return Result;
-    }
-
-    public static String FTBwiki(String message) throws UnsupportedEncodingException {
-        String Result;
-
-        String ftborg = "http://ftbwiki.org/";
-
-        String name;
-        String id;
-        String info;
-
+        //------------------------------
         try {
             URL read;
-            read = new URL(ftborg + QueryAllPages + message);
+            read = new URL(ftborg + QueryAllPages + URLEncoder.encode(sb.toString().trim(), "UTF-8"));
             read.openConnection().setReadTimeout((int) TimeUnit.SECONDS.toMillis(ReadTimeout));
             BufferedReader xx = new BufferedReader(new InputStreamReader(read.openStream()));
             String search = xx.readLine();
             JsonObject json = JsonUtils.getJsonObject(search);
-            String searchJson = json.getAsJsonObject("query").getAsJsonArray("search").get(0).getAsJsonObject().get("title").toString();
+            searchJson = json.getAsJsonObject("query").getAsJsonArray("search").get(0).getAsJsonObject().get("title").toString();
 
             if (searchJson.contains("Getting Started")) {
                 searchJson = json.getAsJsonObject("query").getAsJsonArray("search").get(1).getAsJsonObject().get("title").toString();
@@ -421,14 +377,15 @@ public class Wiki extends Command {
             u.openConnection().setReadTimeout((int) TimeUnit.SECONDS.toMillis(ReadTimeout));
             URLConnection c = u.openConnection();
             BufferedReader in = new BufferedReader(new InputStreamReader(c.getInputStream()));
-            String xy = in.readLine();
+            xy = in.readLine();
 
             String json1 = xy.replaceAll("\n", " ");
             id = json1.replaceAll("[{\"/>}{\\\\']", "").replaceAll(".*(?:pages:)|(?::pageid.*)", "");
             JsonObject jsonObj = JsonUtils.getJsonObject(json1);
 
             if (jsonObj.getAsJsonObject("query").get("pages").toString().contains("Vanilla|type=")) {
-                return name + " (Vanilla):" + ("http://minecraft.gamepedia.com/" + name).replaceAll(" ", "_");
+                MessageUtils.sendChannel(event, name + " (Vanilla):" + ("http://minecraft.gamepedia.com/" + name).replaceAll(" ", "_"));
+                return true;
             }
 
             String APItest = jsonObj.getAsJsonObject("query").getAsJsonObject("pages").getAsJsonObject(id).getAsJsonArray("revisions").get(0).getAsJsonObject().get("*").toString();
@@ -439,6 +396,7 @@ public class Wiki extends Command {
                     .replaceAll("\\r?\\n.*|(?:==.*?==).*", "")
                     .replaceAll("\\S+\\|(\\S+)", "$1")
                     .replaceAll(".*(?:}})", "").replaceAll("&&&", "").replaceAll("!!!", Colors.UNDERLINE);
+            System.out.println(df);
             String fd = df.replaceAll("'''", Colors.BOLD).replaceAll("''", Colors.UNDERLINE).replaceAll("\"", "").replaceAll("===", Colors.BOLD + " ").replaceAll("==", Colors.BOLD + " ");
             info = fd;
             if (fd.length() > 220) {
@@ -447,9 +405,12 @@ public class Wiki extends Command {
             }
 
         } catch (Exception x) {
-            x.printStackTrace();
+            //x.printStackTrace();
             System.out.println("Could not find " + message + " on ftbwiki.org");
-            return null;
+            if (x.getMessage().contains("504"))
+                MessageUtils.sendUserNotice(event, "Connection timed-out while connecting to the ftbwiki.org");
+            MessageUtils.sendChannel(event, "http://youtu.be/gvdf5n-zI14  |  Please check your spelling!  | The item/block was not found on The Minecraft Wiki, The Official FTB, and ftbwiki.org");
+            return true;
         }
 
         String x;
@@ -466,9 +427,9 @@ public class Wiki extends Command {
             URL = x;
         }
 
-        Result = info + " [ " + URL + " ]";
+        MessageUtils.sendChannel(event, info + " [ " + URL + " ]");
 
-        return Result;
+        return true;
     }
 
     @Override
