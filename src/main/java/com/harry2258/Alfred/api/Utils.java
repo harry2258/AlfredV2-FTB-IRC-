@@ -373,15 +373,13 @@ public class Utils {
     public static String getDrama() {
         String drama = null;
         try {
-            URL url = new URL("http://mc-drama.herokuapp.com/raw");
-            BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
-            drama = in.readLine();
+            Document doc = Jsoup.connect("http://mc-drama.herokuapp.com/raw").get();
+            drama = doc.text();
         } catch (Exception e) {
             e.printStackTrace();
         }
         return drama;
     }
-
 
     public static void Parser(File file) {
         JsonObject obj = new JsonObject();
