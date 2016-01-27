@@ -8,6 +8,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.harry2258.Alfred.Main;
+import com.harry2258.Alfred.Misc.CreeperHost;
 import com.harry2258.Alfred.json.Perms;
 import com.harry2258.Alfred.listeners.MessageEvent;
 import org.apache.commons.io.IOUtils;
@@ -141,13 +142,26 @@ public class Utils {
             URL url = new URL("https://status.mojang.com/check");
             BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream()));
             String result;
+
             while ((result = reader.readLine()) != null) {
-                String a = result.replace("red", Colors.RED + "✘" + Colors.NORMAL).replace("green", Colors.DARK_GREEN + "✓" + Colors.NORMAL).replace("yellow", Colors.YELLOW + "~" + Colors.NORMAL).replace("[", "").replace("]", "").replace("{", "").replace("}", "").replace(":", ": ").replace("\"", "").replace("session.", "Legacy Session.").replace("server", " Server");
-                String[] c = a.replaceAll(".minecraft.net", "").replaceAll(".mojang.com|.net", "").split(",");
+                String a = result.replace("red", Colors.RED + "✘" + Colors.NORMAL)
+                        .replace("green", Colors.DARK_GREEN + "✓" + Colors.NORMAL)
+                        .replace("yellow", Colors.YELLOW + "~" + Colors.NORMAL)
+                        .replace("[", "").replace("]", "").replace("{", "")
+                        .replace("}", "").replace(":", ": ").replace("\"", "")
+                        .replace("session.", "Legacy Session.")
+                        .replace("server", " Server");
+
+                String[] c = a.replaceAll("\\.minecraft.net", "")
+                        .replaceAll("\\.mojang.com|.net", "")
+                        .replaceAll("\\.com", "")
+                        .split(",");
+
                 for (String tmp : c) {
                     returns += Character.toUpperCase(tmp.charAt(0)) + tmp.substring(1).toLowerCase() + " | ";
                 }
             }
+
             reader.close();
         } catch (IOException e) {
             if (e.getMessage().contains("503")) {
