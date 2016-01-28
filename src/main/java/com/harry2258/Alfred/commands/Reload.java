@@ -8,6 +8,7 @@ import org.pircbotx.hooks.events.MessageEvent;
 import java.io.File;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 
 /**
  * Created by Hardik on 1/15/14.
@@ -21,43 +22,52 @@ public class Reload extends Command {
     }
 
     @Override
-    public boolean execute(MessageEvent event) throws Exception {
+    public boolean execute(MessageEvent event){
         if (!config.useDatabase) {
-            Main.map.remove(event.getChannel().getName().toLowerCase());
-            File file = new File(System.getProperty("user.dir") + "/perms/" + event.getChannel().getName().toLowerCase() + "/" + "perms.json");
-            if (!file.exists()) {
-                System.out.println("Creating perms.json for " + event.getChannel());
-                JsonUtils.createJsonStructure(file);
-            }
-            String perms = JsonUtils.getStringFromFile(file.toString());
-            Perms p = JsonUtils.getPermsFromString(perms);
-            Main.map.put(event.getChannel().getName(), p);
+            try {
+                Main.map.remove(event.getChannel().getName().toLowerCase());
+                File file = new File(System.getProperty("user.dir") + "/perms/" + event.getChannel().getName().toLowerCase() + "/" + "perms.json");
+                if (!file.exists()) {
+                    System.out.println("Creating perms.json for " + event.getChannel());
+                    JsonUtils.createJsonStructure(file);
+                }
+                String perms= JsonUtils.getStringFromFile(file.toString());
+                Perms p = JsonUtils.getPermsFromString(perms);
+                Main.map.put(event.getChannel().getName(), p);
 
-            MessageUtils.sendUserNotice(event, "Permissions were reloaded for " + event.getChannel().getName().toLowerCase() + "!");
-            return true;
+                MessageUtils.sendUserNotice(event, "Permissions were reloaded for " + event.getChannel().getName().toLowerCase() + "!");
+                return true;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         } else {
-            PreparedStatement stmt3 = Main.database.prepareStatement("SELECT a.Channel, a.Permission, a.URL FROM `Channel_Permissions` a, `Rejoin_Channels` b WHERE a.Channel = b.Channel;");
-            ResultSet rs3 = stmt3.executeQuery();
-            while (rs3.next()) {
-                String channel = rs3.getString("Channel");
-                Main.URL.put(channel, rs3.getString("URL"));
-                Perms p = JsonUtils.getPermsFromString(rs3.getString("Permission"));
-                Main.map.remove(channel.toLowerCase());
-                Main.map.put(channel.toLowerCase(), p);
-                System.out.println("Loaded setting for channel: " + channel);
+            PreparedStatement stmt3 = null;
+            try {
+                stmt3 = Main.database.prepareStatement("SELECT a.Channel, a.Permission, a.URL FROM `Channel_Permissions` a, `Rejoin_Channels` b WHERE a.Channel = b.Channel;");
+                ResultSet rs3 = stmt3.executeQuery();
+                while (rs3.next()) {
+                    String channel = rs3.getString("Channel");
+                    Main.URL.put(channel, rs3.getString("URL"));
+                    Perms p = JsonUtils.getPermsFromString(rs3.getString("Permission"));
+                    Main.map.remove(channel.toLowerCase());
+                    Main.map.put(channel.toLowerCase(), p);
+                    System.out.println("Loaded setting for channel: " + channel);
+                }
+
+                stmt3 = Main.database.prepareStatement("SELECT * FROM `Ignored_Users`");
+                rs3 = stmt3.executeQuery();
+
+                while (rs3.next()) {
+                    Ignore.ignored.add(rs3.getString("User"));
+                }
+
+                MessageUtils.sendChannel(event, "Reloaded settings for currently connected channel.");
+                return true;
+            } catch (SQLException e) {
+                e.printStackTrace();
             }
-
-            stmt3 = Main.database.prepareStatement("SELECT * FROM `Ignored_Users`");
-            rs3 = stmt3.executeQuery();
-
-            while (rs3.next()) {
-                Ignore.ignored.add(rs3.getString("User"));
-            }
-
-            MessageUtils.sendChannel(event, "Reloaded settings for currently connected channel.");
-            return true;
         }
-     return false; //Line 37 and Line 58 will return true if it reloaded. Else return false.
+        return false; //Line 37 and Line 58 will return true if it reloaded. Else return false.
     }
 
     @Override
