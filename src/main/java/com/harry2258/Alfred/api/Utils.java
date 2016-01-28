@@ -8,7 +8,6 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.harry2258.Alfred.Main;
-import com.harry2258.Alfred.Misc.CreeperHost;
 import com.harry2258.Alfred.json.Perms;
 import com.harry2258.Alfred.listeners.MessageEvent;
 import org.apache.commons.io.IOUtils;
@@ -40,7 +39,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Utils {
-    private static String USER_AGENT = "Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/537.17 (KHTML, like Gecko) Chrome/24.0.1312.57 Safari/537.17";
+    private static String USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.111 Safari/537.36";
 
     public static boolean isUrl(String s) {
         String url_regex = "^(https?|ftp|file)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]";
@@ -170,7 +169,7 @@ public class Utils {
             try {
                 URL xpaw = new URL("http://xpaw.ru/mcstatus/status.json");
                 URLConnection u = xpaw.openConnection();
-                u.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/537.17 (KHTML, like Gecko) Chrome/24.0.1312.57 Safari/537.17");
+                u.setRequestProperty("User-Agent", USER_AGENT);
 
                 BufferedReader first = new BufferedReader(new InputStreamReader(u.getInputStream()));
                 String result = first.readLine();
@@ -194,7 +193,7 @@ public class Utils {
         try {
             URL isgd = new URL("http://is.gd/create.php?format=json&url=" + longUrl);
             URLConnection u = isgd.openConnection();
-            u.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/537.17 (KHTML, like Gecko) Chrome/24.0.1312.57 Safari/537.17");
+            u.setRequestProperty("User-Agent", USER_AGENT);
             BufferedReader first = new BufferedReader(new InputStreamReader(u.getInputStream()));
             String result = first.readLine().trim();
             return JsonUtils.getJsonObject(result).get("shorturl").getAsString();
@@ -245,7 +244,7 @@ public class Utils {
             String temp = String.format("https://ajax.googleapis.com/ajax/services/search/web?v=1.0&q=%s", URLEncoder.encode(s, "UTF-8"));
             URL u = new URL(temp);
             URLConnection c = u.openConnection();
-            c.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/537.17 (KHTML, like Gecko) Chrome/24.0.1312.57 Safari/537.17");
+            c.setRequestProperty("User-Agent", USER_AGENT);
             BufferedReader in = new BufferedReader(new InputStreamReader(c.getInputStream()));
             String json = "";
             String tmp;
