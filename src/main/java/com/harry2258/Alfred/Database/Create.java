@@ -23,7 +23,7 @@ public class Create {
             conn.prepareStatement("CREATE TABLE IF NOT EXISTS Bot (`Nick` VARCHAR(255) NOT NULL PRIMARY KEY, `Password` VARCHAR(255), `Username` VARCHAR(255), `Ident` VARCHAR(255), `Bot_Trigger` VARCHAR(255), `Reconnect` BOOLEAN, `Accept_Invite` BOOLEAN, `Rejoin_Channels` BOOLEAN, `CTCP_Finger_Reply` VARCHAR(255), `CTCP_Version_Reply` VARCHAR(225))").execute();
             conn.prepareStatement("CREATE TABLE IF NOT EXISTS Network_Settings (Server_Host VARCHAR(255), Server_Port VARCHAR(255), Server_Password VARCHAR(255), Use_SSL BOOLEAN, Permissions_Denied VARCHAR(255), Verify_SSL BOOLEAN, Enable_Chat_Socket BOOLEAN, Chat_Socket_Port INTEGER)").execute();
             conn.prepareStatement("CREATE TABLE IF NOT EXISTS Misc (Twitter BOOLEAN, Reddit BOOLEAN, Check_Update BOOLEAN, Update_Channel VARCHAR(255), Update_Interval INTEGER, Weather_API_KEY VARCHAR(255))").execute();
-        } catch (Exception e) {
+        } catch (SQLException e) {
             e.printStackTrace();
             return false;
         }
@@ -46,7 +46,7 @@ public class Create {
             stmt1.execute();
             stmt1.close();
             return true;
-        } catch (Exception e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return false;

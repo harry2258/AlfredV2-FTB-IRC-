@@ -20,21 +20,20 @@ public class Prefix extends Command {
 
     @Override
     public boolean execute(MessageEvent event) throws Exception {
+        if (event.getUser() == null) {
+            return false;
+        }
         if (PermissionManager.hasExec(event.getUser().getNick())) {
-            try {
-                String[] args = event.getMessage().split(" ");
-                if (args.length == 2 && args[1].length() == 1) {
-                    String oldtrigger = config.getTrigger();
-                    config.setTrigger(args[1]);
-                    if (config.useDatabase)
-                        Main.database.prepareStatement("UPDATE `Bot` SET `Bot_Trigger` = '" + config.getTrigger() + "' WHERE `Bot`.`Nick` = '" + event.getBot().getUserBot().getNick() + "';").execute();
-                    MessageUtils.sendUserNotice(event, "Bot prefix was set to " + config.getTrigger() + " from " + oldtrigger);
-                    return true;
-                } else {
-                    return false;
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
+            String[] args = event.getMessage().split(" ");
+            if (args.length == 2 && args[1].length() == 1) {
+                String oldtrigger = config.getTrigger();
+                config.setTrigger(args[1]);
+                if (config.useDatabase)
+                    Main.database.prepareStatement("UPDATE `Bot` SET `Bot_Trigger` = '" + config.getTrigger() + "' WHERE `Bot`.`Nick` = '" + event.getBot().getUserBot().getNick() + "';").execute();
+                MessageUtils.sendUserNotice(event, "Bot prefix was set to " + config.getTrigger() + " from " + oldtrigger);
+                return true;
+            } else {
+                return false;
             }
         } else {
             event.respond("You need to be Exec to change prefix!");

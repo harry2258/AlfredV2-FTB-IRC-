@@ -36,32 +36,28 @@ public class Reload extends Command {
             MessageUtils.sendUserNotice(event, "Permissions were reloaded for " + event.getChannel().getName().toLowerCase() + "!");
             return true;
         } else {
-            try {
-                PreparedStatement stmt3 = Main.database.prepareStatement("SELECT a.Channel, a.Permission, a.URL FROM `Channel_Permissions` a, `Rejoin_Channels` b WHERE a.Channel = b.Channel;");
-                ResultSet rs3 = stmt3.executeQuery();
-                while (rs3.next()) {
-                    String channel = rs3.getString("Channel");
-                    Main.URL.put(channel, rs3.getString("URL"));
-                    Perms p = JsonUtils.getPermsFromString(rs3.getString("Permission"));
-                    Main.map.remove(channel.toLowerCase());
-                    Main.map.put(channel.toLowerCase(), p);
-                    System.out.println("Loaded setting for channel: " + channel);
-                }
-
-                stmt3 = Main.database.prepareStatement("SELECT * FROM `Ignored_Users`");
-                rs3 = stmt3.executeQuery();
-
-                while (rs3.next()) {
-                    Ignore.ignored.add(rs3.getString("User"));
-                }
-
-                MessageUtils.sendChannel(event, "Reloaded settings for currently connected channel.");
-                return true;
-            } catch (Exception e) {
-                e.printStackTrace();
+            PreparedStatement stmt3 = Main.database.prepareStatement("SELECT a.Channel, a.Permission, a.URL FROM `Channel_Permissions` a, `Rejoin_Channels` b WHERE a.Channel = b.Channel;");
+            ResultSet rs3 = stmt3.executeQuery();
+            while (rs3.next()) {
+                String channel = rs3.getString("Channel");
+                Main.URL.put(channel, rs3.getString("URL"));
+                Perms p = JsonUtils.getPermsFromString(rs3.getString("Permission"));
+                Main.map.remove(channel.toLowerCase());
+                Main.map.put(channel.toLowerCase(), p);
+                System.out.println("Loaded setting for channel: " + channel);
             }
+
+            stmt3 = Main.database.prepareStatement("SELECT * FROM `Ignored_Users`");
+            rs3 = stmt3.executeQuery();
+
+            while (rs3.next()) {
+                Ignore.ignored.add(rs3.getString("User"));
+            }
+
+            MessageUtils.sendChannel(event, "Reloaded settings for currently connected channel.");
+            return true;
         }
-        return false;
+        // return false; ?
     }
 
     @Override

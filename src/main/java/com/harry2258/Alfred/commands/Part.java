@@ -8,6 +8,8 @@ import com.harry2258.Alfred.api.PermissionManager;
 import org.pircbotx.Channel;
 import org.pircbotx.hooks.events.MessageEvent;
 
+import java.sql.SQLException;
+
 public class Part extends Command {
     private Config config;
     private PermissionManager manager;
@@ -18,6 +20,9 @@ public class Part extends Command {
 
     @Override
     public boolean execute(MessageEvent event) {
+        if (event.getUser() == null) {
+            return false;
+        }
         String[] args = event.getMessage().split(" ");
         if (PermissionManager.hasExec(event.getUser().getNick())) {
             try {
@@ -39,7 +44,7 @@ public class Part extends Command {
                         Create.RemoveChannel(event.getChannel().getName(), config, manager);
                     return true;
                 }
-            } catch (Exception e) {
+            } catch (SQLException e) {
                 e.printStackTrace();
             }
         }

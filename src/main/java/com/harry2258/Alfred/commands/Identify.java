@@ -19,12 +19,7 @@ public class Identify extends Command {
 
     @Override
     public boolean execute(MessageEvent event) throws Exception {
-        try {
-            event.getBot().sendRaw().rawLineNow("NICKSERV IDENTIFY " + config.getBotIdent() + " " + config.getBotPassword());
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        }
+        event.getBot().sendRaw().rawLineNow("NICKSERV IDENTIFY " + config.getBotIdent() + " " + config.getBotPassword());
         return true;
     }
 

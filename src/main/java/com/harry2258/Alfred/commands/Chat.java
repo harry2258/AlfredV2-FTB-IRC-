@@ -27,7 +27,7 @@ public class Chat extends Command {
             synchronized (monitor) {
                 try {
                     monitor.wait(); // wait until notified
-                } catch (Exception e) {
+                } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
             }
@@ -46,14 +46,9 @@ public class Chat extends Command {
         String[] args = event.getMessage().split(" ");
         StringBuilder sb = new StringBuilder();
         if (args.length == 3 && args[1].equalsIgnoreCase("exec") && PermissionManager.hasExec(event.getUser().getNick())) {
-            try {
-                Main.Chat.put(event.getChannel(), Boolean.valueOf(args[2]));
-                MessageUtils.sendUserNotice(event, "Chat is now turned " + Boolean.valueOf(args[2]) + " for channel " + event.getChannel().getName());
-                return true;
-            } catch (Exception e) {
-                e.printStackTrace();
-                return false;
-            }
+            Main.Chat.put(event.getChannel(), Boolean.valueOf(args[2]));
+            MessageUtils.sendUserNotice(event, "Chat is now turned " + Boolean.valueOf(args[2]) + " for channel " + event.getChannel().getName());
+            return true;
         }
 
         for (int i = 1; i < args.length; i++) {
