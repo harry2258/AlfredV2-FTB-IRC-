@@ -19,10 +19,7 @@ import org.slf4j.impl.SimpleLogger;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
+import java.sql.*;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -66,17 +63,12 @@ public class Main {
                 final Config config = new Config();
                 PermissionManager manager = new PermissionManager();
                 System.out.println("Loading and registering commands");
-                try {
-                    if (!config.UseDatabase()) {
-                        config.load();
-                    } else {
-                        System.out.println("Connecting to " + config.getDatabaseHost());
-                        database = DriverManager.getConnection("jdbc:mysql://" + config.getDatabaseHost() + "/" + config.getDatabase(), config.getDatabaseUser(), config.getDatabasePass());
-                        config.loadDatabase(database);
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    System.exit(0);
+                if (!config.UseDatabase()) {
+                    config.load();
+                } else {
+                    System.out.println("Connecting to " + config.getDatabaseHost());
+                    database = DriverManager.getConnection("jdbc:mysql://" + config.getDatabaseHost() + "/" + config.getDatabase(), config.getDatabaseUser(), config.getDatabasePass());
+                    config.loadDatabase(database);
                 }
 
                 //Creates Exec.json
@@ -156,36 +148,31 @@ public class Main {
                         builder.addAutoJoinChannel(channel);
                     }
                 } else {
-                    try {
-                        //Getting out Auto-join channels
-                        PreparedStatement stmt = database.prepareStatement("SELECT Channel  FROM `Rejoin_Channels`");
-                        ResultSet rs = stmt.executeQuery();
+                    //Getting out Auto-join channels
+                    PreparedStatement stmt = database.prepareStatement("SELECT Channel  FROM `Rejoin_Channels`");
+                    ResultSet rs = stmt.executeQuery();
 
-                        while (rs.next()) {
-                            builder.addAutoJoinChannel(rs.getString("Channel"));
-                            if (!Create.AddChannel(rs.getString("Channel"), database))
-                                System.out.println("Could not create permissions for " + rs.getString("Channel"));
-                        }
+                    while (rs.next()) {
+                        builder.addAutoJoinChannel(rs.getString("Channel"));
+                        if (!Create.AddChannel(rs.getString("Channel"), database))
+                            System.out.println("Could not create permissions for " + rs.getString("Channel"));
+                    }
 
-                        //Getting Permissions and settings for said channels
-                        stmt = database.prepareStatement("SELECT * FROM `Channel_Permissions`");
-                        rs = stmt.executeQuery();
-                        while (rs.next()) {
-                            URL.put(rs.getString("Channel"), rs.getString("URL"));
-                        }
+                    //Getting Permissions and settings for said channels
+                    stmt = database.prepareStatement("SELECT * FROM `Channel_Permissions`");
+                    rs = stmt.executeQuery();
+                    while (rs.next()) {
+                        URL.put(rs.getString("Channel"), rs.getString("URL"));
+                    }
 
-                        PreparedStatement stmt3 = database.prepareStatement("SELECT a.Channel, a.Permission, a.URL FROM `Channel_Permissions` a, `Rejoin_Channels` b WHERE a.Channel = b.Channel;");
-                        ResultSet rs3 = stmt3.executeQuery();
-                        while (rs3.next()) {
-                            String channel = rs3.getString("Channel");
-                            Main.URL.put(channel, rs3.getString("URL"));
-                            Perms p = JsonUtils.getPermsFromString(rs3.getString("Permission"));
-                            Main.map.put(channel.toLowerCase(), p);
-                            System.out.println("Loaded setting for channel: " + channel);
-                        }
-
-                    } catch (Exception e) {
-                        e.printStackTrace();
+                    PreparedStatement stmt3 = database.prepareStatement("SELECT a.Channel, a.Permission, a.URL FROM `Channel_Permissions` a, `Rejoin_Channels` b WHERE a.Channel = b.Channel;");
+                    ResultSet rs3 = stmt3.executeQuery();
+                    while (rs3.next()) {
+                        String channel = rs3.getString("Channel");
+                        Main.URL.put(channel, rs3.getString("URL"));
+                        Perms p = JsonUtils.getPermsFromString(rs3.getString("Permission"));
+                        Main.map.put(channel.toLowerCase(), p);
+                        System.out.println("Loaded setting for channel: " + channel);
                     }
                 }
 
@@ -210,7 +197,7 @@ public class Main {
 
                 bot.startBot();
 
-            } catch (Exception ex) {
+            } catch (SQLException|IOException|IrcException ex) {
                 ex.printStackTrace();
                 System.out.println("Help! I've crashed and I can't recover!");
                 Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);

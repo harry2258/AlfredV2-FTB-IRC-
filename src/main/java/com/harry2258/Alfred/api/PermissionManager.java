@@ -12,6 +12,7 @@ import com.harry2258.Alfred.json.Perms;
 import org.pircbotx.Channel;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.HashSet;
 import java.util.Properties;
 import java.util.Set;
@@ -33,7 +34,7 @@ public class PermissionManager {
                     return true;
                 }
             }
-        } catch (Exception e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
         return false;
@@ -96,7 +97,7 @@ public class PermissionManager {
                 return true;
             }
 
-        } catch (Exception e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
         return false;

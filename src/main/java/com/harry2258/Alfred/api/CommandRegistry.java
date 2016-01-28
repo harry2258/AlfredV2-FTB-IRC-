@@ -30,7 +30,7 @@ public class CommandRegistry {
             try {
                 commands.put(name, (Command) Command.class.getClassLoader().loadClass("com.harry2258.Alfred.commands." + name).newInstance());
                 return commands.get(name);
-            } catch (Exception ex) {
+            } catch (InstantiationException|ClassNotFoundException|IllegalAccessException ex) {
                 ex.printStackTrace();
             }
         }

@@ -12,8 +12,10 @@ import org.pircbotx.Colors;
 import org.pircbotx.hooks.events.MessageEvent;
 
 import java.io.File;
+import java.io.IOException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.List;
 
 /**
@@ -50,37 +52,29 @@ public class Remove extends Command {
                         String mod = args[2];
                         if (event.getChannel().getUsers().contains(event.getBot().getUserChannelDao().getUser(args[2]))) {
                             inChan = true;
-                            try {
-                                mod = Utils.getAccount(event.getBot().getUserChannelDao().getUser(args[2]), event);
-                            } catch (Exception ex) {
-                                System.out.println("Got an error while getting player login!");
-                            }
+                            mod = Utils.getAccount(event.getBot().getUserChannelDao().getUser(args[2]), event);
                             event.getBot().getUserChannelDao().getUser(args[2]).send()
                                     .notice("You are no longer a " + Colors.BOLD + "MODERATOR" + Colors.NORMAL + " for channel " + event.getChannel().getName());
                         } else {
                             mod = args[2];
                         }
-                        try {
-                            if (p.getMods().contains(mod)) {
-                                temp = p.getMods();
-                                temp.remove(mod);
-                                p.setMods(temp);
-                                perm.setPermission(p);
-                                JsonUtils.writeJsonFile(file, perm);
-                                MessageUtils.sendUserNotice(event, args[2] + " is no longer a Moderator for channel " + event.getChannel().getName());
-                                Main.map.put(event.getChannel().getName().toLowerCase(), perm);
-                                MessageUtils.sendUserNotice(event, "Reloaded Permissions");
-                                if (inChan) {
-                                    event.getBot().getUserChannelDao().getUser(args[2]).send()
-                                            .notice("You are no longer a " + Colors.BOLD + "MODERATOR" + Colors.NORMAL + " for channel " + event.getChannel().getName());
-                                }
-                                return true;
-                            } else {
-                                MessageUtils.sendChannel(event, args[2] + " is not on the list!");
-                                return true;
+                        if (p.getMods().contains(mod)) {
+                            temp = p.getMods();
+                            temp.remove(mod);
+                            p.setMods(temp);
+                            perm.setPermission(p);
+                            JsonUtils.writeJsonFile(file, perm);
+                            MessageUtils.sendUserNotice(event, args[2] + " is no longer a Moderator for channel " + event.getChannel().getName());
+                            Main.map.put(event.getChannel().getName().toLowerCase(), perm);
+                            MessageUtils.sendUserNotice(event, "Reloaded Permissions");
+                            if (inChan) {
+                                event.getBot().getUserChannelDao().getUser(args[2]).send()
+                                        .notice("You are no longer a " + Colors.BOLD + "MODERATOR" + Colors.NORMAL + " for channel " + event.getChannel().getName());
                             }
-                        } catch (Exception ex) {
-                            ex.printStackTrace();
+                            return true;
+                        } else {
+                            MessageUtils.sendChannel(event, args[2] + " is not on the list!");
+                            return true;
                         }
                     }
                 }
@@ -95,23 +89,19 @@ public class Remove extends Command {
                             command = check;
                         }
 
-                        try {
-                            if (p.getModPerms().contains(command)) {
-                                temp = (p.getModPerms());
-                                temp.remove(command);
-                                p.setModPerms(temp);
-                                perm.setPermission(p);
-                                JsonUtils.writeJsonFile(file, perm);
-                                MessageUtils.sendUserNotice(event, "Moderators can no longer use the command '" + args[2] + "'");
-                                Main.map.put(event.getChannel().getName().toLowerCase(), perm);
-                                MessageUtils.sendUserNotice(event, "Reloaded Permissions");
-                                return true;
-                            } else {
-                                MessageUtils.sendChannel(event, command + " is not on the list!");
-                                return true;
-                            }
-                        } catch (Exception ex) {
-                            ex.printStackTrace();
+                        if (p.getModPerms().contains(command)) {
+                            temp = (p.getModPerms());
+                            temp.remove(command);
+                            p.setModPerms(temp);
+                            perm.setPermission(p);
+                            JsonUtils.writeJsonFile(file, perm);
+                            MessageUtils.sendUserNotice(event, "Moderators can no longer use the command '" + args[2] + "'");
+                            Main.map.put(event.getChannel().getName().toLowerCase(), perm);
+                            MessageUtils.sendUserNotice(event, "Reloaded Permissions");
+                            return true;
+                        } else {
+                            MessageUtils.sendChannel(event, command + " is not on the list!");
+                            return true;
                         }
                     }
                 }
@@ -120,36 +110,28 @@ public class Remove extends Command {
                     if (args.length == 3) {
                         String mod = args[2];
                         if (event.getChannel().getUsers().contains(event.getBot().getUserChannelDao().getUser(args[2]))) {
-                            try {
-                                mod = Utils.getAccount(event.getBot().getUserChannelDao().getUser(args[2]), event);
-                            } catch (Exception ex) {
-                                System.out.println("Got an error while getting player login!");
-                            }
+                            mod = Utils.getAccount(event.getBot().getUserChannelDao().getUser(args[2]), event);
                             inChan = true;
                         } else {
                             mod = args[2];
                         }
-                        try {
-                            if (p.getAdmins().contains(mod)) {
-                                temp = p.getAdmins();
-                                temp.remove(mod);
-                                p.setAdmins(temp);
-                                perm.setPermission(p);
-                                JsonUtils.writeJsonFile(file, perm);
-                                MessageUtils.sendUserNotice(event, args[2] + " is no longer an Admin for channel " + event.getChannel().getName());
-                                Main.map.put(event.getChannel().getName().toLowerCase(), perm);
-                                MessageUtils.sendUserNotice(event, "Reloaded Permissions");
-                                if (inChan) {
-                                    event.getBot().getUserChannelDao().getUser(args[2]).send()
-                                            .notice("You are no longer an " + Colors.BOLD + "ADMIN" + Colors.NORMAL + " for channel " + event.getChannel().getName());
-                                }
-                                return true;
-                            } else {
-                                MessageUtils.sendChannel(event, args[2] + " is not on the list!");
-                                return true;
+                        if (p.getAdmins().contains(mod)) {
+                            temp = p.getAdmins();
+                            temp.remove(mod);
+                            p.setAdmins(temp);
+                            perm.setPermission(p);
+                            JsonUtils.writeJsonFile(file, perm);
+                            MessageUtils.sendUserNotice(event, args[2] + " is no longer an Admin for channel " + event.getChannel().getName());
+                            Main.map.put(event.getChannel().getName().toLowerCase(), perm);
+                            MessageUtils.sendUserNotice(event, "Reloaded Permissions");
+                            if (inChan) {
+                                event.getBot().getUserChannelDao().getUser(args[2]).send()
+                                        .notice("You are no longer an " + Colors.BOLD + "ADMIN" + Colors.NORMAL + " for channel " + event.getChannel().getName());
                             }
-                        } catch (Exception ex) {
-                            ex.printStackTrace();
+                            return true;
+                        } else {
+                            MessageUtils.sendChannel(event, args[2] + " is not on the list!");
+                            return true;
                         }
                     }
                 }
@@ -164,23 +146,19 @@ public class Remove extends Command {
                             command = check;
                         }
 
-                        try {
-                            if (p.getEveryone().contains(command)) {
-                                temp = p.getEveryone();
-                                temp.remove(command);
-                                p.setEveryone(temp);
-                                perm.setPermission(p);
-                                JsonUtils.writeJsonFile(file, perm);
-                                MessageUtils.sendUserNotice(event, "Regular users can no longer use the command '" + args[2] + "'");
-                                Main.map.put(event.getChannel().getName().toLowerCase(), perm);
-                                MessageUtils.sendUserNotice(event, "Reloaded Permissions");
-                                return true;
-                            } else {
-                                MessageUtils.sendChannel(event, args[2] + " is not on the list!");
-                                return true;
-                            }
-                        } catch (Exception ex) {
-                            ex.printStackTrace();
+                        if (p.getEveryone().contains(command)) {
+                            temp = p.getEveryone();
+                            temp.remove(command);
+                            p.setEveryone(temp);
+                            perm.setPermission(p);
+                            JsonUtils.writeJsonFile(file, perm);
+                            MessageUtils.sendUserNotice(event, "Regular users can no longer use the command '" + args[2] + "'");
+                            Main.map.put(event.getChannel().getName().toLowerCase(), perm);
+                            MessageUtils.sendUserNotice(event, "Reloaded Permissions");
+                            return true;
+                        } else {
+                            MessageUtils.sendChannel(event, args[2] + " is not on the list!");
+                            return true;
                         }
                     }
                 }
@@ -209,12 +187,12 @@ public class Remove extends Command {
                                 MessageUtils.sendChannel(event, args[2] + " is not on the list!");
                                 return true;
                             }
-                        } catch (Exception ex) {
+                        } catch (IOException ex) {
                             ex.printStackTrace();
                         }
                     }
                 }
-            } catch (Exception e) {
+            } catch (IOException e) {
                 e.printStackTrace();
             }
         } else {
@@ -232,7 +210,7 @@ public class Remove extends Command {
                 strFileJson = rs1.getString("Permission");
                 System.out.println(strFileJson);
                 channel = rs1.getString("Channel");
-            } catch (Exception e) {
+            } catch (SQLException e) {
                 e.printStackTrace();
                 return false;
             }
@@ -245,11 +223,7 @@ public class Remove extends Command {
                     String mod = args[2];
                     if (event.getChannel().getUsers().contains(event.getBot().getUserChannelDao().getUser(args[2]))) {
                         inChan = true;
-                        try {
-                            mod = Utils.getAccount(event.getBot().getUserChannelDao().getUser(args[2]), event);
-                        } catch (Exception ex) {
-                            System.out.println("Got an error while getting player login!");
-                        }
+                        mod = Utils.getAccount(event.getBot().getUserChannelDao().getUser(args[2]), event);
                         event.getBot().getUserChannelDao().getUser(args[2]).send()
                                 .notice("You are no longer a " + Colors.BOLD + "MODERATOR" + Colors.NORMAL + " for channel " + event.getChannel().getName());
                     } else {
@@ -275,7 +249,7 @@ public class Remove extends Command {
                             MessageUtils.sendChannel(event, args[2] + " is not on the list!");
                             return true;
                         }
-                    } catch (Exception ex) {
+                    } catch (SQLException ex) {
                         ex.printStackTrace();
                     }
                 }
@@ -306,7 +280,7 @@ public class Remove extends Command {
                             MessageUtils.sendChannel(event, command + " is not on the list!");
                             return true;
                         }
-                    } catch (Exception ex) {
+                    } catch (SQLException ex) {
                         ex.printStackTrace();
                     }
                 }
@@ -315,11 +289,7 @@ public class Remove extends Command {
                 if (args.length == 3) {
                     String mod = args[2];
                     if (event.getChannel().getUsers().contains(event.getBot().getUserChannelDao().getUser(args[2]))) {
-                        try {
-                            mod = Utils.getAccount(event.getBot().getUserChannelDao().getUser(args[2]), event);
-                        } catch (Exception ex) {
-                            System.out.println("Got an error while getting player login!");
-                        }
+                        mod = Utils.getAccount(event.getBot().getUserChannelDao().getUser(args[2]), event);
                         inChan = true;
                     } else {
                         mod = args[2];
@@ -344,7 +314,7 @@ public class Remove extends Command {
                             MessageUtils.sendChannel(event, args[2] + " is not on the list!");
                             return true;
                         }
-                    } catch (Exception ex) {
+                    } catch (SQLException ex) {
                         ex.printStackTrace();
                     }
                 }
@@ -375,7 +345,7 @@ public class Remove extends Command {
                             MessageUtils.sendChannel(event, args[2] + " is not on the list!");
                             return true;
                         }
-                    } catch (Exception ex) {
+                    } catch (SQLException ex) {
                         ex.printStackTrace();
                     }
                 }

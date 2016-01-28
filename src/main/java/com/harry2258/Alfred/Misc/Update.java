@@ -6,6 +6,7 @@ import org.pircbotx.Channel;
 import org.pircbotx.PircBotX;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 
@@ -54,7 +55,7 @@ public class Update extends Thread {
                     Thread.sleep(10800000);
                 }
                 Thread.sleep(time);
-            } catch (Exception e) {
+            } catch (InterruptedException|IOException e) {
                 e.printStackTrace();
             }
         }

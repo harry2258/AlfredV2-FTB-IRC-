@@ -6,6 +6,7 @@ import org.pircbotx.Channel;
 import org.pircbotx.Colors;
 import org.pircbotx.PircBotX;
 
+import java.io.IOException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
@@ -35,22 +36,15 @@ public class RecentChanges extends Thread {
         try {
             System.out.println("[FTB Wiki] Sleeping for 1 minutes. Waiting for bot to start up.");
             Thread.sleep(60000);
-        } catch (Exception e) {
+        } catch (InterruptedException e) {
             e.printStackTrace();
         }
 
         Channel chan = null;
         String tmp = null;
         boolean FoundChannel;
-
-        try {
-            chan = bot.getUserChannelDao().getChannel("#ftb-wiki-recentchanges");
-            FoundChannel = true;
-        } catch (Exception e) {
-            System.out.println("The bot is not in the #ftb-wiki-recentchanges channel");
-            e.printStackTrace();
-            FoundChannel = false;
-        }
+        chan = bot.getUserChannelDao().getChannel("#ftb-wiki-recentchanges");
+        FoundChannel = true;
 
         while (isRunning && FoundChannel) {
             try {
@@ -58,6 +52,8 @@ public class RecentChanges extends Thread {
                 URLConnection c = change.openConnection();
                 c.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/537.17 (KHTML, like Gecko) Chrome/24.0.1312.57 Safari/537.17");
                 String json = JsonUtils.convertStreamToString(c.getInputStream());
+                // I have no idea what exactly is throwing the NPE here. Good thing this feature
+                // isn't used?
                 JsonObject jsonObj = JsonUtils.getJsonObject(json).getAsJsonObject("query").getAsJsonArray("recentchanges").get(0).getAsJsonObject();
 
                 String Type = jsonObj.get("type").getAsString();
@@ -83,6 +79,8 @@ public class RecentChanges extends Thread {
                 }
 
                 Thread.sleep(5000);
+            // convertStreamToString() throws the normal exception class. Otherwise, we would
+                // just catch IOException and InterruptedException here.
             } catch (Exception e) {
                 changes.remove(tmp);
                 e.printStackTrace();

@@ -120,7 +120,7 @@ public class Ignore extends Command {
                     return true;
                 }
 
-            } catch (Exception ex) {
+            } catch (SQLException ex) {
                 ex.printStackTrace();
                 return false;
             }

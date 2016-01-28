@@ -8,6 +8,7 @@ import com.harry2258.Alfred.api.PermissionManager;
 import org.pircbotx.hooks.events.MessageEvent;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 
@@ -37,7 +38,7 @@ public class Update extends Command {
                     MessageUtils.sendChannel(event, result);
                 }
                 return true;
-            } catch (Exception e) {
+            } catch (IOException e) {
                 e.printStackTrace();
                 return false;
             }
@@ -56,7 +57,7 @@ public class Update extends Command {
             } else {
                 MessageUtils.sendChannel(event, "Alfred is up-to-date!");
             }
-        } catch (Exception e) {
+        } catch (IOException e) {
             e.printStackTrace();
             return false;
         }

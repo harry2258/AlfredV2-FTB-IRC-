@@ -12,6 +12,7 @@ import twitter4j.TwitterFactory;
 import twitter4j.conf.ConfigurationBuilder;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 
@@ -70,6 +71,9 @@ public class Twitter extends Thread {
 
                 String users = JsonUtils.getStringFromFile(TweetUsers.toString());
                 JsonObject tweetuser = JsonUtils.getJsonObject(users);
+                if (Auth == null) {
+                    break;
+                }
                 if (Auth.get("OAuthConsumerKey").getAsString().isEmpty() | Auth.get("OAuthConsumerSecret").getAsString().isEmpty() | Auth.get("OAuthAccessToken").getAsString().isEmpty() | Auth.get("OAuthAccessTokenSecret").getAsString().isEmpty()) {
                     for (Channel chan : bot.getUserBot().getChannels()) {
                         chan.send().message("UH-OH!! This is something wrong with your \"oauth.json\" file in Twitter folder.");
@@ -90,6 +94,10 @@ public class Twitter extends Thread {
 
                 twitterFactory = new TwitterFactory(cb.build());
                 twitter = twitterFactory.getInstance();
+
+                if (tweetuser == null) {
+                    continue;
+                }
 
                 String[] args = tweetuser.get("Users").getAsString().replaceAll("[\\[\"\\]]", "").split(",");
 
@@ -114,7 +122,7 @@ public class Twitter extends Thread {
                     }
                 }
                 Thread.sleep(60000);
-            } catch (Exception e) {
+            } catch (InterruptedException|IOException e) {
                 System.out.println(Thread.currentThread().getName() + " ->> " + e.toString());
                 e.printStackTrace();
             }

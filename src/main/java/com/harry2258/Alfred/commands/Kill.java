@@ -12,10 +12,7 @@ import org.pircbotx.Colors;
 import org.pircbotx.hooks.WaitForQueue;
 import org.pircbotx.hooks.events.MessageEvent;
 
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -82,8 +79,7 @@ public class Kill extends Command {
                         f.get(10, TimeUnit.SECONDS);
                     }
 
-                } catch (Exception ignored) {
-                }
+                } catch (InterruptedException ignored) {}
                 service.shutdown();
                 queue.close();
                 com.harry2258.Alfred.listeners.MessageEvent.waiting = false;
@@ -91,7 +87,7 @@ public class Kill extends Command {
                 return true;
             }
             event.respond("You need to be an Exec. user to be able to kill the bot!");
-        } catch (Exception ex) {
+        } catch (ExecutionException|TimeoutException ex) {
             Logger.getLogger(Kill.class.getName()).log(Level.SEVERE, null, ex);
             return false;
         }

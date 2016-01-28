@@ -11,6 +11,7 @@ import org.pircbotx.Colors;
 import org.pircbotx.hooks.events.MessageEvent;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.InetSocketAddress;
@@ -71,9 +72,16 @@ public class CreeperHost extends Thread {
         int ch = ChReposlist.size();
         final long startTime = System.currentTimeMillis();
 
+        if (event.getUser() == null) {
+            return;
+        }
+
         try {
             Document doc = Jsoup.connect("https://dl.dropboxusercontent.com/u/10600322/edges.json").get();
             JsonObject report = JsonUtils.getJsonObject(doc.text());
+            if (report == null) {
+                return;
+            }
             chRepos = (ArrayList) getKeysFromJson(doc.text());
             for (int i = 0; i < chRepos.size(); i++) {
                 chURLs.add(report.get(chRepos.get(i).toString()).toString().replaceAll("\"", ""));
@@ -84,7 +92,7 @@ public class CreeperHost extends Thread {
             }
             event.getUser().send().notice("Got edges.json from progwml6");
             progwml6 = true;
-        } catch (Exception f) {
+        } catch (IOException f) {
             f.printStackTrace();
             event.getUser().send().notice("Failed to get edges.json from progwml6");
         }
@@ -101,6 +109,9 @@ public class CreeperHost extends Thread {
                             String edgesjson = JsonUtils.getStringFromFile(System.getProperty("user.dir") + "/edges.json");
                             Json = JsonUtils.isJSONObject(edgesjson);
                             JsonObject report = JsonUtils.getJsonObject(edgesjson);
+                            if (report == null) {
+                                return;
+                            }
                             chRepos = (ArrayList) getKeysFromJson(edgesjson);
                             for (int i = 0; i < chRepos.size(); i++) {
                                 chURLs.add(report.get(chRepos.get(i).toString()).toString().replaceAll("\"", ""));
@@ -111,7 +122,7 @@ public class CreeperHost extends Thread {
                             }
                             ch--;
                             edges = ChReposlist.get(ch);
-                        } catch (Exception jsonfile) {
+                        } catch (IOException jsonfile) {
                             jsonfile.printStackTrace();
                         }
 
@@ -128,6 +139,9 @@ public class CreeperHost extends Thread {
                 Document doc = Jsoup.connect("http://" + edges + "/edges.json").get();
                 Json = JsonUtils.isJSONObject(doc.text());
                 JsonObject report = JsonUtils.getJsonObject(doc.text());
+                if (report == null) {
+                    return;
+                }
                 chRepos = (ArrayList) getKeysFromJson(doc.text());
                 for (int i = 0; i < chRepos.size(); i++) {
                     chURLs.add(report.get(chRepos.get(i).toString()).toString().replaceAll("\"", ""));
@@ -136,8 +150,8 @@ public class CreeperHost extends Thread {
                         ChReposlist.add(chURLs.get(i));
                     }
                 }
-            } catch (Exception E) {
-                E.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         }
 
@@ -159,7 +173,7 @@ public class CreeperHost extends Thread {
                     tests.add(true);
 
                     s.close();
-                } catch (Exception e) {
+                } catch (IOException e) {
                     tests.add(false);
                     System.out.println("Could not connect to: " + chURLs.get(i));
                     event.getUser().send().notice("Ping to " + chRepos.get(i) + " repo timed out!");
@@ -181,13 +195,16 @@ public class CreeperHost extends Thread {
                             String test;
                             int x;
                             JsonObject jsonObj = JsonUtils.getJsonObject(jsons);
+                            if (jsonObj == null) {
+                                return;
+                            }
                             test = jsonObj.get("Bandwidth").getAsString();
                             x = Integer.parseInt(test) * 100 / 1000000;
                             re.close();
                             urlConn.disconnect();
                             Load.add(x);
                             System.out.println(chURLNames.get(i) + ": " + x);
-                        } catch (Exception ex) {
+                        } catch (IOException ex) {
                             ex.printStackTrace();
                             Load.add(0);
                         }

@@ -116,7 +116,7 @@ public class Error extends Command {
                 return true;
             }
 
-        } catch (Exception e) {
+        } catch (SQLException|ClassNotFoundException e) {
             e.printStackTrace();
             MessageUtils.sendChannel(event, e.toString());
             return true;
@@ -145,12 +145,8 @@ public class Error extends Command {
 
     private void createTables() throws SQLException {
         Connection conn = getConnection();
-        try {
-            conn.prepareStatement("CREATE TABLE IF NOT EXISTS Problems ( ID INT NOT NULL AUTO_INCREMENT PRIMARY KEY, Diagnosis VARCHAR(255), Suggestion VARCHAR(255) ) ").execute();
-            conn.prepareStatement("CREATE TABLE IF NOT EXISTS ProblemErrors ( ID INT NOT NULL AUTO_INCREMENT PRIMARY KEY, ProblemID integer, Error VARCHAR(255) )").execute();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        conn.prepareStatement("CREATE TABLE IF NOT EXISTS Problems ( ID INT NOT NULL AUTO_INCREMENT PRIMARY KEY, Diagnosis VARCHAR(255), Suggestion VARCHAR(255) ) ").execute();
+        conn.prepareStatement("CREATE TABLE IF NOT EXISTS ProblemErrors ( ID INT NOT NULL AUTO_INCREMENT PRIMARY KEY, ProblemID integer, Error VARCHAR(255) )").execute();
         conn.close();
     }
 
@@ -183,15 +179,17 @@ public class Error extends Command {
         Connection conn = getConnection();
         PreparedStatement stmt = conn.prepareStatement("UPDATE Problems (Diagnosis, Suggestion) VALUES (?, ?)");
         //stmt.setInt(1, ID);
-        stmt.setString(1, diagnosis);
-        stmt.setString(2, suggestion);
-        stmt.execute();
-        stmt.close();
+        try {
+            stmt.setString(1, diagnosis);
+            stmt.setString(2, suggestion);
+            stmt.execute();
+            stmt.close();
 
-        stmt = conn.prepareStatement("DELETE FROM ProblemErrors WHERE ProblemID=?");
-        stmt.setInt(1, ID);
-        stmt.execute();
-        stmt.close();
+            stmt = conn.prepareStatement("DELETE FROM ProblemErrors WHERE ProblemID=?");
+            stmt.setInt(1, ID);
+            stmt.execute();
+            stmt.close();
+        } catch (SQLException ignore) {}
 
         for (String error : errors) {
             PreparedStatement stmtError = conn.prepareStatement("INSERT INTO ProblemErrors (ProblemID, Error) VALUES (?,?)");
