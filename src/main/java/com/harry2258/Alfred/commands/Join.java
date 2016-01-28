@@ -32,18 +32,14 @@ public class Join extends Command {
             }
             event.getBot().sendIRC().joinChannel(args[1]);
             if (config.useDatabase) {
-                try {
-                    Create.AddChannel(target.toLowerCase(), Main.database);
-                    PreparedStatement stmt = Main.database.prepareStatement("SELECT Permission FROM `Channel_Permissions` WHERE Channel = ?");
-                    stmt.setString(1, target.toLowerCase());
-                    ResultSet rs = stmt.executeQuery();
-                    rs.next();
-                    Perms p = JsonUtils.getPermsFromString(rs.getString("Permission"));
-                    Main.map.put(target.toLowerCase(), p);
-                    System.out.println("Loaded perms for " + target);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+                Create.AddChannel(target.toLowerCase(), Main.database);
+                PreparedStatement stmt = Main.database.prepareStatement("SELECT Permission FROM `Channel_Permissions` WHERE Channel = ?");
+                stmt.setString(1, target.toLowerCase());
+                ResultSet rs = stmt.executeQuery();
+                rs.next();
+                Perms p = JsonUtils.getPermsFromString(rs.getString("Permission"));
+                Main.map.put(target.toLowerCase(), p);
+                System.out.println("Loaded perms for " + target);
             } else {
                 String channel = target;
                 File file = new File(System.getProperty("user.dir") + "/perms/" + channel.toLowerCase() + "/" + "perms.json");

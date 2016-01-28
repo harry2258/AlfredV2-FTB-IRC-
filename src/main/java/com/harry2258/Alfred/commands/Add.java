@@ -33,13 +33,9 @@ public class Add extends Command {
 
     private static JsonElement Json(String[] list) {
         final JsonArray Array = new JsonArray();
-        try {
-            for (final String tmp : list) {
-                final JsonPrimitive JsonList = new JsonPrimitive(tmp);
-                Array.add(JsonList);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+        for (final String tmp : list) {
+            final JsonPrimitive JsonList = new JsonPrimitive(tmp);
+            Array.add(JsonList);
         }
         return Array;
     }
@@ -79,38 +75,32 @@ public class Add extends Command {
 
             if (type.equalsIgnoreCase("mod")) {
                 if (args.length == 3) {
-                    try {
-                        if (!event.getChannel().getUsers().contains(event.getBot().getUserChannelDao().getUser(args[2]))) {
-                            MessageUtils.sendChannel(event, "There is no user by that name!");
-                            return false;
-                        }
-                        User newUser = event.getBot().getUserChannelDao().getUser(args[2]);
-                        String newuser = Utils.getAccount(event.getBot().getUserChannelDao().getUser(args[2]), event);
-                        if (newuser.isEmpty()) {
-                            return false;
-                        }
+                    if (!event.getChannel().getUsers().contains(event.getBot().getUserChannelDao().getUser(args[2]))) {
+                        MessageUtils.sendChannel(event, "There is no user by that name!");
+                        return false;
+                    }
+                    User newUser = event.getBot().getUserChannelDao().getUser(args[2]);
+                    String newuser = Utils.getAccount(event.getBot().getUserChannelDao().getUser(args[2]), event);
+                    if (newuser.isEmpty()) {
+                        return false;
+                    }
 
-                        String strFileJson = JsonUtils.getStringFromFile(Jsonfile);
-                        JsonObject jsonObj = JsonUtils.getJsonObject(strFileJson);
-                        if (!isAdded(newUser, event.getChannel().getName(), args)) {
-                            temp = jsonObj.getAsJsonObject("Perms").get("Mods").toString();
-                            String[] tempArray = (temp.replaceAll("[\\[\\]\"]", "") + "," + newuser + "").split(",");
-                            jsonObj.getAsJsonObject("Perms").add("Mods", Json(tempArray));
-                            JsonUtils.writeJsonFile(file, jsonObj.toString());
-                            MessageUtils.sendUserNotice(event, newuser + " is now a Moderator for channel " + event.getChannel().getName());
-                            String perms = JsonUtils.getStringFromFile(Jsonfile);
-                            Perms p = JsonUtils.getPermsFromString(perms);
-                            Main.map.put(event.getChannel().getName().toLowerCase(), p);
-                            MessageUtils.sendUserNotice(event, "Reloaded Permissions");
-                            event.getBot().getUserChannelDao().getUser(args[2]).send().notice("You are now a " + Colors.BOLD + "MODERATOR" + Colors.NORMAL + " for channel " + event.getChannel().getName());
-                            return true;
-                        } else {
-                            MessageUtils.sendChannel(event, newuser + " is already on the list!");
-                            return true;
-                        }
-                    } catch (Exception ex) {
-                        ex.printStackTrace();
-                        MessageUtils.sendChannel(event, "Please enter a valid username!");
+                    String strFileJson = JsonUtils.getStringFromFile(Jsonfile);
+                    JsonObject jsonObj = JsonUtils.getJsonObject(strFileJson);
+                    if (!isAdded(newUser, event.getChannel().getName(), args)) {
+                        temp = jsonObj.getAsJsonObject("Perms").get("Mods").toString();
+                        String[] tempArray = (temp.replaceAll("[\\[\\]\"]", "") + "," + newuser + "").split(",");
+                        jsonObj.getAsJsonObject("Perms").add("Mods", Json(tempArray));
+                        JsonUtils.writeJsonFile(file, jsonObj.toString());
+                        MessageUtils.sendUserNotice(event, newuser + " is now a Moderator for channel " + event.getChannel().getName());
+                        String perms = JsonUtils.getStringFromFile(Jsonfile);
+                        Perms p = JsonUtils.getPermsFromString(perms);
+                        Main.map.put(event.getChannel().getName().toLowerCase(), p);
+                        MessageUtils.sendUserNotice(event, "Reloaded Permissions");
+                        event.getBot().getUserChannelDao().getUser(args[2]).send().notice("You are now a " + Colors.BOLD + "MODERATOR" + Colors.NORMAL + " for channel " + event.getChannel().getName());
+                        return true;
+                    } else {
+                        MessageUtils.sendChannel(event, newuser + " is already on the list!");
                         return true;
                     }
                 }
@@ -119,33 +109,29 @@ public class Add extends Command {
             if (type.equalsIgnoreCase("modperms")) {
                 if (args.length == 3) {
                     if (commands.containsKey(Character.toUpperCase(args[2].charAt(0)) + event.getMessage().split(" ")[2].substring(1).toLowerCase()) || new File("plugins/" + Character.toUpperCase(args[2].charAt(0)) + event.getMessage().split(" ")[2].substring(1).toLowerCase() + ".bsh").exists() || args[2].equalsIgnoreCase("custom") || args[2].equalsIgnoreCase("custom.command")) {
-                        try {
-                            String check = args[2];
-                            String command;
-                            if (!check.contains("command.")) {
-                                command = "command." + check;
-                            } else {
-                                command = check;
-                            }
-                            String strFileJson = JsonUtils.getStringFromFile(Jsonfile);
-                            JsonObject jsonObj = JsonUtils.getJsonObject(strFileJson);
-                            if (!jsonObj.getAsJsonObject("Perms").get("ModPerms").toString().contains(command)) {
-                                temp = jsonObj.getAsJsonObject("Perms").get("ModPerms").toString();
-                                String[] tempArray = (temp.replaceAll("[\\[\\]\"]", "") + "," + command + "").split(",");
-                                jsonObj.getAsJsonObject("Perms").add("ModPerms", Json(tempArray));
-                                JsonUtils.writeJsonFile(file, jsonObj.toString());
-                                MessageUtils.sendUserNotice(event, "Moderators are now able to use the command '" + args[2] + "'");
-                                String perms = JsonUtils.getStringFromFile(Jsonfile);
-                                Perms p = JsonUtils.getPermsFromString(perms);
-                                Main.map.put(event.getChannel().getName().toLowerCase(), p);
-                                MessageUtils.sendUserNotice(event, "Reloaded Permissions");
-                                return true;
-                            } else {
-                                MessageUtils.sendChannel(event, args[2] + " is already on the list!");
-                                return true;
-                            }
-                        } catch (Exception ex) {
-                            ex.printStackTrace();
+                        String check = args[2];
+                        String command;
+                        if (!check.contains("command.")) {
+                            command = "command." + check;
+                        } else {
+                            command = check;
+                        }
+                        String strFileJson = JsonUtils.getStringFromFile(Jsonfile);
+                        JsonObject jsonObj = JsonUtils.getJsonObject(strFileJson);
+                        if (!jsonObj.getAsJsonObject("Perms").get("ModPerms").toString().contains(command)) {
+                            temp = jsonObj.getAsJsonObject("Perms").get("ModPerms").toString();
+                            String[] tempArray = (temp.replaceAll("[\\[\\]\"]", "") + "," + command + "").split(",");
+                            jsonObj.getAsJsonObject("Perms").add("ModPerms", Json(tempArray));
+                            JsonUtils.writeJsonFile(file, jsonObj.toString());
+                            MessageUtils.sendUserNotice(event, "Moderators are now able to use the command '" + args[2] + "'");
+                            String perms = JsonUtils.getStringFromFile(Jsonfile);
+                            Perms p = JsonUtils.getPermsFromString(perms);
+                            Main.map.put(event.getChannel().getName().toLowerCase(), p);
+                            MessageUtils.sendUserNotice(event, "Reloaded Permissions");
+                            return true;
+                        } else {
+                            MessageUtils.sendChannel(event, args[2] + " is already on the list!");
+                            return true;
                         }
                     } else {
                         MessageUtils.sendChannel(event, "There is no command by that name!");
@@ -156,37 +142,31 @@ public class Add extends Command {
 
             if (type.equalsIgnoreCase("admin")) {
                 if (args.length == 3) {
-                    try {
-                        if (!event.getChannel().getUsers().contains(event.getBot().getUserChannelDao().getUser(args[2])) || new File("plugins/" + Character.toUpperCase(args[2].charAt(0)) + event.getMessage().split(" ")[2].substring(1).toLowerCase() + ".bsh").exists()) {
-                            MessageUtils.sendChannel(event, "There is no user by that name!");
-                            return false;
-                        }
-                        User newUser = event.getBot().getUserChannelDao().getUser(args[2]);
-                        String newuser = Utils.getAccount(event.getBot().getUserChannelDao().getUser(args[2]), event);
-                        if (newuser.isEmpty()) {
-                            return false;
-                        }
-                        String strFileJson = JsonUtils.getStringFromFile(Jsonfile);
-                        JsonObject jsonObj = JsonUtils.getJsonObject(strFileJson);
-                        if (!isAdded(newUser, event.getChannel().getName(), args)) {
-                            temp = jsonObj.getAsJsonObject("Perms").get("Admins").toString();
-                            String[] tempArray = (temp.replaceAll("[\\[\\]\"]", "") + "," + newuser + "").split(",");
-                            jsonObj.getAsJsonObject("Perms").add("Admins", Json(tempArray));
-                            JsonUtils.writeJsonFile(file, jsonObj.toString());
-                            MessageUtils.sendUserNotice(event, newuser + " is now an Admin for channel " + event.getChannel().getName());
-                            String perms = JsonUtils.getStringFromFile(Jsonfile);
-                            Perms p = JsonUtils.getPermsFromString(perms);
-                            Main.map.put(event.getChannel().getName().toLowerCase(), p);
-                            MessageUtils.sendUserNotice(event, "Reloaded Permissions");
-                            event.getBot().getUserChannelDao().getUser(args[2]).send().notice("You are now an " + Colors.BOLD + "ADMIN" + Colors.NORMAL + " for channel " + event.getChannel().getName());
-                            return true;
-                        } else {
-                            MessageUtils.sendChannel(event, newuser + " is already on the list!");
-                            return true;
-                        }
-                    } catch (Exception ex) {
-                        ex.printStackTrace();
-                        MessageUtils.sendChannel(event, "Please enter a valid username!");
+                    if (!event.getChannel().getUsers().contains(event.getBot().getUserChannelDao().getUser(args[2])) || new File("plugins/" + Character.toUpperCase(args[2].charAt(0)) + event.getMessage().split(" ")[2].substring(1).toLowerCase() + ".bsh").exists()) {
+                        MessageUtils.sendChannel(event, "There is no user by that name!");
+                        return false;
+                    }
+                    User newUser = event.getBot().getUserChannelDao().getUser(args[2]);
+                    String newuser = Utils.getAccount(event.getBot().getUserChannelDao().getUser(args[2]), event);
+                    if (newuser.isEmpty()) {
+                        return false;
+                    }
+                    String strFileJson = JsonUtils.getStringFromFile(Jsonfile);
+                    JsonObject jsonObj = JsonUtils.getJsonObject(strFileJson);
+                    if (!isAdded(newUser, event.getChannel().getName(), args)) {
+                        temp = jsonObj.getAsJsonObject("Perms").get("Admins").toString();
+                        String[] tempArray = (temp.replaceAll("[\\[\\]\"]", "") + "," + newuser + "").split(",");
+                        jsonObj.getAsJsonObject("Perms").add("Admins", Json(tempArray));
+                        JsonUtils.writeJsonFile(file, jsonObj.toString());
+                        MessageUtils.sendUserNotice(event, newuser + " is now an Admin for channel " + event.getChannel().getName());
+                        String perms = JsonUtils.getStringFromFile(Jsonfile);
+                        Perms p = JsonUtils.getPermsFromString(perms);
+                        Main.map.put(event.getChannel().getName().toLowerCase(), p);
+                        MessageUtils.sendUserNotice(event, "Reloaded Permissions");
+                        event.getBot().getUserChannelDao().getUser(args[2]).send().notice("You are now an " + Colors.BOLD + "ADMIN" + Colors.NORMAL + " for channel " + event.getChannel().getName());
+                        return true;
+                    } else {
+                        MessageUtils.sendChannel(event, newuser + " is already on the list!");
                         return true;
                     }
                 }
@@ -195,34 +175,30 @@ public class Add extends Command {
             if (type.equalsIgnoreCase("everyone")) {
                 if (args.length == 3) {
                     if (commands.containsKey(Character.toUpperCase(args[2].charAt(0)) + event.getMessage().split(" ")[2].substring(1).toLowerCase()) || new File("plugins/" + Character.toUpperCase(args[2].charAt(0)) + event.getMessage().split(" ")[2].substring(1).toLowerCase() + ".bsh").exists() || args[2].equalsIgnoreCase("custom") || args[2].equalsIgnoreCase("custom.command")) {
-                        try {
-                            String check = args[2];
-                            String command;
-                            if (!check.contains("command.")) {
-                                command = "command." + check;
-                            } else {
-                                command = check;
-                            }
+                        String check = args[2];
+                        String command;
+                        if (!check.contains("command.")) {
+                            command = "command." + check;
+                        } else {
+                            command = check;
+                        }
 
-                            String strFileJson = JsonUtils.getStringFromFile(Jsonfile);
-                            JsonObject jsonObj = JsonUtils.getJsonObject(strFileJson);
-                            if (!jsonObj.getAsJsonObject("Perms").get("Everyone").toString().contains(command)) {
-                                temp = jsonObj.getAsJsonObject("Perms").get("Everyone").toString();
-                                String[] tempArray = (temp.replaceAll("[\\[\\]\"]", "") + "," + command + "").split(",");
-                                jsonObj.getAsJsonObject("Perms").add("Everyone", Json(tempArray));
-                                JsonUtils.writeJsonFile(file, jsonObj.toString());
-                                MessageUtils.sendUserNotice(event, "Everyone is now able to use the command '" + args[2] + "'");
-                                String perms = JsonUtils.getStringFromFile(Jsonfile);
-                                Perms p = JsonUtils.getPermsFromString(perms);
-                                Main.map.put(event.getChannel().getName().toLowerCase(), p);
-                                MessageUtils.sendUserNotice(event, "Reloaded Permissions");
-                                return true;
-                            } else {
-                                MessageUtils.sendChannel(event, args[2] + " is already on the list!");
-                                return true;
-                            }
-                        } catch (Exception ex) {
-                            ex.printStackTrace();
+                        String strFileJson = JsonUtils.getStringFromFile(Jsonfile);
+                        JsonObject jsonObj = JsonUtils.getJsonObject(strFileJson);
+                        if (!jsonObj.getAsJsonObject("Perms").get("Everyone").toString().contains(command)) {
+                            temp = jsonObj.getAsJsonObject("Perms").get("Everyone").toString();
+                            String[] tempArray = (temp.replaceAll("[\\[\\]\"]", "") + "," + command + "").split(",");
+                            jsonObj.getAsJsonObject("Perms").add("Everyone", Json(tempArray));
+                            JsonUtils.writeJsonFile(file, jsonObj.toString());
+                            MessageUtils.sendUserNotice(event, "Everyone is now able to use the command '" + args[2] + "'");
+                            String perms = JsonUtils.getStringFromFile(Jsonfile);
+                            Perms p = JsonUtils.getPermsFromString(perms);
+                            Main.map.put(event.getChannel().getName().toLowerCase(), p);
+                            MessageUtils.sendUserNotice(event, "Reloaded Permissions");
+                            return true;
+                        } else {
+                            MessageUtils.sendChannel(event, args[2] + " is already on the list!");
+                            return true;
                         }
                     } else {
                         MessageUtils.sendChannel(event, "There is no command by that name!");
@@ -235,31 +211,27 @@ public class Add extends Command {
                 if (PermissionManager.hasExec(event.getUser().getNick())) {
                     if (args.length == 3) {
                         if (commands.containsKey(Character.toUpperCase(args[2].charAt(0)) + event.getMessage().split(" ")[2].substring(1).toLowerCase()) || new File("plugins/" + Character.toUpperCase(args[2].charAt(0)) + event.getMessage().split(" ")[2].substring(1).toLowerCase() + ".bsh").exists()) {
-                            try {
-                                String check = args[2];
-                                String command;
-                                if (!check.contains("command.")) {
-                                    command = "command." + check;
-                                } else {
-                                    command = check;
-                                }
+                            String check = args[2];
+                            String command;
+                            if (!check.contains("command.")) {
+                                command = "command." + check;
+                            } else {
+                                command = check;
+                            }
 
-                                String strFileJson = JsonUtils.getStringFromFile(Main.globalperm.toString());
-                                JsonObject jsonObj = JsonUtils.getJsonObject(strFileJson);
-                                if (!jsonObj.get("Permissions").toString().contains(command)) {
-                                    temp = jsonObj.getAsJsonObject("Permissions").toString();
-                                    String[] tempArray = (temp.replaceAll("[\\[\\]\"]", "") + "," + command + "").split(",");
-                                    jsonObj.add("Permissions", Json(tempArray));
-                                    JsonUtils.writeJsonFile(Main.globalperm, jsonObj.toString());
-                                    MessageUtils.sendUserNotice(event, args[2] + " was added to the list!");
-                                    MessageUtils.sendUserNotice(event, "Reloaded Permissions");
-                                    return true;
-                                } else {
-                                    MessageUtils.sendChannel(event, args[2] + " is already on the list!");
-                                    return true;
-                                }
-                            } catch (Exception ex) {
-                                ex.printStackTrace();
+                            String strFileJson = JsonUtils.getStringFromFile(Main.globalperm.toString());
+                            JsonObject jsonObj = JsonUtils.getJsonObject(strFileJson);
+                            if (!jsonObj.get("Permissions").toString().contains(command)) {
+                                temp = jsonObj.getAsJsonObject("Permissions").toString();
+                                String[] tempArray = (temp.replaceAll("[\\[\\]\"]", "") + "," + command + "").split(",");
+                                jsonObj.add("Permissions", Json(tempArray));
+                                JsonUtils.writeJsonFile(Main.globalperm, jsonObj.toString());
+                                MessageUtils.sendUserNotice(event, args[2] + " was added to the list!");
+                                MessageUtils.sendUserNotice(event, "Reloaded Permissions");
+                                return true;
+                            } else {
+                                MessageUtils.sendChannel(event, args[2] + " is already on the list!");
+                                return true;
                             }
                         } else {
                             MessageUtils.sendChannel(event, "There is no command by that name!");
@@ -275,94 +247,75 @@ public class Add extends Command {
             String strFileJson;
             String channel;
             String temp;
-            try {
-                PreparedStatement stmt1 = Main.database.prepareStatement("SELECT Channel, Permission FROM `Channel_Permissions` WHERE Channel = '" + event.getChannel().getName() + "';");
-                ResultSet rs1 = stmt1.executeQuery();
-                rs1.next();
-                strFileJson = rs1.getString("Permission");
-                channel = rs1.getString("Channel");
-            } catch (Exception e) {
-                e.printStackTrace();
-                return false;
-            }
+            PreparedStatement stmt1 = Main.database.prepareStatement("SELECT Channel, Permission FROM `Channel_Permissions` WHERE Channel = '" + event.getChannel().getName() + "';");
+            ResultSet rs1 = stmt1.executeQuery();
+            rs1.next();
+            strFileJson = rs1.getString("Permission");
+            channel = rs1.getString("Channel");
 
             if (type.equalsIgnoreCase("mod")) {
                 if (args.length == 3) {
-
-                    try {
-                        if (!event.getChannel().getUsers().contains(event.getBot().getUserChannelDao().getUser(args[2])) || new File("plugins/" + Character.toUpperCase(args[2].charAt(0)) + event.getMessage().split(" ")[2].substring(1).toLowerCase() + ".bsh").exists()) {
-                            MessageUtils.sendChannel(event, "There is no user by that name!");
-                            return false;
-                        }
-
-                        User newUser = event.getBot().getUserChannelDao().getUser(args[2]);
-                        String newuser = Utils.getAccount(event.getBot().getUserChannelDao().getUser(args[2]), event);
-                        if (newuser.isEmpty()) {
-                            System.out.println("Could not get User info!");
-                            return false;
-                        }
-
-                        if (!Main.Login.containsKey(newUser.getNick())) {
-                            Main.Login.put(newUser.getNick(), newuser);
-                        }
-
-                        JsonObject jsonObj = JsonUtils.getJsonObject(strFileJson);
-                        if (!isAdded(newUser, event.getChannel().getName(), args)) {
-                            temp = jsonObj.getAsJsonObject("Perms").get("Mods").toString();
-                            String[] tempArray = (temp.replaceAll("[\\[\\]\"]", "") + "," + newuser + "").split(",");
-                            jsonObj.getAsJsonObject("Perms").add("Mods", Json(tempArray));
-                            PreparedStatement stmt1 = Main.database.prepareStatement("UPDATE `Channel_Permissions` SET `Permission` = '" + jsonObj.toString() + "' WHERE `Channel` = '" + channel + "';");
-                            stmt1.execute();
-                            MessageUtils.sendUserNotice(event, newuser + " is now an Moderator for channel " + event.getChannel().getName());
-                            Perms p = JsonUtils.getPermsFromString(jsonObj.toString());
-                            Main.map.put(event.getChannel().getName().toLowerCase(), p);
-                            MessageUtils.sendUserNotice(event, "Reloaded Permissions");
-                            event.getBot().getUserChannelDao().getUser(args[2]).send().notice("You are now an " + Colors.BOLD + "MODERATOR" + Colors.NORMAL + " for channel " + event.getChannel().getName());
-                            return true;
-                        } else {
-                            MessageUtils.sendChannel(event, newuser + " is already on the list!");
-                            return true;
-                        }
-
-                    } catch (Exception ex) {
-                        ex.printStackTrace();
-                        MessageUtils.sendChannel(event, "Please enter a valid username!");
+                    if (!event.getChannel().getUsers().contains(event.getBot().getUserChannelDao().getUser(args[2])) || new File("plugins/" + Character.toUpperCase(args[2].charAt(0)) + event.getMessage().split(" ")[2].substring(1).toLowerCase() + ".bsh").exists()) {
+                        MessageUtils.sendChannel(event, "There is no user by that name!");
                         return false;
                     }
 
-                }
+                    User newUser = event.getBot().getUserChannelDao().getUser(args[2]);
+                    String newuser = Utils.getAccount(event.getBot().getUserChannelDao().getUser(args[2]), event);
+                    if (newuser.isEmpty()) {
+                        System.out.println("Could not get User info!");
+                        return false;
+                    }
 
+                    if (!Main.Login.containsKey(newUser.getNick())) {
+                        Main.Login.put(newUser.getNick(), newuser);
+                    }
+
+                    JsonObject jsonObj = JsonUtils.getJsonObject(strFileJson);
+                    if (!isAdded(newUser, event.getChannel().getName(), args)) {
+                        temp = jsonObj.getAsJsonObject("Perms").get("Mods").toString();
+                        String[] tempArray = (temp.replaceAll("[\\[\\]\"]", "") + "," + newuser + "").split(",");
+                        jsonObj.getAsJsonObject("Perms").add("Mods", Json(tempArray));
+                        stmt1 = Main.database.prepareStatement("UPDATE `Channel_Permissions` SET `Permission` = '" + jsonObj.toString() + "' WHERE `Channel` = '" + channel + "';");
+                        stmt1.execute();
+                        MessageUtils.sendUserNotice(event, newuser + " is now an Moderator for channel " + event.getChannel().getName());
+                        Perms p = JsonUtils.getPermsFromString(jsonObj.toString());
+                        Main.map.put(event.getChannel().getName().toLowerCase(), p);
+                        MessageUtils.sendUserNotice(event, "Reloaded Permissions");
+                        event.getBot().getUserChannelDao().getUser(args[2]).send().notice("You are now an " + Colors.BOLD + "MODERATOR" + Colors.NORMAL + " for channel " + event.getChannel().getName());
+                        return true;
+                    } else {
+                        MessageUtils.sendChannel(event, newuser + " is already on the list!");
+                        return true;
+                    }
+                }
             }
             if (type.equalsIgnoreCase("modperms")) {
                 if (args.length == 3) {
                     if (commands.containsKey(Character.toUpperCase(args[2].charAt(0)) + event.getMessage().split(" ")[2].substring(1).toLowerCase()) || new File("plugins/" + Character.toUpperCase(args[2].charAt(0)) + event.getMessage().split(" ")[2].substring(1).toLowerCase() + ".bsh").exists() || args[2].equalsIgnoreCase("custom") || args[2].equalsIgnoreCase("custom.command")) {
-                        try {
-                            String check = args[2];
-                            String command;
-                            if (!check.contains("command.")) {
-                                command = "command." + check;
-                            } else {
-                                command = check;
-                            }
+                        String check = args[2];
+                        String command;
+                        if (!check.contains("command.")) {
+                            command = "command." + check;
+                        } else {
+                            command = check;
+                        }
 
-                            JsonObject jsonObj = JsonUtils.getJsonObject(strFileJson);
-                            if (!jsonObj.getAsJsonObject("Perms").get("ModPerms").toString().contains(command)) {
-                                temp = jsonObj.getAsJsonObject("Perms").get("ModPerms").toString();
-                                String[] tempArray = (temp.replaceAll("[\\[\\]\"]", "") + "," + command + "").split(",");
-                                jsonObj.getAsJsonObject("Perms").add("ModPerms", Json(tempArray));
-                                PreparedStatement stmt1 = Main.database.prepareStatement("UPDATE `Channel_Permissions` SET `Permission` = '" + jsonObj.toString() + "' WHERE `Channel` = '" + channel + "';");
-                                stmt1.execute();
-                                MessageUtils.sendUserNotice(event, "Moderators are now able to use the command '" + args[2] + "'");
-                                Perms p = JsonUtils.getPermsFromString(jsonObj.toString());
-                                Main.map.put(event.getChannel().getName().toLowerCase(), p);
-                                MessageUtils.sendUserNotice(event, "Reloaded Permissions");
-                                return true;
-                            } else {
-                                MessageUtils.sendChannel(event, args[2] + " is already on the list!");
-                                return true;
-                            }
-                        } catch (Exception ex) {
-                            ex.printStackTrace();
+                        JsonObject jsonObj = JsonUtils.getJsonObject(strFileJson);
+                        if (!jsonObj.getAsJsonObject("Perms").get("ModPerms").toString().contains(command)) {
+                            temp = jsonObj.getAsJsonObject("Perms").get("ModPerms").toString();
+                            String[] tempArray = (temp.replaceAll("[\\[\\]\"]", "") + "," + command + "").split(",");
+                            jsonObj.getAsJsonObject("Perms").add("ModPerms", Json(tempArray));
+                            stmt1 = Main.database.prepareStatement("UPDATE `Channel_Permissions` SET `Permission` = '" + jsonObj.toString() + "' WHERE `Channel` = '" + channel + "';");
+                            stmt1.execute();
+                            MessageUtils.sendUserNotice(event, "Moderators are now able to use the command '" + args[2] + "'");
+                            Perms p = JsonUtils.getPermsFromString(jsonObj.toString());
+                            Main.map.put(event.getChannel().getName().toLowerCase(), p);
+                            MessageUtils.sendUserNotice(event, "Reloaded Permissions");
+                            return true;
+                        } else {
+                            MessageUtils.sendChannel(event, args[2] + " is already on the list!");
+                            return true;
                         }
                     } else {
                         MessageUtils.sendChannel(event, "There is no command by that name!");
@@ -372,84 +325,71 @@ public class Add extends Command {
             }
             if (type.equalsIgnoreCase("admin")) {
                 if (args.length == 3) {
-
-                    try {
-                        if (!event.getChannel().getUsers().contains(event.getBot().getUserChannelDao().getUser(args[2])) || new File("plugins/" + Character.toUpperCase(args[2].charAt(0)) + event.getMessage().split(" ")[2].substring(1).toLowerCase() + ".bsh").exists()) {
-                            MessageUtils.sendChannel(event, "There is no user by that name!");
-                            return false;
-                        }
-
-                        User newUser = event.getBot().getUserChannelDao().getUser(args[2]);
-                        String newuser = Utils.getAccount(event.getBot().getUserChannelDao().getUser(args[2]), event);
-
-                        if (newuser.isEmpty()) {
-                            System.out.println("Could not get User info!");
-                            return false;
-                        }
-
-                        if (!Main.Login.containsKey(newUser.getNick())) {
-                            Main.Login.put(newUser.getNick(), newuser);
-                        }
-
-                        JsonObject jsonObj = JsonUtils.getJsonObject(strFileJson);
-                        if (!isAdded(newUser, event.getChannel().getName(), args)) {
-                            temp = jsonObj.getAsJsonObject("Perms").get("Admins").toString();
-                            String[] tempArray = (temp.replaceAll("[\\[\\]\"]", "") + "," + newuser + "").split(",");
-                            jsonObj.getAsJsonObject("Perms").add("Admins", Json(tempArray));
-                            PreparedStatement stmt1 = Main.database.prepareStatement("UPDATE `Channel_Permissions` SET `Permission` = '" + jsonObj.toString() + "' WHERE `Channel` = '" + channel + "';");
-                            stmt1.execute();
-                            MessageUtils.sendUserNotice(event, newuser + " is now an Admin for channel " + event.getChannel().getName());
-                            Perms p = JsonUtils.getPermsFromString(jsonObj.toString());
-                            Main.map.put(event.getChannel().getName().toLowerCase(), p);
-                            MessageUtils.sendUserNotice(event, "Reloaded Permissions");
-                            event.getBot().getUserChannelDao().getUser(args[2]).send().notice("You are now an " + Colors.BOLD + "ADMIN" + Colors.NORMAL + " for channel " + event.getChannel().getName());
-                            return true;
-                        } else {
-                            MessageUtils.sendChannel(event, newuser + " is already on the list!");
-                            return true;
-                        }
-
-                    } catch (Exception ex) {
-                        ex.printStackTrace();
-                        MessageUtils.sendChannel(event, "Please enter a valid username!");
+                    if (!event.getChannel().getUsers().contains(event.getBot().getUserChannelDao().getUser(args[2])) || new File("plugins/" + Character.toUpperCase(args[2].charAt(0)) + event.getMessage().split(" ")[2].substring(1).toLowerCase() + ".bsh").exists()) {
+                        MessageUtils.sendChannel(event, "There is no user by that name!");
                         return false;
                     }
 
+                    User newUser = event.getBot().getUserChannelDao().getUser(args[2]);
+                    String newuser = Utils.getAccount(event.getBot().getUserChannelDao().getUser(args[2]), event);
+
+                    if (newuser.isEmpty()) {
+                        System.out.println("Could not get User info!");
+                        return false;
+                    }
+
+                    if (!Main.Login.containsKey(newUser.getNick())) {
+                        Main.Login.put(newUser.getNick(), newuser);
+                    }
+
+                    JsonObject jsonObj = JsonUtils.getJsonObject(strFileJson);
+                    if (!isAdded(newUser, event.getChannel().getName(), args)) {
+                        temp = jsonObj.getAsJsonObject("Perms").get("Admins").toString();
+                        String[] tempArray = (temp.replaceAll("[\\[\\]\"]", "") + "," + newuser + "").split(",");
+                        jsonObj.getAsJsonObject("Perms").add("Admins", Json(tempArray));
+                        stmt1 = Main.database.prepareStatement("UPDATE `Channel_Permissions` SET `Permission` = '" + jsonObj.toString() + "' WHERE `Channel` = '" + channel + "';");
+                        stmt1.execute();
+                        MessageUtils.sendUserNotice(event, newuser + " is now an Admin for channel " + event.getChannel().getName());
+                        Perms p = JsonUtils.getPermsFromString(jsonObj.toString());
+                        Main.map.put(event.getChannel().getName().toLowerCase(), p);
+                        MessageUtils.sendUserNotice(event, "Reloaded Permissions");
+                        event.getBot().getUserChannelDao().getUser(args[2]).send().notice("You are now an " + Colors.BOLD + "ADMIN" + Colors.NORMAL + " for channel " + event.getChannel().getName());
+                        return true;
+                    } else {
+                        MessageUtils.sendChannel(event, newuser + " is already on the list!");
+                        return true;
+                    }
                 }
             }
             if (type.equalsIgnoreCase("everyone")) {
 
                 if (args.length == 3) {
                     if (commands.containsKey(Character.toUpperCase(args[2].charAt(0)) + event.getMessage().split(" ")[2].substring(1).toLowerCase()) || new File("plugins/" + Character.toUpperCase(args[2].charAt(0)) + event.getMessage().split(" ")[2].substring(1).toLowerCase() + ".bsh").exists() || args[2].equalsIgnoreCase("custom") || args[2].equalsIgnoreCase("custom.command")) {
-                        try {
-                            String check = args[2];
-                            String command;
-                            if (!check.contains("command.")) {
-                                command = "command." + check;
-                            } else {
-                                command = check;
-                            }
+                        String check = args[2];
+                        String command;
+                        if (!check.contains("command.")) {
+                            command = "command." + check;
+                        } else {
+                            command = check;
+                        }
 
-                            JsonObject jsonObj = JsonUtils.getJsonObject(strFileJson);
-                            if (!jsonObj.getAsJsonObject("Perms").get("Everyone").toString().contains(command)) {
-                                temp = jsonObj.getAsJsonObject("Perms").get("Everyone").toString();
-                                String[] tempArray = (temp.replaceAll("[\\[\\]\"]", "") + "," + command + "").split(",");
-                                jsonObj.getAsJsonObject("Perms").add("Everyone", Json(tempArray));
-                                PreparedStatement stmt1 = Main.database.prepareStatement("UPDATE `Channel_Permissions` SET `Permission` = '" + jsonObj.toString() + "' WHERE `Channel` = '" + channel + "';");
-                                stmt1.execute();
-                                MessageUtils.sendUserNotice(event, "Everyone is now able to use the command '" + args[2] + "'");
-                                Perms p = JsonUtils.getPermsFromString(jsonObj.toString());
-                                Main.map.put(event.getChannel().getName().toLowerCase(), p);
-                                System.out.println(Main.map.get(event.getChannel().getName()) + "\n" + Main.map.get("#gazserver"));
+                        JsonObject jsonObj = JsonUtils.getJsonObject(strFileJson);
+                        if (!jsonObj.getAsJsonObject("Perms").get("Everyone").toString().contains(command)) {
+                            temp = jsonObj.getAsJsonObject("Perms").get("Everyone").toString();
+                            String[] tempArray = (temp.replaceAll("[\\[\\]\"]", "") + "," + command + "").split(",");
+                            jsonObj.getAsJsonObject("Perms").add("Everyone", Json(tempArray));
+                            stmt1 = Main.database.prepareStatement("UPDATE `Channel_Permissions` SET `Permission` = '" + jsonObj.toString() + "' WHERE `Channel` = '" + channel + "';");
+                            stmt1.execute();
+                            MessageUtils.sendUserNotice(event, "Everyone is now able to use the command '" + args[2] + "'");
+                            Perms p = JsonUtils.getPermsFromString(jsonObj.toString());
+                            Main.map.put(event.getChannel().getName().toLowerCase(), p);
+                            System.out.println(Main.map.get(event.getChannel().getName()) + "\n" + Main.map.get("#gazserver"));
 
-                                MessageUtils.sendUserNotice(event, "Reloaded Permissions");
-                                return true;
-                            } else {
-                                MessageUtils.sendChannel(event, args[2] + " is already on the list!");
-                                return true;
-                            }
-                        } catch (Exception ex) {
-                            ex.printStackTrace();
+                            MessageUtils.sendUserNotice(event, "Reloaded Permissions");
+                            return true;
+                        } else {
+                            MessageUtils.sendChannel(event, args[2] + " is already on the list!");
+                            return true;
                         }
                     } else {
                         MessageUtils.sendChannel(event, "There is no command by that name!");

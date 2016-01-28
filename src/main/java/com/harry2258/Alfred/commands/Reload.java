@@ -8,6 +8,7 @@ import org.pircbotx.hooks.events.MessageEvent;
 import java.io.File;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 
 /**
  * Created by Hardik on 1/15/14.
@@ -21,23 +22,28 @@ public class Reload extends Command {
     }
 
     @Override
-    public boolean execute(MessageEvent event) throws Exception {
+    public boolean execute(MessageEvent event){
         if (!config.useDatabase) {
-            Main.map.remove(event.getChannel().getName().toLowerCase());
-            File file = new File(System.getProperty("user.dir") + "/perms/" + event.getChannel().getName().toLowerCase() + "/" + "perms.json");
-            if (!file.exists()) {
-                System.out.println("Creating perms.json for " + event.getChannel());
-                JsonUtils.createJsonStructure(file);
-            }
-            String perms = JsonUtils.getStringFromFile(file.toString());
-            Perms p = JsonUtils.getPermsFromString(perms);
-            Main.map.put(event.getChannel().getName(), p);
-
-            MessageUtils.sendUserNotice(event, "Permissions were reloaded for " + event.getChannel().getName().toLowerCase() + "!");
-            return true;
-        } else {
             try {
-                PreparedStatement stmt3 = Main.database.prepareStatement("SELECT a.Channel, a.Permission, a.URL FROM `Channel_Permissions` a, `Rejoin_Channels` b WHERE a.Channel = b.Channel;");
+                Main.map.remove(event.getChannel().getName().toLowerCase());
+                File file = new File(System.getProperty("user.dir") + "/perms/" + event.getChannel().getName().toLowerCase() + "/" + "perms.json");
+                if (!file.exists()) {
+                    System.out.println("Creating perms.json for " + event.getChannel());
+                    JsonUtils.createJsonStructure(file);
+                }
+                String perms= JsonUtils.getStringFromFile(file.toString());
+                Perms p = JsonUtils.getPermsFromString(perms);
+                Main.map.put(event.getChannel().getName(), p);
+
+                MessageUtils.sendUserNotice(event, "Permissions were reloaded for " + event.getChannel().getName().toLowerCase() + "!");
+                return true;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } else {
+            PreparedStatement stmt3 = null;
+            try {
+                stmt3 = Main.database.prepareStatement("SELECT a.Channel, a.Permission, a.URL FROM `Channel_Permissions` a, `Rejoin_Channels` b WHERE a.Channel = b.Channel;");
                 ResultSet rs3 = stmt3.executeQuery();
                 while (rs3.next()) {
                     String channel = rs3.getString("Channel");
@@ -57,11 +63,11 @@ public class Reload extends Command {
 
                 MessageUtils.sendChannel(event, "Reloaded settings for currently connected channel.");
                 return true;
-            } catch (Exception e) {
+            } catch (SQLException e) {
                 e.printStackTrace();
             }
         }
-        return false;
+        return false; //Line 39 and Line 65 will return true if it reloaded. Else return false.
     }
 
     @Override

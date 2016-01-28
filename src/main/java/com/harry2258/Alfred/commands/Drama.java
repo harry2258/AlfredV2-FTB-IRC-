@@ -16,11 +16,7 @@ public class Drama extends Command {
 
     @Override
     public boolean execute(MessageEvent event) throws Exception {
-        try {
-            MessageUtils.sendChannel(event, Utils.getDrama());
-        } catch (Exception e) {
-            return false;
-        }
+        MessageUtils.sendChannel(event, Utils.getDrama());
         return true;
     }
 

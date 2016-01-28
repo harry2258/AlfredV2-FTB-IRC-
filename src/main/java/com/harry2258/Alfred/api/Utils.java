@@ -27,7 +27,9 @@ import java.io.*;
 import java.net.*;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -181,7 +183,7 @@ public class Utils {
                         " | Legacy Skins: " + report.getAsJsonObject("skins").get("title").getAsString() +
                         " | Website: " + report.getAsJsonObject("website").get("title").getAsString() +
                         " | Realms: " + report.getAsJsonObject("realms").get("title").getAsString()).replaceAll("Online", Colors.DARK_GREEN + "✓" + Colors.NORMAL).replaceAll("Offline", Colors.RED + "✘" + Colors.NORMAL).replaceAll("Server Error", Colors.RED + "Server Error" + Colors.NORMAL);
-            } catch (Exception x) {
+            } catch (IOException x) {
                 x.printStackTrace();
             }
 
@@ -198,7 +200,7 @@ public class Utils {
             String result = first.readLine().trim();
             return JsonUtils.getJsonObject(result).get("shorturl").getAsString();
 
-        } catch (Exception e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
         return null;
@@ -286,7 +288,7 @@ public class Utils {
                 System.out.println("Ping to " + address + " was success [Time " + (endTime - startTime) + " MS ]");
                 return true;
             }
-        } catch (final Exception e1) {
+        } catch (final IOException e1) {
             e1.printStackTrace();
         }
         return false;
@@ -342,7 +344,7 @@ public class Utils {
             } else {
                 bans = Colors.BOLD + user + Colors.NORMAL + " has a total of " + Colors.BOLD + i + Colors.NORMAL + " bans!";
             }
-        } catch (Exception x) {
+        } catch (IOException x) {
             x.printStackTrace();
             bans = "Please make sure you spelled the Minecraft name right! ";
         }
@@ -362,7 +364,7 @@ public class Utils {
                 insult1 = line.replaceAll("</font>", " ").replace("</form><hr>", "").replaceAll("<br>", " ");
                 br.close();
             } while (insult1.isEmpty());
-        } catch (Exception e1) {
+        } catch (IOException e1) {
             e1.printStackTrace();
         }
 
@@ -377,7 +379,7 @@ public class Utils {
             Document doc = Jsoup.connect("http://www.chainofgood.co.uk/passiton").userAgent("Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/537.17 (KHTML, like Gecko) Chrome/24.0.1312.57 Safari/537.17").get();
             Elements medium = doc.select(".medium");
             compliment = medium.get(random.nextInt(medium.size())).toString().replaceAll("<[^>]*>", "");
-        } catch (Exception e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
         return compliment;
@@ -388,7 +390,7 @@ public class Utils {
         try {
             Document doc = Jsoup.connect("http://mc-drama.herokuapp.com/raw").get();
             drama = doc.text();
-        } catch (Exception e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
         return drama;
@@ -396,21 +398,17 @@ public class Utils {
 
     public static void Parser(File file) {
         JsonObject obj = new JsonObject();
-        try {
-            obj.addProperty("MCVersion", true);
-            obj.addProperty("JavaVersion", true);
-            obj.addProperty("Modded", true);
-            obj.addProperty("ServerBrand", true);
-            obj.addProperty("ServerType", true);
-            obj.addProperty("Description", true);
-            obj.addProperty("OSName", true);
-            obj.addProperty("Suggestion", true);
-            obj.addProperty("Information", true);
-            obj.addProperty("Stacktrace", true);
-            JsonUtils.writeJsonFile(file, obj.toString());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        obj.addProperty("MCVersion", true);
+        obj.addProperty("JavaVersion", true);
+        obj.addProperty("Modded", true);
+        obj.addProperty("ServerBrand", true);
+        obj.addProperty("ServerType", true);
+        obj.addProperty("Description", true);
+        obj.addProperty("OSName", true);
+        obj.addProperty("Suggestion", true);
+        obj.addProperty("Information", true);
+        obj.addProperty("Stacktrace", true);
+        JsonUtils.writeJsonFile(file, obj.toString());
     }
 
     public static void Geveryone(File file) {
@@ -425,7 +423,7 @@ public class Utils {
                 out.newLine();
             }
             out.close();
-        } catch (Exception e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
@@ -442,7 +440,7 @@ public class Utils {
                 out.newLine();
             }
             out.close();
-        } catch (Exception e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
@@ -459,7 +457,7 @@ public class Utils {
                 out.newLine();
             }
             out.close();
-        } catch (Exception e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
@@ -476,7 +474,7 @@ public class Utils {
                 out.newLine();
             }
             out.close();
-        } catch (Exception e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
@@ -510,7 +508,7 @@ public class Utils {
             long diffHours = diff / (60 * 60 * 1000) % 24;
             long diffDays = diff / (24 * 60 * 60 * 1000);
             dif = Math.abs(diffDays) + " Days, " + Math.abs(diffHours) + " Hours, " + Math.abs(diffMinutes) + " Minutes, " + Math.abs(diffSeconds) + " Seconds";
-        } catch (Exception e) {
+        } catch (ParseException e) {
             e.printStackTrace();
         }
         return dif;
@@ -553,7 +551,7 @@ public class Utils {
                 System.out.println("Loaded setting for channel: " + channel);
             }
             return true;
-        } catch (Exception e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return false;

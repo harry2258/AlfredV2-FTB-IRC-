@@ -136,7 +136,7 @@ public class Config {
 
             System.out.println("Update Database: " + updateDatabase);
             return useDatabase;
-        } catch (Exception e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
         return false;
@@ -156,13 +156,8 @@ public class Config {
             s.printStackTrace();
         }
 
-        try {
-            if (updateDatabase) {
-                UpdateDatabase(conn);
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
+        if (updateDatabase) {
+            UpdateDatabase(conn);
         }
 
         try {
@@ -295,7 +290,7 @@ public class Config {
 
         } catch (SQLException e) {
             Logger.getLogger(Config.class.getName()).log(Level.SEVERE, null, e);
-        } catch (Exception e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }

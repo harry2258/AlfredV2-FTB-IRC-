@@ -22,44 +22,38 @@ public class Ping extends Command {
     public boolean execute(MessageEvent event) throws Exception {
         String returns;
         Long time;
-        try {
-            String[] args = event.getMessage().split(" ");
-            if (args.length == 2) {
-                String host = args[1].replaceAll("http://|https://|www.", "");
-                Long start = System.currentTimeMillis();
-
-                if (Utils.ValidIP(host)) {
-                    Socket s = new Socket(host, 80);
-                    s.close();
-                } else {
-                    Socket s = new Socket(InetAddress.getByName(host), 80);
-                    s.close();
-                }
-
-                time = System.currentTimeMillis() - start;
-                returns = args[1] + " response time: " + time + " miliseconds";
-                MessageUtils.sendChannel(event, returns);
-                return true;
-            }
-
-            String host = args[1];
-            int port = Integer.valueOf(args[2]);
+        String[] args = event.getMessage().split(" ");
+        if (args.length == 2) {
+            String host = args[1].replaceAll("http://|https://|www.", "");
             Long start = System.currentTimeMillis();
 
             if (Utils.ValidIP(host)) {
-                Socket s = new Socket(host, port);
+                Socket s = new Socket(host, 80);
                 s.close();
             } else {
-                Socket s = new Socket(InetAddress.getByName(host), port);
+                Socket s = new Socket(InetAddress.getByName(host), 80);
                 s.close();
             }
-            time = System.currentTimeMillis() - start;
-            returns = "Response time: " + time + " miliseconds";
 
-        } catch (Exception ex) {
-            MessageUtils.sendChannel(event, ex.toString());
-            return false;
+            time = System.currentTimeMillis() - start;
+            returns = args[1] + " response time: " + time + " miliseconds";
+            MessageUtils.sendChannel(event, returns);
+            return true;
         }
+
+        String host = args[1];
+        int port = Integer.valueOf(args[2]);
+        Long start = System.currentTimeMillis();
+
+        if (Utils.ValidIP(host)) {
+            Socket s = new Socket(host, port);
+            s.close();
+        } else {
+            Socket s = new Socket(InetAddress.getByName(host), port);
+            s.close();
+        }
+        time = System.currentTimeMillis() - start;
+        returns = "Response time: " + time + " miliseconds";
         MessageUtils.sendChannel(event, returns);
         return true;
     }

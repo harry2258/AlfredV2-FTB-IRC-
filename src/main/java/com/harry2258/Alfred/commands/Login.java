@@ -6,6 +6,8 @@ import com.harry2258.Alfred.api.*;
 import com.harry2258.Alfred.json.Perms;
 import org.pircbotx.hooks.events.MessageEvent;
 
+import java.io.IOException;
+
 /**
  * Created by Hardik on 1/15/14.
  */
@@ -36,7 +38,7 @@ public class Login extends Command {
                     return "Exec";
             }
 
-        } catch (Exception e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
 
