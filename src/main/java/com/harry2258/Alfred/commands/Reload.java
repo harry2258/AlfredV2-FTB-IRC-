@@ -67,7 +67,7 @@ public class Reload extends Command {
                 e.printStackTrace();
             }
         }
-        return false; //Line 37 and Line 58 will return true if it reloaded. Else return false.
+        return false; //Line 39 and Line 65 will return true if it reloaded. Else return false.
     }
 
     @Override
