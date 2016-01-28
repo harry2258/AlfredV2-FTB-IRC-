@@ -20,7 +20,7 @@ apply plugin: 'com.github.johnrengelman.shadow'
 
 project.ext {
     mainClass = 'com.harry2258.Alfred.Main'
-    currentYear = '2013'
+    currentYear = '2016'
 }
 group = 'com.harry2258'
 version = '2'
@@ -52,7 +52,6 @@ dependencies {
     compile 'commons-io:commons-io:2.4'
     compile 'ca.pjer:chatter-bot-api:1.3.3'
     compile 'junit:junit:4.12'
-    compile 'org.projectlombok:lombok:1.16.6'
     compile 'net.objecthunter:exp4j:0.4.5'
 }
 
