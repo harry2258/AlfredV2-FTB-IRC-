@@ -57,7 +57,7 @@ public class Reload extends Command {
             MessageUtils.sendChannel(event, "Reloaded settings for currently connected channel.");
             return true;
         }
-        // return false; ?
+     return false; //Line 37 and Line 58 will return true if it reloaded. Else return false.
     }
 
     @Override
