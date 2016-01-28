@@ -127,7 +127,7 @@ public class Reddit extends Thread {
                     chaninfo.put(hur, result);
                 }
                 Thread.sleep(60000);
-            } catch (InterruptedException|IOException e) {
+            } catch (InterruptedException | IOException e) {
                 e.printStackTrace();
                 System.out.println(Thread.currentThread().getName() + " ->> " + e.toString());
                 bot.getUserChannelDao().getUser("batman").send().message("[Reddit] " + e.toString());

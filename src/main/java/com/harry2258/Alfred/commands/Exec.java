@@ -34,7 +34,7 @@ public class Exec extends Command {
             } else {
                 //interpreter.eval("java.lang.String getStuff(java.lang.String command){ java.lang.String output = \"\";java.lang.Process p = Runtime.getRuntime().exec(command}); BufferedReader in = new BufferedReader(new InputStreamReader(p.getInputStream()));java.lang.String temp = \"\";while((temp = in.readLine()) != null){ output += temp + \"\\t\"; } return output; }");
             }
-        } catch (EvalError|UtilEvalError ex) {
+        } catch (EvalError | UtilEvalError ex) {
             Logger.getLogger(Exec.class.getName()).log(Level.SEVERE, null, ex);
         }
     }

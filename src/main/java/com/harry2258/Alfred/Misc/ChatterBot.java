@@ -29,7 +29,7 @@ public class ChatterBot extends Thread {
                 UserAnswered = false;
                 Chat.unlockWaiter();
             }
-        // Shoutout to ChatterBot for stupidly throwing Exception.
+            // Shoutout to ChatterBot for stupidly throwing Exception.
         } catch (Exception e) {
             e.printStackTrace();
         }

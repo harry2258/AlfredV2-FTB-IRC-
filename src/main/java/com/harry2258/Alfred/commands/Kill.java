@@ -79,7 +79,8 @@ public class Kill extends Command {
                         f.get(10, TimeUnit.SECONDS);
                     }
 
-                } catch (InterruptedException ignored) {}
+                } catch (InterruptedException ignored) {
+                }
                 service.shutdown();
                 queue.close();
                 com.harry2258.Alfred.listeners.MessageEvent.waiting = false;
@@ -87,7 +88,7 @@ public class Kill extends Command {
                 return true;
             }
             event.respond("You need to be an Exec. user to be able to kill the bot!");
-        } catch (ExecutionException|TimeoutException ex) {
+        } catch (ExecutionException | TimeoutException ex) {
             Logger.getLogger(Kill.class.getName()).log(Level.SEVERE, null, ex);
             return false;
         }

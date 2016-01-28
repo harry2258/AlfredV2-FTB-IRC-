@@ -55,7 +55,7 @@ public class Update extends Thread {
                     Thread.sleep(10800000);
                 }
                 Thread.sleep(time);
-            } catch (InterruptedException|IOException e) {
+            } catch (InterruptedException | IOException e) {
                 e.printStackTrace();
             }
         }

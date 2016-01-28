@@ -122,7 +122,7 @@ public class Twitter extends Thread {
                     }
                 }
                 Thread.sleep(60000);
-            } catch (InterruptedException|IOException e) {
+            } catch (InterruptedException | IOException e) {
                 System.out.println(Thread.currentThread().getName() + " ->> " + e.toString());
                 e.printStackTrace();
             }

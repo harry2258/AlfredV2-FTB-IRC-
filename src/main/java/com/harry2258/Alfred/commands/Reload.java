@@ -22,7 +22,7 @@ public class Reload extends Command {
     }
 
     @Override
-    public boolean execute(MessageEvent event){
+    public boolean execute(MessageEvent event) {
         if (!config.useDatabase) {
             try {
                 Main.map.remove(event.getChannel().getName().toLowerCase());
@@ -31,7 +31,7 @@ public class Reload extends Command {
                     System.out.println("Creating perms.json for " + event.getChannel());
                     JsonUtils.createJsonStructure(file);
                 }
-                String perms= JsonUtils.getStringFromFile(file.toString());
+                String perms = JsonUtils.getStringFromFile(file.toString());
                 Perms p = JsonUtils.getPermsFromString(perms);
                 Main.map.put(event.getChannel().getName(), p);
 

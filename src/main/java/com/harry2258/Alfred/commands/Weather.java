@@ -1,6 +1,5 @@
 package com.harry2258.Alfred.commands;
 
-import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.harry2258.Alfred.api.*;
 import org.pircbotx.Colors;
@@ -134,10 +133,10 @@ public class Weather extends Command {
             return false;
         }
         Alert = (obj.getAsJsonArray("alerts").get(0).getAsJsonObject().get("description")
-          .getAsString().isEmpty()) ? "None" : Colors.BOLD + Colors.RED + obj.getAsJsonArray
-          ("alerts").get(0).getAsJsonObject().get("description").getAsString() + Colors
-          .NORMAL + " till " + obj.getAsJsonArray("alerts").get(0).getAsJsonObject().get
-          ("expires").getAsString();
+                .getAsString().isEmpty()) ? "None" : Colors.BOLD + Colors.RED + obj.getAsJsonArray
+                ("alerts").get(0).getAsJsonObject().get("description").getAsString() + Colors
+                .NORMAL + " till " + obj.getAsJsonArray("alerts").get(0).getAsJsonObject().get
+                ("expires").getAsString();
 
         MessageUtils.sendChannel(event, city + ", " + state + ": " + Weather + " | " + Temp + " | " + Colors.BOLD + "Humidity" + Colors.NORMAL + ": " + Humidity + " | " + Colors.BOLD + "Winds" + Colors.NORMAL + ": " + Wind + " | Alerts: " + Alert);
 

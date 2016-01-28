@@ -197,7 +197,7 @@ public class Main {
 
                 bot.startBot();
 
-            } catch (SQLException|IOException|IrcException ex) {
+            } catch (SQLException | IOException | IrcException ex) {
                 ex.printStackTrace();
                 System.out.println("Help! I've crashed and I can't recover!");
                 Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);

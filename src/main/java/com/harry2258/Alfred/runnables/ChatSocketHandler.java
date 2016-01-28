@@ -10,7 +10,6 @@ import org.pircbotx.PircBotX;
 
 import java.io.*;
 import java.net.Socket;
-import java.net.SocketException;
 
 class ChatSocketHandler extends Thread {
     private PircBotX bot;

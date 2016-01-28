@@ -13,8 +13,6 @@ import org.pircbotx.hooks.ListenerAdapter;
 
 import java.io.*;
 import java.util.Date;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import static com.harry2258.Alfred.api.CommandRegistry.commands;
 

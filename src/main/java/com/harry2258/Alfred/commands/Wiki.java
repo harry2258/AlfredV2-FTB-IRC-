@@ -22,13 +22,11 @@ import java.util.regex.Pattern;
  */
 public class Wiki extends Command {
 
-    private Config config;
-    private PermissionManager manager;
-
     private static int ReadTimeout = 10; // in Seconds
-
     private static String QueryAllPages = "api.php?format=json&action=query&list=search&srsearch=";
     private static String titlesr = "api.php?&action=query&prop=revisions&rvprop=content&format=json&titles=";
+    private Config config;
+    private PermissionManager manager;
 
     public Wiki() {
         super("Wiki", "Wiki Minecraft stuff!", "Wiki [Query]");
@@ -75,55 +73,6 @@ public class Wiki extends Command {
         m.appendTail(buffer3);
 
         return buffer3.toString();
-    }
-
-    @Override
-    public boolean execute(MessageEvent event) throws Exception {
-        StringBuilder sb = new StringBuilder();
-        String[] args = event.getMessage().split(" ");
-
-        if (args.length == 1) {
-            MessageUtils.sendChannel(event, "Official FTB Wiki: http://ftb.gamepedia.com/");
-            return true;
-        }
-
-        for (int i = 1; i < args.length; i++) {
-            sb.append(args[i]).append(" ");
-        }
-
-        String test = sb.toString().trim();
-
-        if (args[1].equalsIgnoreCase("bc")) {
-            test = "Buildcraft";
-        }
-        String message;
-        if (test.contains("User:")) {
-            message = test;
-        } else {
-            message = URLEncoder.encode(test, "UTF-8").replaceAll("\\+", "_");
-        }
-
-        String Text;
-
-
-        if ((Text = MinecraftWiki(message)) != null) {
-            MessageUtils.sendChannel(event, Text);
-            return true;
-        }
-
-        if ((Text = FTBGamepedia(message)) != null) {
-            MessageUtils.sendChannel(event, Text);
-            return true;
-        }
-
-        if ((Text = FTBwiki(message)) != null) {
-            MessageUtils.sendChannel(event, Text);
-            return true;
-        }
-
-        MessageUtils.sendChannel(event, "The item/block was not found on The Minecraft Wiki, The Official FTB, or on ftbwiki.org | Are you sure you spelled it right?");
-
-        return true;
     }
 
     public static String MinecraftWiki(String message) {
@@ -205,7 +154,8 @@ public class Wiki extends Command {
 
         try {
             URL z = new URL("http://ftb.gamepedia.com/" + message);
-            URLConnection y = z.openConnection();;
+            URLConnection y = z.openConnection();
+            ;
             y.setReadTimeout((int) TimeUnit.SECONDS.toMillis(ReadTimeout));
             y.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/537.17 (KHTML, like Gecko) Chrome/24.0.1312.57 Safari/537.17");
             System.out.println(y.getURL());
@@ -246,7 +196,7 @@ public class Wiki extends Command {
                     return "?";
                 }
                 if (jsonObj.getAsJsonObject("query").get("pages").toString().contains("Vanilla|type=")) {
-                    return jsonObj.getAsJsonObject("query").getAsJsonObject("pages").getAsJsonObject(id).get("title").getAsString().replaceAll("\"","") + " [Vanilla] " + ("http://minecraft.gamepedia.com/" + message);
+                    return jsonObj.getAsJsonObject("query").getAsJsonObject("pages").getAsJsonObject(id).get("title").getAsString().replaceAll("\"", "") + " [Vanilla] " + ("http://minecraft.gamepedia.com/" + message);
                 }
 
                 String APItest = jsonObj.getAsJsonObject("query").getAsJsonObject("pages").getAsJsonObject(id).getAsJsonArray("revisions").get(0).getAsJsonObject().get("*").toString();
@@ -485,6 +435,55 @@ public class Wiki extends Command {
         Result = info + " [ " + URL + " ]";
 
         return Result;
+    }
+
+    @Override
+    public boolean execute(MessageEvent event) throws Exception {
+        StringBuilder sb = new StringBuilder();
+        String[] args = event.getMessage().split(" ");
+
+        if (args.length == 1) {
+            MessageUtils.sendChannel(event, "Official FTB Wiki: http://ftb.gamepedia.com/");
+            return true;
+        }
+
+        for (int i = 1; i < args.length; i++) {
+            sb.append(args[i]).append(" ");
+        }
+
+        String test = sb.toString().trim();
+
+        if (args[1].equalsIgnoreCase("bc")) {
+            test = "Buildcraft";
+        }
+        String message;
+        if (test.contains("User:")) {
+            message = test;
+        } else {
+            message = URLEncoder.encode(test, "UTF-8").replaceAll("\\+", "_");
+        }
+
+        String Text;
+
+
+        if ((Text = MinecraftWiki(message)) != null) {
+            MessageUtils.sendChannel(event, Text);
+            return true;
+        }
+
+        if ((Text = FTBGamepedia(message)) != null) {
+            MessageUtils.sendChannel(event, Text);
+            return true;
+        }
+
+        if ((Text = FTBwiki(message)) != null) {
+            MessageUtils.sendChannel(event, Text);
+            return true;
+        }
+
+        MessageUtils.sendChannel(event, "The item/block was not found on The Minecraft Wiki, The Official FTB, or on ftbwiki.org | Are you sure you spelled it right?");
+
+        return true;
     }
 
     @Override

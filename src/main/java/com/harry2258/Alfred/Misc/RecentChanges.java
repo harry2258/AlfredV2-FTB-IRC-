@@ -6,7 +6,6 @@ import org.pircbotx.Channel;
 import org.pircbotx.Colors;
 import org.pircbotx.PircBotX;
 
-import java.io.IOException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
@@ -79,7 +78,7 @@ public class RecentChanges extends Thread {
                 }
 
                 Thread.sleep(5000);
-            // convertStreamToString() throws the normal exception class. Otherwise, we would
+                // convertStreamToString() throws the normal exception class. Otherwise, we would
                 // just catch IOException and InterruptedException here.
             } catch (Exception e) {
                 changes.remove(tmp);

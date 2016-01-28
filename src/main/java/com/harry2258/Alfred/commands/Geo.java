@@ -87,7 +87,7 @@ public class Geo extends Command {
             info += Colors.BOLD + "Coords: " + Colors.NORMAL + jsonObj.getString("lat").replaceAll("(?:\\.).*", "") + " " + jsonObj.getString("lon").replaceAll("(?:\\.).*", "");
 
             MessageUtils.sendChannel(event, info);
-        } catch (JSONException|IOException e) {
+        } catch (JSONException | IOException e) {
             e.printStackTrace();
             return false;
         }

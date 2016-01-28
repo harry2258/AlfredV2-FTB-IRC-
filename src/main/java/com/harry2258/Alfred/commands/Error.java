@@ -116,7 +116,7 @@ public class Error extends Command {
                 return true;
             }
 
-        } catch (SQLException|ClassNotFoundException e) {
+        } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
             MessageUtils.sendChannel(event, e.toString());
             return true;
@@ -189,7 +189,8 @@ public class Error extends Command {
             stmt.setInt(1, ID);
             stmt.execute();
             stmt.close();
-        } catch (SQLException ignore) {}
+        } catch (SQLException ignore) {
+        }
 
         for (String error : errors) {
             PreparedStatement stmtError = conn.prepareStatement("INSERT INTO ProblemErrors (ProblemID, Error) VALUES (?,?)");

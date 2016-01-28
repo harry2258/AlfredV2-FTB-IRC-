@@ -8,7 +8,6 @@ import org.pircbotx.PircBotX;
 
 import java.io.IOException;
 import java.net.ServerSocket;
-import java.net.SocketException;
 
 public class ChatSocketListener extends Thread {
     private static volatile boolean isRunning = true;
