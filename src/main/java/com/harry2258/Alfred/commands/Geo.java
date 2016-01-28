@@ -4,9 +4,11 @@ import com.google.gson.JsonObject;
 import com.harry2258.Alfred.api.*;
 import org.pircbotx.Colors;
 import org.pircbotx.hooks.events.MessageEvent;
+import twitter4j.JSONException;
 import twitter4j.JSONObject;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.UnknownHostException;
@@ -57,7 +59,7 @@ public class Geo extends Command {
 
                 event.getUser().send().message(info);
                 return true;
-            } catch (Exception e) {
+            } catch (IOException e) {
                 e.printStackTrace();
                 return false;
             }
@@ -85,7 +87,7 @@ public class Geo extends Command {
             info += Colors.BOLD + "Coords: " + Colors.NORMAL + jsonObj.getString("lat").replaceAll("(?:\\.).*", "") + " " + jsonObj.getString("lon").replaceAll("(?:\\.).*", "");
 
             MessageUtils.sendChannel(event, info);
-        } catch (Exception e) {
+        } catch (JSONException|IOException e) {
             e.printStackTrace();
             return false;
         }

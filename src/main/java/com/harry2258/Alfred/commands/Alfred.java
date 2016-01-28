@@ -30,22 +30,17 @@ public class Alfred extends Command {
             event.getUser().send().notice("Try asking me something next time.");
             return true;
         }
-        try {
-            if (answers.isEmpty()) {
-                Document doc = Jsoup.connect("https://www.dropbox.com/s/dfwe23lx1ogttw7/8ball.json?raw=1").get();
-                JsonObject answer = JsonUtils.getJsonObject(doc.text());
-                ArrayList numbers = (ArrayList) CreeperHost.getKeysFromJson(doc.text());
-                for (Object number : numbers) {
-                    answers.add(answer.get(number.toString()).toString());
-                }
+        if (answers.isEmpty()) {
+            Document doc = Jsoup.connect("https://www.dropbox.com/s/dfwe23lx1ogttw7/8ball.json?raw=1").get();
+            JsonObject answer = JsonUtils.getJsonObject(doc.text());
+            ArrayList numbers = (ArrayList) CreeperHost.getKeysFromJson(doc.text());
+            for (Object number : numbers) {
+                answers.add(answer.get(number.toString()).toString());
             }
-            Random Randomizer = new Random();
-            event.getChannel().send().message(answers.get(Randomizer.nextInt(answers.size())).toString().replace("\"", ""));
-            return true;
-        } catch (Exception e) {
-            e.printStackTrace();
         }
-        return false;
+        Random Randomizer = new Random();
+        event.getChannel().send().message(answers.get(Randomizer.nextInt(answers.size())).toString().replace("\"", ""));
+        return true;
     }
 
     @Override

@@ -26,19 +26,18 @@ public class Transfer extends Command {
                 Main.database.prepareStatement("TRUNCATE Channel_Permissions").execute();
             }
             File all = new File("perms/");
+            if (all.listFiles() == null || event.getUser() == null) {
+                return false;
+            }
             for (final File file : all.listFiles()) {
-                try {
-                    if (file.isDirectory()) {
-                        System.out.println("MOVING PERMISSIONS FOR CHANNEL: " + file.getName());
-                        for (File tmp : file.listFiles()) {
-                            PreparedStatement stmt = Main.database.prepareStatement("INSERT IGNORE INTO `Channel_Permissions` (`Channel`, `Permission`, `URL`) VALUES (?, ?, 'none')");
-                            stmt.setString(1, file.getName());
-                            stmt.setString(2, JsonUtils.getStringFromFile(tmp.getPath()));
-                            stmt.execute();
-                        }
+                if (file.isDirectory()) {
+                    System.out.println("MOVING PERMISSIONS FOR CHANNEL: " + file.getName());
+                    for (File tmp : file.listFiles()) {
+                        PreparedStatement stmt = Main.database.prepareStatement("INSERT IGNORE INTO `Channel_Permissions` (`Channel`, `Permission`, `URL`) VALUES (?, ?, 'none')");
+                        stmt.setString(1, file.getName());
+                        stmt.setString(2, JsonUtils.getStringFromFile(tmp.getPath()));
+                        stmt.execute();
                     }
-                } catch (Exception e) {
-                    e.printStackTrace();
                 }
             }
 

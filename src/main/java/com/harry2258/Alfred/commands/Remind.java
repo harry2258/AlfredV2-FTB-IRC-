@@ -4,10 +4,7 @@ import com.harry2258.Alfred.api.*;
 import org.pircbotx.User;
 import org.pircbotx.hooks.events.MessageEvent;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.PrintWriter;
+import java.io.*;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -38,9 +35,14 @@ public class Remind extends Command {
             }
 
             File file = new File(System.getProperty("user.dir") + "/Reminders/" + newuser + ".txt");
-            if (!file.exists()) {
-                file.getParentFile().mkdirs();
-                file.createNewFile();
+            try {
+                if (!file.exists()) {
+                    file.getParentFile().mkdirs();
+                    file.createNewFile();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+                return false;
             }
 
             StringBuilder sb = new StringBuilder();
@@ -49,11 +51,15 @@ public class Remind extends Command {
                 sb.append(args[i]).append(" ");
             }
 
+            if (event.getUser() == null) {
+                return false;
+            }
+
             try (PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(file, true)))) {
                 out.println(date + " [" + event.getUser().getNick() + "] " + sb);
                 out.close();
                 MessageUtils.sendUserNotice(event, "Reminder set! It will be sent the next time " + args[1] + " is active.");
-            } catch (Exception e) {
+            } catch (IOException e) {
                 e.printStackTrace();
                 return false;
             }

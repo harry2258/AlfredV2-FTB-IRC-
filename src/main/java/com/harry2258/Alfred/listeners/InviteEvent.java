@@ -66,11 +66,7 @@ public class InviteEvent extends ListenerAdapter {
             }
 
             if (config.useDatabase) {
-                try {
-                    Create.AddChannel(event.getChannel(), Main.database);
-                } catch (Exception s) {
-                    s.printStackTrace();
-                }
+                Create.AddChannel(event.getChannel(), Main.database);
             }
         }
     }

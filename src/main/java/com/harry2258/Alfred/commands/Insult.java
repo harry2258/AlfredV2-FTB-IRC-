@@ -81,12 +81,8 @@ public class Insult extends Command {
                 while (insult1.isEmpty()) {
                     wait();
                 }
-                try {
-                    sendInsult(event, user + insult1);
-                    return true;
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+                sendInsult(event, user + insult1);
+                return true;
             }
 
             StringBuilder builder = new StringBuilder();

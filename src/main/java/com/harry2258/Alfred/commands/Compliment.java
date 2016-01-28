@@ -63,12 +63,8 @@ public class Compliment extends Command {
                 user = args[2].trim() + ", ";
             }
 
-            try {
-                sendCompliment(event, user + compliment, chan);
-                return true;
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            sendCompliment(event, user + compliment, chan);
+            return true;
         }
         MessageUtils.sendChannel(event, compliment);
         return true;

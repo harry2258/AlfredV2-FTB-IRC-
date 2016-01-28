@@ -27,13 +27,9 @@ public class Math extends Command {
         for (int i = 1; i < args.length; i++) {
             sb.append(args[i]).append(" ");
         }
-        try {
-            Expression e = new ExpressionBuilder(sb.toString()).build();
-            event.respond(String.valueOf(e.evaluate()));
-            return true;
-        } catch (Exception e) {
-            return false;
-        }
+        Expression e = new ExpressionBuilder(sb.toString()).build();
+        event.respond(String.valueOf(e.evaluate()));
+        return true;
     }
 
     @Override

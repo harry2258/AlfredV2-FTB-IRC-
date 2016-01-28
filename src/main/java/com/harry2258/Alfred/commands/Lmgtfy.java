@@ -30,11 +30,7 @@ public class Lmgtfy extends Command {
         String message = sb.toString().trim();
         String y = "http://lmgtfy.com/?q=" + message;
         String x = y.replaceAll(" ", "+");
-        try {
-            finalurl = Utils.shortenUrl(x);
-        } catch (Exception e2) {
-            e2.printStackTrace();
-        }
+        finalurl = Utils.shortenUrl(x);
         event.respond(finalurl);
         return true;
     }

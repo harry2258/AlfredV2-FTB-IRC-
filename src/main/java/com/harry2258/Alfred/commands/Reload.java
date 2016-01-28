@@ -42,7 +42,7 @@ public class Reload extends Command {
                 e.printStackTrace();
             }
         } else {
-            PreparedStatement stmt3;
+            PreparedStatement stmt3 = null;
             try {
                 stmt3 = Main.database.prepareStatement("SELECT a.Channel, a.Permission, a.URL FROM `Channel_Permissions` a, `Rejoin_Channels` b WHERE a.Channel = b.Channel;");
                 ResultSet rs3 = stmt3.executeQuery();

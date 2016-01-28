@@ -5,6 +5,7 @@
 package com.harry2258.Alfred.commands;
 
 import bsh.EvalError;
+import bsh.UtilEvalError;
 import com.harry2258.Alfred.api.*;
 import org.pircbotx.hooks.events.MessageEvent;
 
@@ -33,7 +34,7 @@ public class Exec extends Command {
             } else {
                 //interpreter.eval("java.lang.String getStuff(java.lang.String command){ java.lang.String output = \"\";java.lang.Process p = Runtime.getRuntime().exec(command}); BufferedReader in = new BufferedReader(new InputStreamReader(p.getInputStream()));java.lang.String temp = \"\";while((temp = in.readLine()) != null){ output += temp + \"\\t\"; } return output; }");
             }
-        } catch (Exception ex) {
+        } catch (EvalError|UtilEvalError ex) {
             Logger.getLogger(Exec.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
@@ -44,41 +45,36 @@ public class Exec extends Command {
 
     @Override
     public boolean execute(MessageEvent event) {
-        try {
-            if (PermissionManager.hasExec(event.getUser().getNick())) {
-                if (!(event.getMessage().toLowerCase().contains("processbuilder") || event.getMessage().toLowerCase().contains("runtime") || event.getMessage().toLowerCase().contains("process") || event.getMessage().toLowerCase().contains("system.getproperty"))) {
-                    String[] args = event.getMessage().split(" ");
-                    StringBuilder sb = new StringBuilder();
-                    if (args.length >= 2) {
-                        try {
-                            interpreter.set("event", event);
-                            interpreter.set("bot", event.getBot());
-                            interpreter.set("chan", event.getChannel());
-                            interpreter.set("user", event.getUser());
-                            interpreter.set("config", config);
-                            for (int i = 1; i < args.length; i++) {
-                                sb.append(args[i]).append(" ");
-                            }
-                            String command = sb.toString().trim();
-                            interpreter.eval(command);
-                            return true;
-                        } catch (EvalError ex) {
-                            Logger.getLogger(Exec.class.getName()).log(Level.SEVERE, null, ex);
-                            MessageUtils.sendChannel(event, ex.toString());
-                            return true;
+        if (PermissionManager.hasExec(event.getUser().getNick())) {
+            if (!(event.getMessage().toLowerCase().contains("processbuilder") || event.getMessage().toLowerCase().contains("runtime") || event.getMessage().toLowerCase().contains("process") || event.getMessage().toLowerCase().contains("system.getproperty"))) {
+                String[] args = event.getMessage().split(" ");
+                StringBuilder sb = new StringBuilder();
+                if (args.length >= 2) {
+                    try {
+                        interpreter.set("event", event);
+                        interpreter.set("bot", event.getBot());
+                        interpreter.set("chan", event.getChannel());
+                        interpreter.set("user", event.getUser());
+                        interpreter.set("config", config);
+                        for (int i = 1; i < args.length; i++) {
+                            sb.append(args[i]).append(" ");
                         }
+                        String command = sb.toString().trim();
+                        interpreter.eval(command);
+                        return true;
+                    } catch (EvalError ex) {
+                        Logger.getLogger(Exec.class.getName()).log(Level.SEVERE, null, ex);
+                        MessageUtils.sendChannel(event, ex.toString());
+                        return true;
                     }
-                } else {
-                    MessageUtils.sendUserNotice(event, "You cannot run that command! I'm so sorry, I'm Canadian sorry.");
                 }
-
             } else {
-                MessageUtils.sendUserNotice(event, "You have to be in the group 'Exec' to use this command!");
-                return false;
+                MessageUtils.sendUserNotice(event, "You cannot run that command! I'm so sorry, I'm Canadian sorry.");
             }
-        } catch (Exception ex) {
-            Logger.getLogger(Exec.class.getName()).log(Level.SEVERE, null, ex);
-            MessageUtils.sendChannel(event, ex.getMessage());
+
+        } else {
+            MessageUtils.sendUserNotice(event, "You have to be in the group 'Exec' to use this command!");
+            return false;
         }
         return false;
     }
