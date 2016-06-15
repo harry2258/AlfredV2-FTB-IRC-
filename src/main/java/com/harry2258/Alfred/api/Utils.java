@@ -147,7 +147,7 @@ public class Utils {
             BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream()));
             String result = reader.readLine();
             reader.close();
-            
+
             JsonArray json = new JsonParser().parse(result).getAsJsonArray();
 
             for (int i = 0 ; i < json.size() ; i++) {
