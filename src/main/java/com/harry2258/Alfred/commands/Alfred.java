@@ -10,6 +10,10 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.pircbotx.hooks.events.MessageEvent;
 
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.*;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -30,17 +34,33 @@ public class Alfred extends Command {
             event.getUser().send().notice("Try asking me something next time.");
             return true;
         }
-        if (answers.isEmpty()) {
-            Document doc = Jsoup.connect("https://www.dropbox.com/s/dfwe23lx1ogttw7/8ball.json?raw=1").get();
-            JsonObject answer = JsonUtils.getJsonObject(doc.text());
-            ArrayList numbers = (ArrayList) CreeperHost.getKeysFromJson(doc.text());
-            for (Object number : numbers) {
-                answers.add(answer.get(number.toString()).toString());
-            }
+
+        String[] args = event.getMessage().split(" ");
+        StringBuilder builder = new StringBuilder();
+        for (int i = 1; i < args.length; i++) {
+            builder.append(args[i]).append(" ");
         }
-        Random Randomizer = new Random();
-        event.getChannel().send().message(answers.get(Randomizer.nextInt(answers.size())).toString().replace("\"", ""));
-        return true;
+
+        try {
+            {
+                URL url = new URL("https://8ball.delegator.com/magic/JSON/" + URLEncoder.encode(builder.toString().trim(), "UTF-8"));
+                URLConnection conn = url.openConnection();
+                conn.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/537.17 (KHTML, like Gecko) Chrome/24.0.1312.57 Safari/537.17");
+                BufferedReader in = new BufferedReader(
+                        new InputStreamReader(conn.getInputStream()));
+                String inputLine;
+                String json = "";
+                while ((inputLine = in.readLine()) != null)
+                    json += inputLine.trim();
+                in.close();
+
+                 event.getChannel().send().message(JsonUtils.getJsonObject(json).getAsJsonObject("magic").get("answer").getAsString());
+                return true;
+            }
+        } catch (MalformedURLException | NullPointerException m) {
+            m.printStackTrace();
+        }
+        return false;
     }
 
     @Override

@@ -6,7 +6,6 @@ import org.pircbotx.Channel;
 import org.pircbotx.PircBotX;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 
@@ -35,6 +34,8 @@ public class Update extends Thread {
     public void run() {
         isRunning = true;
 
+        Thread.currentThread().setName("Updater");
+
         try {
             System.out.println("Updater started. Waiting 1 minute for bot to start up.");
             Thread.sleep(60000);
@@ -55,7 +56,7 @@ public class Update extends Thread {
                     Thread.sleep(10800000);
                 }
                 Thread.sleep(time);
-            } catch (InterruptedException | IOException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
