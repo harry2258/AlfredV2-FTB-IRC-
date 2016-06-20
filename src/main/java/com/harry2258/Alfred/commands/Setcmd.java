@@ -37,29 +37,24 @@ public class Setcmd extends Command {
                 for (int i = 2; i < args.length; i++) {
                     sb.append(args[i]).append(" ");
                 }
-                try {
-
-                    File command = new File("commands/" + event.getChannel().getName() + "/" + args[1] + ".cmd");
-                    command.getParentFile().mkdirs();
-                    command.createNewFile();
-                    PrintWriter writer = new PrintWriter(new FileWriter(command));
-                    String[] lines = sb.toString().trim().split("\\\\n");
-                    if (lines.length <= 3) {
-                        for (String s : lines) {
-                            writer.println(s);
-                        }
-                    } else {
-                        MessageUtils.sendChannel(event, "lines must be less than or equal to 3!");
-                        return false;
+                File command = new File("commands/" + event.getChannel().getName() + "/" + args[1] + ".cmd");
+                command.getParentFile().mkdirs();
+                command.createNewFile();
+                PrintWriter writer = new PrintWriter(new FileWriter(command));
+                String[] lines = sb.toString().trim().split("\\\\n");
+                if (lines.length <= 3) {
+                    for (String s : lines) {
+                        writer.println(s);
                     }
-                    writer.flush();
-                    writer.close();
-                    MessageUtils.sendUserNotice(event, "'" + args[1] + "' was set to '" + sb.toString() + "'");
-
-                    return true;
-                } catch (Exception e) {
-                    e.printStackTrace();
+                } else {
+                    MessageUtils.sendChannel(event, "lines must be less than or equal to 3!");
+                    return false;
                 }
+                writer.flush();
+                writer.close();
+                MessageUtils.sendUserNotice(event, "'" + args[1] + "' was set to '" + sb.toString() + "'");
+
+                return true;
             }
         } else {
             MessageUtils.sendUserNotice(event, "You cannot create a custom command by that name!");

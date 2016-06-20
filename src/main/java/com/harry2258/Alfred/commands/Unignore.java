@@ -13,6 +13,7 @@ import com.harry2258.Alfred.api.Utils;
 import org.pircbotx.hooks.events.MessageEvent;
 
 import java.sql.PreparedStatement;
+import java.sql.SQLException;
 
 public class Unignore extends Command {
 
@@ -28,12 +29,7 @@ public class Unignore extends Command {
         String[] args = event.getMessage().split(" ");
         if (args.length == 2) {
             String user;
-            try {
-                user = Utils.getAccount(event.getBot().getUserChannelDao().getUser(args[1]), event);
-            } catch (Exception e) {
-                e.printStackTrace();
-                return false;
-            }
+            user = Utils.getAccount(event.getBot().getUserChannelDao().getUser(args[1]), event);
             if (Ignore.ignored.contains(user)) {
                 Ignore.ignored.remove(user);
                 if (config.useDatabase) {
@@ -41,7 +37,7 @@ public class Unignore extends Command {
                         PreparedStatement stmt = Main.database.prepareStatement("DELETE FROM `Ignored_Users` WHERE User = ?");
                         stmt.setString(1, user);
                         stmt.execute();
-                    } catch (Exception ex) {
+                    } catch (SQLException ex) {
                         ex.printStackTrace();
                         return false;
                     }

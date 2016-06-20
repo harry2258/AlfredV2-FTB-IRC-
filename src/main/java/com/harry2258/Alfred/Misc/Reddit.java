@@ -9,6 +9,7 @@ import org.pircbotx.PircBotX;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
@@ -36,7 +37,7 @@ public class Reddit extends Thread {
         try {
             System.out.println("[Reddit] Sleeping for 1 minutes. Waiting for bot to start up.");
             Thread.sleep(60000);
-        } catch (Exception e) {
+        } catch (InterruptedException e) {
             e.printStackTrace();
         }
         while (isRunning) {
@@ -51,12 +52,15 @@ public class Reddit extends Thread {
                     JsonUtils.writeJsonFile(reddit, test);
                 }
 
-            } catch (Exception e) {
+            } catch (IOException e) {
                 e.printStackTrace();
             }
             try {
                 String users = JsonUtils.getStringFromFile(reddit.toString());
                 JsonObject reddits = JsonUtils.getJsonObject(users);
+                if (reddits == null) {
+                    return;
+                }
                 String[] test = reddits.get("Reddit").getAsString().replaceAll("[\\[\"\\]]", "").split(",");
                 for (String hur : test) {
                     String[] args = hur.split(":");
@@ -76,6 +80,9 @@ public class Reddit extends Thread {
                     long CreateTime = 0;
                     while ((ts = br.readLine()) != null) {
                         JsonObject jsonObj = JsonUtils.getJsonObject(ts);
+                        if (jsonObj == null) {
+                            continue;
+                        }
                         title = jsonObj.getAsJsonObject("data").getAsJsonArray("children").get(0).getAsJsonObject().getAsJsonObject("data").get("title").getAsString().trim();
                         if (!jsonObj.getAsJsonObject("data").getAsJsonArray("children").get(0).getAsJsonObject().getAsJsonObject("data").get("selftext").getAsString().isEmpty()) {
                             text = jsonObj.getAsJsonObject("data").getAsJsonArray("children").get(0).getAsJsonObject().getAsJsonObject("data").get("selftext").getAsString().replaceAll("\\n", " ");
@@ -104,47 +111,31 @@ public class Reddit extends Thread {
 
                     result = "[" + Colors.RED + "Reddit" + Colors.NORMAL + "] " + " [ " + URL + " ] " + Colors.BOLD + author + Colors.NORMAL + ": " + infotitle + " " + infotext;
 
-                    try {
-                        if (chaninfo.containsKey(hur)) {
+                    if (chaninfo.containsKey(hur)) {
 
-                            if (chaninfo.get(hur).isEmpty()) {
-                                chaninfo.put(hur, "Nothing!!");
-                            }
-
-                            if (!chaninfo.get(hur).equalsIgnoreCase(result)) {
-                                chan.send().message("[" + Colors.RED + "Reddit" + Colors.NORMAL + "] " + " [ " + Utils.shortenUrl(URL) + " ] [" + Utils.getTimeDifference(CreateTime) + " ago] " + Colors.BOLD + author + Colors.NORMAL + ": " + infotitle + " " + infotext);
-                            }
-
-                        } else {
-                            chan.send().message("[" + Colors.RED + "Reddit" + Colors.NORMAL + "] " + " [ " + Utils.shortenUrl(URL) + " ] [" + Utils.getTimeDifference(CreateTime) + " ago ] " + Colors.BOLD + author + Colors.NORMAL + ": " + infotitle + " " + infotext);
+                        if (chaninfo.get(hur).isEmpty()) {
+                            chaninfo.put(hur, "Nothing!!");
                         }
 
-                    } catch (Exception ex) {
-                        try {
-                            System.out.println("Got error 502! sleeping for 5 mins");
-                            Thread.sleep(300000);
-                        } catch (InterruptedException e1) {
-                            e1.printStackTrace();
+                        if (!chaninfo.get(hur).equalsIgnoreCase(result)) {
+                            chan.send().message("[" + Colors.RED + "Reddit" + Colors.NORMAL + "] " + " [ " + Utils.shortenUrl(URL) + " ] [" + Utils.getTimeDifference(CreateTime) + " ago] " + Colors.BOLD + author + Colors.NORMAL + ": " + infotitle + " " + infotext);
                         }
+
+                    } else {
+                        chan.send().message("[" + Colors.RED + "Reddit" + Colors.NORMAL + "] " + " [ " + Utils.shortenUrl(URL) + " ] [" + Utils.getTimeDifference(CreateTime) + " ago ] " + Colors.BOLD + author + Colors.NORMAL + ": " + infotitle + " " + infotext);
                     }
                     chaninfo.put(hur, result);
                 }
                 Thread.sleep(60000);
-            } catch (Exception e) {
+            } catch (InterruptedException | IOException e) {
                 e.printStackTrace();
                 System.out.println(Thread.currentThread().getName() + " ->> " + e.toString());
-                try {
-                    bot.getUserChannelDao().getUser("batman").send().message("[Reddit] " + e.toString());
-                } catch (Exception ex) {
-                    //e.printStacktrace();
-                }
+                bot.getUserChannelDao().getUser("batman").send().message("[Reddit] " + e.toString());
                 try {
                     Thread.sleep(300000);
                 } catch (InterruptedException e1) {
                     e1.printStackTrace();
                 }
-
-
             }
         }
     }

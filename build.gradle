@@ -42,7 +42,7 @@ dependencies {
     compile 'org.jsoup:jsoup:1.8.3'
     compile 'org.slf4j:slf4j-simple:1.7.13'
     compile 'org.reflections:reflections:0.9.10'
-    compile 'com.google.code.gson:gson:2.5'
+    compile 'com.google.code.gson:gson:2.7'
     compile 'org.twitter4j:twitter4j-core:4.0.4'
     compile 'commons-configuration:commons-configuration:1.9'//NFG
     compile 'mysql:mysql-connector-java:5.1.38'

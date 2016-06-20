@@ -9,8 +9,6 @@ import org.pircbotx.hooks.events.MessageEvent;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class Nick extends Command {
     private Config config;
@@ -22,27 +20,26 @@ public class Nick extends Command {
 
     @Override
     public boolean execute(MessageEvent event) {
-        try {
-            if (PermissionManager.hasExec(event.getUser().getNick())) {
-                String[] args = event.getMessage().split(" ");
-                if (args.length >= 1) {
-                    event.getBot().sendIRC().changeNick(event.getMessage().split(" ")[1]);
-                    if (config.useDatabase) {
-                        try {
-                            PreparedStatement stmt = Main.database.prepareStatement("UPDATE  `Bot` SET  `Nick` =  ? WHERE  `Nick` =  ?;");
-                            stmt.setString(1, args[1]);
-                            stmt.setString(2, event.getBot().getNick());
-                            stmt.execute();
-                        } catch (SQLException e) {
-                            e.printStackTrace();
-                            MessageUtils.sendUserNotice(event, "Could not update the database!");
-                        }
+        if (event.getUser() == null) {
+            return false;
+        }
+        if (PermissionManager.hasExec(event.getUser().getNick())) {
+            String[] args = event.getMessage().split(" ");
+            if (args.length >= 1) {
+                event.getBot().sendIRC().changeNick(event.getMessage().split(" ")[1]);
+                if (config.useDatabase) {
+                    try {
+                        PreparedStatement stmt = Main.database.prepareStatement("UPDATE  `Bot` SET  `Nick` =  ? WHERE  `Nick` =  ?;");
+                        stmt.setString(1, args[1]);
+                        stmt.setString(2, event.getBot().getNick());
+                        stmt.execute();
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                        MessageUtils.sendUserNotice(event, "Could not update the database!");
                     }
-                    return true;
                 }
+                return true;
             }
-        } catch (Exception ex) {
-            Logger.getLogger(Nick.class.getName()).log(Level.SEVERE, null, ex);
         }
         return false;
     }

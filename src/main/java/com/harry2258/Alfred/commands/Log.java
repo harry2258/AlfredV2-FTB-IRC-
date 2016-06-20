@@ -53,97 +53,93 @@ public class Log extends Command {
         }
 
         String tmp;
-        try {
-            String test = JsonUtils.getStringFromFile(Main.parser.toString());
-            JsonObject jsonObj = JsonUtils.getJsonObject(test);
-            URL url;
-            url = new URL(URL);
-            URLConnection u = url.openConnection();
-            u.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/537.17 (KHTML, like Gecko) Chrome/24.0.1312.57 Safari/537.17");
-            BufferedReader br = new BufferedReader(new InputStreamReader(u.getInputStream()));
+        String test = JsonUtils.getStringFromFile(Main.parser.toString());
+        JsonObject jsonObj = JsonUtils.getJsonObject(test);
+        URL url;
+        url = new URL(URL);
+        URLConnection u = url.openConnection();
+        u.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/537.17 (KHTML, like Gecko) Chrome/24.0.1312.57 Safari/537.17");
+        BufferedReader br = new BufferedReader(new InputStreamReader(u.getInputStream()));
 
-            if (br.readLine().contains("Technic Launcher Error Report")) {
-                System.out.println("Technic Log");
-            } else {
-                while ((tmp = br.readLine()) != null) {
-                    String pattern = "(Time:).+\\n(Description)";
-                    String pattern2 = "(Affected level)";
-                    Boolean matchFound = Pattern.matches(pattern, tmp);
-                    if (matchFound) {
+        if (br.readLine().contains("Technic Launcher Error Report")) {
+            System.out.println("Technic Log");
+        } else {
+            while ((tmp = br.readLine()) != null) {
+                String pattern = "(Time:).+\\n(Description)";
+                String pattern2 = "(Affected level)";
+                Boolean matchFound = Pattern.matches(pattern, tmp);
+                if (matchFound) {
 
-                        Boolean match2 = Pattern.matches(pattern2, tmp);
-                        if (match2) {
-                            break;
-                        }
+                    Boolean match2 = Pattern.matches(pattern2, tmp);
+                    if (match2) {
+                        break;
                     }
-                    if (tmp.contains("This paste has been removed!")) {
-                        return "The paste cannot be found!";
-                    } else if (tmp.contains("FTBLaunch starting up") && !tmp.contains("greg0ree")) {
-                        temp = Colors.BOLD + "Launcher: " + Colors.NORMAL + tmp.replaceAll(".*(?:version )|(?: Build).*", "");
-                        if (!info.contains(temp)) {
-                            info.add(temp);
-                        }
-                    } else if (tmp.contains("CI Build#: 9999999") || tmp.contains("greg0ree") || tmp.contains("FTB_cracked")) {
-                        return "We " + Colors.BOLD + "DO NOT" + Colors.NORMAL + " give support for cracked launchers!";
-                    } else if (tmp.contains("FTB Launcher CI Build")) {
-                        temp = Colors.BOLD + "CI #" + Colors.NORMAL + tmp.replaceAll(".*(?:#: )|(?:,).*", "");
-                        if (!info.contains(temp)) {
-                            info.add(temp);
-                        }
-                    } else if (tmp.contains("Server brand: ")) {
-                        temp = Colors.BOLD + "Server Brand: " + Colors.NORMAL + tmp.replaceAll("^.*?(?=[A-Z][a-z])", "").replaceAll("\\\\[.*?\\\\]", "").replace("Server brand: ", "");
-                        if (!info.contains(temp) && jsonObj.get("ServerBrand").getAsBoolean()) {
-                            info.add(temp);
-                        }
-                    } else if (tmp.contains("Server type: ")) {
-                        temp = Colors.BOLD + "Server type: " + Colors.NORMAL + tmp.replaceAll("^.*?(?=[A-Z][a-z])", "").replaceAll("\\\\[.*?\\\\]", "").replace("Server type: ", "");
-                        if (!info.contains(temp) && jsonObj.get("ServerType").getAsBoolean()) {
-                            info.add(temp);
-                        }
-                    } else if (tmp.contains("Minecraft Version:")) {
-                        temp = Colors.BOLD + "Minecraft Version: " + Colors.NORMAL + tmp.replaceAll("^.*?(?=[A-Z][a-z])", "").replaceAll("\\\\[.*?\\\\]", "").replaceAll(".*(?:Minecraft Version: )", "");
-                        if (!info.contains(temp) && jsonObj.get("MCVersion").getAsBoolean()) {
-                            info.add(temp);
-                        }
-
-                    } else if (tmp.contains("Java Version:")) {
-                        temp = Colors.BOLD + "Java Version: " + Colors.NORMAL + tmp.replaceAll(".*(?:Java Version: )", "").replaceAll("(?:[Ss]orted as: ).*", "");
-                        if (!info.contains(temp) && jsonObj.get("JavaVersion").getAsBoolean()) {
-                            info.add(temp);
-                        }
-                    } else if (tmp.contains("Is Modded: ")) {
-                        temp = Colors.BOLD + "Client Brand: " + Colors.NORMAL + tmp.replaceAll("^.*?(?=[A-Z][a-z])", "").replaceAll("\\\\[.*?\\\\]", "").replaceAll(".*(?:Is Modded: Definitely; Client brand changed to )|.*(?:Is Modded: Definitely; Server brand changed to )", "");
-                        if (!info.contains(temp) && jsonObj.get("Modded").getAsBoolean()) {
-                            info.add(temp);
-                        }
-                    } else if (tmp.contains("Operating System: ") || tmp.contains("OS: ")) {
-                        temp = Colors.BOLD + "OS: " + Colors.NORMAL + tmp.replaceAll("^.*?(?=[A-Z][a-z])", "").replaceAll("\\\\[.*?\\\\]", "").replaceAll(".*(?:Operating System: )|.*(?:OS: )", "");
-                        if (!info.contains(temp) && jsonObj.get("OSName").getAsBoolean()) {
-                            info.add(temp);
-                        }
+                }
+                if (tmp.contains("This paste has been removed!")) {
+                    return "The paste cannot be found!";
+                } else if (tmp.contains("FTBLaunch starting up") && !tmp.contains("greg0ree")) {
+                    temp = Colors.BOLD + "Launcher: " + Colors.NORMAL + tmp.replaceAll(".*(?:version )|(?: Build).*", "");
+                    if (!info.contains(temp)) {
+                        info.add(temp);
                     }
-                    //TODO get Description and Caused By
-                }
+                } else if (tmp.contains("CI Build#: 9999999") || tmp.contains("greg0ree") || tmp.contains("FTB_cracked")) {
+                    return "We " + Colors.BOLD + "DO NOT" + Colors.NORMAL + " give support for cracked launchers!";
+                } else if (tmp.contains("FTB Launcher CI Build")) {
+                    temp = Colors.BOLD + "CI #" + Colors.NORMAL + tmp.replaceAll(".*(?:#: )|(?:,).*", "");
+                    if (!info.contains(temp)) {
+                        info.add(temp);
+                    }
+                } else if (tmp.contains("Server brand: ")) {
+                    temp = Colors.BOLD + "Server Brand: " + Colors.NORMAL + tmp.replaceAll("^.*?(?=[A-Z][a-z])", "").replaceAll("\\\\[.*?\\\\]", "").replace("Server brand: ", "");
+                    if (!info.contains(temp) && jsonObj.get("ServerBrand").getAsBoolean()) {
+                        info.add(temp);
+                    }
+                } else if (tmp.contains("Server type: ")) {
+                    temp = Colors.BOLD + "Server type: " + Colors.NORMAL + tmp.replaceAll("^.*?(?=[A-Z][a-z])", "").replaceAll("\\\\[.*?\\\\]", "").replace("Server type: ", "");
+                    if (!info.contains(temp) && jsonObj.get("ServerType").getAsBoolean()) {
+                        info.add(temp);
+                    }
+                } else if (tmp.contains("Minecraft Version:")) {
+                    temp = Colors.BOLD + "Minecraft Version: " + Colors.NORMAL + tmp.replaceAll("^.*?(?=[A-Z][a-z])", "").replaceAll("\\\\[.*?\\\\]", "").replaceAll(".*(?:Minecraft Version: )", "");
+                    if (!info.contains(temp) && jsonObj.get("MCVersion").getAsBoolean()) {
+                        info.add(temp);
+                    }
 
-                for (String anInfo : info) {
-                    Message.add(anInfo);
+                } else if (tmp.contains("Java Version:")) {
+                    temp = Colors.BOLD + "Java Version: " + Colors.NORMAL + tmp.replaceAll(".*(?:Java Version: )", "").replaceAll("(?:[Ss]orted as: ).*", "");
+                    if (!info.contains(temp) && jsonObj.get("JavaVersion").getAsBoolean()) {
+                        info.add(temp);
+                    }
+                } else if (tmp.contains("Is Modded: ")) {
+                    temp = Colors.BOLD + "Client Brand: " + Colors.NORMAL + tmp.replaceAll("^.*?(?=[A-Z][a-z])", "").replaceAll("\\\\[.*?\\\\]", "").replaceAll(".*(?:Is Modded: Definitely; Client brand changed to )|.*(?:Is Modded: Definitely; Server brand changed to )", "");
+                    if (!info.contains(temp) && jsonObj.get("Modded").getAsBoolean()) {
+                        info.add(temp);
+                    }
+                } else if (tmp.contains("Operating System: ") || tmp.contains("OS: ")) {
+                    temp = Colors.BOLD + "OS: " + Colors.NORMAL + tmp.replaceAll("^.*?(?=[A-Z][a-z])", "").replaceAll("\\\\[.*?\\\\]", "").replaceAll(".*(?:Operating System: )|.*(?:OS: )", "");
+                    if (!info.contains(temp) && jsonObj.get("OSName").getAsBoolean()) {
+                        info.add(temp);
+                    }
                 }
-
-                for (String s : Message) {
-                    message += s + " | ";
-                }
-
-                if (message.length() > 500) {
-                    return "The log was too big and was not sent! Please retry again or disable some features in parser.json";
-                } else {
-                    return message;
-                }
+                //TODO get Description and Caused By
             }
 
-            //Error.getProblems(webpage, event);
-        } catch (Exception e) {
-            e.printStackTrace();
+            for (String anInfo : info) {
+                Message.add(anInfo);
+            }
+
+            for (String s : Message) {
+                message += s + " | ";
+            }
+
+            if (message.length() > 500) {
+                return "The log was too big and was not sent! Please retry again or disable some features in parser.json";
+            } else {
+                return message;
+            }
         }
+
+        //Error.getProblems(webpage, event);
         return "";
     }
 

@@ -13,8 +13,6 @@ import org.pircbotx.hooks.ListenerAdapter;
 
 import java.io.*;
 import java.util.Date;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import static com.harry2258.Alfred.api.CommandRegistry.commands;
 
@@ -146,100 +144,93 @@ public class MessageEvent extends ListenerAdapter {
                 file.createNewFile();
             }
 
-            try {
-                if (manager.hasPermission("command.custom", eventuser, event.getChannel())) {
+            if (manager.hasPermission("command.custom", eventuser, event.getChannel())) {
 
-                    String commandname = event.getMessage().split(" ")[0].substring(1).toLowerCase();
-                    File commandfile = new File("commands/" + event.getChannel().getName() + "/" + commandname + ".cmd");
-                    if (commandfile.exists() || new File("commands/" + event.getChannel().getName() + "/" + commandname.toLowerCase() + ".cmd").exists()) {
-                        BufferedReader in = new BufferedReader(new FileReader(commandfile));
-                        String tmp;
-                        if (args.length == 2) {
-                            while ((tmp = in.readLine()) != null) {
-                                String temps = tmp.replaceAll("color.red", Colors.RED).replaceAll("color.green", Colors.GREEN).replaceAll("color.bold", Colors.BOLD).replaceAll("color.normal", Colors.NORMAL).replaceAll("color.darkgreen", Colors.DARK_GREEN).replaceAll("color.purple", Colors.PURPLE).replaceAll("color.darkblue", Colors.DARK_BLUE).replaceAll("color.blue", Colors.BLUE);
-                                //.replaceAll("%user%", user);
-                                event.getChannel().send().message(args[1] + ", " + temps);
-                            }
-                            in.close();
-                            return;
-
-                        } else {
-                            while ((tmp = in.readLine()) != null) {
-                                String temps = tmp.replaceAll("color.red", Colors.RED).replaceAll("color.green", Colors.GREEN).replaceAll("color.bold", Colors.BOLD).replaceAll("color.normal", Colors.NORMAL).replaceAll("color.darkgreen", Colors.DARK_GREEN).replaceAll("color.purple", Colors.PURPLE).replaceAll("color.darkblue", Colors.DARK_BLUE).replaceAll("color.blue", Colors.BLUE);
-                                event.getChannel().send().message(temps);
-                            }
-                            in.close();
-                            return;
+                String commandname = event.getMessage().split(" ")[0].substring(1).toLowerCase();
+                File commandfile = new File("commands/" + event.getChannel().getName() + "/" + commandname + ".cmd");
+                if (commandfile.exists() || new File("commands/" + event.getChannel().getName() + "/" + commandname.toLowerCase() + ".cmd").exists()) {
+                    BufferedReader in = new BufferedReader(new FileReader(commandfile));
+                    String tmp;
+                    if (args.length == 2) {
+                        while ((tmp = in.readLine()) != null) {
+                            String temps = tmp.replaceAll("color.red", Colors.RED).replaceAll("color.green", Colors.GREEN).replaceAll("color.bold", Colors.BOLD).replaceAll("color.normal", Colors.NORMAL).replaceAll("color.darkgreen", Colors.DARK_GREEN).replaceAll("color.purple", Colors.PURPLE).replaceAll("color.darkblue", Colors.DARK_BLUE).replaceAll("color.blue", Colors.BLUE);
+                            //.replaceAll("%user%", user);
+                            event.getChannel().send().message(args[1] + ", " + temps);
                         }
-                    }
-                }
-                if (config.useDatabase && !Main.database.isValid(5000)) {
-                    Main.database = com.harry2258.Alfred.Database.Utils.getConnection(config);
-                }
+                        in.close();
+                        return;
 
-                String name = "";
-                Boolean exist = false;
-
-                if (new File("plugins/" + classname + ".bsh").exists()) {
-                    name = classname;
-                    exist = true;
-                } else if (new File("plugins/" + classname.toLowerCase() + ".bsh").exists()) {
-                    name = classname.toLowerCase();
-                    exist = true;
-                }
-
-                if (exist && hasPerms) {
-                    try {
-                        interpreter.set("event", event);
-                        interpreter.set("bot", event.getBot());
-                        interpreter.set("chan", event.getChannel());
-                        interpreter.set("user", event.getUser());
-                        interpreter.eval(String.format("source(\"plugins/%s.bsh\")", name));
-                    } catch (EvalError ex) {
-                        ex.printStackTrace();
-                        event.respond(ex.getLocalizedMessage());
+                    } else {
+                        while ((tmp = in.readLine()) != null) {
+                            String temps = tmp.replaceAll("color.red", Colors.RED).replaceAll("color.green", Colors.GREEN).replaceAll("color.bold", Colors.BOLD).replaceAll("color.normal", Colors.NORMAL).replaceAll("color.darkgreen", Colors.DARK_GREEN).replaceAll("color.purple", Colors.PURPLE).replaceAll("color.darkblue", Colors.DARK_BLUE).replaceAll("color.blue", Colors.BLUE);
+                            event.getChannel().send().message(temps);
+                        }
+                        in.close();
                         return;
                     }
+                }
+            }
+            if (config.useDatabase && !Main.database.isValid(5000)) {
+                Main.database = com.harry2258.Alfred.Database.Utils.getConnection(config);
+            }
+
+            String name = "";
+            Boolean exist = false;
+
+            if (new File("plugins/" + classname + ".bsh").exists()) {
+                name = classname;
+                exist = true;
+            } else if (new File("plugins/" + classname.toLowerCase() + ".bsh").exists()) {
+                name = classname.toLowerCase();
+                exist = true;
+            }
+
+            if (exist && hasPerms) {
+                try {
+                    interpreter.set("event", event);
+                    interpreter.set("bot", event.getBot());
+                    interpreter.set("chan", event.getChannel());
+                    interpreter.set("user", event.getUser());
+                    interpreter.eval(String.format("source(\"plugins/%s.bsh\")", name));
+                } catch (EvalError ex) {
+                    ex.printStackTrace();
+                    event.respond(ex.getLocalizedMessage());
                     return;
                 }
+                return;
+            }
 
-                if (verified) {
-                    if (commands.containsKey(classname)) {
-                        if (hasPerms) {
-                            Command command = CommandRegistry.getCommand(classname);
-                            command.setConfig(config);
-                            if (!command.execute(event)) {
-                                event.respond(Colors.RED + "An error occurred! " + Colors.NORMAL + command.getHelp());
-                                return;
-                            }
-
-                            StringBuilder sb = new StringBuilder();
-                            for (int i = 1; i < args.length; i++) {
-                                sb.append(args[i]).append(" ");
-                            }
-
-                            try (PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(file, true)))) {
-                                out.println("[" + date + "]" + " " + eventuser + ": " + "[" + classname + "] " + sb);
-                                out.close();
-                            }
-
-                        } else {
-                            event.getUser().send().notice(config.getPermissionDenied().replaceAll("%USERNAME%", eventuser));
+            if (verified) {
+                if (commands.containsKey(classname)) {
+                    if (hasPerms) {
+                        Command command = CommandRegistry.getCommand(classname);
+                        if (command == null) {
+                            return;
                         }
+                        command.setConfig(config);
+                        if (!command.execute(event)) {
+                            event.respond(Colors.RED + "An error occurred! " + Colors.NORMAL + command.getHelp());
+                            return;
+                        }
+
+                        StringBuilder sb = new StringBuilder();
+                        for (int i = 1; i < args.length; i++) {
+                            sb.append(args[i]).append(" ");
+                        }
+
+                        try (PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(file, true)))) {
+                            out.println("[" + date + "]" + " " + eventuser + ": " + "[" + classname + "] " + sb);
+                            out.close();
+                        }
+
                     } else {
-                        event.getUser().send().notice("There is no command by that name!");
+                        event.getUser().send().notice(config.getPermissionDenied().replaceAll("%USERNAME%", eventuser));
                     }
                 } else {
-                    event.getUser().send().notice("You need to be logged in with NickServ to use the bot! If you are already logged in, try " + config.getTrigger() + "flush");
+                    event.getUser().send().notice("There is no command by that name!");
                 }
-            } catch (Exception e) {
-                /*
-                 * Unknown command
-                 * >implying i give a fuck
-                 *
-                 */
-                Logger.getLogger(MessageEvent.class.getName()).log(Level.SEVERE, null, e);
-
+            } else {
+                event.getUser().send().notice("You need to be logged in with NickServ to use the bot! If you are already logged in, try " + config.getTrigger() + "flush");
             }
         }
 

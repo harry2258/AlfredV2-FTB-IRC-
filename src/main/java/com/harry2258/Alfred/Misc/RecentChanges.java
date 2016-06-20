@@ -31,6 +31,8 @@ public class RecentChanges extends Thread {
     public void run() {
         isRunning = true;
 
+        Thread.currentThread().setName("FTB Wiki");
+
         String ChangeUrl = "http://ftb.gamepedia.com/api.php?action=query&list=recentchanges&rcprop=title|user|ids|comment|timestamp&rclimit=3&format=json";
         try {
             System.out.println("[FTB Wiki] Sleeping for 1 minutes. Waiting for bot to start up.");

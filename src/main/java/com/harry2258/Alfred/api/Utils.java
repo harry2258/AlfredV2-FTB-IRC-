@@ -4,6 +4,7 @@
  */
 package com.harry2258.Alfred.api;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -26,9 +27,12 @@ import org.pircbotx.hooks.events.WhoisEvent;
 
 import java.io.*;
 import java.net.*;
+import java.security.Key;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -40,7 +44,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Utils {
-    private static String USER_AGENT = "Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/537.17 (KHTML, like Gecko) Chrome/24.0.1312.57 Safari/537.17";
+    private static String USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.111 Safari/537.36";
 
     public static boolean isUrl(String s) {
         String url_regex = "^(https?|ftp|file)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]";
@@ -141,28 +145,29 @@ public class Utils {
         try {
             URL url = new URL("https://status.mojang.com/check");
             BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream()));
-            String result;
+            String result = reader.readLine();
+            reader.close();
 
-            while ((result = reader.readLine()) != null) {
-                String a = result.replace("red", Colors.RED + "✘" + Colors.NORMAL)
+            JsonArray json = new JsonParser().parse(result).getAsJsonArray();
+
+            for (int i = 0 ; i < json.size() ; i++) {
+
+                String KeyName = String.valueOf(CreeperHost.getKeysFromJson(json.get(i).getAsJsonObject().toString())).replaceAll("\\]|\\[", "");
+                String Status = json.get(i).getAsJsonObject().get(KeyName).getAsString() + " | ";
+                String ServiceStatus = (Character.toUpperCase(KeyName.charAt(0)) + KeyName.substring(1).toLowerCase()  + ": " + Status)
+                        .replace("red", Colors.RED + "✘" + Colors.NORMAL)
                         .replace("green", Colors.DARK_GREEN + "✓" + Colors.NORMAL)
                         .replace("yellow", Colors.YELLOW + "~" + Colors.NORMAL)
-                        .replace("[", "").replace("]", "").replace("{", "")
-                        .replace("}", "").replace(":", ": ").replace("\"", "")
                         .replace("session.", "Legacy Session.")
                         .replace("server", " Server");
 
-                String[] c = a.replaceAll("\\.minecraft.net", "")
+                ServiceStatus = ServiceStatus.replaceAll("\\.minecraft.net", "")
                         .replaceAll("\\.mojang.com|.net", "")
-                        .replaceAll("\\.com", "")
-                        .split(",");
+                        .replaceAll("\\.com", "");
 
-                for (String tmp : c) {
-                    returns += Character.toUpperCase(tmp.charAt(0)) + tmp.substring(1).toLowerCase() + " | ";
-                }
+                returns += ServiceStatus;
             }
 
-            reader.close();
         } catch (IOException e) {
             if (e.getMessage().contains("503")) {
                 System.out.println("The minecraft status server is temporarily unavailable, please try again later");
@@ -170,7 +175,7 @@ public class Utils {
             try {
                 URL xpaw = new URL("http://xpaw.ru/mcstatus/status.json");
                 URLConnection u = xpaw.openConnection();
-                u.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/537.17 (KHTML, like Gecko) Chrome/24.0.1312.57 Safari/537.17");
+                u.setRequestProperty("User-Agent", USER_AGENT);
 
                 BufferedReader first = new BufferedReader(new InputStreamReader(u.getInputStream()));
                 String result = first.readLine();
@@ -182,7 +187,7 @@ public class Utils {
                         " | Legacy Skins: " + report.getAsJsonObject("skins").get("title").getAsString() +
                         " | Website: " + report.getAsJsonObject("website").get("title").getAsString() +
                         " | Realms: " + report.getAsJsonObject("realms").get("title").getAsString()).replaceAll("Online", Colors.DARK_GREEN + "✓" + Colors.NORMAL).replaceAll("Offline", Colors.RED + "✘" + Colors.NORMAL).replaceAll("Server Error", Colors.RED + "Server Error" + Colors.NORMAL);
-            } catch (Exception x) {
+            } catch (IOException x) {
                 x.printStackTrace();
             }
 
@@ -194,12 +199,12 @@ public class Utils {
         try {
             URL isgd = new URL("http://is.gd/create.php?format=json&url=" + longUrl);
             URLConnection u = isgd.openConnection();
-            u.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/537.17 (KHTML, like Gecko) Chrome/24.0.1312.57 Safari/537.17");
+            u.setRequestProperty("User-Agent", USER_AGENT);
             BufferedReader first = new BufferedReader(new InputStreamReader(u.getInputStream()));
             String result = first.readLine().trim();
             return JsonUtils.getJsonObject(result).get("shorturl").getAsString();
 
-        } catch (Exception e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
         return null;
@@ -245,7 +250,7 @@ public class Utils {
             String temp = String.format("https://ajax.googleapis.com/ajax/services/search/web?v=1.0&q=%s", URLEncoder.encode(s, "UTF-8"));
             URL u = new URL(temp);
             URLConnection c = u.openConnection();
-            c.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/537.17 (KHTML, like Gecko) Chrome/24.0.1312.57 Safari/537.17");
+            c.setRequestProperty("User-Agent", USER_AGENT);
             BufferedReader in = new BufferedReader(new InputStreamReader(c.getInputStream()));
             String json = "";
             String tmp;
@@ -287,7 +292,7 @@ public class Utils {
                 System.out.println("Ping to " + address + " was success [Time " + (endTime - startTime) + " MS ]");
                 return true;
             }
-        } catch (final Exception e1) {
+        } catch (final IOException e1) {
             e1.printStackTrace();
         }
         return false;
@@ -343,7 +348,7 @@ public class Utils {
             } else {
                 bans = Colors.BOLD + user + Colors.NORMAL + " has a total of " + Colors.BOLD + i + Colors.NORMAL + " bans!";
             }
-        } catch (Exception x) {
+        } catch (IOException x) {
             x.printStackTrace();
             bans = "Please make sure you spelled the Minecraft name right! ";
         }
@@ -363,7 +368,7 @@ public class Utils {
                 insult1 = line.replaceAll("</font>", " ").replace("</form><hr>", "").replaceAll("<br>", " ");
                 br.close();
             } while (insult1.isEmpty());
-        } catch (Exception e1) {
+        } catch (IOException e1) {
             e1.printStackTrace();
         }
 
@@ -378,7 +383,7 @@ public class Utils {
             Document doc = Jsoup.connect("http://www.chainofgood.co.uk/passiton").userAgent("Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/537.17 (KHTML, like Gecko) Chrome/24.0.1312.57 Safari/537.17").get();
             Elements medium = doc.select(".medium");
             compliment = medium.get(random.nextInt(medium.size())).toString().replaceAll("<[^>]*>", "");
-        } catch (Exception e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
         return compliment;
@@ -389,7 +394,7 @@ public class Utils {
         try {
             Document doc = Jsoup.connect("http://mc-drama.herokuapp.com/raw").get();
             drama = doc.text();
-        } catch (Exception e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
         return drama;
@@ -397,21 +402,17 @@ public class Utils {
 
     public static void Parser(File file) {
         JsonObject obj = new JsonObject();
-        try {
-            obj.addProperty("MCVersion", true);
-            obj.addProperty("JavaVersion", true);
-            obj.addProperty("Modded", true);
-            obj.addProperty("ServerBrand", true);
-            obj.addProperty("ServerType", true);
-            obj.addProperty("Description", true);
-            obj.addProperty("OSName", true);
-            obj.addProperty("Suggestion", true);
-            obj.addProperty("Information", true);
-            obj.addProperty("Stacktrace", true);
-            JsonUtils.writeJsonFile(file, obj.toString());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        obj.addProperty("MCVersion", true);
+        obj.addProperty("JavaVersion", true);
+        obj.addProperty("Modded", true);
+        obj.addProperty("ServerBrand", true);
+        obj.addProperty("ServerType", true);
+        obj.addProperty("Description", true);
+        obj.addProperty("OSName", true);
+        obj.addProperty("Suggestion", true);
+        obj.addProperty("Information", true);
+        obj.addProperty("Stacktrace", true);
+        JsonUtils.writeJsonFile(file, obj.toString());
     }
 
     public static void Geveryone(File file) {
@@ -426,7 +427,7 @@ public class Utils {
                 out.newLine();
             }
             out.close();
-        } catch (Exception e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
@@ -443,7 +444,7 @@ public class Utils {
                 out.newLine();
             }
             out.close();
-        } catch (Exception e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
@@ -460,7 +461,7 @@ public class Utils {
                 out.newLine();
             }
             out.close();
-        } catch (Exception e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
@@ -477,7 +478,7 @@ public class Utils {
                 out.newLine();
             }
             out.close();
-        } catch (Exception e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
@@ -511,7 +512,7 @@ public class Utils {
             long diffHours = diff / (60 * 60 * 1000) % 24;
             long diffDays = diff / (24 * 60 * 60 * 1000);
             dif = Math.abs(diffDays) + " Days, " + Math.abs(diffHours) + " Hours, " + Math.abs(diffMinutes) + " Minutes, " + Math.abs(diffSeconds) + " Seconds";
-        } catch (Exception e) {
+        } catch (ParseException e) {
             e.printStackTrace();
         }
         return dif;
@@ -554,7 +555,7 @@ public class Utils {
                 System.out.println("Loaded setting for channel: " + channel);
             }
             return true;
-        } catch (Exception e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return false;

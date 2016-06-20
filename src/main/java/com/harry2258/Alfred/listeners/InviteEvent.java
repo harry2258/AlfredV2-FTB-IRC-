@@ -9,7 +9,6 @@ import org.pircbotx.hooks.ListenerAdapter;
 import org.pircbotx.hooks.WaitForQueue;
 import org.pircbotx.hooks.events.WhoisEvent;
 
-import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -66,11 +65,7 @@ public class InviteEvent extends ListenerAdapter {
             }
 
             if (config.useDatabase) {
-                try {
-                    Create.AddChannel(event.getChannel(), Main.database);
-                } catch (Exception s) {
-                    s.printStackTrace();
-                }
+                Create.AddChannel(event.getChannel(), Main.database);
             }
         }
     }

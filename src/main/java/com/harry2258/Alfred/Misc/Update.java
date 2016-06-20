@@ -34,6 +34,8 @@ public class Update extends Thread {
     public void run() {
         isRunning = true;
 
+        Thread.currentThread().setName("Updater");
+
         try {
             System.out.println("Updater started. Waiting 1 minute for bot to start up.");
             Thread.sleep(60000);

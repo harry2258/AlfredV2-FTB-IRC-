@@ -20,6 +20,7 @@ public class ChatterBot extends Thread {
     }
 
     public void run() {
+        Thread.currentThread().setName("ChatterBot");
         try {
             ChatterBotFactory factory = new ChatterBotFactory();
             com.google.code.chatterbotapi.ChatterBot bot1 = factory.create(ChatterBotType.CLEVERBOT);

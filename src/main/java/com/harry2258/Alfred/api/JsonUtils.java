@@ -55,7 +55,7 @@ public class JsonUtils {
         return ret;
     }
 
-    public static String getStringFromFile(String filePath) throws Exception {
+    public static String getStringFromFile(String filePath) throws IOException {
         return Files.toString(new File(filePath), Charset.isSupported("UTF-8") ? Charset.forName("UTF-8") : Charset.defaultCharset());
     }
 

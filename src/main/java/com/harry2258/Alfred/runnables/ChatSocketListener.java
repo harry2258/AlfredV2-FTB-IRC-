@@ -6,6 +6,7 @@ package com.harry2258.Alfred.runnables;
 
 import org.pircbotx.PircBotX;
 
+import java.io.IOException;
 import java.net.ServerSocket;
 
 public class ChatSocketListener extends Thread {
@@ -30,7 +31,7 @@ public class ChatSocketListener extends Thread {
             while (isRunning) {
                 new Thread(new ChatSocketHandler(server.accept(), bot)).start();
             }
-        } catch (Exception ex) {
+        } catch (IOException ex) {
             ex.printStackTrace();
         }
     }

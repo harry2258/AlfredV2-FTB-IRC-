@@ -100,151 +100,131 @@ public class Info extends Command {
             }
             return true;
         } else {
-            try {
-                if (args.length == 2 && args[1].contains("command")) {
-                    if (new File("commands/" + event.getChannel().getName() + "/").exists()) {
-                        File folder = new File("commands/" + event.getChannel().getName() + "/");
-                        File[] listOfFiles = folder.listFiles();
-                        System.out.println((listOfFiles != null));
-                        if (listOfFiles != null) {
-                            for (File listOfFile : listOfFiles) {
-                                if (listOfFile.isFile()) {
-                                    CommandsName.add((Character.toUpperCase(listOfFile.getName().charAt(0)) + listOfFile.getName().substring(1).toLowerCase()).replace(".cmd", ""));
-                                }
-                            }
-                        } else {
-                            MessageUtils.sendUserNotice(event, "There are no custom command for this channel yet!");
-                            return true;
-                        }
-                        hs.addAll(CommandsName);
-                        CommandsName.clear();
-                        CommandsName.addAll(hs);
-                        Collections.sort(CommandsName);
-                        String temp = CommandsName.toString();
-                        MessageUtils.sendUserNotice(event, temp);
-                        return true;
-
-                    }
-                    MessageUtils.sendUserNotice(event, "There are no custom command for this channel yet!");
-                    return true;
-                }
-
-                if (args.length == 2 && args[1].equalsIgnoreCase("rejoin")) {
-                    PreparedStatement stmt = Main.database.prepareStatement("SELECT Channel  FROM `Rejoin_Channels`");
-                    ResultSet rs = stmt.executeQuery();
-                    ArrayList<String> channels = new ArrayList<>();
-                    while (rs.next()) {
-                        channels.add(rs.getString("Channel"));
-                    }
-                    MessageUtils.sendUserNotice(event, "Channels to join when restarting: " + channels.toString());
-                    return true;
-                }
-
-                if (args.length == 2 && args[1].equalsIgnoreCase("ignored")) {
-                    int i = 0;
-                    PreparedStatement stmt3 = Main.database.prepareStatement("SELECT * FROM `Ignored_Users`");
-                    ResultSet rs3 = stmt3.executeQuery();
-                    if (rs3.next()) {
-                        while (rs3.next()) {
-                            i = i + 1;
-                        }
-                    }
-                    MessageUtils.sendUserNotice(event, String.valueOf(i) + " users are ignored by the bot. ");
-                    if (i > 0)
-                        MessageUtils.sendUserNotice(event, "Type \"" + config.getTrigger() + "info ignored list \" for a full list!");
-                    return true;
-                }
-
-                if (args.length == 3 && args[2].equalsIgnoreCase("list")) {
-                    ArrayList<String> IgnoredUsers = new ArrayList<>();
-                    PreparedStatement stmt3 = Main.database.prepareStatement("SELECT * FROM `Ignored_Users`");
-                    ResultSet rs3 = stmt3.executeQuery();
-                    if (rs3.next()) {
-                        while (rs3.next()) {
-                            rs3.getString("User");
-                            try {
-                                IgnoredUsers.add(rs3.getString("User"));
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                                return false;
+            if (args.length == 2 && args[1].contains("command")) {
+                if (new File("commands/" + event.getChannel().getName() + "/").exists()) {
+                    File folder = new File("commands/" + event.getChannel().getName() + "/");
+                    File[] listOfFiles = folder.listFiles();
+                    System.out.println((listOfFiles != null));
+                    if (listOfFiles != null) {
+                        for (File listOfFile : listOfFiles) {
+                            if (listOfFile.isFile()) {
+                                CommandsName.add((Character.toUpperCase(listOfFile.getName().charAt(0)) + listOfFile.getName().substring(1).toLowerCase()).replace(".cmd", ""));
                             }
                         }
-                    }
-                    MessageUtils.sendUserNotice(event, "Ignored Users: " + JsonUtils.prettyPrint(IgnoredUsers));
-                    return true;
-                }
-
-                if (args.length == 4 && args[2].equalsIgnoreCase("user")) {
-                    String info;
-                    String account = "";
-                    try {
-                        User ignored = event.getBot().getUserChannelDao().getUser(args[3]);
-                        if (event.getChannel().getUsers().contains(ignored)) {
-                            account = Utils.getAccount(ignored, event);
-                        }
-                        PreparedStatement stmt = Main.database.prepareStatement("SELECT * FROM `Ignored_Users` WHERE User_Nick = ? OR User = ?");
-                        stmt.setString(1, args[3]);
-                        stmt.setString(2, account);
-                        ResultSet rs = stmt.executeQuery();
-                        while (rs.next()) {
-                            info = "User " + args[3] + " was ignored by " + rs.getString("Ignored_By") + " on " + rs.getDate("Date") + " at " + rs.getTime("Date") + " UTC";
-                            MessageUtils.sendChannel(event, info);
-                        }
+                    } else {
+                        MessageUtils.sendUserNotice(event, "There are no custom command for this channel yet!");
                         return true;
-                    } catch (Exception user) {
-                        user.printStackTrace();
-                        return false;
+                    }
+                    hs.addAll(CommandsName);
+                    CommandsName.clear();
+                    CommandsName.addAll(hs);
+                    Collections.sort(CommandsName);
+                    String temp = CommandsName.toString();
+                    MessageUtils.sendUserNotice(event, temp);
+                    return true;
+
+                }
+                MessageUtils.sendUserNotice(event, "There are no custom command for this channel yet!");
+                return true;
+            }
+
+            if (args.length == 2 && args[1].equalsIgnoreCase("rejoin")) {
+                PreparedStatement stmt = Main.database.prepareStatement("SELECT Channel  FROM `Rejoin_Channels`");
+                ResultSet rs = stmt.executeQuery();
+                ArrayList<String> channels = new ArrayList<>();
+                while (rs.next()) {
+                    channels.add(rs.getString("Channel"));
+                }
+                MessageUtils.sendUserNotice(event, "Channels to join when restarting: " + channels.toString());
+                return true;
+            }
+
+            if (args.length == 2 && args[1].equalsIgnoreCase("ignored")) {
+                int i = 0;
+                PreparedStatement stmt3 = Main.database.prepareStatement("SELECT * FROM `Ignored_Users`");
+                ResultSet rs3 = stmt3.executeQuery();
+                if (rs3.next()) {
+                    while (rs3.next()) {
+                        i = i + 1;
                     }
                 }
+                MessageUtils.sendUserNotice(event, String.valueOf(i) + " users are ignored by the bot. ");
+                if (i > 0)
+                    MessageUtils.sendUserNotice(event, "Type \"" + config.getTrigger() + "info ignored list \" for a full list!");
+                return true;
+            }
 
-                if (args.length == 2 && (args[1].equalsIgnoreCase("full") || args[1].equalsIgnoreCase("all"))) {
-                    String exe = JsonUtils.getStringFromFile(System.getProperty("user.dir") + "/exec.json");
-                    Permission exec = JsonUtils.getPermsFromString(exe).getPermission();
-                    int NumberofCommand = 0;
-                    if (new File("commands/" + event.getChannel().getName() + "/").exists()) {
-                        NumberofCommand = new File("commands/" + event.getChannel().getName() + "/").listFiles().length;
+            if (args.length == 3 && args[2].equalsIgnoreCase("list")) {
+                ArrayList<String> IgnoredUsers = new ArrayList<>();
+                PreparedStatement stmt3 = Main.database.prepareStatement("SELECT * FROM `Ignored_Users`");
+                ResultSet rs3 = stmt3.executeQuery();
+                if (rs3.next()) {
+                    while (rs3.next()) {
+                        rs3.getString("User");
+                        IgnoredUsers.add(rs3.getString("User"));
                     }
+                }
+                MessageUtils.sendUserNotice(event, "Ignored Users: " + JsonUtils.prettyPrint(IgnoredUsers));
+                return true;
+            }
 
-                    try {
-                        PreparedStatement stmt = Main.database.prepareStatement("SELECT `URL` FROM `Channel_Permissions` WHERE `Channel` = '" + event.getChannel().getName() + "'");
-                        ResultSet rs = stmt.executeQuery();
-                        rs.next();
-                        URL = rs.getString("URL");
-                    } catch (Exception url) {
-                        url.printStackTrace();
-                    }
-                    Perms perms = Main.map.get(event.getChannel().getName().toLowerCase());
-                    Permission p = perms.getPermission();
+            if (args.length == 4 && args[2].equalsIgnoreCase("user")) {
+                String info;
+                String account = "";
+                User ignored = event.getBot().getUserChannelDao().getUser(args[3]);
+                if (event.getChannel().getUsers().contains(ignored)) {
+                    account = Utils.getAccount(ignored, event);
+                }
+                PreparedStatement stmt = Main.database.prepareStatement("SELECT * FROM `Ignored_Users` WHERE User_Nick = ? OR User = ?");
+                stmt.setString(1, args[3]);
+                stmt.setString(2, account);
+                ResultSet rs = stmt.executeQuery();
+                while (rs.next()) {
+                    info = "User " + args[3] + " was ignored by " + rs.getString("Ignored_By") + " on " + rs.getDate("Date") + " at " + rs.getTime("Date") + " UTC";
+                    MessageUtils.sendChannel(event, info);
+                }
+                return true;
+            }
 
-                    MessageUtils.sendUserNotice(event, "Permission everyone has: " + JsonUtils.prettyPrint(p.getEveryone()).replaceAll("command.", "")); //Everyone Perms
-                    MessageUtils.sendUserNotice(event, "Mod Permissions: " + JsonUtils.prettyPrint(p.getModPerms()).replaceAll("command.", "")); //Mod Permissions
-                    MessageUtils.sendUserNotice(event, "Moderators: " + JsonUtils.prettyPrint(p.getMods())); //Mod List
-                    MessageUtils.sendUserNotice(event, "Admins: " + JsonUtils.prettyPrint(p.getAdmins())); //Admin List
-                    MessageUtils.sendUserNotice(event, "Executive Users: " + JsonUtils.prettyPrint(exec.getExec()));  //Global Exec!!
-                    MessageUtils.sendUserNotice(event, "Number of custom command: " + NumberofCommand + ". For a full list, type " + config.getTrigger() + "info commands");
-                    MessageUtils.sendUserNotice(event, "URL scanning: " + URL);
+            if (args.length == 2 && (args[1].equalsIgnoreCase("full") || args[1].equalsIgnoreCase("all"))) {
+                String exe = JsonUtils.getStringFromFile(System.getProperty("user.dir") + "/exec.json");
+                Permission exec = JsonUtils.getPermsFromString(exe).getPermission();
+                int NumberofCommand = 0;
+                if (new File("commands/" + event.getChannel().getName() + "/").exists()) {
+                    NumberofCommand = new File("commands/" + event.getChannel().getName() + "/").listFiles().length;
                 }
 
-                String Usergroup = Login.Group(Main.Login.get(event.getUser().getNick()), event.getChannel().getName());
+                PreparedStatement stmt = Main.database.prepareStatement("SELECT `URL` FROM `Channel_Permissions` WHERE `Channel` = '" + event.getChannel().getName() + "'");
+                ResultSet rs = stmt.executeQuery();
+                rs.next();
+                URL = rs.getString("URL");
                 Perms perms = Main.map.get(event.getChannel().getName().toLowerCase());
                 Permission p = perms.getPermission();
 
-                if (Usergroup.equalsIgnoreCase("None :<")) {
-                    MessageUtils.sendUserNotice(event, "You are in the default group and have access to: " + JsonUtils.prettyPrint(p.getEveryone()).replaceAll("command.", ""));
-                }
-                if (Usergroup.equalsIgnoreCase("Moderator")) {
-                    MessageUtils.sendUserNotice(event, "You are in the Moderator group and have access to: " + JsonUtils.prettyPrint(p.getModPerms()).replaceAll("command.", "") + JsonUtils.prettyPrint(p.getEveryone()).replaceAll("command.", ""));
-                }
-                if (Usergroup.equalsIgnoreCase("Admin")) {
-                    MessageUtils.sendUserNotice(event, "You are a Admin! You have access to all commands " + Colors.BOLD + "except" + Colors.NORMAL + " a few critical commands such as Kill, Exec, Etc.");
-                }
-                if (Usergroup.equalsIgnoreCase("Exec")) {
-                    MessageUtils.sendUserNotice(event, "You own this town!");
-                }
+                MessageUtils.sendUserNotice(event, "Permission everyone has: " + JsonUtils.prettyPrint(p.getEveryone()).replaceAll("command.", "")); //Everyone Perms
+                MessageUtils.sendUserNotice(event, "Mod Permissions: " + JsonUtils.prettyPrint(p.getModPerms()).replaceAll("command.", "")); //Mod Permissions
+                MessageUtils.sendUserNotice(event, "Moderators: " + JsonUtils.prettyPrint(p.getMods())); //Mod List
+                MessageUtils.sendUserNotice(event, "Admins: " + JsonUtils.prettyPrint(p.getAdmins())); //Admin List
+                MessageUtils.sendUserNotice(event, "Executive Users: " + JsonUtils.prettyPrint(exec.getExec()));  //Global Exec!!
+                MessageUtils.sendUserNotice(event, "Number of custom command: " + NumberofCommand + ". For a full list, type " + config.getTrigger() + "info commands");
+                MessageUtils.sendUserNotice(event, "URL scanning: " + URL);
+            }
 
-            } catch (Exception e) {
-                e.printStackTrace();
-                return false;
+            String Usergroup = Login.Group(Main.Login.get(event.getUser().getNick()), event.getChannel().getName());
+            Perms perms = Main.map.get(event.getChannel().getName().toLowerCase());
+            Permission p = perms.getPermission();
+
+            if (Usergroup.equalsIgnoreCase("None :<")) {
+                MessageUtils.sendUserNotice(event, "You are in the default group and have access to: " + JsonUtils.prettyPrint(p.getEveryone()).replaceAll("command.", ""));
+            }
+            if (Usergroup.equalsIgnoreCase("Moderator")) {
+                MessageUtils.sendUserNotice(event, "You are in the Moderator group and have access to: " + JsonUtils.prettyPrint(p.getModPerms()).replaceAll("command.", "") + JsonUtils.prettyPrint(p.getEveryone()).replaceAll("command.", ""));
+            }
+            if (Usergroup.equalsIgnoreCase("Admin")) {
+                MessageUtils.sendUserNotice(event, "You are a Admin! You have access to all commands " + Colors.BOLD + "except" + Colors.NORMAL + " a few critical commands such as Kill, Exec, Etc.");
+            }
+            if (Usergroup.equalsIgnoreCase("Exec")) {
+                MessageUtils.sendUserNotice(event, "You own this town!");
             }
             return true;
         }

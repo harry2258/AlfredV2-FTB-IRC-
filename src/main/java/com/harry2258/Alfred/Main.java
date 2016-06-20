@@ -193,7 +193,9 @@ public class Main {
                 PircBotX bot = new PircBotX(builder.buildConfiguration());
                 System.out.println("Starting bot...");
                 version = bot.getConfiguration().getVersion();
-                new Thread(new ChatterBot(bot)).start();
+                //ChatterBot is super unused, Disabled. Enable if you want.
+                //new Thread(new ChatterBot(bot)).start();
+
                 if (config.isEnableChatSocket()) {
                     new Thread(new ChatSocketListener(bot, config.getChatSocketPort())).start();
                 }
@@ -206,8 +208,9 @@ public class Main {
                 if (config.UpdaterChecker()) {
                     new Thread(new Update(bot, config)).start();
                 }
+                //Same for FTB Wiki, SatanicSanta remade his bot.
                 //new Thread(new RecentChanges(bot)).start();
-
+                System.out.println("Start up took: " + (System.currentTimeMillis() - startup));
                 bot.startBot();
 
             } catch (Exception ex) {

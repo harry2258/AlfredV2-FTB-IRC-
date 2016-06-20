@@ -13,7 +13,7 @@ public class Mcstatus extends Command {
     }
 
     @Override
-    public boolean execute(MessageEvent event) {
+    public boolean execute(MessageEvent event) throws Exception {
         MessageUtils.sendChannel(event, Utils.checkMojangServers());
         return true;
     }
