@@ -67,6 +67,8 @@ public class Main {
                 PermissionManager manager = new PermissionManager();
                 System.out.println("Loading and registering commands");
                 try {
+                    Class.forName("com.mysql.jdbc.Driver"); // Set Driver for JBDC
+
                     if (!config.UseDatabase()) {
                         config.load();
                     } else {
