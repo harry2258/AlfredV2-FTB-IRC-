@@ -197,14 +197,12 @@ public class Utils {
 
     public static String shortenUrl(String longUrl) {
         try {
-            URL isgd = new URL("http://is.gd/create.php?format=json&url=" + longUrl);
-            URLConnection u = isgd.openConnection();
-            u.setRequestProperty("User-Agent", USER_AGENT);
-            BufferedReader first = new BufferedReader(new InputStreamReader(u.getInputStream()));
-            String result = first.readLine().trim();
-            return JsonUtils.getJsonObject(result).get("shorturl").getAsString();
-
-        } catch (IOException e) {
+            String isgd = "http://is.gd/create.php?format=json&url=" + longUrl;
+            Document doc = Jsoup.connect(isgd).userAgent(USER_AGENT).get();
+            Element body = doc.body();
+            String Url = JsonUtils.getJsonObject(body.text()).get("shorturl").getAsString();
+            return Url;
+        } catch (NullPointerException | IOException e) {
             e.printStackTrace();
         }
         return null;
